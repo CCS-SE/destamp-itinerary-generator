@@ -17,6 +17,11 @@
     "lint:fix": "turbo lint:fix && manypkg fix",
     "type-check": "turbo type-check"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
   "lint-staged":{
     "**/*.{js,jsx,ts,tsx}":[
       "npx prettier --write",
