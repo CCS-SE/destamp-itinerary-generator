@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run lint:express-server && npm run lint:web-react
+npm run lint:packages && npm run lint:app
