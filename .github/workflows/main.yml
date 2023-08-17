@@ -1,4 +1,4 @@
-name: Expo CI/CD
+name: Build and Deploy Expo
 
 on:
   push:
@@ -16,21 +16,12 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
-
-      - name: Install Expo CLI
-        run: npm install -g expo-cli
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build Expo project
-        run: expo build:ios
-
-      - name: Run tests
-        run: npm test
-
-      - name: Deploy to Expo
-        run: expo login --non-interactive -t ${{ secrets.EXPO_TOKEN }} && expo publish
+      - name: Build and deploy with EAS
+        run: npm run eas-build
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
