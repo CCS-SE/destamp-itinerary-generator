@@ -1,0 +1,27 @@
+name: Build and Deploy Expo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and deploy with EAS
+        run: npm run eas-build
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
