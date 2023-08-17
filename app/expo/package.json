@@ -13,7 +13,7 @@
     "type-check": "tsc --noEmit",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "eas-build": "npx eas build --platform ios --profile preview"
+    "eas-build": "npm run eas-build"
     }
     
   },
