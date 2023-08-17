@@ -1,4 +1,4 @@
-name: prevuew
+name: update
 on: push
 
 jobs:
