@@ -1,6 +1,8 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES6",
+    "module": "CommonJS",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
@@ -14,6 +16,8 @@
     "*.ts",
     "index.tsx",
     "*.js",
+    "./**/*.tsx",
+    "./**/*.ts",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],
