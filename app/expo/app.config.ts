@@ -17,6 +17,8 @@ const defineConfig = (): ExpoConfig => ({
     resizeMode: "contain",
     backgroundColor: "#1F104A",
   },
+
+  
   updates: {
     fallbackToCacheTimeout: 0,
   },
