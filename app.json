@@ -1,3 +1,12 @@
 {
-  "expo": {}
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "74ce95e0-3e47-4274-84a5-42acaf913fdd"
+      }
+    },
+    "android": {
+      "package": "com.kloibelle.destampapp"
+    }
+  }
 }
