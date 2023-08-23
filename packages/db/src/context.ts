@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { mockDeep } from "jest-mock-extended";
-import { MockContext } from "./src/types/types";
+
+import { MockContext } from "./types/types";
 
 type Context = {
   prisma: PrismaClient;
@@ -27,5 +28,5 @@ const createContext = (request: any) => {
   };
 };
 
-export { context, createMockContext, createContext };
+export { context, createMockContext, createContext, prisma };
 export type { Context };
