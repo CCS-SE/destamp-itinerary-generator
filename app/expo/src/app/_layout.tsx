@@ -5,11 +5,22 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
+
+const LOCAL_SYSTEM_IP_ADDRESS = '192.168.1.9'; // change this with your own ip address
+const PORT = 4000;
+
+const client = new ApolloClient({
+  link: createHttpLink({
+    uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
+  }),
+  cache: new InMemoryCache(),
+});
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -21,7 +32,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../../assets/fonts/SpaceMono-Regular.ttf'),
+    Poppins: require('../../assets/fonts/Poppins-Regular.ttf'),
     ...FontAwesome.font,
   });
 
@@ -48,9 +59,11 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <ApolloProvider client={client}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </ApolloProvider>
     </ThemeProvider>
   );
 }
