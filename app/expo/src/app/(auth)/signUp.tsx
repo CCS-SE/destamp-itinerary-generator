@@ -13,9 +13,14 @@ const SignUpScreen: React.FC = () => {
     const { error } = await supabase.auth.signUp({ email, password });
 
     if (error) Alert.alert("Error signing up", error.message);
-    else Alert.alert("Invitation sent! Please check your email.");
+    else
+      Alert.alert(
+        "Your account is ready! Please check your email for confirmation.",
+      );
     setLoading(false);
   };
+
+  //add spinner if (loading)
 
   return (
     <View style={styles.container}>
