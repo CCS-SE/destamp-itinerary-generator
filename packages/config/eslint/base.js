@@ -12,9 +12,9 @@ const config = {
     node: true,
   },
   parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: true,
-  },
+  // parserOptions: {
+  //   project: true,
+  // },
   plugins: ["@typescript-eslint", "import"],
   rules: {
     "@typescript-eslint/no-unused-vars": [
