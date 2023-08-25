@@ -6,7 +6,7 @@ import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
 
 import { getDaysDifference, getTripDateFormat } from "~/utils/dates";
 import BottomHalfModal from "../Modal/BottomHalfModal";
-import TripMenuList from "../TripMenu/TripMenuList";
+import TripMenuList from "../Menu/TripMenu/TripMenuList";
 
 interface TripCardProps {
   id: string;
