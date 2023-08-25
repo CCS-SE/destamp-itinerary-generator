@@ -1,21 +1,21 @@
-import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useState } from 'react';
+import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { supabase } from "../../../config/initSupabase";
+import { supabase } from '../../../config/initSupabase';
 
 const SignUpScreen: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     setLoading(true);
     const { error } = await supabase.auth.signUp({ email, password });
 
-    if (error) Alert.alert("Error signing up", error.message);
+    if (error) Alert.alert('Error signing up', error.message);
     else
       Alert.alert(
-        "Your account is ready! Please check your email for confirmation.",
+        'Your account is ready! Please check your email for confirmation.',
       );
     setLoading(false);
   };
@@ -48,8 +48,8 @@ const SignUpScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   title: {
@@ -57,9 +57,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    width: "100%",
+    width: '100%',
     height: 40,
-    borderColor: "gray",
+    borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 10,
     paddingHorizontal: 10,

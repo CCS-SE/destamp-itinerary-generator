@@ -12,24 +12,23 @@ const config = {
     node: true,
   },
   parser: "@typescript-eslint/parser",
-  // parserOptions: {
-  //   project: true,
-  // },
-  plugins: ["@typescript-eslint", "import"],
+  parserOptions: {
+    project: true,
+  },
+  plugins: ["@typescript-eslint"],
   rules: {
-    "@typescript-eslint/no-unused-vars": [
+    "indent": [1, 2, { "SwitchCase": 1 }],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "@typescript-eslint/ban-types": [
       "error",
-      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-    ],
-    "@typescript-eslint/consistent-type-imports": [
-      "warn",
-      { prefer: "type-imports", fixStyle: "separate-type-imports" },
-    ],
-    "@typescript-eslint/no-misused-promises": [
-      2,
-      { checksVoidReturn: { attributes: false } },
-    ],
-    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ]
   },
   ignorePatterns: [
     "**/.eslintrc.cjs",

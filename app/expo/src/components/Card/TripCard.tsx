@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import * as Haptics from "expo-haptics";
-import { Image } from "expo-image";
-import { AntDesign, FontAwesome5 } from "@expo/vector-icons";
+import type { ReactNode} from 'react';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { Image } from 'expo-image';
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import { getDaysDifference, getTripDateFormat } from "~/utils/dates";
-import BottomHalfModal from "../Modal/BottomHalfModal";
-import TripMenuList from "../TripMenu/TripMenuList";
+import { getDaysDifference, getTripDateFormat } from '~/utils/dates';
+import BottomHalfModal from '../Modal/BottomHalfModal';
+import TripMenuList from '../Menu/TripMenu/TripMenuList';
 
 interface TripCardProps {
   id: string;
@@ -33,7 +34,7 @@ export default function TripCard({
   };
 
   const blurhash =
-    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
+    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   const daysDifference = getDaysDifference(startDate, endDate);
 
@@ -62,7 +63,7 @@ export default function TripCard({
             <FontAwesome5
               name="ellipsis-h"
               size={22}
-              color={"white"}
+              color={'white'}
             ></FontAwesome5>
           </TouchableOpacity>
           <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
@@ -77,7 +78,7 @@ export default function TripCard({
             <View testID="date" className="flex-row items-center">
               <Text className="pl-2 text-center text-lg font-medium text-gray-500">
                 {`${getTripDateFormat(startDate)}  •  ${daysDifference} ${
-                  daysDifference > 1 ? "days" : "day"
+                  daysDifference > 1 ? 'days' : 'day'
                 }`}
               </Text>
             </View>
@@ -102,9 +103,9 @@ export default function TripCard({
   );
 }
 
-const travelSizeIcon: Record<string, any> = {
-  SOLO: <AntDesign name="user" size={15} color={"#808080"} />,
-  COUPLE: <AntDesign name="hearto" size={15} color={"#808080"} />,
-  FAMILY: <AntDesign name="home" size={15} color={"#808080"} />,
-  GROUP: <AntDesign name="team" size={15} color={"#808080"} />,
+const travelSizeIcon: Record<string, ReactNode> = {
+  SOLO: <AntDesign name="user" size={15} color={'#808080'} />,
+  COUPLE: <AntDesign name="hearto" size={15} color={'#808080'} />,
+  FAMILY: <AntDesign name="home" size={15} color={'#808080'} />,
+  GROUP: <AntDesign name="team" size={15} color={'#808080'} />,
 };

@@ -5,7 +5,7 @@
   "types": "./index.ts",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only src",
+    "dev": "pnpm with-env ts-node-dev --no-notify --respawn --transpile-only src",
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:migrate": "pnpm with-env prisma migrate dev",

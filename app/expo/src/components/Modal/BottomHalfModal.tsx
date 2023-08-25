@@ -1,9 +1,9 @@
-import { View } from "react-native";
-import Modal from "react-native-modal";
+import { View } from 'react-native';
+import Modal from 'react-native-modal';
 
 interface BottomHalfModalProps {
   isVisible: boolean;
-  children: any;
+  children: string | JSX.Element | JSX.Element[];
   onClose: () => void;
 }
 
@@ -16,7 +16,7 @@ function BottomHalfModal({
     <Modal
       isVisible={isVisible}
       onBackdropPress={onClose}
-      swipeDirection={"down"}
+      swipeDirection={'down'}
       onSwipeComplete={onClose}
       animationInTiming={600}
       animationOutTiming={600}
@@ -26,7 +26,7 @@ function BottomHalfModal({
     >
       <View className="absolute -bottom-5 h-80 w-full rounded-t-3xl bg-white">
         <View
-          style={{ alignSelf: "center" }}
+          style={{ alignSelf: 'center' }}
           className=" mt-2.5 h-2 w-12 rounded-2xl bg-slate-300"
         />
         {children}

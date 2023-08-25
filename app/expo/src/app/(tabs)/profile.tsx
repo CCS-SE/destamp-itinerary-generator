@@ -1,27 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
+import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
+import StampDisplayEmptyState from '~/screens/Profile/StampDisplayEmptyState';
 
-export default function TabTwoScreen() {
+export default function ProfileScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile</Text>
-      <View style={styles.separator}/>
+    <View className="flex-1 items-center p-5 bg-gray-50">
+      <StampDisplayEmptyState />
+      <ProfileMenuList
+        onPress={() => { }}
+      />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

@@ -6,18 +6,20 @@ import { SplashScreen, Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
+import { fetch } from 'cross-fetch';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-const LOCAL_SYSTEM_IP_ADDRESS = '192.168.1.9'; // change this with your own ip address
+const LOCAL_SYSTEM_IP_ADDRESS = '192.168.1.8'; // change this with your own ip address
 const PORT = 4000;
 
 const client = new ApolloClient({
   link: createHttpLink({
     uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
+    fetch
   }),
   cache: new InMemoryCache(),
 });
