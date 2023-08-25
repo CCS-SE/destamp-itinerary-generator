@@ -1,4 +1,6 @@
+import { Image } from "expo-image";
 import { Tabs } from "expo-router";
+
 import { TabBarIcon } from "~/components/Icon/TabBarIcon";
 
 export default function TabLayout() {
@@ -10,7 +12,7 @@ export default function TabLayout() {
           title: "My Trips",
           headerTitleStyle: {
             fontSize: 30,
-            fontFamily: 'Poppins'
+            fontFamily: "Poppins",
           },
           tabBarActiveTintColor: "#FC6873",
           tabBarIcon: ({ color }) => (
@@ -24,9 +26,21 @@ export default function TabLayout() {
           title: "Profile",
           headerTitleStyle: {
             fontSize: 30,
-            fontFamily: 'Poppins'
+            fontFamily: "Poppins",
+            textAlign: "left",
           },
           tabBarActiveTintColor: "#FC6873",
+          headerRight: () => (
+            <Image
+              source={require("../../../assets/images/profile.png")}
+              contentFit="contain"
+              style={{
+                width: 40,
+                height: 40,
+                right: 20,
+              }}
+            />
+          ),
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="user" color={color} size={24} />
           ),

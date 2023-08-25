@@ -42,7 +42,7 @@ export default function MyTripScreen() {
   }
 
   return (
-    <View className="flex-1 items-center bg-white">
+    <View className="flex-1 items-center bg-gray-50">
       {data && (
         <FlatList
           data={data.trips}
