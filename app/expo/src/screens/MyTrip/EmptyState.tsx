@@ -6,7 +6,7 @@ import * as Haptics from 'expo-haptics';
 
 export default function MyTripEmptyState() {
   return (
-    <View className="flex-1 items-center">
+    <View className="flex-1 items-center bg-white">
       <Image
         source={require("../../../assets/images/empty-state.png")}
         className="m-14 h-64 w-80"
