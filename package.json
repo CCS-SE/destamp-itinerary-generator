@@ -19,25 +19,22 @@
     "lint:fix": "turbo lint:fix && manypkg fix",
     "lint:expo": "pnpm -F expo lint",
     "lint:db": "pnpm -F db lint",
-    "type-check": "turbo type-check"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "type-check": "turbo type-check",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "npx eslint --fix"
-    ]
+    "**/*.{js,jsx,ts,tsx}": "eslint ."
   },
   "dependencies": {
     "@destamp/prettier-config": "^0.1.0",
     "@manypkg/cli": "^0.21.0",
-    "prettier": "^3.0.2",
     "turbo": "^1.10.12",
     "typescript": "^5.1.6"
   },
-  "prettier": "@destamp/prettier-config"
+  "prettier": "@destamp/prettier-config",
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.1"
+  }
 }
