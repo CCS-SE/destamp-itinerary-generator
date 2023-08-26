@@ -14,8 +14,8 @@ scalar DateTime
 
 type Destination {
   createdAt: DateTime!
-  id: ID!
-  image: Image!
+  id: Int!
+  image: Image
   name: String!
   updatedAt: DateTime!
 }
@@ -41,13 +41,13 @@ enum TravelSize {
 }
 
 type Trip {
-  adultCount: Int!
+  adultCount: Int
   budget: Float!
-  childCount: Int!
+  childCount: Int
   createdAt: DateTime!
-  destination: Destination!
+  destination: Destination
   endDate: DateTime!
-  id: ID!
+  id: Int!
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!

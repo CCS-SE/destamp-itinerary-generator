@@ -6,9 +6,25 @@
     "index.ts",
     "postcss.js"
   ],
-  "devDependencies": {
+  "dependencies": {
     "autoprefixer": "^10.4.15",
-    "postcss": "^8.4.26",
+    "postcss": "8.4.26",
     "tailwindcss": "3.3.2"
-  }
+  },
+  "devDependencies": {
+    "@destamp/eslint-config": "^0.2.0",
+    "@destamp/prettier-config": "^0.1.0",
+    "@destamp/tsconfig": "^0.1.0",
+    "eslint": "^8.47.0",
+    "prettier": "^3.0.2",
+    "prettier-plugin-tailwindcss": "^0.5.3",
+    "typescript": "^5.1.6"
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@destamp/eslint-config/base"
+    ]
+  },
+  "prettier": "@destamp/prettier-config"
 }

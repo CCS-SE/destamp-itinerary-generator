@@ -3,8 +3,7 @@ const config = {
   extends: [
     "turbo",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:@typescript-eslint/recommended",
     "prettier",
   ],
   env: {
@@ -17,18 +16,29 @@ const config = {
   },
   plugins: ["@typescript-eslint"],
   rules: {
-    "indent": [1, 2, { "SwitchCase": 1 }],
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        checksConditionals: false,
+        checksVoidReturn: false,
+      },
+    ],
+    "@typescript-eslint/no-floating-promises": ["warn"],
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-explicit-any": "error",
+    indent: [1, 2, { SwitchCase: 1 }],
+    quotes: ["error", "single"],
+    semi: ["error", "always"],
     "@typescript-eslint/ban-types": [
       "error",
       {
-        "extendDefaults": true,
-        "types": {
-          "{}": false
-        }
-      }
-    ]
+        extendDefaults: true,
+        types: {
+          "{}": false,
+        },
+      },
+    ],
+    "react/no-unescaped-entities": 0,
   },
   ignorePatterns: [
     "**/.eslintrc.cjs",

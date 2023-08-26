@@ -1,12 +1,12 @@
-import { BigIntResolver, DateTimeResolver } from "graphql-scalars";
-import { asNexusMethod, makeSchema } from "nexus";
-import { validatePlugin } from "nexus-validate";
+import { BigIntResolver, DateTimeResolver } from 'graphql-scalars';
+import { asNexusMethod, makeSchema } from 'nexus';
+import { validatePlugin } from 'nexus-validate';
 
-import Models from "./models";
-import Query from "./query";
+import Models from './models';
+import Query from './query';
 
-const DateTime = asNexusMethod(DateTimeResolver, "date");
-const BigInt = asNexusMethod(BigIntResolver, "bigInt");
+const DateTime = asNexusMethod(DateTimeResolver, 'date');
+const BigInt = asNexusMethod(BigIntResolver, 'bigInt');
 
 const schema = makeSchema({
   nonNullDefaults: {
@@ -19,14 +19,14 @@ const schema = makeSchema({
     typegen: `${__dirname}/../generated/nexus.ts`,
   },
   contextType: {
-    module: require.resolve("../../context"),
-    export: "Context",
+    module: require.resolve('../context'),
+    export: 'Context',
   },
   sourceTypes: {
     modules: [
       {
-        module: "@prisma/client",
-        alias: "prisma",
+        module: '@prisma/client',
+        alias: 'prisma',
       },
     ],
   },

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { supabase } from '../../../config/initSupabase';
@@ -6,7 +6,7 @@ import { supabase } from '../../../config/initSupabase';
 const SignUpScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const handleSignUp = async () => {
     setLoading(true);

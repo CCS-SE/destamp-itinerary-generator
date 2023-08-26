@@ -1,5 +1,5 @@
 import type { ReactNode} from 'react';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
@@ -12,14 +12,14 @@ import TripMenuList from '../Menu/TripMenu/TripMenuList';
 interface TripCardProps {
   id: string;
   imgSrc: string;
-  destination?: string;
+  destination: string;
   startDate: Date;
   endDate: Date;
   budget: number;
   travelSize: string;
 }
 
-export default function TripCard({
+function TripCard({
   imgSrc,
   destination,
   startDate,
@@ -109,3 +109,5 @@ const travelSizeIcon: Record<string, ReactNode> = {
   FAMILY: <AntDesign name="home" size={15} color={'#808080'} />,
   GROUP: <AntDesign name="team" size={15} color={'#808080'} />,
 };
+
+export default memo(TripCard);

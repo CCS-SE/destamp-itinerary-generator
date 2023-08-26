@@ -6,9 +6,7 @@ const projectRoot = __dirname;
 const workspaceRoot = path.resolve(projectRoot, "../..");
 
 // Create the default Metro config
-const config = getDefaultConfig(projectRoot, {
-  mode: 'exotic'
-});
+const config = getDefaultConfig(projectRoot);
 
 if (config.resolver) {
   // 1. Watch all files within the monorepo

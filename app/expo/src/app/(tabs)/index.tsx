@@ -33,7 +33,7 @@ export default function MyTripScreen() {
 
   const { loading, error, data } = useQuery(GetAllTripsDocument);
 
-  if (error) return <Text>{`Error! ${error}`}</Text>;
+  if (error) return <Text>{`Error! ${error.message.toString()}`}</Text>;
 
   if (loading) return <Text>{'Loading...'}</Text>;
 

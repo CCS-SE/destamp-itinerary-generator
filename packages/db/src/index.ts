@@ -1,14 +1,14 @@
 import 'dotenv/config';
-import http from "http";
-import { ApolloServer } from "@apollo/server";
+import http from 'http';
+import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import express from "express";
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import express from 'express';
 import { expressMiddleware } from '@apollo/server/express4';
-import cors from "cors";
-import bodyParser from "body-parser";
-import { schema } from "./graphql/schema";
-import { createContext } from "./context";
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { schema } from './graphql/schema';
+import { createContext } from './graphql/context';
 
 const app = express();
 
@@ -18,7 +18,7 @@ const startServer = async () => {
   const httpServer = http.createServer(app);
 
   const server = new ApolloServer({
-    schema,
+    schema: schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
   
@@ -34,8 +34,8 @@ const startServer = async () => {
   );
 
   console.log(`🚀 Server ready at: http://localhost:${PORT}/`);
-}
+};
 
-startServer();
+void startServer();
 
 export default app;

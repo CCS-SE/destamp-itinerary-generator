@@ -7,6 +7,7 @@ const config = {
   ],
   rules: {
     "react/prop-types": "off",
+    "react/no-unescaped-entities": 0
   },
   globals: {
     React: "writable",

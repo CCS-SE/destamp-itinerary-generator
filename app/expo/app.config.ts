@@ -3,10 +3,6 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// if (typeof process.env.SUPABASE_URL !== "string" || typeof process.env.SUPABASE_ANON_KEY !== "string") {
-//   throw new Error("Missing Supabase URL or anonymous key");
-// }
-
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 

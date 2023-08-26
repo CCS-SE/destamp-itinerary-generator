@@ -1,12 +1,13 @@
-import { PrismaClient } from "@prisma/client";
-import { mockDeep } from "jest-mock-extended";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { PrismaClient } from '@prisma/client';
+import { mockDeep } from 'jest-mock-extended';
 
-import { MockContext } from "./types/types";
+import { MockContext } from '../types/types';
 
-type Context = {
+interface Context {
   prisma: PrismaClient;
   req: any;
-};
+}
 
 const createMockContext = (): MockContext => {
   return {
@@ -22,6 +23,7 @@ const context: Context = {
 };
 
 const createContext = (request: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...request,
     prisma,
