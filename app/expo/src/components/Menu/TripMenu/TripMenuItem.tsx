@@ -20,7 +20,7 @@ function TripMenuItem({ onCloseModal, item }: TripMenuItemProps) {
         onCloseModal();
       }}
     >
-      <View className="p-4 justify-start items-start">
+      <View className="items-start justify-start p-4">
         <View className="flex-row items-center p-1">
           {item?.icon}
           <Text style={{ color: item?.color }} className="ml-5 text-lg">

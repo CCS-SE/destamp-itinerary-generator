@@ -12,10 +12,11 @@
     "db:seed": "pnpm with-env node prisma/seed.js",
     "with-env": "dotenv -e ../../.env --",
     "nexus:generate": "ts-node --transpile-only src/graphql/schema/index.ts",
-    "generate":  "pnpm db:generate && pnpm nexus:generate",
+    "generate":  "pnpm db:generate",
     "lint": "eslint .",
     "lint:fix": "pnpm lint --fix",
-    "format": "prettier --check \"**/*.{mjs,ts,md,json}\"",
+    "format": "prettier --check \"**/*.{mjs,ts,md}\"",
+    "format:fix": "prettier --write \"**/*.{mjs,ts,md}\"",
     "type-check": "tsc --noEmit"
   },
   "prisma": {

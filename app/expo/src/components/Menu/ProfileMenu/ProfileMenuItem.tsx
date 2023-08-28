@@ -21,7 +21,7 @@ function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
       }}
     >
       <View className="w-[360]">
-        <View className="flex-row items-center bg-white p-4 rounded-xl mt-5">
+        <View className="mt-5 flex-row items-center rounded-xl bg-white p-4">
           {item?.icon}
           <Text style={{ color: item?.color }} className="ml-5 text-xl">
             {item?.title}

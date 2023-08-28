@@ -1,7 +1,8 @@
-import type { ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+
 import TripMenuItem from './TripMenuItem';
 
 interface TripMenuListProps {
@@ -31,7 +32,9 @@ interface TripMenu {
 
 const tripMenus: TripMenu[] = [
   {
-    icon: <Ionicons name="information-circle-outline" color={'#403f3f'} size={26} />,
+    icon: (
+      <Ionicons name="information-circle-outline" color={'#403f3f'} size={26} />
+    ),
     title: 'View trip details',
     color: '#403f3f',
   },

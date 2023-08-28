@@ -1,10 +1,7 @@
 import React from 'react';
-import {
-  FlatList,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { gql, useQuery } from '@apollo/client';
+
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import TripCard from '~/components/Card/TripCard';
 import { GetAllTripsDocument } from '~/graphql/generated';
@@ -30,7 +27,6 @@ export const GetAllTripsQuery = gql(
 );
 
 export default function MyTripScreen() {
-
   const { loading, error, data } = useQuery(GetAllTripsDocument);
 
   if (error) return <Text>{`Error! ${error.message.toString()}`}</Text>;

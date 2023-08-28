@@ -45,11 +45,17 @@ jobs:
     - name: Install dependents (with cache)
       run: pnpm install
 
+    - name: Format expo
+      run: npm run format:expo
+
+    - name: Format server
+      run: npm run format:server
+      
     - name: Run ESLint on expo
       run: npm run lint:expo
 
-    - name: Run ESLint on db
-      run: npm run lint:db
+    - name: Run ESLint on server
+      run: npm run lint:server
       
     - name: Generate Schema
       run: npm run generate

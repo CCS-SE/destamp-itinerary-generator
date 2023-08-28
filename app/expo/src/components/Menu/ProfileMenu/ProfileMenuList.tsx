@@ -1,4 +1,4 @@
-import type { ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';

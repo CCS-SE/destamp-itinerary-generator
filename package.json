@@ -18,12 +18,14 @@
     "lint": "turbo lint --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg check",
     "lint:fix": "turbo lint:fix && manypkg fix",
     "lint:expo": "pnpm -F expo lint",
-    "lint:db": "pnpm -F db lint",
+    "lint:server": "pnpm -F db lint",
+    "format:expo": "pnpm -F expo format",
+    "format:server": "pnpm -F db format",
     "type-check": "turbo type-check",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": "eslint ."
+    "**/*.{js,jsx,ts,tsx}": "prettier --write"
   },
   "dependencies": {
     "@destamp/prettier-config": "^0.1.0",

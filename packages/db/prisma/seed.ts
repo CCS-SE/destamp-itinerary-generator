@@ -1,5 +1,5 @@
-import { PrismaClient, TravelSize } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { PrismaClient, TravelSize } from '@prisma/client';
 
 const db = new PrismaClient();
 
@@ -28,7 +28,7 @@ const createDestination = async (count: number) => {
 
     await db.trip.update({
       where: {
-        id: randomTrip
+        id: randomTrip,
       },
       data: {
         destination: {
@@ -36,11 +36,11 @@ const createDestination = async (count: number) => {
             name: location.city(),
             image: {
               create: {
-                url: image.url()
-              }
-            }
-          }
-        }
+                url: image.url(),
+              },
+            },
+          },
+        },
       },
     });
   }

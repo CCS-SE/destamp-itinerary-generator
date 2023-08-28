@@ -1,13 +1,13 @@
-import type { ReactNode} from 'react';
-import React, { useState, memo } from 'react';
+import type { ReactNode } from 'react';
+import React, { memo, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
 import { getDaysDifference, getTripDateFormat } from '~/utils/dates';
-import BottomHalfModal from '../Modal/BottomHalfModal';
 import TripMenuList from '../Menu/TripMenu/TripMenuList';
+import BottomHalfModal from '../Modal/BottomHalfModal';
 
 interface TripCardProps {
   id: string;
