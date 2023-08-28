@@ -1,7 +1,8 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import type { ReactNode } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface TripMenu {
-  icon: any;
+  icon: ReactNode;
   title: string;
   color: string;
 }
@@ -19,7 +20,7 @@ function TripMenuItem({ onCloseModal, item }: TripMenuItemProps) {
         onCloseModal();
       }}
     >
-      <View className="p-4 justify-start items-start">
+      <View className="items-start justify-start p-4">
         <View className="flex-row items-center p-1">
           {item?.icon}
           <Text style={{ color: item?.color }} className="ml-5 text-lg">

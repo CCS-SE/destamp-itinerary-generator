@@ -5,13 +5,19 @@
   "types": "./index.ts",
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only src",
+    "dev": "pnpm with-env ts-node-dev --no-notify --respawn --transpile-only src",
     "db:generate": "pnpm with-env prisma generate",
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:migrate": "pnpm with-env prisma migrate dev",
     "db:seed": "pnpm with-env node prisma/seed.js",
     "with-env": "dotenv -e ../../.env --",
-    "nexus:generate": "ts-node --transpile-only src/graphql/schema/index.ts"
+    "nexus:generate": "ts-node --transpile-only src/graphql/schema/index.ts",
+    "generate":  "pnpm db:generate",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix",
+    "format": "prettier --check \"**/*.{mjs,ts,md}\"",
+    "format:fix": "prettier --write \"**/*.{mjs,ts,md}\"",
+    "type-check": "tsc --noEmit"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
@@ -31,11 +37,26 @@
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
+    "@destamp/eslint-config": "^0.2.0",
+    "@destamp/prettier-config": "^0.1.0",
+    "@destamp/tsconfig": "^0.1.0",
+    "@destamp/tailwind-config": "^0.1.0",
     "@types/cors": "^2.8.13",
     "@types/node": "^20.5.1",
     "dotenv-cli": "^7.2.1",
     "prisma": "^5.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
-  }
+  },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "@destamp/eslint-config/base"
+    ],
+    "ignorePatterns": [
+      "/src/graphql/generated/nexus.ts",
+      "/prisma/seed.ts"
+    ]
+  },
+  "prettier": "@destamp/prettier-config"
 }

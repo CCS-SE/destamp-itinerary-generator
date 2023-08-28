@@ -11,29 +11,32 @@
     "clean:workspaces": "turbo clean",
     "db:push": "pnpm -F db push",
     "db:studio": "pnpm -F db dev",
+    "generate": "pnpm -F db generate",
     "dev": "turbo dev --parallel",
-    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
-    "lint": "turbo lint && manypkg check",
+    "format": "turbo format --continue -- --cache --cache-location='node_modules/.cache/.prettiercache'",
+    "format:fix": "turbo format --continue -- --write --cache --cache-location='node_modules/.cache/.prettiercache'",
+    "lint": "turbo lint --continue -- --cache --cache-location 'node_modules/.cache/.eslintcache' && manypkg check",
     "lint:fix": "turbo lint:fix && manypkg fix",
-    "type-check": "turbo type-check"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "lint:expo": "pnpm -F expo lint",
+    "lint:server": "pnpm -F db lint",
+    "format:expo": "pnpm -F expo format",
+    "format:server": "pnpm -F db format",
+    "type-check": "turbo type-check",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": [
-      "npx prettier --write",
-      "npx eslint --fix"
-    ]
+    "**/*.{js,jsx,ts,tsx}": "prettier --write"
   },
   "dependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
+    "@destamp/prettier-config": "^0.1.0",
     "@manypkg/cli": "^0.21.0",
-    "prettier": "^3.0.1",
-    "prettier-plugin-tailwindcss": "^0.5.2",
     "turbo": "^1.10.12",
     "typescript": "^5.1.6"
+  },
+  "prettier": "@destamp/prettier-config",
+  "devDependencies": {
+    "eslint": "^8.48.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.1"
   }
 }

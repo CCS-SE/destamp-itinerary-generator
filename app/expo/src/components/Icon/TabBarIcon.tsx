@@ -1,7 +1,7 @@
-import SimpleLineIcon from "@expo/vector-icons/SimpleLineIcons";
+import SimpleLineIcon from '@expo/vector-icons/SimpleLineIcons';
 
 interface TabBarIconProps {
-  name: React.ComponentProps<typeof SimpleLineIcon>["name"];
+  name: React.ComponentProps<typeof SimpleLineIcon>['name'];
   color: string;
   size: number;
 }

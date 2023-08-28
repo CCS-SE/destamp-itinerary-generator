@@ -6,8 +6,6 @@
 app
   ├─ expo
 packages
-  ├─ api
-  ├─ auth
   ├─ config
   └─ db
 ```

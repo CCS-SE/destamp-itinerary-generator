@@ -1,6 +1,6 @@
-import { Text, TouchableOpacity } from "react-native";
-import * as Haptics from "expo-haptics";
-import { LinearGradient } from "expo-linear-gradient";
+import { Text, TouchableOpacity } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface AbsoluteButtonProps {
   title: string;
@@ -14,7 +14,7 @@ export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
       className="absolute bottom-6 right-6"
     >
       <LinearGradient
-        colors={["#F0226C", "#F78E48"]}
+        colors={['#F0226C', '#F78E48']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
         className="rounded-full"

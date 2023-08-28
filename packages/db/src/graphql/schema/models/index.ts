@@ -1,6 +1,6 @@
-import Destination from "./Destination";
-import Image from "./Image";
-import Trip from "./Trip";
+import Destination from './Destination';
+import Image from './Image';
+import Trip from './Trip';
 
 const Models = [Destination, Trip, Image];
 

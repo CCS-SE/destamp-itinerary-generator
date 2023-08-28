@@ -1,14 +1,14 @@
-import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
-import { Image } from "expo-image";
-import { LinearGradient } from "expo-linear-gradient";
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function MyTripEmptyState() {
   return (
-    <View className="flex-1 items-center">
+    <View className="flex-1 items-center bg-white">
       <Image
-        source={require("../../../assets/images/empty-state.png")}
+        source={require('../../../assets/images/empty-state.png')}
         className="m-14 h-64 w-80"
       />
       <Text className="-my-3 text-2xl font-normal text-slate-700">
@@ -22,7 +22,7 @@ export default function MyTripEmptyState() {
         onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       >
         <LinearGradient
-          colors={["#F0226C", "#F78E48"]}
+          colors={['#F0226C', '#F78E48']}
           start={{ x: 0, y: 0.1 }}
           end={{ x: 0.8, y: 0 }}
           className="rounded-lg shadow-lg"

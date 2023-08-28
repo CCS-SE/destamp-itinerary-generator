@@ -3,8 +3,7 @@ const config = {
   extends: [
     "turbo",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:@typescript-eslint/recommended",
     "prettier",
   ],
   env: {
@@ -12,24 +11,34 @@ const config = {
     node: true,
   },
   parser: "@typescript-eslint/parser",
-  // parserOptions: {
-  //   project: true,
-  // },
-  plugins: ["@typescript-eslint", "import"],
+  parserOptions: {
+    project: true,
+  },
+  plugins: ["@typescript-eslint"],
   rules: {
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-    ],
-    "@typescript-eslint/consistent-type-imports": [
-      "warn",
-      { prefer: "type-imports", fixStyle: "separate-type-imports" },
-    ],
     "@typescript-eslint/no-misused-promises": [
-      2,
-      { checksVoidReturn: { attributes: false } },
+      "error",
+      {
+        checksConditionals: false,
+        checksVoidReturn: false,
+      },
     ],
-    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    "@typescript-eslint/no-floating-promises": ["warn"],
+    "@typescript-eslint/no-unsafe-assignment": "warn",
+    "@typescript-eslint/no-explicit-any": "error",
+    indent: [1, 2, { SwitchCase: 1 }],
+    quotes: ["error", "single"],
+    semi: ["error", "always"],
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        extendDefaults: true,
+        types: {
+          "{}": false,
+        },
+      },
+    ],
+    "react/no-unescaped-entities": 0,
   },
   ignorePatterns: [
     "**/.eslintrc.cjs",

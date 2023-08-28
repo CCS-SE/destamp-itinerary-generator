@@ -1,14 +1,13 @@
-import { objectType } from "nexus";
+import { objectType } from 'nexus';
 
 const Image = objectType({
-  name: "Image",
+  name: 'Image',
   definition(t) {
-    t.id("id"), 
-    t.nullable.string("name");
-    t.string("url");
-    t.nullable.int("size");
-    t.field("createdAt", { type: "DateTime" });
-    t.field("updatedAt", { type: "DateTime" });
+    t.id('id'), t.nullable.string('name');
+    t.string('url');
+    t.nullable.int('size');
+    t.field('createdAt', { type: 'DateTime' });
+    t.field('updatedAt', { type: 'DateTime' });
   },
 });
 
