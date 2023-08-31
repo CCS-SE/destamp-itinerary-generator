@@ -15,14 +15,11 @@ import { supabase } from '../../../config/initSupabase';
 const SignUpScreen: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [hidePassword, sethidePassword] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [hidePassword2, sethidePassword2] = useState(true);
 
   const handleSignUp = async () => {
-    setLoading(true);
-
     if (password == confirmPassword) {
       const { error } = await supabase.auth.signUp({ email, password });
 
@@ -31,7 +28,6 @@ const SignUpScreen: React.FC = () => {
         Alert.alert(
           'Your account is ready! Please check your email for confirmation.',
         );
-      setLoading(false);
     } else {
       Alert.alert('Error signing up', 'Passwords do not match');
     }
@@ -44,7 +40,7 @@ const SignUpScreen: React.FC = () => {
       <Text style={styles.title}>Sign Up</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          placeholder="Email"
+          placeholder="E-mail"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
