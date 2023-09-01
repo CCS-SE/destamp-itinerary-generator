@@ -23,7 +23,6 @@ const context: Context = {
 };
 
 const createContext = (request: any) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...request,
     prisma,
