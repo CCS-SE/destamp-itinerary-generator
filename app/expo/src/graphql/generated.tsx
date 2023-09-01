@@ -25,6 +25,9 @@ export type Incremental<T> =
   | {
       [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
     };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
+  [P in K]-?: NonNullable<T[P]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string };
@@ -36,11 +39,18 @@ export type Scalars = {
   DateTime: { input: any; output: any };
 };
 
+export type CreateUserInput = {
+  email: Scalars['String']['input'];
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  userType: UserType;
+};
+
 export type Destination = {
   __typename?: 'Destination';
   createdAt: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
-  image: Image;
+  id: Scalars['Int']['output'];
+  image?: Maybe<Image>;
   name: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -55,9 +65,22 @@ export type Image = {
   url: Scalars['String']['output'];
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  createUser: User;
+};
+
+export type MutationCreateUserArgs = {
+  data: CreateUserInput;
+};
+
 export type Query = {
   __typename?: 'Query';
-  trips: Array<Trip>;
+  travelerTrips: Array<Trip>;
+};
+
+export type QueryTravelerTripsArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export enum TravelSize {
@@ -67,20 +90,44 @@ export enum TravelSize {
   Solo = 'SOLO',
 }
 
+export type Traveler = {
+  __typename?: 'Traveler';
+  contactNumber?: Maybe<Scalars['String']['output']>;
+  firstName?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  image?: Maybe<Image>;
+  lastName?: Maybe<Scalars['String']['output']>;
+  trips: Array<Trip>;
+};
+
 export type Trip = {
   __typename?: 'Trip';
-  adultCount: Scalars['Int']['output'];
+  adultCount?: Maybe<Scalars['Int']['output']>;
   budget: Scalars['Float']['output'];
-  childCount: Scalars['Int']['output'];
+  childCount?: Maybe<Scalars['Int']['output']>;
   createdAt: Scalars['DateTime']['output'];
-  destination: Destination;
+  destination?: Maybe<Destination>;
   endDate: Scalars['DateTime']['output'];
-  id: Scalars['ID']['output'];
+  id: Scalars['Int']['output'];
   startDate: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
   travelSize: TravelSize;
   updatedAt: Scalars['DateTime']['output'];
 };
+
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  password: Scalars['String']['output'];
+  traveler?: Maybe<Traveler>;
+  userType: UserType;
+};
+
+export enum UserType {
+  BusinessOperator = 'BUSINESS_OPERATOR',
+  Traveler = 'TRAVELER',
+}
 
 export type ResolverTypeWrapper<T> = Promise<T> | T;
 
@@ -191,31 +238,40 @@ export type DirectiveResolverFn<
 export type ResolversTypes = {
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CreateUserInput: CreateUserInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   Destination: ResolverTypeWrapper<Destination>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   TravelSize: TravelSize;
+  Traveler: ResolverTypeWrapper<Traveler>;
   Trip: ResolverTypeWrapper<Trip>;
+  User: ResolverTypeWrapper<User>;
+  UserType: UserType;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
+  CreateUserInput: CreateUserInput;
   DateTime: Scalars['DateTime']['output'];
   Destination: Destination;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Image: Image;
   Int: Scalars['Int']['output'];
+  Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
+  Traveler: Traveler;
   Trip: Trip;
+  User: User;
 };
 
 export interface BigIntScalarConfig
@@ -234,8 +290,8 @@ export type DestinationResolvers<
     ResolversParentTypes['Destination'] = ResolversParentTypes['Destination'],
 > = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  image?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -255,12 +311,52 @@ export type ImageResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type MutationResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
+> = {
+  createUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateUserArgs, 'data'>
+  >;
+};
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  travelerTrips?: Resolver<
+    Array<ResolversTypes['Trip']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryTravelerTripsArgs, 'userId'>
+  >;
+};
+
+export type TravelerResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Traveler'] = ResolversParentTypes['Traveler'],
+> = {
+  contactNumber?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  firstName?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TripResolvers<
@@ -268,21 +364,38 @@ export type TripResolvers<
   ParentType extends
     ResolversParentTypes['Trip'] = ResolversParentTypes['Trip'],
 > = {
-  adultCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  adultCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   budget?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  childCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  childCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   destination?: Resolver<
-    ResolversTypes['Destination'],
+    Maybe<ResolversTypes['Destination']>,
     ParentType,
     ContextType
   >;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   travelSize?: Resolver<ResolversTypes['TravelSize'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['User'] = ResolversParentTypes['User'],
+> = {
+  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  traveler?: Resolver<
+    Maybe<ResolversTypes['Traveler']>,
+    ParentType,
+    ContextType
+  >;
+  userType?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -291,43 +404,83 @@ export type Resolvers<ContextType = any> = {
   DateTime?: GraphQLScalarType;
   Destination?: DestinationResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Traveler?: TravelerResolvers<ContextType>;
   Trip?: TripResolvers<ContextType>;
+  User?: UserResolvers<ContextType>;
 };
 
-export type GetAllTripsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetTravelerTripsQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
 
-export type GetAllTripsQuery = {
+export type GetTravelerTripsQuery = {
   __typename?: 'Query';
-  trips: Array<{
+  travelerTrips: Array<{
     __typename?: 'Trip';
-    id: string;
+    id: number;
     title: string;
     budget: number;
     travelSize: TravelSize;
     startDate: any;
     endDate: any;
-    destination: {
+    destination?: {
       __typename?: 'Destination';
       name: string;
-      image: { __typename?: 'Image'; url: string };
-    };
+      image?: { __typename?: 'Image'; url: string } | null;
+    } | null;
   }>;
 };
 
-export const GetAllTripsDocument = {
+export type CreateUserMutationVariables = Exact<{
+  data: CreateUserInput;
+}>;
+
+export type CreateUserMutation = {
+  __typename?: 'Mutation';
+  createUser: { __typename?: 'User'; id: string };
+};
+
+export const GetTravelerTripsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetAllTrips' },
+      name: { kind: 'Name', value: 'GetTravelerTrips' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'trips' },
+            name: { kind: 'Name', value: 'travelerTrips' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+            ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
@@ -367,4 +520,55 @@ export const GetAllTripsDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetAllTripsQuery, GetAllTripsQueryVariables>;
+} as unknown as DocumentNode<
+  GetTravelerTripsQuery,
+  GetTravelerTripsQueryVariables
+>;
+export const CreateUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateUserInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'data' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
