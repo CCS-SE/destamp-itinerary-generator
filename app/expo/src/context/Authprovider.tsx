@@ -1,58 +1,53 @@
-// import { createContext, useContext, useEffect, useState } from "react";
-// import { useRouter, useSegments } from "expo-router";
+import React, { createContext, useEffect, useState } from 'react';
+import { router } from 'expo-router';
+import { Session } from '@supabase/supabase-js';
+import { supabase } from 'config/initSupabase';
 
-// type User = {
-//   name: string;
-// };
+type ContextProps = {
+  user: null | boolean;
+  session: Session | null;
+};
 
-// type AuthType = {
-//   user: User | null;
-//   setUser: (user: User | null) => void;
-// };
+const AuthContext = createContext<Partial<ContextProps>>({});
 
-// const AuthContext = createContext<AuthType>({
-//   user: null,
-//   setUser: () => {},
-// });
+interface Props {
+  children: React.ReactNode;
+}
 
-// export const useAuth = () => useContext(AuthContext);
+const AuthProvider = (props: Props) => {
+  const [session, setSession] = useState<Session | null>(null);
 
-// function useProtectedRoute(user: any) {
-//   const segments = useSegments();
-//   const router = useRouter();
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        router.push('/(tabs)/');
+      }
+      const { data: authListener } = supabase.auth.onAuthStateChange(
+        async (_event, session) => {
+          setSession(session);
+          if (session) {
+            router.push('/(tabs)/');
+          } else {
+            router.push('/login');
+          }
+        },
+      );
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    });
+  }, []);
 
-//   useEffect(() => {
-//     const inAuthGroup = segments[0] === "(auth)";
-//     console.log(user);
-//     if (
-//       // If the user is not signed in and the initial segment is not anything in the auth group.
-//       !user &&
-//       !inAuthGroup
-//     ) {
-//       // Redirect to the sign-in page.
-//       router.replace("/signUp");
-//     } else if (user && inAuthGroup) {
-//       // Redirect away from the sign-in page.
-//       router.replace("/index");
-//     }
-//   }, [user, segments]);
-// }
+  return (
+    <AuthContext.Provider
+      value={{
+        session,
+      }}
+    >
+      {props.children}
+    </AuthContext.Provider>
+  );
+};
 
-// export function AuthProvider({
-//   children,
-// }: {
-//   children: JSX.Element;
-// }): JSX.Element {
-//   const [user, setUser] = useState<User | null>(null);
-
-//   useProtectedRoute(user);
-
-//   const authContext: AuthType = {
-//     user,
-//     setUser,
-//   };
-
-//   return (
-//     <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>
-//   );
-// }
+export { AuthContext, AuthProvider };

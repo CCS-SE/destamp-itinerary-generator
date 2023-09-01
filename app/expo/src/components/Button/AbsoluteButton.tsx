@@ -14,7 +14,7 @@ export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
       className="absolute bottom-6 right-6"
     >
       <LinearGradient
-        colors={['#F0226C', '#F78E48']}
+        colors={['#fd8139', '#f65a82']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
         className="rounded-full"
