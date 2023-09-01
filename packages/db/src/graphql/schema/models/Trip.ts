@@ -6,7 +6,8 @@ import Destination from './Destination';
 const Trip = objectType({
   name: 'Trip',
   definition(t) {
-    t.int('id'), t.string('title');
+    t.int('id');
+    t.string('title');
     t.float('budget');
     t.nullable.field('destination', {
       type: nullable(Destination),

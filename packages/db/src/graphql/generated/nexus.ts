@@ -49,10 +49,19 @@ declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
-export interface NexusGenInputs {}
+export interface NexusGenInputs {
+  CreateUserInput: {
+    // input type
+    email: string; // String!
+    id: string; // String!
+    password: string; // String!
+    userType: NexusGenEnums['UserType']; // UserType!
+  };
+}
 
 export interface NexusGenEnums {
   TravelSize: 'COUPLE' | 'FAMILY' | 'GROUP' | 'SOLO';
+  UserType: 'BUSINESS_OPERATOR' | 'TRAVELER';
 }
 
 export interface NexusGenScalars {
@@ -82,7 +91,15 @@ export interface NexusGenObjects {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
   };
+  Mutation: {};
   Query: {};
+  Traveler: {
+    // root type
+    contactNumber?: string | null; // String
+    firstName?: string | null; // String
+    id: number; // Int!
+    lastName?: string | null; // String
+  };
   Trip: {
     // root type
     adultCount?: number | null; // Int
@@ -95,6 +112,13 @@ export interface NexusGenObjects {
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  };
+  User: {
+    // root type
+    email: string; // String!
+    id: string; // String!
+    password: string; // String!
+    userType: NexusGenEnums['UserType']; // UserType!
   };
 }
 
@@ -126,8 +150,21 @@ export interface NexusGenFieldTypes {
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
   };
+  Mutation: {
+    // field return type
+    createUser: NexusGenRootTypes['User']; // User!
+  };
   Query: {
     // field return type
+    travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+  };
+  Traveler: {
+    // field return type
+    contactNumber: string | null; // String
+    firstName: string | null; // String
+    id: number; // Int!
+    image: NexusGenRootTypes['Image'] | null; // Image
+    lastName: string | null; // String
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
   };
   Trip: {
@@ -143,6 +180,14 @@ export interface NexusGenFieldTypes {
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  };
+  User: {
+    // field return type
+    email: string; // String!
+    id: string; // String!
+    password: string; // String!
+    traveler: NexusGenRootTypes['Traveler'] | null; // Traveler
+    userType: NexusGenEnums['UserType']; // UserType!
   };
 }
 
@@ -164,8 +209,21 @@ export interface NexusGenFieldTypeNames {
     updatedAt: 'DateTime';
     url: 'String';
   };
+  Mutation: {
+    // field return type name
+    createUser: 'User';
+  };
   Query: {
     // field return type name
+    travelerTrips: 'Trip';
+  };
+  Traveler: {
+    // field return type name
+    contactNumber: 'String';
+    firstName: 'String';
+    id: 'Int';
+    image: 'Image';
+    lastName: 'String';
     trips: 'Trip';
   };
   Trip: {
@@ -182,9 +240,30 @@ export interface NexusGenFieldTypeNames {
     travelSize: 'TravelSize';
     updatedAt: 'DateTime';
   };
+  User: {
+    // field return type name
+    email: 'String';
+    id: 'String';
+    password: 'String';
+    traveler: 'Traveler';
+    userType: 'UserType';
+  };
 }
 
-export interface NexusGenArgTypes {}
+export interface NexusGenArgTypes {
+  Mutation: {
+    createUser: {
+      // args
+      data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    };
+  };
+  Query: {
+    travelerTrips: {
+      // args
+      userId: string; // String!
+    };
+  };
+}
 
 export interface NexusGenAbstractTypeMembers {}
 
@@ -192,7 +271,7 @@ export interface NexusGenTypeInterfaces {}
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 
