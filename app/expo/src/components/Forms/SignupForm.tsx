@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { gql, useMutation } from '@apollo/client';
-import { Entypo } from '@expo/vector-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from 'config/initSupabase';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';

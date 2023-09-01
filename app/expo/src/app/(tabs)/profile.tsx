@@ -7,7 +7,7 @@ export default function ProfileScreen() {
   return (
     <View className="flex-1 items-center bg-gray-50 p-5">
       <StampDisplayEmptyState />
-      <ProfileMenuList onPress={() => undefined} />
+      <ProfileMenuList />
     </View>
   );
 }
