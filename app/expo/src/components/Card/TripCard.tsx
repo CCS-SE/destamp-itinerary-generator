@@ -10,7 +10,7 @@ import TripMenuList from '../Menu/TripMenu/TripMenuList';
 import BottomHalfModal from '../Modal/BottomHalfModal';
 
 interface TripCardProps {
-  id: string;
+  id: number;
   imgSrc: string;
   destination: string;
   startDate: Date;

@@ -22,7 +22,7 @@ export default function MyTripEmptyState() {
         onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       >
         <LinearGradient
-          colors={['#F0226C', '#F78E48']}
+          colors={['#fd8139', '#f65a82']}
           start={{ x: 0, y: 0.1 }}
           end={{ x: 0.8, y: 0 }}
           className="rounded-lg shadow-lg"

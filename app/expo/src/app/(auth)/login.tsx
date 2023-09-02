@@ -5,25 +5,26 @@ import { Link, Stack } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
 
 import IconButton from '~/components/Button/IconButton';
-import SignUpForm from '~/components/Forms/SignupForm';
+import LoginForm from '~/components/Forms/LoginForm';
 
-export default function SignUpScreen() {
+export default function LoginScreen() {
   return (
     <SafeAreaView
       edges={['top', 'bottom']}
-      className="mt-24 flex-1 bg-transparent p-3"
+      className="top-28 flex-1 bg-transparent p-3"
     >
       <ScrollView>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 ml-2 w-96 text-2xl font-medium text-orange-500">
-          Start with creating an account
+        <Text>{}</Text>
+        <Text className="mb-6 ml-2 w-96 text-3xl font-medium text-orange-500">
+          Welcome Back!
         </Text>
-        <SignUpForm />
+        <LoginForm />
         <View className="flex-row items-center justify-center">
           <IconButton
             onPress={() => undefined}
             icon={
-              <Entypo name="facebook-with-circle" size={33} color={'#1877F2'} />
+              <Entypo name="facebook-with-circle" size={35} color={'#1877F2'} />
             }
           />
           <IconButton
@@ -39,13 +40,13 @@ export default function SignUpScreen() {
         </View>
         <View className="mt-3 flex-row items-center justify-center">
           <Text className=" mr-1 text-base font-medium text-slate-700">
-            Already a Destamp user?
+            Don't have an account yet?
           </Text>
           <Link
-            href="/(auth)/login"
+            href="/(auth)/signUp"
             className="text-base font-medium text-orange-500"
           >
-            Login
+            Create account
           </Link>
         </View>
       </ScrollView>
