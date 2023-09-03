@@ -9,6 +9,7 @@ interface AbsoluteButtonProps {
 export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       activeOpacity={0.98}
       className="absolute bottom-6 right-6"
@@ -19,7 +20,10 @@ export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
         end={{ x: 0.8, y: 0 }}
         className="rounded-full"
       >
-        <Text className="font-lg mx-2.5 p-2.5 text-4xl text-zinc-100">
+        <Text
+          testID="absolute-btn-text"
+          className="font-lg mx-2.5 p-2.5 text-4xl text-zinc-100"
+        >
           {title}
         </Text>
       </LinearGradient>

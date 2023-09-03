@@ -14,11 +14,13 @@ export default function GradientButton({
 }: GradientButtonProps) {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       activeOpacity={0.7}
       onPress={onPress}
       disabled={isSubmitting}
     >
       <LinearGradient
+        testID="gradient-btn-color"
         colors={['#fd8139', '#f65a82']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
@@ -27,9 +29,17 @@ export default function GradientButton({
         }`}
       >
         {isSubmitting ? (
-          <ActivityIndicator size="small" color={'white'} className="m-1" />
+          <ActivityIndicator
+            testID="gradient-btn-loading"
+            size="small"
+            color={'white'}
+            className="m-1"
+          />
         ) : (
-          <Text className="ml-2 items-center text-lg font-medium text-white">
+          <Text
+            testID="gradient-btn-text"
+            className="ml-2 items-center text-lg font-medium text-white"
+          >
             {title}
           </Text>
         )}

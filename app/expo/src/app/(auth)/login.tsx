@@ -15,7 +15,6 @@ export default function LoginScreen() {
     >
       <ScrollView>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text>{}</Text>
         <Text className="mb-6 ml-2 w-96 text-3xl font-medium text-orange-500">
           Welcome Back!
         </Text>
