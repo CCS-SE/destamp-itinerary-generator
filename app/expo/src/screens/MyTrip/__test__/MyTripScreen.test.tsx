@@ -54,7 +54,7 @@ describe('My Trip Screen', () => {
     expect(createTripElement).toBeDefined();
   });
 
-  it("should render traveler's trips", async () => {
+  it('should render travelers trips', async () => {
     await renderScreen(TripsQueryMock);
 
     const tripList = await screen.findByTestId('my-trip-list');
@@ -75,13 +75,5 @@ describe('My Trip Screen', () => {
     expect(date).toBeDefined();
     expect(travelSize).toBeDefined();
     expect(budget).toBeDefined();
-
-    // expect(tripData[0].budget).toBe(tripQueryData[0]?.budget)
-    // expect(tripData[0].destination.image).toStrictEqual(tripQueryData[0]?.destination.image)
-    // expect(tripData[0].destination.name).toBe(tripQueryData[0]?.destination.name)
-    // expect(tripData[0].endDate).toBe(tripQueryData[0]?.endDate)
-    // expect(tripData[0].startDate).toBe(tripQueryData[0]?.startDate)
-    // expect(tripData[0].title).toBe(tripQueryData[0]?.title)
-    // expect(tripData[0].travelSize).toBe(tripQueryData[0]?.travelSize)
   });
 });
