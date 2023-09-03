@@ -15,12 +15,13 @@ interface ProfileMenuItemProps {
 function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       activeOpacity={0.8}
       onPress={() => {
         onPress();
       }}
     >
-      <View className="w-[360]">
+      <View testID="profile-menu-item" className="w-[360]">
         <View className="mt-5 flex-row items-center rounded-xl bg-white p-4">
           {item?.icon}
           <Text style={{ color: item?.color }} className="ml-5 text-xl">

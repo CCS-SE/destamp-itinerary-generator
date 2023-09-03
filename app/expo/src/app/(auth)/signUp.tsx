@@ -1,69 +1,54 @@
-import { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
+import { Link, Stack } from 'expo-router';
+import { Entypo } from '@expo/vector-icons';
 
-import { supabase } from '../../../config/initSupabase';
+import IconButton from '~/components/Button/IconButton';
+import SignUpForm from '~/components/Forms/SignupForm';
 
-const SignUpScreen: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [, setLoading] = useState(false);
-
-  const handleSignUp = async () => {
-    setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    if (error) Alert.alert('Error signing up', error.message);
-    else
-      Alert.alert(
-        'Your account is ready! Please check your email for confirmation.',
-      );
-    setLoading(false);
-  };
-
-  //add spinner if (loading)
-
+export default function SignUpScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-    </View>
+    <SafeAreaView
+      edges={['top', 'bottom']}
+      className="mt-24 flex-1 bg-transparent p-3"
+    >
+      <ScrollView>
+        <Stack.Screen options={{ headerShown: false }} />
+        <Text className="mb-6 ml-2 w-96 text-2xl font-medium text-orange-500">
+          Start with creating an account
+        </Text>
+        <SignUpForm />
+        <View className="flex-row items-center justify-center">
+          <IconButton
+            onPress={() => undefined}
+            icon={
+              <Entypo name="facebook-with-circle" size={33} color={'#1877F2'} />
+            }
+          />
+          <IconButton
+            onPress={() => undefined}
+            icon={
+              <Image
+                source={require('../../../assets/images/google-icon.png')}
+                contentFit="scale-down"
+                style={{ width: 30, height: 30 }}
+              />
+            }
+          />
+        </View>
+        <View className="mt-3 flex-row items-center justify-center">
+          <Text className=" mr-1 text-base font-medium text-slate-700">
+            Already a Destamp user?
+          </Text>
+          <Link
+            href="/(auth)/login"
+            className="text-base font-medium text-orange-500"
+          >
+            Login
+          </Link>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
-
-export default SignUpScreen;
+}

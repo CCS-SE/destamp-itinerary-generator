@@ -16,6 +16,8 @@ import {
 } from '@react-navigation/native';
 import { fetch } from 'cross-fetch';
 
+import { AuthProvider } from '~/context/AuthProvider';
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -69,11 +71,13 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <ApolloProvider client={client}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </ApolloProvider>
+      <AuthProvider>
+        <ApolloProvider client={client}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+        </ApolloProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

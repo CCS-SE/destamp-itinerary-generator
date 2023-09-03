@@ -10,7 +10,7 @@ import TripMenuList from '../Menu/TripMenu/TripMenuList';
 import BottomHalfModal from '../Modal/BottomHalfModal';
 
 interface TripCardProps {
-  id: string;
+  id: number;
   imgSrc: string;
   destination: string;
   startDate: Date;
@@ -40,12 +40,15 @@ function TripCard({
 
   return (
     <TouchableOpacity
+      accessibilityRole="button"
+      testID="trip-card"
       activeOpacity={1}
       onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
     >
       <View className="bg- m-3">
         <View className="w-[370] rounded-2xl bg-gray-50 shadow-md">
           <Image
+            testID="trip-destination-img"
             source={imgSrc}
             className="h-52 w-[370] rounded-2xl"
             placeholder={blurhash}
@@ -53,6 +56,8 @@ function TripCard({
           ></Image>
           <View className=" container absolute h-52 rounded-2xl bg-black opacity-20" />
           <TouchableOpacity
+            accessibilityRole="button"
+            testID="trip-menu-btn"
             className=" absolute right-3 top-2 p-2"
             activeOpacity={0.7}
             onPress={() => {
@@ -70,13 +75,19 @@ function TripCard({
             <TripMenuList onCloseModal={onModalClose} />
           </BottomHalfModal>
           <View className="absolute left-4 top-40 w-[215] flex-row justify-between">
-            <Text className="text-left text-2xl font-semibold text-zinc-100">
+            <Text
+              testID="trip-destination"
+              className="text-left text-2xl font-semibold text-zinc-100"
+            >
               {destination}
             </Text>
           </View>
           <View className="flex-row justify-between p-2">
-            <View testID="date" className="flex-row items-center">
-              <Text className="pl-2 text-center text-lg font-medium text-gray-500">
+            <View className="flex-row items-center">
+              <Text
+                testID="trip-date"
+                className="pl-2 text-center text-lg font-medium text-gray-500"
+              >
                 {`${getTripDateFormat(startDate)}  •  ${daysDifference} ${
                   daysDifference > 1 ? 'days' : 'day'
                 }`}
@@ -84,18 +95,29 @@ function TripCard({
             </View>
           </View>
           <View className="-top-2 flex-row pl-2">
-            <View
-              testID="travel_size"
-              className="mr-3 flex-row items-center rounded-md pl-2"
-            >
+            <View className="mr-3 flex-row items-center rounded-md pl-2">
               {travelSizeIcon[travelSize]}
-              <Text className="pl-1 text-center text-base font-light text-gray-500">
-                {`${travelSize}  •`}
+              <Text
+                testID="trip-travel-size"
+                className="pl-1 text-center text-base font-light text-gray-500"
+              >
+                {travelSize}
+              </Text>
+              <Text className="pl-2 text-center text-base font-light text-gray-500">
+                •
               </Text>
             </View>
-            <Text className="text-center text-base font-light text-gray-500">
-              {`₱${new Intl.NumberFormat().format(budget)}`}
-            </Text>
+            <View className="flex-row">
+              <Text className="text-center text-base font-light text-gray-500">
+                ₱
+              </Text>
+              <Text
+                testID="trip-budget"
+                className="text-center text-base font-light text-gray-500"
+              >
+                {new Intl.NumberFormat().format(budget)}
+              </Text>
+            </View>
           </View>
         </View>
       </View>

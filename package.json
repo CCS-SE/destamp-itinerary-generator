@@ -21,6 +21,7 @@
     "lint:server": "pnpm -F db lint",
     "format:expo": "pnpm -F expo format",
     "format:server": "pnpm -F db format",
+    "test:expo": "pnpm -F expo test",
     "type-check": "turbo type-check",
     "prepare": "husky install"
   },
@@ -30,6 +31,7 @@
   "dependencies": {
     "@destamp/prettier-config": "^0.1.0",
     "@manypkg/cli": "^0.21.0",
+    "chalk": "^4.1.2",
     "turbo": "^1.10.12",
     "typescript": "^5.1.6"
   },
