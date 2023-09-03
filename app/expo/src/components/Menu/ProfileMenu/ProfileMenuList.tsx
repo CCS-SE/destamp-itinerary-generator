@@ -11,6 +11,7 @@ function ProfileMenuList() {
 
   return (
     <FlatList
+      testID="profile-menu-list"
       data={profileMenu}
       renderItem={({ item }) => (
         <ProfileMenuItem onPress={item.onPress!} item={item} />

@@ -14,6 +14,7 @@ function BottomHalfModal({
 }: BottomHalfModalProps) {
   return (
     <Modal
+      testID="modal"
       isVisible={isVisible}
       onBackdropPress={onClose}
       swipeDirection={'down'}
@@ -26,6 +27,7 @@ function BottomHalfModal({
     >
       <View className="absolute -bottom-5 h-80 w-full rounded-t-3xl bg-white">
         <View
+          testID="modal-menus"
           style={{ alignSelf: 'center' }}
           className=" mt-2.5 h-2 w-12 rounded-2xl bg-slate-300"
         />

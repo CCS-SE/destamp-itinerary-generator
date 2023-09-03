@@ -37,18 +37,23 @@ export default function MyTripScreen() {
     },
   });
 
-  if (error) return <Text>{`Error! ${error.message.toString()}`}</Text>;
+  if (error)
+    return (
+      <Text testID="my-trip-error">{`Error! ${error.message.toString()}`}</Text>
+    );
 
-  if (loading && !data) return <Text>{'Loading...'}</Text>;
+  if (loading && !data)
+    return <Text testID="my-trip-loading">{'Loading...'}</Text>;
 
   if (data?.travelerTrips.length === 0) {
     return <MyTripEmptyState />;
   }
 
   return (
-    <View className="flex-1 items-center bg-gray-50">
+    <View testID="my-trip" className="flex-1 items-center bg-gray-50">
       {data && (
         <FlatList
+          testID="my-trip-list"
           data={data.travelerTrips}
           renderItem={({ item }) => (
             <TripCard
