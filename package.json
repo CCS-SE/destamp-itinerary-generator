@@ -22,6 +22,7 @@
     "format:expo": "pnpm -F expo format",
     "format:server": "pnpm -F db format",
     "test:expo": "pnpm -F expo test",
+    "test:server": "pnpm -F db test",
     "type-check": "turbo type-check",
     "prepare": "husky install"
   },
