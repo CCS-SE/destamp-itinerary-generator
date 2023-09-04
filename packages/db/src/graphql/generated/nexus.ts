@@ -50,6 +50,17 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CreateTripInput: {
+    // input type
+    adultCount?: number | null; // Int
+    budget: number; // Float!
+    childCount?: number | null; // Int
+    destinationId: number; // Int!
+    endDate: NexusGenScalars['DateTime']; // DateTime!
+    startDate: NexusGenScalars['DateTime']; // DateTime!
+    title: string; // String!
+    travelSize: NexusGenEnums['TravelSize']; // TravelSize!
+  };
   CreateUserInput: {
     // input type
     email: string; // String!
@@ -152,6 +163,7 @@ export interface NexusGenFieldTypes {
   };
   Mutation: {
     // field return type
+    createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
   };
   Query: {
@@ -211,6 +223,7 @@ export interface NexusGenFieldTypeNames {
   };
   Mutation: {
     // field return type name
+    createTrip: 'Trip';
     createUser: 'User';
   };
   Query: {
@@ -252,6 +265,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createTrip: {
+      // args
+      data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
+    };
     createUser: {
       // args
       data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
