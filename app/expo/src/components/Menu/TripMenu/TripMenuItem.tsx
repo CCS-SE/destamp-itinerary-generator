@@ -15,15 +15,20 @@ interface TripMenuItemProps {
 function TripMenuItem({ onCloseModal, item }: TripMenuItemProps) {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       activeOpacity={0.8}
       onPress={() => {
         onCloseModal();
       }}
     >
-      <View className="items-start justify-start p-4">
+      <View testID="trip-menu-item" className="items-start justify-start p-4">
         <View className="flex-row items-center p-1">
           {item?.icon}
-          <Text style={{ color: item?.color }} className="ml-5 text-lg">
+          <Text
+            testID="trip-menu-item-title"
+            style={{ color: item?.color }}
+            className="ml-5 text-lg"
+          >
             {item?.title}
           </Text>
         </View>

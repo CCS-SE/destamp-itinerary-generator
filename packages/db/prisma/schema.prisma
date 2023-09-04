@@ -8,10 +8,11 @@ generator client {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id       String    @id
+  email    String    @unique
   password String
-  userType UserType @map("user_type")
+  userType UserType  @map("user_type")
+  traveler Traveler?
 
   @@map("users")
 }
@@ -22,6 +23,9 @@ model Traveler {
   lastName      String? @map("last_name")
   contactNumber String? @map("contact_number")
   image         Image?
+  user          User?   @relation(fields: [userId], references: [id])
+  userId        String? @unique
+  trips         Trip[]
 
   @@map("travelers")
 }
@@ -30,6 +34,8 @@ model Trip {
   id            Int          @id @default(autoincrement())
   destination   Destination? @relation(fields: [destinationId], references: [id])
   destinationId Int?
+  traveler      Traveler?    @relation(fields: [travelerId], references: [id])
+  travelerId    Int?
   title         String
   budget        Float
   travelSize    TravelSize   @map("travel_size")

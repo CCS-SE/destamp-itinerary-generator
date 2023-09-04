@@ -15,6 +15,7 @@ function TripMenuList({ onCloseModal }: TripMenuListProps) {
 
   return (
     <FlatList
+      testID="trip-menu-list"
       data={tripMenu}
       renderItem={({ item }) => (
         <TripMenuItem onCloseModal={onCloseModal} item={item} />
