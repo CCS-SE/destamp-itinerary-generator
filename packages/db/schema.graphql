@@ -7,6 +7,17 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
+input CreateTripInput {
+  adultCount: Int
+  budget: Float!
+  childCount: Int
+  destinationId: Int!
+  endDate: DateTime!
+  startDate: DateTime!
+  title: String!
+  travelSize: TravelSize!
+}
+
 input CreateUserInput {
   email: String!
   id: String!
@@ -37,6 +48,7 @@ type Image {
 }
 
 type Mutation {
+  createTrip(data: CreateTripInput!): Trip!
   createUser(data: CreateUserInput!): User!
 }
 

@@ -143,7 +143,7 @@ export default function SignUpForm() {
       <View className="mb-12 items-center">
         <GradientButton
           onPress={handleSubmit(onSubmit)}
-          title="Login"
+          title="Create Account"
           isSubmitting={isSubmitting}
         />
       </View>

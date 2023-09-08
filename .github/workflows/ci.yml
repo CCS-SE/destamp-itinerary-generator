@@ -65,4 +65,7 @@ jobs:
     
     - name: Run test on expo
       run: npm run test:expo
+    
+    - name: Run test on server
+      run: npm run test:server
 
