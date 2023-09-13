@@ -44,6 +44,7 @@ export default function LoginForm() {
           return (
             <View>
               <CustomTextInput
+                testID="email-input"
                 placeholder="Email"
                 value={value}
                 onChangeText={onChange}
@@ -65,6 +66,7 @@ export default function LoginForm() {
           return (
             <View className="flex-row">
               <CustomTextInput
+                testID="password-input"
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
@@ -80,7 +82,7 @@ export default function LoginForm() {
           );
         }}
       />
-      <View className="mb-12 items-center">
+      <View testID="login-btn" className="mb-12 items-center">
         <GradientButton
           onPress={handleSubmit(onSubmit)}
           title="Login"

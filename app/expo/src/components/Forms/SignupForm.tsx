@@ -79,6 +79,7 @@ export default function SignUpForm() {
           return (
             <View>
               <CustomTextInput
+                testID="email-input"
                 placeholder="Email"
                 value={value}
                 onChangeText={onChange}
@@ -100,6 +101,7 @@ export default function SignUpForm() {
           return (
             <View className="flex-row">
               <CustomTextInput
+                testID="password-input"
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
@@ -125,6 +127,7 @@ export default function SignUpForm() {
           return (
             <View className="flex-row">
               <CustomTextInput
+                testID="confirm-password-input"
                 placeholder="Confirm Password"
                 value={value}
                 onChangeText={onChange}
@@ -140,10 +143,10 @@ export default function SignUpForm() {
           );
         }}
       />
-      <View className="mb-12 items-center">
+      <View testID="sign-up-btn" className="mb-12 items-center">
         <GradientButton
           onPress={handleSubmit(onSubmit)}
-          title="Login"
+          title="Sign Up and Login"
           isSubmitting={isSubmitting}
         />
       </View>
