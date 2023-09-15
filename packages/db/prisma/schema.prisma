@@ -22,7 +22,6 @@ model Traveler {
   firstName     String? @map("first_name")
   lastName      String? @map("last_name")
   contactNumber String? @map("contact_number")
-  image         Image?
   user          User?   @relation(fields: [userId], references: [id])
   userId        String? @unique
   trips         Trip[]
@@ -57,11 +56,12 @@ model Trip {
 }
 
 model DepartingLocation {
-  id          Int          @id @default(autoincrement())
-  name        String
-  addres      String
-  geoLocation GeoLocation?
-  trip        Trip?
+  id        Int    @id @default(autoincrement())
+  name      String
+  address   String
+  latitude  Float
+  longitude Float
+  trip      Trip?
 
   @@map("departing_locations")
 }
@@ -80,18 +80,18 @@ model Destination {
 
 model Place {
   id                String             @id @default(cuid())
-  itineraryDay      ItineraryDay?      @relation(fields: [itineraryDayId], references: [id])
-  itineraryDayId    Int?
   name              String
   description       String?
   type              PlaceType
   address           String
   price             Float
   contactNumber     String?            @map("contact_number")
-  geoLocation       GeoLocation?
+  latitude          Float
+  longitude         Float
   visitDuration     Float              @map("visit_duration")
   url               String?
   website           String?
+  isClamied         Boolean            @map("is_claimed")
   categories        Category[]
   openingHours      OpeningHour[]
   images            Image[]
@@ -100,6 +100,7 @@ model Place {
   diningOfferings   DiningOffering[]
   diningCuisines    DiningCuisine[]
   amenities         Amenity[]
+  itineraryDays     ItineraryDay[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -108,65 +109,60 @@ model Place {
 }
 
 model DiningAtmosphere {
-  id      Int     @id @default(autoincrement())
-  name    String
-  place   Place?  @relation(fields: [placeId], references: [id])
-  placeId String?
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
 
   @@map("dining_atmospheres")
 }
 
 model DiningOffering {
-  id      Int     @id @default(autoincrement())
-  place   Place?  @relation(fields: [placeId], references: [id])
-  placeId String?
-  name    String
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
 
   @@map("dining_offerings")
 }
 
 model DiningOption {
-  id      Int     @id @default(autoincrement())
-  place   Place?  @relation(fields: [placeId], references: [id])
-  placeId String?
-  name    String
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
 
   @@map("dining_options")
 }
 
 model DiningCuisine {
-  id      Int     @id @default(autoincrement())
-  place   Place?  @relation(fields: [placeId], references: [id])
-  placeId String?
-  name    String
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
 
   @@map("dining_cuisines")
 }
 
 model Amenity {
-  id      Int     @id @default(autoincrement())
-  place   Place?  @relation(fields: [placeId], references: [id])
-  placeId String?
-  name    String
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
 
   @@map("amenities")
 }
 
 model Category {
-  id      Int     @id @default(autoincrement())
-  place   Place?  @relation(fields: [placeId], references: [id])
-  placeId String?
-  name    String
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  places Place[]
 
   @@map("categories")
 }
 
 model OpeningHour {
-  id        Int      @id @default(autoincrement())
-  place     Place?   @relation(fields: [placeId], references: [id])
+  id        Int       @id @default(autoincrement())
+  place     Place?    @relation(fields: [placeId], references: [id])
   placeId   String?
-  startDate DateTime @map("start_date")
-  endDate   DateTime @map("end_date")
+  day       Int
+  openTime  DateTime? @map("open_time")
+  closeTime DateTime? @map("close_time")
 
   @@map("opening_hours")
 }
@@ -218,33 +214,15 @@ model Expense {
   @@map("expenses")
 }
 
-model GeoLocation {
-  id        Int   @id @default(autoincrement())
-  latitude  Float
-  longitude Float
-
-  place               Place              @relation(fields: [placeId], references: [id])
-  placeId             String             @unique
-  departingLocation   DepartingLocation? @relation(fields: [departingLocationId], references: [id])
-  departingLocationId Int?               @unique
-
-  @@map("geo_location")
-}
-
 model Image {
   id            String       @id @default(cuid())
-  traveler      Traveler?    @relation(fields: [travelerId], references: [id])
-  travelerId    Int?         @unique
-  destination   Destination? @relation(fields: [destinatiodId], references: [id])
-  destinatiodId Int?         @unique
   place         Place?       @relation(fields: [placeId], references: [id])
   placeId       String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+  destinationId Int?         @unique
   name          String?
   url           String
   size          Int?
-  isProfileImg  Boolean      @default(false) @map("is_profile_img")
-  isPlaceImg    Boolean      @default(false) @map("is_place_img")
-  isMenuImg     Boolean      @default(false) @map("is_menu_img")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

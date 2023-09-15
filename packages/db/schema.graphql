@@ -2,10 +2,20 @@
 ### Do not make changes to this file directly
 
 
+type Amenity {
+  id: Int!
+  name: String!
+}
+
 """
 The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
+
+type Category {
+  id: Int!
+  name: String!
+}
 
 input CreateTripInput {
   adultCount: Int
@@ -30,12 +40,59 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+type DepartingLocation {
+  address: String!
+  id: Int!
+  latitude: Float!
+  longitude: Float!
+  name: String!
+}
+
 type Destination {
   createdAt: DateTime!
   id: Int!
   image: Image
   name: String!
   updatedAt: DateTime!
+}
+
+type DiningAtmosphere {
+  id: Int!
+  name: String!
+}
+
+type DiningCuisine {
+  id: Int!
+  name: String!
+}
+
+type DiningOffering {
+  id: Int!
+  name: String!
+}
+
+type DiningOption {
+  id: Int!
+  name: String!
+}
+
+type Expense {
+  amount: Float!
+  category: ExpenseCategory!
+  createdAt: DateTime!
+  date: DateTime!
+  note: String
+  updatedAt: DateTime!
+}
+
+enum ExpenseCategory {
+  ACCOMMODATION
+  ACTIVITY
+  FOOD
+  OTHER
+  SHOPPING
+  SIGHTSEEING
+  TRANSPORTATION
 }
 
 type Image {
@@ -47,12 +104,74 @@ type Image {
   url: String!
 }
 
+type Itinerary {
+  createdAt: DateTime!
+  expenses: [Expense!]!
+  id: Int!
+  itineraryDays: [ItineraryDay!]!
+  totalCost: Float!
+  totalDuration: Float!
+  updatedAt: DateTime!
+  url: String!
+}
+
+type ItineraryDay {
+  accommodationCost: Float!
+  attractionCost: Float!
+  createdAt: DateTime!
+  destinations: [Place!]!
+  foodCost: Float!
+  id: Int!
+  transportationCost: Float!
+  updatedAt: DateTime!
+}
+
 type Mutation {
   createTrip(data: CreateTripInput!): Trip!
   createUser(data: CreateUserInput!): User!
 }
 
+type OpeningHour {
+  closeTime: DateTime!
+  day: Int!
+  id: Int!
+  openTime: DateTime!
+}
+
+type Place {
+  address: String!
+  amenities: [Amenity!]!
+  categories: [Category!]!
+  contactNumber: String
+  createdAt: DateTime!
+  description: String
+  diningAtmospheres: [DiningAtmosphere!]!
+  diningCuisines: [DiningCuisine!]!
+  diningOfferings: [DiningOffering!]!
+  diningOptions: [DiningOption!]!
+  id: String!
+  images: [Image!]!
+  latitude: Float!
+  longitude: Float!
+  name: String!
+  openingHours: [OpeningHour!]!
+  price: Float!
+  type: PlaceType!
+  updatedAt: DateTime!
+  url: String
+  visitDuration: Float!
+  website: String
+}
+
+enum PlaceType {
+  ACCOMMODATION
+  ATTRACTION
+  RESTAURANT
+}
+
 type Query {
+  itinerary(tripId: Int!): Itinerary!
+  places: [Place!]!
   travelerTrips(userId: String!): [Trip!]!
 }
 
@@ -67,7 +186,6 @@ type Traveler {
   contactNumber: String
   firstName: String
   id: Int!
-  image: Image
   lastName: String
   trips: [Trip!]!
 }
@@ -77,9 +195,14 @@ type Trip {
   budget: Float!
   childCount: Int
   createdAt: DateTime!
+  departingLocation: DepartingLocation
   destination: Destination
   endDate: DateTime!
   id: Int!
+  isAccommodationIncluded: Boolean!
+  isFoodIncluded: Boolean!
+  isTransportationIncluded: Boolean!
+  itinerary: Itinerary
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!
