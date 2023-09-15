@@ -12,7 +12,11 @@ export default function ShowPasswordIcon({
   hidePassword,
 }: ShowPasswordIconProps) {
   return (
-    <TouchableOpacity onPress={onPress} className="absolute right-5 mt-4">
+    <TouchableOpacity
+      testID="show-password-icon"
+      onPress={onPress}
+      className="absolute right-5 mt-4"
+    >
       {hidePassword ? (
         <Entypo name="eye" size={22} color="#A9A9A9" />
       ) : (

@@ -89,7 +89,12 @@ export default function LoginForm() {
           isSubmitting={isSubmitting}
         />
       </View>
-      <Text className="text-lg font-normal text-gray-500">Or login with</Text>
+      <Text
+        testID="login-with-text"
+        className="text-lg font-normal text-gray-500"
+      >
+        Or login with
+      </Text>
     </View>
   );
 }

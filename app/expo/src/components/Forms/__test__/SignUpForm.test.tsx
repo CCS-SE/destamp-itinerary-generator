@@ -7,9 +7,6 @@ import SignUpForm, { CreateUser } from '../SignUpForm';
 
 jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn(() => ({})),
-  auth: {
-    signUp: jest.fn(),
-  },
 }));
 
 const mockCreateUserMutation = {

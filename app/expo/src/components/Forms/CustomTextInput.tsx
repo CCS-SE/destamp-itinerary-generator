@@ -17,7 +17,12 @@ export const CustomTextInput = ({
         className="h-14 w-[370] rounded-2xl border-2 border-orange-500 px-6"
       />
       {!!errorMessage && (
-        <Text className="mt-2 text-sm text-red-500">{errorMessage}</Text>
+        <Text
+          testID={textInputProps.testID + '-error'}
+          className="mt-2 text-sm text-red-500"
+        >
+          {errorMessage}
+        </Text>
       )}
     </View>
   );

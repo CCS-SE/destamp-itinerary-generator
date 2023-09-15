@@ -1,24 +1,27 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
+import { act } from 'react-test-renderer';
 
 import LoginForm from '../LoginForm';
 
-jest.mock('@supabase/supabase-js', () => {
+jest.mock('config/initSupabase', () => {
   return {
-    createClient: jest.fn(() => ({})),
+    createClient: jest.fn(),
   };
 });
 
 describe('Login Form', () => {
   it('renders the log in form', () => {
-    const { getByTestId } = render(<LoginForm />);
+    const { getByTestId, getByRole } = render(<LoginForm />);
     const emailInput = getByTestId('email-input');
     const passwordInput = getByTestId('password-input');
-    const loginButton = getByTestId('login-btn');
+    const loginWithText = getByTestId('login-with-text');
+    const loginBtn = getByRole('button', { name: 'Login' });
 
     expect(emailInput).toBeTruthy();
     expect(passwordInput).toBeTruthy();
-    expect(loginButton).toBeTruthy();
+    expect(loginBtn).toBeTruthy();
+    expect(loginWithText).toBeTruthy();
   });
 
   it('handles email and password input correctly', () => {
@@ -33,19 +36,44 @@ describe('Login Form', () => {
     expect(passwordInput.props.value).toBe('testpassword');
   });
 
-  //   it('handles login button click', () => {
-  //     const { getByTestId } = render(<LoginForm />);
-  //     const emailInput = getByTestId('email-input');
-  //     const passwordInput = getByTestId('password-input');
-  //     const loginButton = getByTestId('login-btn');
+  it('shows input error text', async () => {
+    const { getByTestId, getByRole } = render(<LoginForm />);
+    const loginBtn = getByRole('button', { name: 'Login' });
+    const emailInput = getByTestId('email-input');
+    const passwordInput = getByTestId('password-input');
 
-  //     fireEvent.changeText(emailInput, 'testuser@gmail.com');
-  //     fireEvent.changeText(passwordInput, 'testpassword');
-  //     fireEvent.press(loginButton);
+    await act(async () => {
+      await fireEvent.press(loginBtn);
+    });
 
-  //     expect().toHaveBeenCalledWith({
-  //       email: 'testuser@gmail.com',
-  //       password: 'testpassword',
-  //     });
-  //   });
+    const emailInputError = getByTestId('email-input-error');
+    const passwordInputError = getByTestId('password-input-error');
+
+    expect(emailInputError).toBeTruthy;
+    expect(passwordInputError).toBeTruthy;
+
+    fireEvent.changeText(emailInput, 'testuser@gmail.com');
+    fireEvent.changeText(passwordInput, 'testpassword');
+
+    expect(emailInputError).toBeFalsy;
+    expect(passwordInputError).toBeFalsy;
+
+    fireEvent.changeText(emailInput, 'testuser');
+
+    expect(emailInputError).toBeTruthy;
+  });
+
+  it('unhides/hides password input when unhide/hide icon is pressed', () => {
+    const { getByTestId } = render(<LoginForm />);
+    const passwordInput = getByTestId('password-input');
+    const showPasswordIcon = getByTestId('show-password-icon');
+
+    fireEvent.press(showPasswordIcon);
+
+    expect(passwordInput.props.secureTextEntry).toBe(false);
+
+    fireEvent.press(showPasswordIcon);
+
+    expect(passwordInput.props.secureTextEntry).toBe(true);
+  });
 });
