@@ -9,6 +9,7 @@
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
     "types": ["nativewind/types", "jest"]
   },
+  
   "include": [
     "expo-plugins",
     "src",

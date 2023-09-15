@@ -36,6 +36,7 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: './assets/images/splash.png',
       backgroundColor: '#1F104A',
     },
+    package: 'com.destamp.login',
   },
   extra: {
     // eas: {
@@ -48,7 +49,11 @@ const defineConfig = (): ExpoConfig => ({
     tsconfigPaths: true,
     typedRoutes: true,
   },
-  plugins: ['expo-router', './expo-plugins/with-modify-gradle.js'],
+  plugins: [
+    'expo-facebook',
+    'expo-router',
+    './expo-plugins/with-modify-gradle.js',
+  ],
 });
 
 export default defineConfig;

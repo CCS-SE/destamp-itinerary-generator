@@ -1,13 +1,61 @@
-import { ScrollView, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Google from 'expo-auth-session/providers/google';
 import { Image } from 'expo-image';
 import { Link, Stack } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import IconButton from '~/components/Button/IconButton';
 import LoginForm from '~/components/Forms/LoginForm';
 
 export default function LoginScreen() {
+  const [userInfo, setUserInfo] = useState<any>(null);
+
+  // Call Google.useAuthRequest to get the request and response objects
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId:
+      '132131926000-ov9froqbabvbrq1mfikb53ia079pjalt.apps.googleusercontent.com',
+  });
+
+  useEffect(() => {
+    hangleSignInWithGoogle();
+  }, [response]);
+
+  async function hangleSignInWithGoogle() {
+    const user = await AsyncStorage.getItem('@user');
+    if (!user) {
+      if (response) {
+        if (response.type === 'success') {
+          const idToken = response.params?.id_token;
+          if (idToken) {
+            getUserInfo(idToken);
+          }
+        }
+      }
+    } else {
+      setUserInfo(JSON.parse(user));
+    }
+  }
+
+  const getUserInfo = async (idToken: string) => {
+    if (!idToken) return;
+    try {
+      const response = await fetch(
+        'https://www.googleapis.com/userinfo/v2/me',
+        {
+          headers: { Authorization: `Bearer ${idToken}` },
+        },
+      );
+
+      const user = await response.json();
+      await AsyncStorage.setItem('@user', JSON.stringify(user));
+      setUserInfo(user);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <SafeAreaView
       edges={['top', 'bottom']}
@@ -27,7 +75,7 @@ export default function LoginScreen() {
             }
           />
           <IconButton
-            onPress={() => undefined}
+            onPress={() => promptAsync?.()}
             icon={
               <Image
                 source={require('../../../assets/images/google-icon.png')}
