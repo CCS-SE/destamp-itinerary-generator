@@ -44,7 +44,7 @@ export default function SignUpForm() {
     });
 
     if (error) Alert.alert('Sign Up Error', error.message);
-    else {
+    else if (data && data.user) {
       const createUserInput: MutationCreateUserArgs = {
         data: {
           id: data.user!.id,
@@ -112,6 +112,7 @@ export default function SignUpForm() {
               <ShowPasswordIcon
                 hidePassword={hidePassword}
                 onPress={() => setHidePassword(!hidePassword)}
+                testID="show-password-icon"
               />
             </View>
           );
@@ -138,6 +139,7 @@ export default function SignUpForm() {
               <ShowPasswordIcon
                 hidePassword={hideConfirmPassword}
                 onPress={() => setHideConfirmPassword(!hideConfirmPassword)}
+                testID="show-confirm-icon"
               />
             </View>
           );
@@ -150,7 +152,10 @@ export default function SignUpForm() {
           isSubmitting={isSubmitting}
         />
       </View>
-      <Text className="mb-1 text-lg font-normal text-gray-500">
+      <Text
+        testID="bottom-text"
+        className="mb-1 text-lg font-normal text-gray-500"
+      >
         Or login with
       </Text>
     </View>

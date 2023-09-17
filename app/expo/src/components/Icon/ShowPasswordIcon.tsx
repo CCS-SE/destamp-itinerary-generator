@@ -5,15 +5,17 @@ import { Entypo } from '@expo/vector-icons';
 interface ShowPasswordIconProps {
   onPress: () => void;
   hidePassword: boolean;
+  testID: string;
 }
 
 export default function ShowPasswordIcon({
   onPress,
   hidePassword,
+  testID,
 }: ShowPasswordIconProps) {
   return (
     <TouchableOpacity
-      testID="show-password-icon"
+      testID={testID}
       onPress={onPress}
       className="absolute right-5 mt-4"
     >
