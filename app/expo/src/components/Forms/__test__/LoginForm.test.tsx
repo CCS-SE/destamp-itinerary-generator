@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { fireEvent, render } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
@@ -40,7 +41,7 @@ describe('Login Form', () => {
     expect(passwordInput.props.value).toBe('testpassword');
   });
 
-  it('shows input error text', async () => {
+  it('shows input error texts', async () => {
     const { getByTestId, getByRole } = render(<LoginForm />);
     const loginBtn = getByRole('button', { name: 'Login' });
     const emailInput = getByTestId('email-input');
@@ -90,7 +91,7 @@ describe('Login Form', () => {
     expect(passwordInput.props.secureTextEntry).toBe(true);
   });
 
-  it('logins a user with correct inputs', async () => {
+  it('returns an error if using unexisting user credentials', async () => {
     const { getByTestId, getByRole } = render(<LoginForm />);
     const loginBtn = getByRole('button', { name: 'Login' });
     const emailInput = getByTestId('email-input');
@@ -102,11 +103,43 @@ describe('Login Form', () => {
       fireEvent.press(loginBtn);
     });
 
-    await act(() => {
+    await act(async () => {
       expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
         email: 'shemjehrojondanero@gmail.com',
         password: 'eeeeee',
       });
+
+      const { error } = await mockSupabaseClient.auth.signInWithPassword(
+        'shemjehrojondanero@gmail.com',
+        'eeeeee',
+      );
+      expect(error?.name).toBe('AuthApiError');
+    });
+  });
+
+  it('logins a user', async () => {
+    const { getByTestId, getByRole } = render(<LoginForm />);
+    const loginBtn = getByRole('button', { name: 'Login' });
+    const emailInput = getByTestId('email-input');
+    const passwordInput = getByTestId('password-input');
+
+    await act(() => {
+      fireEvent.changeText(emailInput, 'shemjehrojondanero@gmail.com');
+      fireEvent.changeText(passwordInput, 'shemjehro');
+      fireEvent.press(loginBtn);
+    });
+
+    await act(async () => {
+      expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
+        email: 'shemjehrojondanero@gmail.com',
+        password: 'shemjehro',
+      });
+
+      const { error } = await mockSupabaseClient.auth.signInWithPassword(
+        'shemjehrojondanero@gmail.com',
+        'shemjehro',
+      );
+      expect(error).toBe(null);
     });
   });
 });

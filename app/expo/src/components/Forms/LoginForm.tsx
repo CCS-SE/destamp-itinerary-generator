@@ -77,6 +77,7 @@ export default function LoginForm() {
               <ShowPasswordIcon
                 hidePassword={hidePassword}
                 onPress={() => setHidePassword(!hidePassword)}
+                testID="show-password-icon"
               />
             </View>
           );
