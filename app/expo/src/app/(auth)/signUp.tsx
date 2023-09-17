@@ -5,7 +5,7 @@ import { Link, Stack } from 'expo-router';
 import { Entypo } from '@expo/vector-icons';
 
 import IconButton from '~/components/Button/IconButton';
-import SignUpForm from '~/components/Forms/SignUpForm';
+import SignUpForm from '~/components/Forms/SignupForm';
 
 export default function SignUpScreen() {
   return (
