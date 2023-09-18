@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 
+import StampDisplayEmptyState from '~/app/(auth)/StampDisplayEmptyState';
 import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
-import StampDisplayEmptyState from '~/screens/Profile/StampDisplayEmptyState';
 
 export default function ProfileScreen() {
   return (

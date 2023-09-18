@@ -24,7 +24,9 @@
     "test:expo": "pnpm -F expo test",
     "test:server": "pnpm -F db test",
     "type-check": "turbo type-check",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": "prettier --write"
@@ -32,15 +34,24 @@
   "dependencies": {
     "@destamp/prettier-config": "^0.1.0",
     "@manypkg/cli": "^0.21.0",
+    "@material-ui/core": "^4.12.4",
     "chalk": "^4.1.2",
+    "expo": "~49.0.11",
+    "expo-dev-client": "~2.4.10",
+    "expo-splash-screen": "~0.20.5",
+    "expo-status-bar": "~1.6.0",
+    "react": "^17.0.2",
+    "react-native": "0.72.4",
     "turbo": "^1.10.12",
     "typescript": "^5.1.6",
     "yup": "^0.32.11"
   },
   "prettier": "@destamp/prettier-config",
   "devDependencies": {
+    "@babel/core": "^7.20.0",
     "eslint": "^8.48.0",
     "husky": "^8.0.0",
     "lint-staged": "^14.0.1"
-  }
+  },
+  "version": "1.0.0"
 }

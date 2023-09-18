@@ -1,102 +1,116 @@
 import React, { useEffect, useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Facebook from 'expo-auth-session/providers/facebook';
 import * as Google from 'expo-auth-session/providers/google';
 import { Image } from 'expo-image';
 import { Link, Stack } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
 import { Entypo } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import IconButton from '~/components/Button/IconButton';
 import LoginForm from '~/components/Forms/LoginForm';
+import TravelerInfo from '~/components/Stepper/TravelerInfo';
+import FacebookLogin from './fb';
 
+WebBrowser.maybeCompleteAuthSession();
 export default function LoginScreen() {
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [user, setUser] = useState(null);
 
-  // Call Google.useAuthRequest to get the request and response objects
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId:
-      '132131926000-ov9froqbabvbrq1mfikb53ia079pjalt.apps.googleusercontent.com',
-  });
+  const [facebookRequest, facebookResponse, facebookPromptAsync] =
+    Facebook.useAuthRequest({
+      clientId: '264325039833558',
+    });
 
-  useEffect(() => {
-    hangleSignInWithGoogle();
-  }, [response]);
+  const [googleRequest, googleResponse, googlePromptAsync] =
+    Google.useAuthRequest({
+      androidClientId:
+        '132131926000-ov9froqbabvbrq1mfikb53ia079pjalt.apps.googleusercontent.com',
+      webClientId:
+        '132131926000-m5bsnfprk9e9p7jqk04nebfd3o63ajvu.apps.googleusercontent.com',
+    });
 
-  async function hangleSignInWithGoogle() {
-    const user = await AsyncStorage.getItem('@user');
-    if (!user) {
-      if (response) {
-        if (response.type === 'success') {
-          const idToken = response.params?.id_token;
-          if (idToken) {
-            getUserInfo(idToken);
-          }
-        }
-      }
-    } else {
-      setUserInfo(JSON.parse(user));
-    }
-  }
+  // useEffect(() => {
+  //   hangleSignInWithGoogle();
+  // }, [response]);
 
-  const getUserInfo = async (idToken: string) => {
-    if (!idToken) return;
-    try {
-      const response = await fetch(
-        'https://www.googleapis.com/userinfo/v2/me',
-        {
-          headers: { Authorization: `Bearer ${idToken}` },
-        },
-      );
+  // async function hangleSignInWithGoogle() {
+  //   const user = await AsyncStorage.getItem('@user');
+  //   if (!user) {
+  //     if (response) {
+  //       if (response.type === 'success') {
+  //         const idToken = response.params?.id_token;
+  //         if (idToken) {
+  //           getUserInfo(idToken);
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     setUserInfo(JSON.parse(user));
+  //   }
+  // }
 
-      const user = await response.json();
-      await AsyncStorage.setItem('@user', JSON.stringify(user));
-      setUserInfo(user);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const getUserInfo = async (idToken: string) => {
+  //   if (!idToken) return;
+  //   try {
+  //     const response = await fetch(
+  //       'https://www.googleapis.com/userinfo/v2/me',
+  //       {
+  //         headers: { Authorization: `Bearer ${idToken}` },
+  //       },
+  //     );
+
+  //     const user = await response.json();
+  //     await AsyncStorage.setItem('@user', JSON.stringify(user));
+  //     setUserInfo(user);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   return (
-    <SafeAreaView
-      edges={['top', 'bottom']}
-      className="top-28 flex-1 bg-transparent p-3"
-    >
-      <ScrollView>
-        <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 ml-2 w-96 text-3xl font-medium text-orange-500">
-          Welcome Back!
-        </Text>
-        <LoginForm />
-        <View className="flex-row items-center justify-center">
-          <IconButton
-            onPress={() => undefined}
-            icon={
-              <Entypo name="facebook-with-circle" size={35} color={'#1877F2'} />
-            }
-          />
-          <IconButton
-            onPress={() => promptAsync?.()}
-            icon={
-              <Image
-                source={require('../../../assets/images/google-icon.png')}
-                contentFit="scale-down"
-                style={{ width: 30, height: 30 }}
-              />
-            }
-          />
-        </View>
-        <View className="mt-3 flex-row items-center justify-center">
-          <Text className=" mr-1 text-base font-medium text-slate-700">
-            Don't have an account yet?
-          </Text>
-          <Link
-            href="/(auth)/signUp"
-            className="text-base font-medium text-orange-500"
-          >
-            Create account
-          </Link>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <TravelerInfo />
+    // <SafeAreaView
+    //   edges={['top', 'bottom']}
+    //   className="top-28 flex-1 bg-transparent p-3"
+    // >
+    // /* <ScrollView>
+    //   <Stack.Screen options={{ headerShown: false }} />
+    //   <Text className="mb-6 ml-2 w-96 text-3xl font-medium text-orange-500">
+    //     Welcome Back!
+    //   </Text>
+    //   <LoginForm />
+    //   <View className="flex-row items-center justify-center">
+    //     <IconButton
+    //       onPress={() => facebookPromptAsync?.()}
+    //       icon={
+    //         <Entypo name="facebook-with-circle" size={35} color={'#1877F2'} />
+    //       }
+    //     />
+    //     <IconButton
+    //       onPress={() => googlePromptAsync?.()}
+    //       icon={
+    //         <Image
+    //           source={require('../../../assets/images/google-icon.png')}
+    //           contentFit="scale-down"
+    //           style={{ width: 30, height: 30 }}
+    //         />
+    //       }
+    //     />
+    //   </View>
+    //   <View className="mt-3 flex-row items-center justify-center">
+    //     <Text className=" mr-1 text-base font-medium text-slate-700">
+    //       Don't have an account yet?
+    //     </Text>
+    //     <Link
+    //       href="/(auth)/signUp"
+    //       className="text-base font-medium text-orange-500"
+    //     >
+    //       Create account
+    //     </Link>
+    //   </View>
+    // </ScrollView> */
+
+    // </SafeAreaView>
   );
 }

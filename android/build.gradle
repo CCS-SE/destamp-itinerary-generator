@@ -16,11 +16,7 @@ buildscript {
         google()
         mavenCentral()
     }
-
-    apply plugin: 'com.android.application'
     dependencies {
-
-        implementation 'com.google.android.gms:play-services-auth:20:7:0'
         classpath('com.android.tools.build:gradle:7.4.2')
         classpath('com.facebook.react:react-native-gradle-plugin')
     }

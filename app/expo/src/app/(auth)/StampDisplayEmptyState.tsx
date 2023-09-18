@@ -22,6 +22,7 @@ export default function StampDisplayEmptyState() {
       >
         Start planning your trip and collect stamps as you go. ✨
       </Text>
+      {/* <Stepper/> */}
     </View>
   );
 }

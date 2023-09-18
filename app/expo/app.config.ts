@@ -12,8 +12,8 @@ if (typeof SUPABASE_URL !== 'string' || typeof SUPABASE_ANON_KEY !== 'string') {
 
 const defineConfig = (): ExpoConfig => ({
   name: 'expo',
-  slug: 'expo',
-  scheme: 'expo',
+  slug: 'destamp-app',
+
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/splash.png',
@@ -38,6 +38,8 @@ const defineConfig = (): ExpoConfig => ({
     },
     package: 'com.destamp.login',
   },
+  scheme: ['destamp-app', 'fb264325039833558'],
+
   extra: {
     // eas: {
     //   projectId: "ijgufbptbcpxemkduevh",
@@ -57,3 +59,6 @@ const defineConfig = (): ExpoConfig => ({
 });
 
 export default defineConfig;
+
+//  exp+destamp-app://expo-development-client/?url=http%3A%2F%2F192.168.254.108%3A8081
+// https://com.destamp.login/exp+destamp-app://expo-development-client/?url=http%3A%2F%2F192.168.254.108%3A8081
