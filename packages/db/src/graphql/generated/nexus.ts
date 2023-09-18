@@ -80,6 +80,15 @@ export interface NexusGenEnums {
     | 'SIGHTSEEING'
     | 'TRANSPORTATION';
   PlaceType: 'ACCOMMODATION' | 'ATTRACTION' | 'RESTAURANT';
+  ExpenseCategory:
+    | 'ACCOMMODATION'
+    | 'ACTIVITY'
+    | 'FOOD'
+    | 'OTHER'
+    | 'SHOPPING'
+    | 'SIGHTSEEING'
+    | 'TRANSPORTATION';
+  PlaceType: 'ACCOMMODATION' | 'ATTRACTION' | 'RESTAURANT';
   TravelSize: 'COUPLE' | 'FAMILY' | 'GROUP' | 'SOLO';
   UserType: 'BUSINESS_OPERATOR' | 'TRAVELER';
 }
@@ -195,7 +204,7 @@ export interface NexusGenObjects {
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
-    price: string; // String!
+    price: number; // Float!
     type: NexusGenEnums['PlaceType']; // PlaceType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url?: string | null; // String
@@ -218,6 +227,9 @@ export interface NexusGenObjects {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     endDate: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
+    isAccommodationIncluded: boolean; // Boolean!
+    isFoodIncluded: boolean; // Boolean!
+    isTransportationIncluded: boolean; // Boolean!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -359,7 +371,7 @@ export interface NexusGenFieldTypes {
     longitude: number; // Float!
     name: string; // String!
     openingHours: NexusGenRootTypes['OpeningHour'][]; // [OpeningHour!]!
-    price: string; // String!
+    price: number; // Float!
     type: NexusGenEnums['PlaceType']; // PlaceType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string | null; // String
@@ -377,7 +389,6 @@ export interface NexusGenFieldTypes {
     contactNumber: string | null; // String
     firstName: string | null; // String
     id: number; // Int!
-    image: NexusGenRootTypes['Image'] | null; // Image
     lastName: string | null; // String
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
   };
@@ -387,9 +398,14 @@ export interface NexusGenFieldTypes {
     budget: number; // Float!
     childCount: number | null; // Int
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    departingLocation: NexusGenRootTypes['DepartingLocation'] | null; // DepartingLocation
     destination: NexusGenRootTypes['Destination'] | null; // Destination
     endDate: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
+    isAccommodationIncluded: boolean; // Boolean!
+    isFoodIncluded: boolean; // Boolean!
+    isTransportationIncluded: boolean; // Boolean!
+    itinerary: NexusGenRootTypes['Itinerary'] | null; // Itinerary
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -522,7 +538,7 @@ export interface NexusGenFieldTypeNames {
     longitude: 'Float';
     name: 'String';
     openingHours: 'OpeningHour';
-    price: 'String';
+    price: 'Float';
     type: 'PlaceType';
     updatedAt: 'DateTime';
     url: 'String';

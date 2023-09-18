@@ -22,7 +22,6 @@ model Traveler {
   firstName     String? @map("first_name")
   lastName      String? @map("last_name")
   contactNumber String? @map("contact_number")
-  image         Image?
   user          User?   @relation(fields: [userId], references: [id])
   userId        String? @unique
   trips         Trip[]
@@ -31,23 +30,40 @@ model Traveler {
 }
 
 model Trip {
-  id            Int          @id @default(autoincrement())
-  destination   Destination? @relation(fields: [destinationId], references: [id])
-  destinationId Int?
-  traveler      Traveler?    @relation(fields: [travelerId], references: [id])
-  travelerId    Int?
-  title         String
-  budget        Float
-  travelSize    TravelSize   @map("travel_size")
-  adultCount    Int?         @map("adult_count")
-  childCount    Int?         @map("child_count")
-  startDate     DateTime     @map("start_date")
-  endDate       DateTime     @map("end_date")
+  id                       Int                @id @default(autoincrement())
+  destination              Destination?       @relation(fields: [destinationId], references: [id])
+  destinationId            Int?
+  departingLocation        DepartingLocation? @relation(fields: [departingLocationId], references: [id])
+  departingLocationId      Int?               @unique
+  traveler                 Traveler?          @relation(fields: [travelerId], references: [id])
+  travelerId               Int?
+  itinerary                Itinerary?
+  title                    String
+  budget                   Float
+  travelSize               TravelSize         @map("travel_size")
+  adultCount               Int?               @map("adult_count")
+  childCount               Int?               @map("child_count")
+  startDate                DateTime           @map("start_date")
+  endDate                  DateTime           @map("end_date")
+  isAccommodationIncluded  Boolean            @default(false)
+  isFoodIncluded           Boolean            @default(false)
+  isTransportationIncluded Boolean            @default(false)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("trips")
+}
+
+model DepartingLocation {
+  id        Int    @id @default(autoincrement())
+  name      String
+  address   String
+  latitude  Float
+  longitude Float
+  trip      Trip?
+
+  @@map("departing_locations")
 }
 
 model Destination {
@@ -68,7 +84,7 @@ model Place {
   description       String?
   type              PlaceType
   address           String
-  price             String
+  price             Float
   contactNumber     String?            @map("contact_number")
   latitude          Float
   longitude         Float
@@ -200,10 +216,10 @@ model Expense {
 
 model Image {
   id            String       @id @default(cuid())
-  traveler      Traveler?    @relation(fields: [travelerId], references: [id])
-  travelerId    Int?         @unique
-  destination   Destination? @relation(fields: [destinatiodId], references: [id])
-  destinatiodId Int?         @unique
+  place         Place?       @relation(fields: [placeId], references: [id])
+  placeId       String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+  destinationId Int?         @unique
   name          String?
   url           String
   size          Int?
@@ -221,6 +237,14 @@ enum UserType {
   @@map("user_type")
 }
 
+enum PlaceType {
+  ACCOMMODATION
+  RESTAURANT
+  ATTRACTION
+
+  @@map("place_type")
+}
+
 enum TravelSize {
   SOLO
   COUPLE
@@ -228,4 +252,14 @@ enum TravelSize {
   FAMILY
 
   @@map("travel_size")
+}
+
+enum ExpenseCategory {
+  ACCOMMODATION
+  FOOD
+  TRANSPORTATION
+  SIGHTSEEING
+  SHOPPING
+  ACTIVITY
+  OTHER
 }
