@@ -7,9 +7,9 @@ import TravelerInfo from '~/screens/TravelerInfo/TravelerInfo';
 export default function ProfileScreen() {
   return (
     <View className="flex-1 items-center bg-gray-50 p-5">
-      {/* <StampDisplayEmptyState /> */}
-      {/* <ProfileMenuList /> */}
-      <TravelerInfo />
+      <StampDisplayEmptyState />
+      <ProfileMenuList />
+      {/* <TravelerInfo /> */}
     </View>
   );
 }
