@@ -44,6 +44,7 @@ export default function LoginForm() {
           return (
             <View>
               <CustomTextInput
+                testID="email-input"
                 placeholder="Email"
                 value={value}
                 onChangeText={onChange}
@@ -65,6 +66,7 @@ export default function LoginForm() {
           return (
             <View className="flex-row">
               <CustomTextInput
+                testID="password-input"
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
@@ -75,19 +77,25 @@ export default function LoginForm() {
               <ShowPasswordIcon
                 hidePassword={hidePassword}
                 onPress={() => setHidePassword(!hidePassword)}
+                testID="show-password-icon"
               />
             </View>
           );
         }}
       />
-      <View className="mb-12 items-center">
+      <View testID="login-btn" className="mb-12 items-center">
         <GradientButton
           onPress={handleSubmit(onSubmit)}
           title="Login"
           isSubmitting={isSubmitting}
         />
       </View>
-      <Text className="text-lg font-normal text-gray-500">Or login with</Text>
+      <Text
+        testID="login-with-text"
+        className="text-lg font-normal text-gray-500"
+      >
+        Or login with
+      </Text>
     </View>
   );
 }

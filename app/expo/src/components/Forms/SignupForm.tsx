@@ -44,7 +44,7 @@ export default function SignUpForm() {
     });
 
     if (error) Alert.alert('Sign Up Error', error.message);
-    else {
+    else if (data && data.user) {
       const createUserInput: MutationCreateUserArgs = {
         data: {
           id: data.user!.id,
@@ -79,6 +79,7 @@ export default function SignUpForm() {
           return (
             <View>
               <CustomTextInput
+                testID="email-input"
                 placeholder="Email"
                 value={value}
                 onChangeText={onChange}
@@ -100,6 +101,7 @@ export default function SignUpForm() {
           return (
             <View className="flex-row">
               <CustomTextInput
+                testID="password-input"
                 placeholder="Password"
                 value={value}
                 onChangeText={onChange}
@@ -110,6 +112,7 @@ export default function SignUpForm() {
               <ShowPasswordIcon
                 hidePassword={hidePassword}
                 onPress={() => setHidePassword(!hidePassword)}
+                testID="show-password-icon"
               />
             </View>
           );
@@ -125,6 +128,7 @@ export default function SignUpForm() {
           return (
             <View className="flex-row">
               <CustomTextInput
+                testID="confirm-password-input"
                 placeholder="Confirm Password"
                 value={value}
                 onChangeText={onChange}
@@ -135,19 +139,23 @@ export default function SignUpForm() {
               <ShowPasswordIcon
                 hidePassword={hideConfirmPassword}
                 onPress={() => setHideConfirmPassword(!hideConfirmPassword)}
+                testID="show-confirm-icon"
               />
             </View>
           );
         }}
       />
-      <View className="mb-12 items-center">
+      <View testID="sign-up-btn" className="mb-12 items-center">
         <GradientButton
           onPress={handleSubmit(onSubmit)}
           title="Create Account"
           isSubmitting={isSubmitting}
         />
       </View>
-      <Text className="mb-1 text-lg font-normal text-gray-500">
+      <Text
+        testID="bottom-text"
+        className="mb-1 text-lg font-normal text-gray-500"
+      >
         Or login with
       </Text>
     </View>

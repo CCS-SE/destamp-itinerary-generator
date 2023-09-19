@@ -23,7 +23,7 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-const LOCAL_SYSTEM_IP_ADDRESS = '192.168.1.8'; // change this with your own ip address
+const LOCAL_SYSTEM_IP_ADDRESS = '192.168.254.135'; // change this with your own ip address
 const PORT = 4000;
 
 const client = new ApolloClient({
