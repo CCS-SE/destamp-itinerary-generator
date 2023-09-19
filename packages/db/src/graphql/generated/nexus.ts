@@ -80,15 +80,6 @@ export interface NexusGenEnums {
     | 'SIGHTSEEING'
     | 'TRANSPORTATION';
   PlaceType: 'ACCOMMODATION' | 'ATTRACTION' | 'RESTAURANT';
-  ExpenseCategory:
-    | 'ACCOMMODATION'
-    | 'ACTIVITY'
-    | 'FOOD'
-    | 'OTHER'
-    | 'SHOPPING'
-    | 'SIGHTSEEING'
-    | 'TRANSPORTATION';
-  PlaceType: 'ACCOMMODATION' | 'ATTRACTION' | 'RESTAURANT';
   TravelSize: 'COUPLE' | 'FAMILY' | 'GROUP' | 'SOLO';
   UserType: 'BUSINESS_OPERATOR' | 'TRAVELER';
 }
@@ -204,7 +195,7 @@ export interface NexusGenObjects {
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
-    price: number; // Float!
+    price: string; // String!
     type: NexusGenEnums['PlaceType']; // PlaceType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url?: string | null; // String
@@ -371,7 +362,7 @@ export interface NexusGenFieldTypes {
     longitude: number; // Float!
     name: string; // String!
     openingHours: NexusGenRootTypes['OpeningHour'][]; // [OpeningHour!]!
-    price: number; // Float!
+    price: string; // String!
     type: NexusGenEnums['PlaceType']; // PlaceType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string | null; // String
@@ -380,8 +371,6 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
-    itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
-    places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
   };
   Traveler: {
@@ -538,7 +527,7 @@ export interface NexusGenFieldTypeNames {
     longitude: 'Float';
     name: 'String';
     openingHours: 'OpeningHour';
-    price: 'Float';
+    price: 'String';
     type: 'PlaceType';
     updatedAt: 'DateTime';
     url: 'String';
@@ -547,8 +536,6 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
-    itinerary: 'Itinerary';
-    places: 'Place';
     travelerTrips: 'Trip';
   };
   Traveler: {
@@ -600,10 +587,6 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
-    itinerary: {
-      // args
-      tripId: number; // Int!
-    };
     travelerTrips: {
       // args
       userId: string; // String!
