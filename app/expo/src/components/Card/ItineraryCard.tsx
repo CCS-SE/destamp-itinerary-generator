@@ -69,9 +69,9 @@ export default function ItineraryCard({
             />
             <DepartingFromCard locationName={departingLocation!} />
           </View>
-          {destinations?.map((destination) => (
+          {destinations?.map((destination, i) => (
             <>
-              <View className="flex-row" key={destination.type}>
+              <View className="flex-row" key={i}>
                 {destination.type === PlaceType.Attraction ? (
                   <Attraction
                     height={33}
@@ -101,7 +101,6 @@ export default function ItineraryCard({
                 />
               </View>
               <DirectionCard
-                key={destination.name}
                 icon={
                   <Walking height={22} width={22} style={{ marginLeft: 8 }} />
                 }

@@ -172,7 +172,6 @@ export interface NexusGenObjects {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dayIndex: number; // Int!
     foodCost: number; // Float!
     id: number; // Int!
     transportationCost: number; // Float!
@@ -327,7 +326,6 @@ export interface NexusGenFieldTypes {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dayIndex: number; // Int!
     destinations: NexusGenRootTypes['Place'][]; // [Place!]!
     foodCost: number; // Float!
     id: number; // Int!
@@ -373,6 +371,8 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
+    places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
   };
@@ -540,6 +540,8 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    itinerary: 'Itinerary';
+    places: 'Place';
     travelerTrips: 'Trip';
     trip: 'Trip';
   };
@@ -592,6 +594,10 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
+    itinerary: {
+      // args
+      tripId: number; // Int!
+    };
     travelerTrips: {
       // args
       userId: string; // String!

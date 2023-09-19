@@ -3,7 +3,6 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link } from 'expo-router';
 
 export default function MyTripEmptyState() {
   const onPress = () => {

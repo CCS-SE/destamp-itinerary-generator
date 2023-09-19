@@ -129,11 +129,11 @@ export default function ItineraryScreen() {
               </ScrollView>
             </View>
             {data &&
-              data.itinerary.itineraryDays.map((itinerary) => {
+              data.itinerary.itineraryDays.map((itinerary, i) => {
                 if (itinerary.dayIndex === selectedDay) {
                   return (
                     <ItineraryCard
-                      key={itinerary.dayIndex}
+                      key={i}
                       attractionCost={itinerary.attractionCost}
                       foodCost={itinerary.foodCost}
                       transportationCost={itinerary.transportationCost}

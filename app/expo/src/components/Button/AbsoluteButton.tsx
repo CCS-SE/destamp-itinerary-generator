@@ -12,6 +12,7 @@ export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
       accessibilityRole="button"
       onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       activeOpacity={0.98}
+      className="absolute bottom-3 right-5"
     >
       <LinearGradient
         colors={['#fd8139', '#f65a82']}
