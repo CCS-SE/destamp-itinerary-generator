@@ -119,6 +119,7 @@ type ItineraryDay {
   accommodationCost: Float!
   attractionCost: Float!
   createdAt: DateTime!
+  dayIndex: Int!
   destinations: [Place!]!
   foodCost: Float!
   id: Int!
@@ -169,48 +170,11 @@ enum PlaceType {
   RESTAURANT
 }
 
-type OpeningHour {
-  closeTime: DateTime!
-  day: Int!
-  id: Int!
-  openTime: DateTime!
-}
-
-type Place {
-  address: String!
-  amenities: [Amenity!]!
-  categories: [Category!]!
-  contactNumber: String
-  createdAt: DateTime!
-  description: String
-  diningAtmospheres: [DiningAtmosphere!]!
-  diningCuisines: [DiningCuisine!]!
-  diningOfferings: [DiningOffering!]!
-  diningOptions: [DiningOption!]!
-  id: String!
-  images: [Image!]!
-  latitude: Float!
-  longitude: Float!
-  name: String!
-  openingHours: [OpeningHour!]!
-  price: Float!
-  type: PlaceType!
-  updatedAt: DateTime!
-  url: String
-  visitDuration: Float!
-  website: String
-}
-
-enum PlaceType {
-  ACCOMMODATION
-  ATTRACTION
-  RESTAURANT
-}
-
 type Query {
   itinerary(tripId: Int!): Itinerary!
   places: [Place!]!
   travelerTrips(userId: String!): [Trip!]!
+  trip(id: Int!): Trip!
 }
 
 enum TravelSize {
