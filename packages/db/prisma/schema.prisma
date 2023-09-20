@@ -84,14 +84,14 @@ model Place {
   description       String?
   type              PlaceType
   address           String
-  price             Float
+  price             String
   contactNumber     String?            @map("contact_number")
   latitude          Float
   longitude         Float
   visitDuration     Float              @map("visit_duration")
   url               String?
   website           String?
-  isClamied         Boolean            @map("is_claimed")
+  isClaimed         Boolean            @map("is_claimed")
   categories        Category[]
   openingHours      OpeningHour[]
   images            Image[]
@@ -190,6 +190,7 @@ model ItineraryDay {
   accommodationCost  Float      @map("accommodation_cost")
   attractionCost     Float      @map("attraction_cost")
   foodCost           Float      @map("food_cost")
+  dayIndex           Int        @map("day_index")
   transportationCost Float      @map("transportation_cost")
   destinations       Place[]
 

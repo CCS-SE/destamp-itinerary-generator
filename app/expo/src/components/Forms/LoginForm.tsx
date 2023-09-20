@@ -92,7 +92,7 @@ export default function LoginForm() {
       </View>
       <Text
         testID="login-with-text"
-        className="text-lg font-normal text-gray-500"
+        className="font-poppins text-lg font-normal text-gray-500"
       >
         Or login with
       </Text>

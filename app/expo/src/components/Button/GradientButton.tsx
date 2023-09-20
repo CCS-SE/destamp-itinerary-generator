@@ -38,7 +38,7 @@ export default function GradientButton({
         ) : (
           <Text
             testID="gradient-btn-text"
-            className="ml-2 items-center text-lg font-medium text-white"
+            className="ml-2 items-center font-poppins-medium text-lg text-white"
           >
             {title}
           </Text>
