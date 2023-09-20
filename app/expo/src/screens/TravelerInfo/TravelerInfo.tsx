@@ -1,157 +1,162 @@
-/* eslint-disable */
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import DatePicker from 'react-native-modern-datepicker';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import React, { useState } from 'react';
-import {
-  Button,
-  GestureResponderEvent,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import Activities from '../../components/TravelInfo/Activities';
+import Companions from '../../components/TravelInfo/Companions';
 
-const TravelerInfo: React.FC = () => {
-  const steps = [
-    'Travel Destination',
-    'Departing Location',
-    'Travel Buddy',
-    'Travel Date',
-    'Budget',
-  ];
-
-  const stepInput = [
-    { text: 'Where do you want to Travel?' },
-    { text: 'Where are you Departing from?' },
-    {
-      text: 'Whom are you traveling with?',
-      // isMultiInput: true, // Indicates multiple input boxes
-    },
-    {
-      text: 'Select Travel Date',
-      // isCalendar: true, // Indicates a calendar component
-    },
-    { text: 'What is your Budget?' },
-  ];
-
-  const [currentStep, setCurrentStep] = useState(1);
-  const [complete, setComplete] = useState(false);
-
-  function handleNextButtonPress(event: GestureResponderEvent): void {
-    throw Error('Function not implemented.');
-  }
-
-  function isStepComplete(stepIndex: number) {
-    return stepIndex < currentStep;
+const TravelerInfoScreen: React.FC = () => {
+  function setSelectedDate(date: string): void {
+    throw new Error('Function not implemented.');
   }
 
   return (
-    <>
+    <ScrollView style={styles.scroll}>
       <View style={styles.container}>
-        {steps?.map((step, i) => (
-          <View
-            key={i}
-            style={[
-              styles.stepItem,
-              currentStep === i + 1,
-              (i + 1 < currentStep || complete) && styles.complete,
-            ]}
-          >
-            {i !== 0 && <View style={styles.lineSeparator} />}
-            <View style={styles.step}>
-              {i + 1 < currentStep || complete ? (
-                <View style={styles.circle}>
-                  <MaterialIcons name="check" size={24} color="green" />
-                </View>
-              ) : (
-                <View style={styles.circle}>
-                  <Text style={styles.stepText}>{i + 1}</Text>
-                </View>
-              )}
-              {/* add */}
-            </View>
-            <TextInput style={styles.textInput} placeholder={step}></TextInput>
-            <Text style={styles.stepText}></Text>
+        <View style={styles.step}>
+          <Text style={styles.title}>Where do you want to travel?</Text>
+          <TextInput style={styles.form} placeholder="Travel Destination" />
+        </View>
+        <View style={styles.step}>
+          <Text style={styles.title}>Where are you departing from?</Text>
+          <TextInput style={styles.form} placeholder="Departing Location" />
+        </View>
+        <View style={styles.step}>
+          <Text style={styles.title}>Whom are you traveling with?</Text>
+          <View style={styles.row}>
+            <Companions
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="white"
+              title="Solo"
+              onPress={() => {}}
+            />
+            <Companions
+              icons={<Ionicons name="md-people-outline" size={24} />}
+              color="white"
+              title="Duo"
+              onPress={() => {}}
+            />
           </View>
-        ))}
+          <View style={styles.row}>
+            <Companions
+              icons={
+                <MaterialCommunityIcons
+                  name="account-group-outline"
+                  size={24}
+                />
+              }
+              color="white"
+              title="Solo"
+              onPress={() => {}}
+            />
+            <Companions
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="white"
+              title="Solo"
+              onPress={() => {}}
+            />
+          </View>
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.title}>Travel Dates</Text>
+          <DatePicker onSelectedChange={(date) => setSelectedDate(date)} />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.title}>Budget</Text>
+          <TextInput style={styles.form} placeholder="Budget" />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.title}>Choose accommodation type</Text>
+          <TextInput style={styles.form} placeholder="Hotel, Rentals,.." />
+        </View>
+
+        <View style={styles.container}>
+          <Text style={styles.title}>Choose ammenities</Text>
+          <TextInput
+            style={styles.form}
+            placeholder="Free Wifi, Parking Space,.."
+          />
+        </View>
+        <View>
+          <Text style={styles.title}>Choose activities you like</Text>
+          <View style={styles.row}>
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#DFCCF1"
+              title="Sightseeing and Tours"
+              onPress={() => {}}
+            />
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#65F1D0"
+              title="Outdoor Activities"
+              onPress={() => {}}
+            />
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#DFCCF1"
+              title={'Shopping\n'}
+              onPress={() => {}}
+            />
+          </View>
+          <View style={styles.row}>
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#65F1D0"
+              title="Educational and Learning Activities"
+              onPress={() => {}}
+            />
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#DFCCF1"
+              title={'Arts and Museums\n'}
+              onPress={() => {}}
+            />
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#65F1D0"
+              title="Food and Culinary Experiences"
+              onPress={() => {}}
+            />
+          </View>
+          <View style={styles.row}>
+            <Activities
+              icons={<Ionicons name="person-outline" size={24} />}
+              color="#65F1D0"
+              title="Bench"
+              onPress={() => {}}
+            />
+          </View>
+          <View style={styles.container}>
+            <Text style={styles.title}>Choose venue preferences</Text>
+            <TextInput style={styles.form} placeholder="Hotel, Rentals,.." />
+          </View>
+        </View>
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          currentStep === steps.length
-            ? setComplete(true)
-            : setCurrentStep((prev) => prev + 1);
-        }}
-      >
-        <Text style={styles.buttonText}>
-          {currentStep === steps.length ? 'Finish' : 'Next'}
-        </Text>
-      </TouchableOpacity>
-    </>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginBottom: 16,
+  },
+  scroll: {
     flex: 1,
-    alignItems: 'center',
   },
-  stepItem: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginVertical: 10,
-    position: 'relative',
-    height: 120, // Adjust height to accommodate multiple input boxes
-  },
-  lineSeparator: {
-    content: '',
-    backgroundColor: '#FF8F45',
-    position: 'absolute',
-    width: 5,
-    height: '100%',
-    // top: '50%',
-    transform: [{ translateX: 18 }],
-    bottom: '85%',
-  },
-  stepText: {
-    color: 'gray',
+  title: {
+    padding: 10,
+    marginLeft: 5,
     fontWeight: 'bold',
-    marginLeft: 10,
+    fontFamily: 'Poppins',
+    color: 'orange',
   },
   step: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    marginBottom: 5,
   },
-  activeStep: {
-    // backgroundColor: 'skyblue',
-    // borderRadius: 20,
-  },
-  circle: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: 'orange',
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  complete: {
-    // backgroundColor: 'green',
-  },
-  button: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  textInput: {
-    marginLeft: 50, // Adjust margin to separate text input from circle
+  form: {
+    marginLeft: 10,
     color: 'orange',
     borderWidth: 2,
     borderColor: 'orange',
@@ -159,16 +164,18 @@ const styles = StyleSheet.create({
     padding: 10,
     width: 300,
   },
-  multiInput: {
-    marginLeft: 50, // Adjust margin to separate text input from circle
-    color: 'orange',
-    borderWidth: 2,
-    borderColor: 'orange',
-    borderRadius: 10,
-    padding: 10,
-    width: 250,
-    marginBottom: 10, // Add margin between multiple input boxes
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    padding: 3,
+  },
+  activities: {
+    textAlign: 'center',
   },
 });
 
-export default TravelerInfo;
+export default TravelerInfoScreen;
