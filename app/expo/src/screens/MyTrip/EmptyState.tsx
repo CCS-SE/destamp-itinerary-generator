@@ -4,8 +4,6 @@ import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import TravelerInfo from '../TravelerInfo/TravelerInfo';
-
 export default function MyTripEmptyState() {
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">
