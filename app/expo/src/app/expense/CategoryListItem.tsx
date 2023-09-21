@@ -1,18 +1,18 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 import { ExpenseCategory } from '~/graphql/generated';
 
 interface Category {
   icon: ReactNode;
-  title: String;
+  title: string;
   value: ExpenseCategory;
-  key: String;
+  key: string;
 }
 
 interface CategoryListItemProps {
   item: Category;
-  onPress: (key: String) => void;
+  onPress: (key: string) => void;
   selectedCategory: Category;
 }
 export default function CategoryListItem({

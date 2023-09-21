@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { gql, useQuery } from '@apollo/client';
+
+// import { gql, useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import ColoredContainer from '~/components/Container/ColoredContainer';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
-import { GetTransactionsDocument } from '~/graphql/generated';
 
-const GetTransactionsQuery = gql(
-  `query GetTransactions($itineraryId: Int!){
-    getTransaction(itineraryId: $itineraryId) {
-      amount
-      category
-      date
-    }
-  }`,
-);
+// import { GetTransactionsDocument } from '~/graphql/generated';
+
+// const GetTransactionsQuery = gql(
+//   `query GetTransactions($itineraryId: Int!){
+//     getTransaction(itineraryId: $itineraryId) {
+//       amount
+//       category
+//       date
+//     }
+//   }`,
+// );
 
 export const ExpensePage = () => {
   const [modal, setModal] = useState(false);
@@ -25,7 +27,7 @@ export const ExpensePage = () => {
     setModal(true);
   };
 
-  const { loading, error, data } = useQuery(GetTransactionsDocument);
+  // const { loading, error, data } = useQuery(GetTransactionsDocument);
 
   return (
     <>

@@ -17,7 +17,7 @@ export default function AddSpendingForm({ onSubmit }: AddSpendingFormProps) {
   const [note, setNote] = useState('');
   const [date, setDate] = useState(new Date());
   const [datePicker, setDatePicker] = useState(false);
-  const [category, setCategory] = useState<ExpenseCategory>(
+  const [, setCategory] = useState<ExpenseCategory>(
     ExpenseCategory.Accommodation,
   );
 

@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import {
   Ionicons,
   MaterialCommunityIcons,
@@ -19,7 +19,7 @@ export default function CategoryList({ onCategoryChange }: CategoryListProps) {
     categories[0]!,
   );
 
-  const onItemPressed = (key: String) => {
+  const onItemPressed = (key: string) => {
     setSelectedCategory(categoryList.find((category) => category.key === key)!);
     onCategoryChange(
       categoryList.find((category) => category.key === key)?.value!,
