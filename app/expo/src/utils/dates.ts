@@ -6,7 +6,7 @@ export function getTripDateFormat(date: Date) {
   });
 }
 
-export function getDaysDifference(startDate: Date, endDate: Date) {
+export function tripDuration(startDate: Date, endDate: Date) {
   return Math.floor(
     (new Date(endDate).getTime() - new Date(startDate).getTime()) /
       (24 * 60 * 60 * 1000),

@@ -3,9 +3,11 @@ import React, { memo, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import { getDaysDifference, getTripDateFormat } from '~/utils/dates';
+import { getTripDateFormat, tripDuration } from '~/utils/dates';
+import { amountFormatter } from '~/utils/utils';
 import TripMenuList from '../Menu/TripMenu/TripMenuList';
 import BottomHalfModal from '../Modal/BottomHalfModal';
 
@@ -20,6 +22,7 @@ interface TripCardProps {
 }
 
 function TripCard({
+  id,
   imgSrc,
   destination,
   startDate,
@@ -36,16 +39,11 @@ function TripCard({
   const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
-  const daysDifference = getDaysDifference(startDate, endDate);
+  const daysDifference = tripDuration(startDate, endDate);
 
   return (
-    <TouchableOpacity
-      accessibilityRole="button"
-      testID="trip-card"
-      activeOpacity={1}
-      onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-    >
-      <View className="bg- m-3">
+    <View className="bg- m-3">
+      <Link href={`/itinerary/${id}`}>
         <View className="w-[370] rounded-2xl bg-gray-50 shadow-md">
           <Image
             testID="trip-destination-img"
@@ -54,7 +52,7 @@ function TripCard({
             placeholder={blurhash}
             transition={1_800}
           ></Image>
-          <View className=" container absolute h-52 rounded-2xl bg-black opacity-20" />
+          <View className=" container absolute h-52 rounded-2xl bg-black opacity-30" />
           <TouchableOpacity
             accessibilityRole="button"
             testID="trip-menu-btn"
@@ -72,12 +70,12 @@ function TripCard({
             ></FontAwesome5>
           </TouchableOpacity>
           <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
-            <TripMenuList onCloseModal={onModalClose} />
+            <TripMenuList onModalClose={onModalClose} />
           </BottomHalfModal>
           <View className="absolute left-4 top-40 w-[215] flex-row justify-between">
             <Text
               testID="trip-destination"
-              className="text-left text-2xl font-semibold text-zinc-100"
+              className="text-left font-poppins-semibold text-2xl text-zinc-100"
             >
               {destination}
             </Text>
@@ -86,7 +84,7 @@ function TripCard({
             <View className="flex-row items-center">
               <Text
                 testID="trip-date"
-                className="pl-2 text-center text-lg font-medium text-gray-500"
+                className="pl-2 text-center font-poppins-medium text-lg text-gray-500"
               >
                 {`${getTripDateFormat(startDate)}  •  ${daysDifference} ${
                   daysDifference > 1 ? 'days' : 'day'
@@ -99,29 +97,29 @@ function TripCard({
               {travelSizeIcon[travelSize]}
               <Text
                 testID="trip-travel-size"
-                className="pl-1 text-center text-base font-light text-gray-500"
+                className="pl-1 text-center font-poppins text-base  text-gray-500"
               >
                 {travelSize}
               </Text>
-              <Text className="pl-2 text-center text-base font-light text-gray-500">
+              <Text className="pl-2 text-center font-poppins text-base  text-gray-500">
                 •
               </Text>
             </View>
             <View className="flex-row">
-              <Text className="text-center text-base font-light text-gray-500">
+              <Text className=" text-center font-poppins text-base  text-gray-500">
                 ₱
               </Text>
               <Text
                 testID="trip-budget"
-                className="text-center text-base font-light text-gray-500"
+                className="text-center font-poppins text-base  text-gray-500"
               >
-                {new Intl.NumberFormat().format(budget)}
+                {amountFormatter(budget)}
               </Text>
             </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </Link>
+    </View>
   );
 }
 

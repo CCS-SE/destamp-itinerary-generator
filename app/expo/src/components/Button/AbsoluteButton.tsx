@@ -12,17 +12,17 @@ export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
       accessibilityRole="button"
       onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
       activeOpacity={0.98}
-      className="absolute bottom-6 right-6"
+      className="absolute bottom-3 right-5"
     >
       <LinearGradient
         colors={['#fd8139', '#f65a82']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
-        className="rounded-full"
+        className="h-16 w-16 items-center justify-center rounded-full"
       >
         <Text
           testID="absolute-btn-text"
-          className="font-lg mx-2.5 p-2.5 text-4xl text-zinc-100"
+          className="mt-4 font-poppins text-5xl text-zinc-100"
         >
           {title}
         </Text>

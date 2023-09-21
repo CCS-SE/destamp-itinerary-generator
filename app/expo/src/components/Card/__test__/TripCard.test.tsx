@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
+import { amountFormatter } from '~/utils/utils';
 import TripCard from '../TripCard';
 import { tripCardData } from './mock/tripCardData';
 
@@ -22,7 +23,7 @@ describe('Trip Card', () => {
     const travelSizeElement = getByTestId('trip-travel-size');
 
     expect(bugdetElement.children[0]).toBe(
-      new Intl.NumberFormat().format(tripCardData.budget),
+      amountFormatter(tripCardData.budget),
     );
     expect(dateElement.children[0]).toBe('Jun 9, 2023  •  3 days');
     expect(travelSizeElement.children[0]).toBe(tripCardData.travelSize);

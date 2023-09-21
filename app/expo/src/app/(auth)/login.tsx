@@ -15,7 +15,7 @@ export default function LoginScreen() {
     >
       <ScrollView>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 ml-2 w-96 text-3xl font-medium text-orange-500">
+        <Text className="mb-6 ml-2 w-96 font-poppins-medium text-3xl font-medium text-orange-500">
           Welcome Back!
         </Text>
         <LoginForm />
@@ -38,12 +38,12 @@ export default function LoginScreen() {
           />
         </View>
         <View className="mt-3 flex-row items-center justify-center">
-          <Text className=" mr-1 text-base font-medium text-slate-700">
+          <Text className="mr-1 font-poppins text-base font-medium text-slate-700">
             Don't have an account yet?
           </Text>
           <Link
             href="/(auth)/signUp"
-            className="text-base font-medium text-orange-500"
+            className="font-poppins text-base font-medium text-orange-500"
           >
             Create account
           </Link>

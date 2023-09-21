@@ -14,7 +14,7 @@ function ProfileMenuList() {
       testID="profile-menu-list"
       data={profileMenu}
       renderItem={({ item }) => (
-        <ProfileMenuItem onPress={item.onPress!} item={item} />
+        <ProfileMenuItem key={item.title} onPress={item.onPress!} item={item} />
       )}
       scrollEnabled={false}
     />
@@ -40,13 +40,13 @@ const profileMenus: ProfileMenu[] = [
     icon: <AntDesign name="user" color={'#727272'} size={26} />,
     title: 'Edit Profile',
     color: '#727272',
-    onPress: handleLogout,
+    onPress: () => undefined,
   },
   {
     icon: <MaterialIcons name="subscriptions" color={'#727272'} size={24} />,
     title: 'Payment & Subscription',
     color: '#727272',
-    onPress: handleLogout,
+    onPress: () => undefined,
   },
   {
     icon: <MaterialIcons name="logout" color={'#FB2E53'} size={22} />,
