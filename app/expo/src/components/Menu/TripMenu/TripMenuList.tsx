@@ -42,11 +42,11 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
     },
   });
 
-  const handleViewItineraryDetials = (id: number) => {
+  const handleViewItineraryDetials = () => {
     router.push(`/itinerary/${id}`);
   };
 
-  const handleDeleteTrip = async (id: number) => {
+  const handleDeleteTrip = async () => {
     await deleteTrip({
       onError: (error) => {
         console.log('Error', error.message);
@@ -76,13 +76,13 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
     });
   };
 
-  const showDeleteTripAlert = (id: number) => {
+  const showDeleteTripAlert = () => {
     confirmationAlert(
       'Delete trip',
       'Are you sure you want to delete this trip?',
       'Delete',
       'Cancel',
-      () => handleDeleteTrip(id),
+      () => handleDeleteTrip(),
     );
   };
 
@@ -97,7 +97,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
       ),
       title: 'View trip details',
       color: '#403f3f',
-      onClick: () => handleViewItineraryDetials(id),
+      onClick: () => handleViewItineraryDetials(),
     },
     {
       icon: <Ionicons name="share-outline" color={'#403f3f'} size={24} />,
@@ -115,7 +115,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
       icon: <AntDesign name="delete" color={'#FB2E53'} size={22} />,
       title: 'Delete trip',
       color: '#FB2E53',
-      onClick: () => showDeleteTripAlert(id),
+      onClick: () => showDeleteTripAlert(),
     },
   ];
 
