@@ -16,7 +16,7 @@ const defineConfig = (): ExpoConfig => ({
   scheme: 'expo',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/images/splash.png',
+  icon: './assets/images/destamp_logo.png',
   userInterfaceStyle: 'light',
   splash: {
     image: './assets/images/splash.png',
@@ -33,7 +33,7 @@ const defineConfig = (): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: './assets/images/splash.png',
+      foregroundImage: './assets/images/destamp_logo.png',
       backgroundColor: '#1F104A',
     },
   },
@@ -47,6 +47,9 @@ const defineConfig = (): ExpoConfig => ({
   experiments: {
     tsconfigPaths: true,
     typedRoutes: true,
+  },
+  web: {
+    bundler: 'metro',
   },
   plugins: ['expo-router', './expo-plugins/with-modify-gradle.js'],
 });

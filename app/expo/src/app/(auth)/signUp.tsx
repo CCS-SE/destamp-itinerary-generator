@@ -15,7 +15,7 @@ export default function SignUpScreen() {
     >
       <ScrollView>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 ml-2 w-96 text-2xl font-medium text-orange-500">
+        <Text className="mb-6 ml-2 w-96 font-poppins-medium text-2xl text-orange-500">
           Start with creating an account
         </Text>
         <SignUpForm />
@@ -38,12 +38,12 @@ export default function SignUpScreen() {
           />
         </View>
         <View className="mt-3 flex-row items-center justify-center">
-          <Text className=" mr-1 text-base font-medium text-slate-700">
+          <Text className="mr-1 font-poppins text-base font-medium text-slate-700">
             Already a Destamp user?
           </Text>
           <Link
             href="/(auth)/login"
-            className="text-base font-medium text-orange-500"
+            className="font-poppins text-base font-medium text-orange-500"
           >
             Login
           </Link>

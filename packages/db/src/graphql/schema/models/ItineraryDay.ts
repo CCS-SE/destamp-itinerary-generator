@@ -8,6 +8,7 @@ const ItineraryDay = objectType({
     t.float('foodCost');
     t.float('attractionCost');
     t.float('transportationCost');
+    t.int('dayIndex');
     t.field('destinations', {
       type: list('Place'),
       resolve: ({ id }, _, ctx) => {

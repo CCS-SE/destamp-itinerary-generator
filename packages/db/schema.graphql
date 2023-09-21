@@ -119,6 +119,7 @@ type ItineraryDay {
   accommodationCost: Float!
   attractionCost: Float!
   createdAt: DateTime!
+  dayIndex: Int!
   destinations: [Place!]!
   foodCost: Float!
   id: Int!
@@ -171,6 +172,7 @@ enum PlaceType {
 
 type Query {
   travelerTrips(userId: String!): [Trip!]!
+  trip(id: Int!): Trip!
 }
 
 enum TravelSize {

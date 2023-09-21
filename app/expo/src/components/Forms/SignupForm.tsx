@@ -154,7 +154,7 @@ export default function SignUpForm() {
       </View>
       <Text
         testID="bottom-text"
-        className="mb-1 text-lg font-normal text-gray-500"
+        className="mb-1 font-poppins text-lg font-normal text-gray-500"
       >
         Or login with
       </Text>

@@ -372,6 +372,7 @@ export interface NexusGenFieldTypes {
   Query: {
     // field return type
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+    trip: NexusGenRootTypes['Trip']; // Trip!
   };
   Traveler: {
     // field return type
@@ -491,6 +492,7 @@ export interface NexusGenFieldTypeNames {
     accommodationCost: 'Float';
     attractionCost: 'Float';
     createdAt: 'DateTime';
+    dayIndex: 'Int';
     destinations: 'Place';
     foodCost: 'Float';
     id: 'Int';
@@ -537,6 +539,7 @@ export interface NexusGenFieldTypeNames {
   Query: {
     // field return type name
     travelerTrips: 'Trip';
+    trip: 'Trip';
   };
   Traveler: {
     // field return type name
@@ -590,6 +593,10 @@ export interface NexusGenArgTypes {
     travelerTrips: {
       // args
       userId: string; // String!
+    };
+    trip: {
+      // args
+      id: number; // Int!
     };
   };
 }
