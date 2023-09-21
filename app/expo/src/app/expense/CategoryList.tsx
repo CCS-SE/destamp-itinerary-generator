@@ -10,19 +10,19 @@ import { ExpenseCategory } from '~/graphql/generated';
 import CategoryListItem from './CategoryListItem';
 
 interface CategoryListProps {
-  onCategoryChange: (category: ExpenseCategory) => void;
+  onCategoryChange: (category: ExpenseCategory | undefined) => void;
 }
 
 export default function CategoryList({ onCategoryChange }: CategoryListProps) {
   const [categoryList] = useState<Category[]>(categories);
-  const [selectedCategory, setSelectedCategory] = useState<Category>(
-    categories[0]!,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<
+    Category | undefined
+  >(categories[0]);
 
   const onItemPressed = (key: string) => {
-    setSelectedCategory(categoryList.find((category) => category.key === key)!);
+    setSelectedCategory(categoryList.find((category) => category.key === key));
     onCategoryChange(
-      categoryList.find((category) => category.key === key)?.value!,
+      categoryList.find((category) => category.key === key)?.value,
     );
   };
 

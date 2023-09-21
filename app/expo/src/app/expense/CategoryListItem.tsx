@@ -13,7 +13,7 @@ interface Category {
 interface CategoryListItemProps {
   item: Category;
   onPress: (key: string) => void;
-  selectedCategory: Category;
+  selectedCategory: Category | undefined;
 }
 export default function CategoryListItem({
   item,
