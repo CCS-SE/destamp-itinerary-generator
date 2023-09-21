@@ -172,6 +172,7 @@ export interface NexusGenObjects {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dayIndex: number; // Int!
     foodCost: number; // Float!
     id: number; // Int!
     transportationCost: number; // Float!
@@ -326,6 +327,7 @@ export interface NexusGenFieldTypes {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dayIndex: number; // Int!
     destinations: NexusGenRootTypes['Place'][]; // [Place!]!
     foodCost: number; // Float!
     id: number; // Int!
@@ -372,6 +374,8 @@ export interface NexusGenFieldTypes {
   Query: {
     // field return type
     getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
+    itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
+    places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
   };
@@ -493,6 +497,7 @@ export interface NexusGenFieldTypeNames {
     accommodationCost: 'Float';
     attractionCost: 'Float';
     createdAt: 'DateTime';
+    dayIndex: 'Int';
     destinations: 'Place';
     foodCost: 'Float';
     id: 'Int';
@@ -539,7 +544,10 @@ export interface NexusGenFieldTypeNames {
   Query: {
     // field return type name
     getTransaction: 'Expense';
+    itinerary: 'Itinerary';
+    places: 'Place';
     travelerTrips: 'Trip';
+    trip: 'Trip';
   };
   Traveler: {
     // field return type name
@@ -593,6 +601,10 @@ export interface NexusGenArgTypes {
     getTransaction: {
       // args
       itineraryId: number; // Int!
+    };
+    itinerary: {
+      // args
+      tripId: number; // Int!
     };
     travelerTrips: {
       // args
