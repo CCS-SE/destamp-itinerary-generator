@@ -5,12 +5,14 @@ interface GradientButtonProps {
   onPress: () => void;
   title: string;
   isSubmitting: boolean;
+  size?: number;
 }
 
 export default function GradientButton({
   onPress,
   title,
   isSubmitting,
+  size = 370,
 }: GradientButtonProps) {
   return (
     <TouchableOpacity
@@ -24,7 +26,7 @@ export default function GradientButton({
         colors={['#fd8139', '#f65a82']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
-        className={`m-5 w-[370] items-center rounded-xl py-3 ${
+        className={`m-5 w-[${size}] items-center rounded-xl py-3 ${
           isSubmitting ? 'opacity-40' : ''
         }`}
       >
