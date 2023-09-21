@@ -19,7 +19,10 @@ function TripMenuItem({ onClick, item }: TripMenuItemProps) {
       activeOpacity={0.8}
       onPress={onClick}
     >
-      <View testID="trip-menu-item" className="items-start justify-start p-4">
+      <View
+        testID={`trip-menu-${item.title}`}
+        className="items-start justify-start p-4"
+      >
         <View className="flex-row items-center p-1">
           {item?.icon}
           <Text
