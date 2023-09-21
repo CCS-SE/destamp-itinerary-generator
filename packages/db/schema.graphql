@@ -130,6 +130,7 @@ type ItineraryDay {
 type Mutation {
   createTrip(data: CreateTripInput!): Trip!
   createUser(data: CreateUserInput!): User!
+  deleteTrip(id: Int!): Trip!
 }
 
 type OpeningHour {
@@ -171,6 +172,8 @@ enum PlaceType {
 }
 
 type Query {
+  itinerary(tripId: Int!): Itinerary!
+  places: [Place!]!
   travelerTrips(userId: String!): [Trip!]!
   trip(id: Int!): Trip!
 }

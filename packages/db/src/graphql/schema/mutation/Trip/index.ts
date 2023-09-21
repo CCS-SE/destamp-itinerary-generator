@@ -1,5 +1,5 @@
-import { CreateTrip } from './Trip.mutation';
+import { CreateTrip, DeleteTrip } from './Trip.mutation';
 
-const Mutations = [CreateTrip];
+const Mutations = [CreateTrip, DeleteTrip];
 
 export default Mutations;
