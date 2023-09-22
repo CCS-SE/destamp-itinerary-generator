@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import DatePicker from 'react-native-modern-datepicker';
