@@ -172,6 +172,7 @@ export interface NexusGenObjects {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dayIndex: number; // Int!
     foodCost: number; // Float!
     id: number; // Int!
     transportationCost: number; // Float!
@@ -326,6 +327,7 @@ export interface NexusGenFieldTypes {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dayIndex: number; // Int!
     destinations: NexusGenRootTypes['Place'][]; // [Place!]!
     foodCost: number; // Float!
     id: number; // Int!
@@ -336,6 +338,7 @@ export interface NexusGenFieldTypes {
     // field return type
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
+    deleteTrip: NexusGenRootTypes['Trip']; // Trip!
   };
   OpeningHour: {
     // field return type
@@ -371,6 +374,8 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
+    places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
   };
@@ -503,6 +508,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     createTrip: 'Trip';
     createUser: 'User';
+    deleteTrip: 'Trip';
   };
   OpeningHour: {
     // field return type name
@@ -538,6 +544,8 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    itinerary: 'Itinerary';
+    places: 'Place';
     travelerTrips: 'Trip';
     trip: 'Trip';
   };
@@ -588,8 +596,16 @@ export interface NexusGenArgTypes {
       // args
       data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
     };
+    deleteTrip: {
+      // args
+      id: number; // Int!
+    };
   };
   Query: {
+    itinerary: {
+      // args
+      tripId: number; // Int!
+    };
     travelerTrips: {
       // args
       userId: string; // String!
