@@ -1,10 +1,4 @@
-import { ReactNode } from 'react';
 import { Alert } from 'react-native';
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from '@expo/vector-icons';
 
 import { ExpenseCategory } from '~/graphql/generated';
 
@@ -30,7 +24,7 @@ export const getPieChartData = (
     __typename?: 'Expense' | undefined;
     amount: number;
     category: ExpenseCategory;
-    date: any;
+    date: Date;
   }[],
 ) => {
   return data.map((item, index) => {
@@ -40,7 +34,7 @@ export const getPieChartData = (
       key: index,
       value: item.amount,
       svg: { fill: color },
-      arc: { cornerRadius: 7 }
+      arc: { cornerRadius: 7 },
     };
   });
 };

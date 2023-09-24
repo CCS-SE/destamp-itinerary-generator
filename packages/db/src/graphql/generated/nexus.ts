@@ -348,8 +348,9 @@ export interface NexusGenFieldTypes {
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
-  }
-  OpeningHour: { // field return type
+  };
+  OpeningHour: {
+    // field return type
     closeTime: NexusGenScalars['DateTime']; // DateTime!
     day: number; // Int!
     id: number; // Int!
@@ -379,8 +380,9 @@ export interface NexusGenFieldTypes {
     url: string | null; // String
     visitDuration: number; // Float!
     website: string | null; // String
-  }
-  Query: { // field return type
+  };
+  Query: {
+    // field return type
     getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
     places: NexusGenRootTypes['Place'][]; // [Place!]!
@@ -425,156 +427,175 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
-  Amenity: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  Category: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  DepartingLocation: { // field return type name
-    address: 'String'
-    id: 'Int'
-    latitude: 'Float'
-    longitude: 'Float'
-    name: 'String'
-  }
-  Destination: { // field return type name
-    createdAt: 'DateTime'
-    id: 'Int'
-    image: 'Image'
-    name: 'String'
-    updatedAt: 'DateTime'
-  }
-  DiningAtmosphere: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  DiningCuisine: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  DiningOffering: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  DiningOption: { // field return type name
-    id: 'Int'
-    name: 'String'
-  }
-  Expense: { // field return type name
-    amount: 'Float'
-    category: 'ExpenseCategory'
-    createdAt: 'DateTime'
-    date: 'DateTime'
-    note: 'String'
-    updatedAt: 'DateTime'
-  }
-  Image: { // field return type name
-    createdAt: 'DateTime'
-    id: 'ID'
-    name: 'String'
-    size: 'Int'
-    updatedAt: 'DateTime'
-    url: 'String'
-  }
-  Itinerary: { // field return type name
-    createdAt: 'DateTime'
-    expenses: 'Expense'
-    id: 'Int'
-    itineraryDays: 'ItineraryDay'
-    totalCost: 'Float'
-    totalDuration: 'Float'
-    updatedAt: 'DateTime'
-    url: 'String'
-  }
-  ItineraryDay: { // field return type name
-    accommodationCost: 'Float'
-    attractionCost: 'Float'
-    createdAt: 'DateTime'
-    dayIndex: 'Int'
-    destinations: 'Place'
-    foodCost: 'Float'
-    id: 'Int'
-    transportationCost: 'Float'
-    updatedAt: 'DateTime'
-  }
-  Mutation: { // field return type name
-    createExpense: 'Expense'
-    createTrip: 'Trip'
-    createUser: 'User'
-    deleteTrip: 'Trip'
-  }
-  OpeningHour: { // field return type name
-    closeTime: 'DateTime'
-    day: 'Int'
-    id: 'Int'
-    openTime: 'DateTime'
-  }
-  Place: { // field return type name
-    address: 'String'
-    amenities: 'Amenity'
-    categories: 'Category'
-    contactNumber: 'String'
-    createdAt: 'DateTime'
-    description: 'String'
-    diningAtmospheres: 'DiningAtmosphere'
-    diningCuisines: 'DiningCuisine'
-    diningOfferings: 'DiningOffering'
-    diningOptions: 'DiningOption'
-    id: 'String'
-    images: 'Image'
-    latitude: 'Float'
-    longitude: 'Float'
-    name: 'String'
-    openingHours: 'OpeningHour'
-    price: 'String'
-    type: 'PlaceType'
-    updatedAt: 'DateTime'
-    url: 'String'
-    visitDuration: 'Float'
-    website: 'String'
-  }
-  Query: { // field return type name
-    getTransaction: 'Expense'
-    itinerary: 'Itinerary'
-    places: 'Place'
-    travelerTrips: 'Trip'
-    trip: 'Trip'
-  }
-  Traveler: { // field return type name
-    contactNumber: 'String'
-    firstName: 'String'
-    id: 'Int'
-    lastName: 'String'
-    trips: 'Trip'
-  }
-  Trip: { // field return type name
-    adultCount: 'Int'
-    budget: 'Float'
-    childCount: 'Int'
-    createdAt: 'DateTime'
-    departingLocation: 'DepartingLocation'
-    destination: 'Destination'
-    endDate: 'DateTime'
-    id: 'Int'
-    isAccommodationIncluded: 'Boolean'
-    isFoodIncluded: 'Boolean'
-    isTransportationIncluded: 'Boolean'
-    itinerary: 'Itinerary'
-    startDate: 'DateTime'
-    title: 'String'
-    travelSize: 'TravelSize'
-    updatedAt: 'DateTime'
-  }
-  User: { // field return type name
-    email: 'String'
-    id: 'String'
-    password: 'String'
-    traveler: 'Traveler'
-    userType: 'UserType'
-  }
+  Amenity: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  Category: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  DepartingLocation: {
+    // field return type name
+    address: 'String';
+    id: 'Int';
+    latitude: 'Float';
+    longitude: 'Float';
+    name: 'String';
+  };
+  Destination: {
+    // field return type name
+    createdAt: 'DateTime';
+    id: 'Int';
+    image: 'Image';
+    name: 'String';
+    updatedAt: 'DateTime';
+  };
+  DiningAtmosphere: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  DiningCuisine: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  DiningOffering: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  DiningOption: {
+    // field return type name
+    id: 'Int';
+    name: 'String';
+  };
+  Expense: {
+    // field return type name
+    amount: 'Float';
+    category: 'ExpenseCategory';
+    createdAt: 'DateTime';
+    date: 'DateTime';
+    note: 'String';
+    updatedAt: 'DateTime';
+  };
+  Image: {
+    // field return type name
+    createdAt: 'DateTime';
+    id: 'ID';
+    name: 'String';
+    size: 'Int';
+    updatedAt: 'DateTime';
+    url: 'String';
+  };
+  Itinerary: {
+    // field return type name
+    createdAt: 'DateTime';
+    expenses: 'Expense';
+    id: 'Int';
+    itineraryDays: 'ItineraryDay';
+    totalCost: 'Float';
+    totalDuration: 'Float';
+    updatedAt: 'DateTime';
+    url: 'String';
+  };
+  ItineraryDay: {
+    // field return type name
+    accommodationCost: 'Float';
+    attractionCost: 'Float';
+    createdAt: 'DateTime';
+    dayIndex: 'Int';
+    destinations: 'Place';
+    foodCost: 'Float';
+    id: 'Int';
+    transportationCost: 'Float';
+    updatedAt: 'DateTime';
+  };
+  Mutation: {
+    // field return type name
+    createExpense: 'Expense';
+    createTrip: 'Trip';
+    createUser: 'User';
+    deleteTrip: 'Trip';
+  };
+  OpeningHour: {
+    // field return type name
+    closeTime: 'DateTime';
+    day: 'Int';
+    id: 'Int';
+    openTime: 'DateTime';
+  };
+  Place: {
+    // field return type name
+    address: 'String';
+    amenities: 'Amenity';
+    categories: 'Category';
+    contactNumber: 'String';
+    createdAt: 'DateTime';
+    description: 'String';
+    diningAtmospheres: 'DiningAtmosphere';
+    diningCuisines: 'DiningCuisine';
+    diningOfferings: 'DiningOffering';
+    diningOptions: 'DiningOption';
+    id: 'String';
+    images: 'Image';
+    latitude: 'Float';
+    longitude: 'Float';
+    name: 'String';
+    openingHours: 'OpeningHour';
+    price: 'String';
+    type: 'PlaceType';
+    updatedAt: 'DateTime';
+    url: 'String';
+    visitDuration: 'Float';
+    website: 'String';
+  };
+  Query: {
+    // field return type name
+    getTransaction: 'Expense';
+    itinerary: 'Itinerary';
+    places: 'Place';
+    travelerTrips: 'Trip';
+    trip: 'Trip';
+  };
+  Traveler: {
+    // field return type name
+    contactNumber: 'String';
+    firstName: 'String';
+    id: 'Int';
+    lastName: 'String';
+    trips: 'Trip';
+  };
+  Trip: {
+    // field return type name
+    adultCount: 'Int';
+    budget: 'Float';
+    childCount: 'Int';
+    createdAt: 'DateTime';
+    departingLocation: 'DepartingLocation';
+    destination: 'Destination';
+    endDate: 'DateTime';
+    id: 'Int';
+    isAccommodationIncluded: 'Boolean';
+    isFoodIncluded: 'Boolean';
+    isTransportationIncluded: 'Boolean';
+    itinerary: 'Itinerary';
+    startDate: 'DateTime';
+    title: 'String';
+    travelSize: 'TravelSize';
+    updatedAt: 'DateTime';
+  };
+  User: {
+    // field return type name
+    email: 'String';
+    id: 'String';
+    password: 'String';
+    traveler: 'Traveler';
+    userType: 'UserType';
+  };
 }
 
 export interface NexusGenArgTypes {
@@ -590,16 +611,19 @@ export interface NexusGenArgTypes {
     createUser: {
       // args
       data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
-    }
-    deleteTrip: { // args
+    };
+    deleteTrip: {
+      // args
       id: number; // Int!
-    }
-  }
+    };
+  };
   Query: {
-    getTransaction: { // args
+    getTransaction: {
+      // args
       itineraryId: number; // Int!
-    }
-    itinerary: { // args
+    };
+    itinerary: {
+      // args
       tripId: number; // Int!
     };
     travelerTrips: {

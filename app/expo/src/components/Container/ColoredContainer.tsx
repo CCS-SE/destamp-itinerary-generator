@@ -17,11 +17,11 @@ export default function ColoredContainer({
   return (
     <View
       style={{ backgroundColor: backgroundColor }}
-      className={'mx-2 mt-4 h-20 w-40 items-center justify-center rounded-2xl'}
+      className={'mx-4 mt-4 h-16 w-36 items-center justify-center rounded-2xl'}
     >
       <Text
         style={{ color: textColor }}
-        className={`text-[${textColor}] text-m`}
+        className={`text-[${textColor}] text-base`}
       >
         {title}
       </Text>
