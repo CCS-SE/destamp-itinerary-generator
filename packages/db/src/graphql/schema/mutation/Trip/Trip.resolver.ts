@@ -19,3 +19,11 @@ export const createTrip = (args: CreateTripInput, ctx: Context) => {
     },
   });
 };
+
+export const deleteTrip = (id: number, ctx: Context) => {
+  return ctx.prisma.trip.delete({
+    where: {
+      id: id,
+    },
+  });
+};

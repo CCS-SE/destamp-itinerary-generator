@@ -42,7 +42,7 @@ function TripCard({
   const daysDifference = tripDuration(startDate, endDate);
 
   return (
-    <View className="bg- m-3">
+    <View className="bg- m-3" testID="trip-card">
       <Link href={`/itinerary/${id}`}>
         <View className="w-[370] rounded-2xl bg-gray-50 shadow-md">
           <Image
@@ -70,7 +70,7 @@ function TripCard({
             ></FontAwesome5>
           </TouchableOpacity>
           <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
-            <TripMenuList onModalClose={onModalClose} />
+            <TripMenuList id={id} onModalClose={onModalClose} />
           </BottomHalfModal>
           <View className="absolute left-4 top-40 w-[215] flex-row justify-between">
             <Text

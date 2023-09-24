@@ -101,6 +101,7 @@ export default function ItineraryCard({
                 />
               </View>
               <DirectionCard
+                key={`${destination.name}-${i}`}
                 icon={
                   <Walking height={22} width={22} style={{ marginLeft: 8 }} />
                 }

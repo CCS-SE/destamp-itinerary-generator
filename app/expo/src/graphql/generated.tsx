@@ -170,6 +170,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createTrip: Trip;
   createUser: User;
+  deleteTrip: Trip;
 };
 
 export type MutationCreateTripArgs = {
@@ -178,6 +179,10 @@ export type MutationCreateTripArgs = {
 
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
+};
+
+export type MutationDeleteTripArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type OpeningHour = {
@@ -661,6 +666,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateUserArgs, 'data'>
   >;
+  deleteTrip?: Resolver<
+    ResolversTypes['Trip'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteTripArgs, 'id'>
+  >;
 };
 
 export type OpeningHourResolvers<
@@ -939,6 +950,15 @@ export type CreateUserMutation = {
   createUser: { __typename?: 'User'; id: string };
 };
 
+export type DeleteTripMutationVariables = Exact<{
+  deleteTripId: Scalars['Int']['input'];
+}>;
+
+export type DeleteTripMutation = {
+  __typename?: 'Mutation';
+  deleteTrip: { __typename?: 'Trip'; id: number; title: string };
+};
+
 export const GetTravelerTripsDocument = {
   kind: 'Document',
   definitions: [
@@ -1213,3 +1233,52 @@ export const CreateUserDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export const DeleteTripDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeleteTrip' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'deleteTripId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteTrip' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'deleteTripId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeleteTripMutation, DeleteTripMutationVariables>;

@@ -1,10 +1,17 @@
 import React from 'react';
+import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
 import { amountFormatter } from '~/utils/utils';
 import TripCard from '../TripCard';
-import { tripCardData } from './mock/tripCardData';
+import { tripCardData, TripsQueryMock } from './mock/query.mock';
+
+jest.mock('@supabase/supabase-js', () => {
+  return {
+    createClient: jest.fn(() => ({})),
+  };
+});
 
 describe('Trip Card', () => {
   it('should render trip destination and image', () => {
@@ -30,18 +37,20 @@ describe('Trip Card', () => {
   });
 
   it('calls the modal open function when menu button is clicked', async () => {
-    const { getByTestId, findByTestId } = render(
-      <TripCard {...tripCardData} />,
+    const { findByTestId } = render(
+      <MockedProvider mocks={TripsQueryMock}>
+        <TripCard {...tripCardData} />
+      </MockedProvider>,
     );
 
-    const menuBtn = getByTestId('trip-menu-btn');
+    const menuBtn = await findByTestId('trip-menu-btn');
     expect(menuBtn).toBeDefined();
 
     act(() => {
       fireEvent.press(menuBtn);
     });
 
-    const modalComponent = findByTestId('modal');
+    const modalComponent = await findByTestId('modal');
     expect(modalComponent).toBeTruthy();
 
     const tripMenuList = await findByTestId('trip-menu-list');

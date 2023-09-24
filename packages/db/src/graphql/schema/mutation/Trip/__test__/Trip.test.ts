@@ -2,7 +2,7 @@ import { TravelSize } from '@prisma/client';
 
 import { MockContext } from '../../../../../types/types';
 import { Context, createMockContext } from '../../../../context';
-import { createTrip } from '../Trip.resolver';
+import { createTrip, deleteTrip } from '../Trip.resolver';
 
 let mockContext: MockContext;
 let context: Context;
@@ -26,6 +26,10 @@ describe('createTrip mutation', () => {
       startDate: new Date('2023-9-23'),
       title: 'Iloilo City Trip',
       travelSize: TravelSize.COUPLE,
+      departingLocationId: 3,
+      isAccommodationIncluded: false,
+      isFoodIncluded: true,
+      isTransportationIncluded: false,
       adultCount: null,
       childCount: null,
       createdAt: new Date('2023-9-20'),
@@ -62,5 +66,42 @@ describe('createTrip mutation', () => {
     });
 
     expect(result).toEqual(expectedResult);
+  });
+});
+
+describe('deleteTrip mutation', () => {
+  it('should delete a trip', async () => {
+    const tripId = 1;
+
+    const trip = {
+      id: 1,
+      budget: 20_000,
+      destinationId: 2,
+      travelerId: 3,
+      endDate: new Date('2023-9-21'),
+      startDate: new Date('2023-9-23'),
+      title: 'Iloilo City Trip',
+      travelSize: TravelSize.COUPLE,
+      departingLocationId: 3,
+      isAccommodationIncluded: false,
+      isFoodIncluded: true,
+      isTransportationIncluded: false,
+      adultCount: null,
+      childCount: null,
+      createdAt: new Date('2023-9-20'),
+      updatedAt: new Date('2023-9-20'),
+    };
+
+    mockContext.prisma.trip.delete.mockResolvedValue(trip);
+
+    const result = await deleteTrip(tripId, context);
+
+    expect(mockContext.prisma.trip.delete).toBeCalledWith({
+      where: {
+        id: tripId,
+      },
+    });
+
+    expect(result).toEqual(trip);
   });
 });
