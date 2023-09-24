@@ -26,7 +26,8 @@ export default function GradientButton({
         colors={['#fd8139', '#f65a82']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
-        className={`m-5 w-[${size}] items-center rounded-xl py-3 ${
+        style={{ width: size }}
+        className={`m-5 items-center rounded-xl py-3 ${
           isSubmitting ? 'opacity-40' : ''
         }`}
       >

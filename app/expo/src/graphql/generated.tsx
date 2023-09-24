@@ -1,42 +1,22 @@
+import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
-import {
-  GraphQLResolveInfo,
-  GraphQLScalarType,
-  GraphQLScalarTypeConfig,
-} from 'graphql';
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
-export type RequireFields<T, K extends keyof T> = Omit<T, K> & {
-  [P in K]-?: NonNullable<T[P]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  BigInt: { input: any; output: any };
-  DateTime: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  BigInt: { input: any; output: any; }
+  DateTime: { input: any; output: any; }
 };
 
 export type Amenity = {
@@ -49,6 +29,14 @@ export type Category = {
   __typename?: 'Category';
   id: Scalars['Int']['output'];
   name: Scalars['String']['output'];
+};
+
+export type CreateExpenseInput = {
+  amount: Scalars['Float']['input'];
+  category: ExpenseCategory;
+  date: Scalars['DateTime']['input'];
+  itineraryId: Scalars['Int']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateTripInput = {
@@ -128,7 +116,7 @@ export enum ExpenseCategory {
   Other = 'OTHER',
   Shopping = 'SHOPPING',
   Sightseeing = 'SIGHTSEEING',
-  Transportation = 'TRANSPORTATION',
+  Transportation = 'TRANSPORTATION'
 }
 
 export type Image = {
@@ -168,16 +156,30 @@ export type ItineraryDay = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createExpense: Expense;
   createTrip: Trip;
   createUser: User;
+  deleteTrip: Trip;
 };
+
+
+export type MutationCreateExpenseArgs = {
+  data: CreateExpenseInput;
+};
+
 
 export type MutationCreateTripArgs = {
   data: CreateTripInput;
 };
 
+
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
+};
+
+
+export type MutationDeleteTripArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type OpeningHour = {
@@ -217,7 +219,7 @@ export type Place = {
 export enum PlaceType {
   Accommodation = 'ACCOMMODATION',
   Attraction = 'ATTRACTION',
-  Restaurant = 'RESTAURANT',
+  Restaurant = 'RESTAURANT'
 }
 
 export type Query = {
@@ -229,17 +231,21 @@ export type Query = {
   trip: Trip;
 };
 
+
 export type QueryGetTransactionArgs = {
   itineraryId: Scalars['Int']['input'];
 };
+
 
 export type QueryItineraryArgs = {
   tripId: Scalars['Int']['input'];
 };
 
+
 export type QueryTravelerTripsArgs = {
   userId: Scalars['String']['input'];
 };
+
 
 export type QueryTripArgs = {
   id: Scalars['Int']['input'];
@@ -249,7 +255,7 @@ export enum TravelSize {
   Couple = 'COUPLE',
   Family = 'FAMILY',
   Group = 'GROUP',
-  Solo = 'SOLO',
+  Solo = 'SOLO'
 }
 
 export type Traveler = {
@@ -292,58 +298,43 @@ export type User = {
 
 export enum UserType {
   BusinessOperator = 'BUSINESS_OPERATOR',
-  Traveler = 'TRAVELER',
+  Traveler = 'TRAVELER'
 }
 
+
+
 export type ResolverTypeWrapper<T> = Promise<T> | T;
+
 
 export type ResolverWithResolve<TResult, TParent, TContext, TArgs> = {
   resolve: ResolverFn<TResult, TParent, TContext, TArgs>;
 };
-export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> =
-  | ResolverFn<TResult, TParent, TContext, TArgs>
-  | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
+export type Resolver<TResult, TParent = {}, TContext = {}, TArgs = {}> = ResolverFn<TResult, TParent, TContext, TArgs> | ResolverWithResolve<TResult, TParent, TContext, TArgs>;
 
 export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
 
-export interface SubscriptionSubscriberObject<
-  TResult,
-  TKey extends string,
-  TParent,
-  TContext,
-  TArgs,
-> {
-  subscribe: SubscriptionSubscribeFn<
-    { [key in TKey]: TResult },
-    TParent,
-    TContext,
-    TArgs
-  >;
-  resolve?: SubscriptionResolveFn<
-    TResult,
-    { [key in TKey]: TResult },
-    TContext,
-    TArgs
-  >;
+export interface SubscriptionSubscriberObject<TResult, TKey extends string, TParent, TContext, TArgs> {
+  subscribe: SubscriptionSubscribeFn<{ [key in TKey]: TResult }, TParent, TContext, TArgs>;
+  resolve?: SubscriptionResolveFn<TResult, { [key in TKey]: TResult }, TContext, TArgs>;
 }
 
 export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
@@ -351,54 +342,33 @@ export interface SubscriptionResolverObject<TResult, TParent, TContext, TArgs> {
   resolve: SubscriptionResolveFn<TResult, any, TContext, TArgs>;
 }
 
-export type SubscriptionObject<
-  TResult,
-  TKey extends string,
-  TParent,
-  TContext,
-  TArgs,
-> =
+export type SubscriptionObject<TResult, TKey extends string, TParent, TContext, TArgs> =
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
 
-export type SubscriptionResolver<
-  TResult,
-  TKey extends string,
-  TParent = {},
-  TContext = {},
-  TArgs = {},
-> =
-  | ((
-      ...args: any[]
-    ) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
+export type SubscriptionResolver<TResult, TKey extends string, TParent = {}, TContext = {}, TArgs = {}> =
+  | ((...args: any[]) => SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>)
   | SubscriptionObject<TResult, TKey, TParent, TContext, TArgs>;
 
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
-  obj: T,
-  context: TContext,
-  info: GraphQLResolveInfo,
-) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
-export type DirectiveResolverFn<
-  TResult = {},
-  TParent = {},
-  TContext = {},
-  TArgs = {},
-> = (
+export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs = {}> = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo,
+  info: GraphQLResolveInfo
 ) => TResult | Promise<TResult>;
+
+
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
@@ -406,6 +376,7 @@ export type ResolversTypes = {
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Category: ResolverTypeWrapper<Category>;
+  CreateExpenseInput: CreateExpenseInput;
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
@@ -442,6 +413,7 @@ export type ResolversParentTypes = {
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
   Category: Category;
+  CreateExpenseInput: CreateExpenseInput;
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DateTime: Scalars['DateTime']['output'];
@@ -468,41 +440,27 @@ export type ResolversParentTypes = {
   User: User;
 };
 
-export type AmenityResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity'],
-> = {
+export type AmenityResolvers<ContextType = any, ParentType extends ResolversParentTypes['Amenity'] = ResolversParentTypes['Amenity']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export interface BigIntScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
+export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
   name: 'BigInt';
 }
 
-export type CategoryResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Category'] = ResolversParentTypes['Category'],
-> = {
+export type CategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export interface DateTimeScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
+export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['DateTime'], any> {
   name: 'DateTime';
 }
 
-export type DepartingLocationResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['DepartingLocation'] = ResolversParentTypes['DepartingLocation'],
-> = {
+export type DepartingLocationResolvers<ContextType = any, ParentType extends ResolversParentTypes['DepartingLocation'] = ResolversParentTypes['DepartingLocation']> = {
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
@@ -511,11 +469,7 @@ export type DepartingLocationResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DestinationResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Destination'] = ResolversParentTypes['Destination'],
-> = {
+export type DestinationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Destination'] = ResolversParentTypes['Destination']> = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image?: Resolver<Maybe<ResolversTypes['Image']>, ParentType, ContextType>;
@@ -524,57 +478,33 @@ export type DestinationResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DiningAtmosphereResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['DiningAtmosphere'] = ResolversParentTypes['DiningAtmosphere'],
-> = {
+export type DiningAtmosphereResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiningAtmosphere'] = ResolversParentTypes['DiningAtmosphere']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DiningCuisineResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['DiningCuisine'] = ResolversParentTypes['DiningCuisine'],
-> = {
+export type DiningCuisineResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiningCuisine'] = ResolversParentTypes['DiningCuisine']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DiningOfferingResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['DiningOffering'] = ResolversParentTypes['DiningOffering'],
-> = {
+export type DiningOfferingResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiningOffering'] = ResolversParentTypes['DiningOffering']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DiningOptionResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['DiningOption'] = ResolversParentTypes['DiningOption'],
-> = {
+export type DiningOptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['DiningOption'] = ResolversParentTypes['DiningOption']> = {
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ExpenseResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Expense'] = ResolversParentTypes['Expense'],
-> = {
+export type ExpenseResolvers<ContextType = any, ParentType extends ResolversParentTypes['Expense'] = ResolversParentTypes['Expense']> = {
   amount?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
-  category?: Resolver<
-    ResolversTypes['ExpenseCategory'],
-    ParentType,
-    ContextType
-  >;
+  category?: Resolver<ResolversTypes['ExpenseCategory'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   note?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -582,11 +512,7 @@ export type ExpenseResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ImageResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Image'] = ResolversParentTypes['Image'],
-> = {
+export type ImageResolvers<ContextType = any, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -596,23 +522,11 @@ export type ImageResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ItineraryResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Itinerary'] = ResolversParentTypes['Itinerary'],
-> = {
+export type ItineraryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Itinerary'] = ResolversParentTypes['Itinerary']> = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  expenses?: Resolver<
-    Array<ResolversTypes['Expense']>,
-    ParentType,
-    ContextType
-  >;
+  expenses?: Resolver<Array<ResolversTypes['Expense']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  itineraryDays?: Resolver<
-    Array<ResolversTypes['ItineraryDay']>,
-    ParentType,
-    ContextType
-  >;
+  itineraryDays?: Resolver<Array<ResolversTypes['ItineraryDay']>, ParentType, ContextType>;
   totalCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   totalDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -620,59 +534,27 @@ export type ItineraryResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ItineraryDayResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['ItineraryDay'] = ResolversParentTypes['ItineraryDay'],
-> = {
-  accommodationCost?: Resolver<
-    ResolversTypes['Float'],
-    ParentType,
-    ContextType
-  >;
+export type ItineraryDayResolvers<ContextType = any, ParentType extends ResolversParentTypes['ItineraryDay'] = ResolversParentTypes['ItineraryDay']> = {
+  accommodationCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   attractionCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dayIndex?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  destinations?: Resolver<
-    Array<ResolversTypes['Place']>,
-    ParentType,
-    ContextType
-  >;
+  destinations?: Resolver<Array<ResolversTypes['Place']>, ParentType, ContextType>;
   foodCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  transportationCost?: Resolver<
-    ResolversTypes['Float'],
-    ParentType,
-    ContextType
-  >;
+  transportationCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
-> = {
-  createTrip?: Resolver<
-    ResolversTypes['Trip'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationCreateTripArgs, 'data'>
-  >;
-  createUser?: Resolver<
-    ResolversTypes['User'],
-    ParentType,
-    ContextType,
-    RequireFields<MutationCreateUserArgs, 'data'>
-  >;
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createExpense?: Resolver<ResolversTypes['Expense'], ParentType, ContextType, RequireFields<MutationCreateExpenseArgs, 'data'>>;
+  createTrip?: Resolver<ResolversTypes['Trip'], ParentType, ContextType, RequireFields<MutationCreateTripArgs, 'data'>>;
+  createUser?: Resolver<ResolversTypes['User'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'data'>>;
+  deleteTrip?: Resolver<ResolversTypes['Trip'], ParentType, ContextType, RequireFields<MutationDeleteTripArgs, 'id'>>;
 };
 
-export type OpeningHourResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['OpeningHour'] = ResolversParentTypes['OpeningHour'],
-> = {
+export type OpeningHourResolvers<ContextType = any, ParentType extends ResolversParentTypes['OpeningHour'] = ResolversParentTypes['OpeningHour']> = {
   closeTime?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   day?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -680,63 +562,23 @@ export type OpeningHourResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type PlaceResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Place'] = ResolversParentTypes['Place'],
-> = {
+export type PlaceResolvers<ContextType = any, ParentType extends ResolversParentTypes['Place'] = ResolversParentTypes['Place']> = {
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  amenities?: Resolver<
-    Array<ResolversTypes['Amenity']>,
-    ParentType,
-    ContextType
-  >;
-  categories?: Resolver<
-    Array<ResolversTypes['Category']>,
-    ParentType,
-    ContextType
-  >;
-  contactNumber?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
+  amenities?: Resolver<Array<ResolversTypes['Amenity']>, ParentType, ContextType>;
+  categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
+  contactNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  description?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  diningAtmospheres?: Resolver<
-    Array<ResolversTypes['DiningAtmosphere']>,
-    ParentType,
-    ContextType
-  >;
-  diningCuisines?: Resolver<
-    Array<ResolversTypes['DiningCuisine']>,
-    ParentType,
-    ContextType
-  >;
-  diningOfferings?: Resolver<
-    Array<ResolversTypes['DiningOffering']>,
-    ParentType,
-    ContextType
-  >;
-  diningOptions?: Resolver<
-    Array<ResolversTypes['DiningOption']>,
-    ParentType,
-    ContextType
-  >;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  diningAtmospheres?: Resolver<Array<ResolversTypes['DiningAtmosphere']>, ParentType, ContextType>;
+  diningCuisines?: Resolver<Array<ResolversTypes['DiningCuisine']>, ParentType, ContextType>;
+  diningOfferings?: Resolver<Array<ResolversTypes['DiningOffering']>, ParentType, ContextType>;
+  diningOptions?: Resolver<Array<ResolversTypes['DiningOption']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType>;
   latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  openingHours?: Resolver<
-    Array<ResolversTypes['OpeningHour']>,
-    ParentType,
-    ContextType
-  >;
+  openingHours?: Resolver<Array<ResolversTypes['OpeningHour']>, ParentType, ContextType>;
   price?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['PlaceType'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -746,96 +588,36 @@ export type PlaceResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type QueryResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
-> = {
-  getTransaction?: Resolver<
-    Array<ResolversTypes['Expense']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryGetTransactionArgs, 'itineraryId'>
-  >;
-  itinerary?: Resolver<
-    ResolversTypes['Itinerary'],
-    ParentType,
-    ContextType,
-    RequireFields<QueryItineraryArgs, 'tripId'>
-  >;
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getTransaction?: Resolver<Array<ResolversTypes['Expense']>, ParentType, ContextType, RequireFields<QueryGetTransactionArgs, 'itineraryId'>>;
+  itinerary?: Resolver<ResolversTypes['Itinerary'], ParentType, ContextType, RequireFields<QueryItineraryArgs, 'tripId'>>;
   places?: Resolver<Array<ResolversTypes['Place']>, ParentType, ContextType>;
-  travelerTrips?: Resolver<
-    Array<ResolversTypes['Trip']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryTravelerTripsArgs, 'userId'>
-  >;
-  trip?: Resolver<
-    ResolversTypes['Trip'],
-    ParentType,
-    ContextType,
-    RequireFields<QueryTripArgs, 'id'>
-  >;
+  travelerTrips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType, RequireFields<QueryTravelerTripsArgs, 'userId'>>;
+  trip?: Resolver<ResolversTypes['Trip'], ParentType, ContextType, RequireFields<QueryTripArgs, 'id'>>;
 };
 
-export type TravelerResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Traveler'] = ResolversParentTypes['Traveler'],
-> = {
-  contactNumber?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  firstName?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
+export type TravelerResolvers<ContextType = any, ParentType extends ResolversParentTypes['Traveler'] = ResolversParentTypes['Traveler']> = {
+  contactNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type TripResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['Trip'] = ResolversParentTypes['Trip'],
-> = {
+export type TripResolvers<ContextType = any, ParentType extends ResolversParentTypes['Trip'] = ResolversParentTypes['Trip']> = {
   adultCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   budget?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   childCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  departingLocation?: Resolver<
-    Maybe<ResolversTypes['DepartingLocation']>,
-    ParentType,
-    ContextType
-  >;
-  destination?: Resolver<
-    Maybe<ResolversTypes['Destination']>,
-    ParentType,
-    ContextType
-  >;
+  departingLocation?: Resolver<Maybe<ResolversTypes['DepartingLocation']>, ParentType, ContextType>;
+  destination?: Resolver<Maybe<ResolversTypes['Destination']>, ParentType, ContextType>;
   endDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  isAccommodationIncluded?: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType
-  >;
+  isAccommodationIncluded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   isFoodIncluded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  isTransportationIncluded?: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType
-  >;
-  itinerary?: Resolver<
-    Maybe<ResolversTypes['Itinerary']>,
-    ParentType,
-    ContextType
-  >;
+  isTransportationIncluded?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  itinerary?: Resolver<Maybe<ResolversTypes['Itinerary']>, ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   travelSize?: Resolver<ResolversTypes['TravelSize'], ParentType, ContextType>;
@@ -843,19 +625,11 @@ export type TripResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['User'] = ResolversParentTypes['User'],
-> = {
+export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  traveler?: Resolver<
-    Maybe<ResolversTypes['Traveler']>,
-    ParentType,
-    ContextType
-  >;
+  traveler?: Resolver<Maybe<ResolversTypes['Traveler']>, ParentType, ContextType>;
   userType?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -884,410 +658,53 @@ export type Resolvers<ContextType = any> = {
   User?: UserResolvers<ContextType>;
 };
 
+
 export type GetTravelerTripsQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
-export type GetTravelerTripsQuery = {
-  __typename?: 'Query';
-  travelerTrips: Array<{
-    __typename?: 'Trip';
-    id: number;
-    title: string;
-    budget: number;
-    travelSize: TravelSize;
-    startDate: any;
-    endDate: any;
-    destination?: {
-      __typename?: 'Destination';
-      name: string;
-      image?: { __typename?: 'Image'; url: string } | null;
-    } | null;
-  }>;
-};
+
+export type GetTravelerTripsQuery = { __typename?: 'Query', travelerTrips: Array<{ __typename?: 'Trip', id: number, title: string, budget: number, travelSize: TravelSize, startDate: any, endDate: any, destination?: { __typename?: 'Destination', name: string, image?: { __typename?: 'Image', url: string } | null } | null }> };
 
 export type GetTransactionsQueryVariables = Exact<{
   itineraryId: Scalars['Int']['input'];
 }>;
 
-export type GetTransactionsQuery = {
-  __typename?: 'Query';
-  getTransaction: Array<{
-    __typename?: 'Expense';
-    amount: number;
-    category: ExpenseCategory;
-    date: any;
-  }>;
-};
+
+export type GetTransactionsQuery = { __typename?: 'Query', getTransaction: Array<{ __typename?: 'Expense', amount: number, category: ExpenseCategory, date: any }> };
 
 export type GetTravelerItineraryQueryVariables = Exact<{
   tripId: Scalars['Int']['input'];
 }>;
 
-export type GetTravelerItineraryQuery = {
-  __typename?: 'Query';
-  itinerary: {
-    __typename?: 'Itinerary';
-    itineraryDays: Array<{
-      __typename?: 'ItineraryDay';
-      foodCost: number;
-      attractionCost: number;
-      transportationCost: number;
-      dayIndex: number;
-      destinations: Array<{
-        __typename?: 'Place';
-        name: string;
-        price: string;
-        type: PlaceType;
-        visitDuration: number;
-        images: Array<{ __typename?: 'Image'; url: string }>;
-      }>;
-    }>;
-  };
-  trip: {
-    __typename?: 'Trip';
-    startDate: any;
-    endDate: any;
-    departingLocation?: {
-      __typename?: 'DepartingLocation';
-      name: string;
-    } | null;
-  };
-};
+
+export type GetTravelerItineraryQuery = { __typename?: 'Query', itinerary: { __typename?: 'Itinerary', id: number, totalCost: number, itineraryDays: Array<{ __typename?: 'ItineraryDay', id: number, foodCost: number, attractionCost: number, transportationCost: number, dayIndex: number, destinations: Array<{ __typename?: 'Place', name: string, price: string, type: PlaceType, visitDuration: number, images: Array<{ __typename?: 'Image', url: string }> }> }> }, trip: { __typename?: 'Trip', budget: number, startDate: any, endDate: any, departingLocation?: { __typename?: 'DepartingLocation', name: string } | null } };
+
+export type CreateExpenseMutationVariables = Exact<{
+  data: CreateExpenseInput;
+}>;
+
+
+export type CreateExpenseMutation = { __typename?: 'Mutation', createExpense: { __typename?: 'Expense', amount: number, category: ExpenseCategory, date: any, note?: string | null } };
 
 export type CreateUserMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
 
-export type CreateUserMutation = {
-  __typename?: 'Mutation';
-  createUser: { __typename?: 'User'; id: string };
-};
 
-export const GetTravelerTripsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetTravelerTrips' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'userId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'String' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'travelerTrips' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'userId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'userId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'budget' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'destination' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'travelSize' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetTravelerTripsQuery,
-  GetTravelerTripsQueryVariables
->;
-export const GetTransactionsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetTransactions' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'itineraryId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'getTransaction' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'itineraryId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'itineraryId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'category' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'date' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetTransactionsQuery,
-  GetTransactionsQueryVariables
->;
-export const GetTravelerItineraryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetTravelerItinerary' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'tripId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'itinerary' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'tripId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'tripId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'itineraryDays' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'foodCost' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'attractionCost' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'transportationCost' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'dayIndex' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'destinations' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'name' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'price' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'type' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'visitDuration' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'images' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'trip' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'tripId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'departingLocation' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetTravelerItineraryQuery,
-  GetTravelerItineraryQueryVariables
->;
-export const CreateUserDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'mutation',
-      name: { kind: 'Name', value: 'CreateUser' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
-          type: {
-            kind: 'NonNullType',
-            type: {
-              kind: 'NamedType',
-              name: { kind: 'Name', value: 'CreateUserInput' },
-            },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'createUser' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
+
+export type DeleteTripMutationVariables = Exact<{
+  deleteTripId: Scalars['Int']['input'];
+}>;
+
+
+export type DeleteTripMutation = { __typename?: 'Mutation', deleteTrip: { __typename?: 'Trip', id: number, title: string } };
+
+
+export const GetTravelerTripsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTravelerTrips"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"travelerTrips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"budget"}},{"kind":"Field","name":{"kind":"Name","value":"destination"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"image"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"travelSize"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}}]}}]} as unknown as DocumentNode<GetTravelerTripsQuery, GetTravelerTripsQueryVariables>;
+export const GetTransactionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTransactions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"itineraryId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getTransaction"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"itineraryId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"itineraryId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"date"}}]}}]}}]} as unknown as DocumentNode<GetTransactionsQuery, GetTransactionsQueryVariables>;
+export const GetTravelerItineraryDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetTravelerItinerary"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"itinerary"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tripId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"totalCost"}},{"kind":"Field","name":{"kind":"Name","value":"itineraryDays"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"foodCost"}},{"kind":"Field","name":{"kind":"Name","value":"attractionCost"}},{"kind":"Field","name":{"kind":"Name","value":"transportationCost"}},{"kind":"Field","name":{"kind":"Name","value":"dayIndex"}},{"kind":"Field","name":{"kind":"Name","value":"destinations"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"price"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"visitDuration"}},{"kind":"Field","name":{"kind":"Name","value":"images"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"url"}}]}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"trip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"budget"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"departingLocation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetTravelerItineraryQuery, GetTravelerItineraryQueryVariables>;
+export const CreateExpenseDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateExpense"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateExpenseInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createExpense"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"amount"}},{"kind":"Field","name":{"kind":"Name","value":"category"}},{"kind":"Field","name":{"kind":"Name","value":"date"}},{"kind":"Field","name":{"kind":"Name","value":"note"}}]}}]}}]} as unknown as DocumentNode<CreateExpenseMutation, CreateExpenseMutationVariables>;
+export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"data"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateUserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"data"},"value":{"kind":"Variable","name":{"kind":"Name","value":"data"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export const DeleteTripDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"DeleteTrip"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"deleteTripId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteTrip"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"deleteTripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"title"}}]}}]}}]} as unknown as DocumentNode<DeleteTripMutation, DeleteTripMutationVariables>;

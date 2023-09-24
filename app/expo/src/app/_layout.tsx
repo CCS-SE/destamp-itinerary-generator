@@ -23,7 +23,8 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-const LOCAL_SYSTEM_IP_ADDRESS = '192.168.1.4'; // change this with your own ip address
+const LOCAL_SYSTEM_IP_ADDRESS = '192.168.254.109';
+// '192.168.254.135'; // change this with your own ip address
 const PORT = 4000;
 
 const client = new ApolloClient({
@@ -31,7 +32,19 @@ const client = new ApolloClient({
     uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
     fetch,
   }),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          travelerTrips: {
+            merge(_, incoming) {
+              return incoming;
+            },
+          },
+        },
+      },
+    },
+  }),
 });
 
 export const unstable_settings = {

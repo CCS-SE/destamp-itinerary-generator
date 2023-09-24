@@ -1,23 +1,55 @@
 import React, { useState } from 'react';
-import { Platform, Pressable, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import { gql, useMutation } from '@apollo/client';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 
-import CategoryList from '~/app/expense/CategoryList';
-import { ExpenseCategory } from '~/graphql/generated';
+import CategoryList from '~/components/List/CategoryList';
+import {
+  CreateExpenseDocument,
+  ExpenseCategory,
+  GetTransactionsDocument,
+  MutationCreateExpenseArgs,
+} from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
 
 interface AddSpendingFormProps {
-  onSubmit: () => void;
+  closeModal: () => void;
+  itineraryId: number;
+  minDate: Date;
+  maxDate: Date;
 }
 
-export default function AddSpendingForm({ onSubmit }: AddSpendingFormProps) {
+export const createExpense = gql(
+  `mutation CreateExpense($data: CreateExpenseInput!) {
+  createExpense(data: $data) {
+      amount,
+      category,
+      date,
+      note,
+  }
+}`,
+);
+
+export default function AddSpendingForm({
+  closeModal,
+  itineraryId,
+  minDate,
+  maxDate,
+}: AddSpendingFormProps) {
+  const [datePicker, setDatePicker] = useState(false);
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
-  const [date, setDate] = useState(new Date());
-  const [datePicker, setDatePicker] = useState(false);
-  const [, setCategory] = useState<ExpenseCategory>(
+  const [date, setDate] = useState(new Date(minDate));
+  const [category, setCategory] = useState<ExpenseCategory>(
     ExpenseCategory.Accommodation,
   );
 
@@ -35,7 +67,7 @@ export default function AddSpendingForm({ onSubmit }: AddSpendingFormProps) {
   ) => {
     if (type == 'set') {
       const newDate = selectedDate;
-      if (Platform.OS === 'android') {
+      if (Platform.OS === 'android' && newDate) {
         toggleDatePicker();
         setDate(newDate!);
       } else {
@@ -44,6 +76,38 @@ export default function AddSpendingForm({ onSubmit }: AddSpendingFormProps) {
     } else {
       toggleDatePicker();
     }
+  };
+
+  const [createExpense] = useMutation(CreateExpenseDocument);
+
+  const onSubmit = async () => {
+    const createExpenseInput: MutationCreateExpenseArgs = {
+      data: {
+        amount: parseFloat(amount),
+        category: category,
+        itineraryId: itineraryId,
+        date: date,
+        note: note,
+      },
+    };
+
+    await createExpense({
+      variables: {
+        data: createExpenseInput.data,
+      },
+      refetchQueries: [
+        {
+          query: GetTransactionsDocument,
+          variables: {
+            itineraryId: itineraryId,
+          },
+        },
+      ],
+      onError: (err) => {
+        Alert.alert('Err', err.message);
+      },
+    });
+    closeModal();
   };
 
   return (
@@ -70,8 +134,8 @@ export default function AddSpendingForm({ onSubmit }: AddSpendingFormProps) {
               value={date}
               mode="date"
               onChange={onDateChange}
-              minimumDate={new Date(2023, 8, 20)}
-              maximumDate={new Date(2023, 8, 23)}
+              minimumDate={new Date(minDate)}
+              maximumDate={new Date(maxDate)}
             />
           </View>
         </View>
@@ -97,10 +161,10 @@ export default function AddSpendingForm({ onSubmit }: AddSpendingFormProps) {
         />
       </View>
       <GradientButton
-        size={290}
         title="Add"
         onPress={onSubmit}
         isSubmitting={false}
+        size={290}
       />
     </View>
   );
