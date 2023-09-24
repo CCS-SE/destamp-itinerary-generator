@@ -14,7 +14,7 @@ import Map from '../../../assets/images/map-icon.svg';
 
 export const GetTravelersItineraryQuery = gql(
   `query GetTravelerItinerary($tripId: Int!) {
-    itinerary(tripId: $tripId) {
+    itinerary(tripId: $tripId) { 
       itineraryDays {
         foodCost
         attractionCost

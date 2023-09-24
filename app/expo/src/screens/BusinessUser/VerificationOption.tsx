@@ -1,27 +1,31 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { router } from 'expo-router';
 
-// import textIcon from '../../../assets/images/textMessageIcon';
+import VerificationOptionCard from '~/components/Card/VerificationOptionCard';
 
 const VerificationOption = () => {
-  // const textIcon = require('../../../assets/images/textMessageIcon.png');
   return (
     <View>
-      <TouchableOpacity>
-        <View style={styles.container}>
-          <View style={styles.row}>
-            <View style={styles.content}>
-              <Text style={styles.title}>
-                Get verification through phone number
-              </Text>
-              <Text style={styles.description}>
-                To confirm your identity, the phone number listed for this
-                business will receive a text with verification code.{' '}
-              </Text>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
+      <Text style={styles.instruction}>Select a way to get verified</Text>
+      <VerificationOptionCard
+        title={'Get verification through phone number'}
+        description={
+          'To confirm your identity, the phone number listed for this business will receive a text with verification code.'
+        }
+        icon={[require('../../../assets/images/textMessageIcon.png')]}
+        onPress={() => router.push('/verificationScreen/1')}
+      />
+      <VerificationOptionCard
+        title={
+          'Get verified by uploading business permit or other proof of ownership'
+        }
+        description={
+          'To confirm your identity, submit a copy of your business permit or any valid proof of ownership. This process may take approximately 1-2 days to complete.'
+        }
+        icon={[require('../../../assets/images/Documents.png')]}
+        onPress={() => {}}
+      />
     </View>
   );
 };
@@ -41,6 +45,8 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 15,
@@ -52,6 +58,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     color: '#818181',
   },
-  textMessageIcon: {},
+  instruction: {
+    fontSize: 20,
+    // height: 800,
+    color: '#FC8040',
+    fontFamily: 'Poppins',
+    margin: 15,
+  },
 });
 export default VerificationOption;

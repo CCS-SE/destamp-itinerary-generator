@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDE4C8',
     borderRadius: 20,
     padding: 30,
-    marginTop: 43,
+    marginTop: 25,
   },
   descriptionBox: {
     fontSize: 10,

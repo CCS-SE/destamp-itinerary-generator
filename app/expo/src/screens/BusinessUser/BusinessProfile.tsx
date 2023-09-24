@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import ContactInformation from '~/components/Card/ContactInfoCard';
 import EstablishmentCategory from '~/components/Card/EstablishmentCategoryCard';
@@ -12,7 +12,7 @@ const BusinessProfile = () => {
   const handleTagPress = () => {};
   return (
     <ScrollView>
-      <View>
+      <View style={styles.container}>
         <ProfileDescription
           description={
             'Explore your adventurous side by making your own unique snack combo with the variety.'
@@ -42,5 +42,11 @@ const BusinessProfile = () => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 20,
+  },
+});
 
 export default BusinessProfile;
