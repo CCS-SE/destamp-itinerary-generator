@@ -11,8 +11,8 @@ import {
   UserType,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
+import { CustomTextInput } from '../FormField/CustomTextInput';
 import ShowPasswordIcon from '../Icon/ShowPasswordIcon';
-import { CustomTextInput } from './CustomTextInput';
 import { SignUpSchema, signUpSchema } from './schema/signupSchema';
 
 export const CreateUser = gql(
