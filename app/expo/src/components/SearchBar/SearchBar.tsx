@@ -1,13 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
-const SearchBar = ({ searchTitle }: { searchTitle: string }) => {
+const SearchBar = ({
+  searchTitle,
+  value,
+}: {
+  searchTitle: string;
+  value: string;
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.row}>
         <AntDesign name="search1" size={24} color="#ECB476" margin={5} />
-        <Text style={styles.searchTitle}>{searchTitle}</Text>
+        <TextInput style={styles.searchTitle}>
+          {searchTitle} {value}
+        </TextInput>
       </View>
     </View>
   );

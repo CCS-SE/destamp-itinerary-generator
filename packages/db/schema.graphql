@@ -173,6 +173,7 @@ enum PlaceType {
 
 type Query {
   itinerary(tripId: Int!): Itinerary!
+  place(placeId: String!): Place!
   places: [Place!]!
   travelerTrips(userId: String!): [Trip!]!
   trip(id: Int!): Trip!

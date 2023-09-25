@@ -3,10 +3,10 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const ContactInformation = ({
   contactNumber,
-  emailAddress,
+  location,
 }: {
-  contactNumber: number;
-  emailAddress: string;
+  contactNumber: string;
+  location: string;
 }) => {
   return (
     <View style={styles.contactInfoBox}>
@@ -14,15 +14,11 @@ const ContactInformation = ({
       <View style={styles.container}>
         <View style={styles.row}>
           <Text style={styles.infoCategory}> Phone Number: </Text>
-          <Text style={styles.infoInput}> +63 {contactNumber} </Text>
+          <Text style={styles.infoInput}>{contactNumber} </Text>
         </View>
         <View style={styles.row}>
-          <Text style={styles.infoCategory}> Email Address: </Text>
-          <Text style={styles.infoInput}>
-            {' '}
-            {'  '}
-            {emailAddress}{' '}
-          </Text>
+          <Text style={styles.infoCategory}> Location: </Text>
+          <Text style={styles.infoInputLoc}>{location}</Text>
         </View>
       </View>
     </View>
@@ -57,7 +53,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'Poppins',
     color: '#EB4335',
-    marginLeft: 10,
+    marginLeft: 13,
+    width: 200,
+  },
+  infoInputLoc: {
+    fontSize: 12,
+    fontFamily: 'Poppins',
+    color: '#EB4335',
+    marginLeft: 50,
+    width: 200,
   },
 });
 

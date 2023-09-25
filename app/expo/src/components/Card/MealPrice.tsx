@@ -1,20 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const MealPrice = ({
-  minPrice,
-  maxPrice,
-}: {
-  minPrice: number;
-  maxPrice: number;
-}) => {
+const MealPrice = ({ price }: { price: number }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Average meal price per person</Text>
       <View>
-        <Text style={styles.mealPrice}>
-          {minPrice} PHP - {maxPrice} PHP
-        </Text>
+        <Text style={styles.mealPrice}>{price} PHP</Text>
       </View>
     </View>
   );
