@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { FlatList, Text, View } from 'react-native';
+import { router } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
@@ -37,6 +38,10 @@ export default function MyTripScreen() {
     },
   });
 
+  const handleCreateTrip = () => {
+    router.push('/trip/create/');
+  };
+
   if (error)
     return (
       <Text testID="my-trip-error">{`Error! ${error.message.toString()}`}</Text>
@@ -69,7 +74,7 @@ export default function MyTripScreen() {
           showsVerticalScrollIndicator={false}
         />
       )}
-      <AbsoluteButton title="+" />
+      <AbsoluteButton title="+" onPress={handleCreateTrip} />
     </View>
   );
 }

@@ -4,13 +4,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 interface AbsoluteButtonProps {
   title: string;
+  onPress: () => void;
 }
 
-export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
+export default function AbsoluteButton({
+  title,
+  onPress,
+}: AbsoluteButtonProps) {
+  const handlePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    onPress();
+  };
   return (
     <TouchableOpacity
       accessibilityRole="button"
-      onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+      onPress={handlePress}
       activeOpacity={0.98}
       className="absolute bottom-3 right-5"
     >

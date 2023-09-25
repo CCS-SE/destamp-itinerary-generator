@@ -227,6 +227,7 @@ export enum PlaceType {
 
 export type Query = {
   __typename?: 'Query';
+  destinations: Array<Destination>;
   itinerary: Itinerary;
   places: Array<Place>;
   travelerTrips: Array<Trip>;
@@ -757,6 +758,11 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  destinations?: Resolver<
+    Array<ResolversTypes['Destination']>,
+    ParentType,
+    ContextType
+  >;
   itinerary?: Resolver<
     ResolversTypes['Itinerary'],
     ParentType,
@@ -939,6 +945,15 @@ export type GetTravelerItineraryQuery = {
       name: string;
     } | null;
   };
+};
+
+export type GetDestinationsQueryQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetDestinationsQueryQuery = {
+  __typename?: 'Query';
+  destinations: Array<{ __typename?: 'Destination'; id: number; name: string }>;
 };
 
 export type CreateUserMutationVariables = Exact<{
@@ -1184,6 +1199,35 @@ export const GetTravelerItineraryDocument = {
 } as unknown as DocumentNode<
   GetTravelerItineraryQuery,
   GetTravelerItineraryQueryVariables
+>;
+export const GetDestinationsQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetDestinationsQuery' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'destinations' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetDestinationsQueryQuery,
+  GetDestinationsQueryQueryVariables
 >;
 export const CreateUserDocument = {
   kind: 'Document',
