@@ -16,8 +16,8 @@ interface DateProps {
 export default function DateRangePicker({
   onDateChange,
 }: DateRangePickerProps) {
-  const [startDate, setStartDate]: any = useState(null);
-  const [endDate, setEndDate]: any = useState(null);
+  const [startDate, setStartDate] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<string | null>(null);
 
   const handleChange = ({ startDate, endDate }: DateProps) => {
     if (startDate && !endDate) {
