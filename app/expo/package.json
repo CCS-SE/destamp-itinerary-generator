@@ -51,6 +51,8 @@
     "react-hook-form": "^7.45.4",
     "react-model": "^4.3.1",
     "react-native": "0.72.4",
+    "react-native-calendar-range-picker": "^1.5.6",
+    "react-native-collapsible": "^1.6.1",
     "react-native-config": "^1.5.1",
     "react-native-dashed-line": "^1.1.0",
     "react-native-gesture-handler": "^2.12.1",
