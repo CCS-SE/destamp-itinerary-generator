@@ -374,6 +374,7 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    destinations: NexusGenRootTypes['Destination'][]; // [Destination!]!
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
     places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
@@ -544,6 +545,7 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    destinations: 'Destination';
     itinerary: 'Itinerary';
     places: 'Place';
     travelerTrips: 'Trip';
