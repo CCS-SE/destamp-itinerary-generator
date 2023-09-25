@@ -25,7 +25,7 @@ function BottomHalfModal({
       backdropTransitionOutTiming={700}
       className="-mx-0 "
     >
-      <View className="absolute -bottom-5 h-80 w-full rounded-t-3xl bg-white">
+      <View className="absolute -bottom-5 h-auto w-full rounded-t-3xl bg-white">
         <View
           testID="modal-menus"
           style={{ alignSelf: 'center' }}

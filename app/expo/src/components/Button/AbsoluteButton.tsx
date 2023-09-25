@@ -1,16 +1,19 @@
 import { Text, TouchableOpacity } from 'react-native';
-import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface AbsoluteButtonProps {
   title: string;
+  onPress: () => void;
 }
 
-export default function AbsoluteButton({ title }: AbsoluteButtonProps) {
+export default function AbsoluteButton({
+  title,
+  onPress,
+}: AbsoluteButtonProps) {
   return (
     <TouchableOpacity
       accessibilityRole="button"
-      onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+      onPress={onPress}
       activeOpacity={0.98}
       className="absolute bottom-3 right-5"
     >

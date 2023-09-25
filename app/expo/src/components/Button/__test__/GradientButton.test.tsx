@@ -63,7 +63,7 @@ describe('Gradient Button', () => {
 
       const gradientBtnElement = getByTestId('gradient-btn-color');
 
-      expect(gradientBtnElement.props.style[5].opacity).toBe(0.4);
+      expect(gradientBtnElement.props.style[4].opacity).toBe(0.4);
     });
   });
 });
