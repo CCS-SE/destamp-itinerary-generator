@@ -113,20 +113,23 @@ export default function AddSpendingForm({
   return (
     <View className="items-center">
       <View className="mt-3">
-        <Text className="text-2xl ">Add Spending</Text>
+        <Text className="font-poppins text-2xl text-[#4C4C4C]">
+          Add Spending
+        </Text>
       </View>
-      <View className="mt-3 h-12 w-72 rounded-xl border-2 border-[#F78E48] p-2">
+      <View className="mt-3 h-12 w-[330] rounded-xl border-2 border-[#F78E48] p-2">
         <TextInput
           keyboardType="numeric"
           placeholder="Amount"
           onChangeText={setAmount}
           value={amount}
+          className="p-.5 font-poppins text-base text-gray-700"
         />
       </View>
-      <Text className="mt-2 text-base font-bold">Category</Text>
-
+      <Text className="ml-10 mt-2 self-start font-poppins text-lg text-[#4C4C4C]">
+        Category
+      </Text>
       <CategoryList onCategoryChange={onCategoryChange} />
-
       {datePicker && (
         <View>
           <View>
@@ -140,24 +143,24 @@ export default function AddSpendingForm({
           </View>
         </View>
       )}
-
-      <View className="mt-1 h-auto w-72 rounded-xl border-2 border-[#F78E48] p-2">
+      <View className="p.5 mt-1 h-12 w-[330] rounded-xl border-2 border-[#F78E48]">
         <Pressable onPress={toggleDatePicker}>
           <TextInput
-            className="text-black"
             placeholder={date.toDateString()}
             value={date.toDateString()}
             editable={false}
+            className="p-1.5 font-poppins text-base text-gray-600"
           />
         </Pressable>
       </View>
-
-      <View className="mt-2 h-auto w-72 rounded-xl border-2 border-[#F78E48] p-2">
+      <View className="mt-2 h-16 w-[330] rounded-xl border-2 border-[#F78E48] p-2">
         <TextInput
           placeholder="Note"
           maxLength={25}
+          multiline
           onChangeText={setNote}
           value={note}
+          className="p-1.5 font-poppins text-base text-gray-700"
         />
       </View>
       <GradientButton
@@ -165,6 +168,7 @@ export default function AddSpendingForm({
         onPress={onSubmit}
         isSubmitting={false}
         size={290}
+        className="mb-10"
       />
     </View>
   );

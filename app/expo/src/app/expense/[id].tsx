@@ -15,7 +15,7 @@ import {
   GetTravelerItineraryDocument,
 } from '~/graphql/generated';
 import { getPieChartData } from '~/utils/utils';
-import Back from '../../../assets/images/back-icon.svg';
+import Back from '../../../assets/images/back-btn.svg';
 
 export const GetTransactionsQuery = gql(
   `query GetTransactions($itineraryId: Int!){
@@ -73,12 +73,12 @@ const ExpensePage = () => {
     <>
       <SafeAreaView edges={['top']} className="flex-0">
         <View className="mx-4 flex-row justify-between">
-          <Back height={45} width={45} onPress={handleBack} />
+          <Back height={35} width={35} onPress={handleBack} />
         </View>
       </SafeAreaView>
       <View>
         <Stack.Screen options={{ headerShown: false }} />
-        <View className="mx-5 flex-row">
+        <View className="mx-5 flex-row self-center">
           <ColoredContainer
             title="SPENDING"
             content={`₱${totalSpending ? totalSpending?.toFixed(2) : 0}`}
@@ -99,7 +99,9 @@ const ExpensePage = () => {
       </View>
       {data?.getTransaction.length == 0 ? (
         <View className="my-64 items-center justify-center">
-          <Text className="text-xl">No expenses yet</Text>
+          <Text className="font-poppins text-2xl text-[#6A6969]">
+            No expenses yet
+          </Text>
         </View>
       ) : (
         <>
@@ -107,11 +109,14 @@ const ExpensePage = () => {
             <PieChart style={{ width: 200, height: 200 }} data={pieChartData} />
           </View>
           <View className="mx-9 justify-between">
-            <Text className="text-lg">Expenses</Text>
+            <Text className="font-poppins text-2xl text-[#5D5D5D]">
+              Expenses
+            </Text>
           </View>
-          <View className="mx-1 h-80">
+          <View className="mx-1 h-[360]">
             {data && (
               <FlatList
+                showsVerticalScrollIndicator={false}
                 persistentScrollbar={true}
                 data={data.getTransaction}
                 renderItem={({ item }) => (
@@ -125,8 +130,11 @@ const ExpensePage = () => {
           </View>
         </>
       )}
-
-      <AbsoluteButton title="+" onPress={onButtonPress} />
+      <AbsoluteButton
+        title="+"
+        onPress={onButtonPress}
+        className="bottom-8 right-7"
+      />
       <BottomHalfModal isVisible={modal} onClose={() => setModal(false)}>
         <AddSpendingForm
           closeModal={() => setModal(false)}

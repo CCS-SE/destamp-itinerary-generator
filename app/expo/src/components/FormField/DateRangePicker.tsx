@@ -47,9 +47,9 @@ export default function DateRangePicker({
           style={{ selectedDayBackgroundColor: '#FC8040' }}
         />
         <Text className="top-3 self-center font-poppins text-base">
-          Select Start Date - End Date{' '}
+          Select Start Date - End Date
           {startDate && endDate
-            ? `• ${daysDifference} ${daysDifference > 1 ? `days` : `day`}`
+            ? `• ${daysDifference + 1} ${daysDifference > 1 ? 'days' : 'day'}`
             : ''}
         </Text>
       </View>

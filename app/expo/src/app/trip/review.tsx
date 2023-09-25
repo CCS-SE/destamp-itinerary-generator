@@ -25,7 +25,6 @@ export default function ReviewInfoScreen() {
     groupCount,
     adultCount,
     childCount,
-    imgUrl,
     startDate,
     endDate,
     budget,

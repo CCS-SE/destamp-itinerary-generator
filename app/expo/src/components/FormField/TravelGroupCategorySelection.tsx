@@ -57,9 +57,9 @@ export default function TravelGroupCategorySelection({
   const travelers = {
     SOLO: '1 traveler',
     COUPLE: '2 travelers',
-    GROUP: `${groupCount} ${groupCount > 1 ? `travelers` : `traveler`}`,
+    GROUP: `${groupCount} ${groupCount > 1 ? 'travelers' : 'traveler'}`,
     FAMILY: `${adultCount + childCount} ${
-      adultCount + childCount > 1 ? `travelers` : `traveler`
+      adultCount + childCount > 1 ? 'travelers' : 'traveler'
     } `,
   };
 

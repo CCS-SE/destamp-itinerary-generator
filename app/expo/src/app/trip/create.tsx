@@ -72,7 +72,7 @@ export default function CreateTripScreen() {
 
   const [tripData, setTripData] = useState<TripDataProps>(initialTripData);
 
-  const handleTripDataChange = (propertyName: string, newValue: any) => {
+  const handleTripDataChange = (propertyName: string, newValue: unknown) => {
     setTripData({
       ...tripData,
       [propertyName]: newValue,
@@ -196,6 +196,7 @@ export default function CreateTripScreen() {
 
     return (
       <Stepper
+        key={index}
         isActive={isActive}
         isCompleted={isCompleted}
         onStepPress={handleStepPress}
@@ -215,16 +216,19 @@ export default function CreateTripScreen() {
 
   const fields = [
     <SearchableTextInput
+      key={1}
       placeholder="Search Destination"
       data={data ? data.destinations : []}
       onChange={(value) => handleTripDataChange('travelDestination', value)}
     />,
     <SearchableTextInput
+      key={2}
       placeholder="Search Departing Location"
       data={data ? data.destinations : []}
       onChange={(value) => handleTripDataChange('departureLocation', value)}
     />,
     <TravelGroupCategorySelection
+      key={3}
       onTravelGroupChange={(value) =>
         handleTripDataChange('travelGroup', value)
       }
@@ -232,11 +236,16 @@ export default function CreateTripScreen() {
       onAdultCountChange={(value) => handleTripDataChange('adultCount', value)}
       onChildCountChange={(value) => handleTripDataChange('childCount', value)}
     />,
-    <DateRangePicker onDateChange={(sd, ed) => handleDateChange(sd, ed)} />,
+    <DateRangePicker
+      key={4}
+      onDateChange={(sd, ed) => handleDateChange(sd, ed)}
+    />,
     <AmountTextInput
+      key={5}
       onChangeText={(value) => handleTripDataChange('budget', value)}
     />,
     <BudgetCategorySelection
+      key={6}
       onOptionChange={(value) =>
         handleTripDataChange('budgetInclusions', value)
       }

@@ -7,13 +7,9 @@ import TripQuery from './Trip/trip.query';
 
 export default [
   TravelerTripsQuery,
-
   PlacesQuery,
-
   ItineraryQuery,
-
   TripQuery,
   Transaction,
-  ,
   DestinationsQuery,
 ];

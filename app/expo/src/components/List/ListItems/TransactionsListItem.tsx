@@ -18,20 +18,20 @@ const TransactionsListItem = ({
   amount,
 }: TransactionsListItemProps) => {
   return (
-    <View className="my-3 flex-row justify-between px-9">
-      <View className="flex-row">
+    <View className="my-3 flex-row items-center justify-between px-9">
+      <View className="flex-row items-center justify-center">
         <View
           className="h-8 w-8 items-center justify-center rounded-full"
           style={{ backgroundColor: categoryIcon[category]?.color }}
         >
           {categoryIcon[category]?.icon}
         </View>
-        <Text className="m-1 text-sm font-light">
+        <Text className="ml-2.5 font-poppins text-base text-gray-600">
           {category.charAt(0) + category.slice(1).toLowerCase()}
         </Text>
       </View>
       <View className="ml-10 mt-1">
-        <Text>-₱{amount}</Text>
+        <Text className="font-poppins text-lg text-gray-600">-₱{amount}</Text>
       </View>
     </View>
   );
