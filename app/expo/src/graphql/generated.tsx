@@ -51,6 +51,14 @@ export type Category = {
   name: Scalars['String']['output'];
 };
 
+export type CreateExpenseInput = {
+  amount: Scalars['Float']['input'];
+  category: ExpenseCategory;
+  date: Scalars['DateTime']['input'];
+  itineraryId: Scalars['Int']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type CreateTripInput = {
   adultCount?: InputMaybe<Scalars['Int']['input']>;
   budget: Scalars['Float']['input'];
@@ -168,9 +176,14 @@ export type ItineraryDay = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createExpense: Expense;
   createTrip: Trip;
   createUser: User;
   deleteTrip: Trip;
+};
+
+export type MutationCreateExpenseArgs = {
+  data: CreateExpenseInput;
 };
 
 export type MutationCreateTripArgs = {
@@ -227,11 +240,16 @@ export enum PlaceType {
 
 export type Query = {
   __typename?: 'Query';
+  getTransaction: Array<Expense>;
   destinations: Array<Destination>;
   itinerary: Itinerary;
   places: Array<Place>;
   travelerTrips: Array<Trip>;
   trip: Trip;
+};
+
+export type QueryGetTransactionArgs = {
+  itineraryId: Scalars['Int']['input'];
 };
 
 export type QueryItineraryArgs = {
@@ -407,6 +425,7 @@ export type ResolversTypes = {
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Category: ResolverTypeWrapper<Category>;
+  CreateExpenseInput: CreateExpenseInput;
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
@@ -443,6 +462,7 @@ export type ResolversParentTypes = {
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
   Category: Category;
+  CreateExpenseInput: CreateExpenseInput;
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DateTime: Scalars['DateTime']['output'];
@@ -655,6 +675,12 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  createExpense?: Resolver<
+    ResolversTypes['Expense'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateExpenseArgs, 'data'>
+  >;
   createTrip?: Resolver<
     ResolversTypes['Trip'],
     ParentType,
@@ -758,6 +784,12 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  getTransaction?: Resolver<
+    Array<ResolversTypes['Expense']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryGetTransactionArgs, 'itineraryId'>
+  >;
   destinations?: Resolver<
     Array<ResolversTypes['Destination']>,
     ParentType,
@@ -912,6 +944,20 @@ export type GetTravelerTripsQuery = {
   }>;
 };
 
+export type GetTransactionsQueryVariables = Exact<{
+  itineraryId: Scalars['Int']['input'];
+}>;
+
+export type GetTransactionsQuery = {
+  __typename?: 'Query';
+  getTransaction: Array<{
+    __typename?: 'Expense';
+    amount: number;
+    category: ExpenseCategory;
+    date: any;
+  }>;
+};
+
 export type GetTravelerItineraryQueryVariables = Exact<{
   tripId: Scalars['Int']['input'];
 }>;
@@ -920,8 +966,11 @@ export type GetTravelerItineraryQuery = {
   __typename?: 'Query';
   itinerary: {
     __typename?: 'Itinerary';
+    id: number;
+    totalCost: number;
     itineraryDays: Array<{
       __typename?: 'ItineraryDay';
+      id: number;
       foodCost: number;
       attractionCost: number;
       transportationCost: number;
@@ -938,12 +987,28 @@ export type GetTravelerItineraryQuery = {
   };
   trip: {
     __typename?: 'Trip';
+    budget: number;
     startDate: any;
     endDate: any;
     departingLocation?: {
       __typename?: 'DepartingLocation';
       name: string;
     } | null;
+  };
+};
+
+export type CreateExpenseMutationVariables = Exact<{
+  data: CreateExpenseInput;
+}>;
+
+export type CreateExpenseMutation = {
+  __typename?: 'Mutation';
+  createExpense: {
+    __typename?: 'Expense';
+    amount: number;
+    category: ExpenseCategory;
+    date: any;
+    note?: string | null;
   };
 };
 
@@ -1056,6 +1121,59 @@ export const GetTravelerTripsDocument = {
   GetTravelerTripsQuery,
   GetTravelerTripsQueryVariables
 >;
+export const GetTransactionsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTransactions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'itineraryId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'getTransaction' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'itineraryId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'itineraryId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'date' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetTransactionsQuery,
+  GetTransactionsQueryVariables
+>;
 export const GetTravelerItineraryDocument = {
   kind: 'Document',
   definitions: [
@@ -1095,12 +1213,15 @@ export const GetTravelerItineraryDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalCost' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'itineraryDays' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'foodCost' },
@@ -1177,6 +1298,7 @@ export const GetTravelerItineraryDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'budget' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
                 {
@@ -1199,6 +1321,60 @@ export const GetTravelerItineraryDocument = {
 } as unknown as DocumentNode<
   GetTravelerItineraryQuery,
   GetTravelerItineraryQueryVariables
+>;
+export const CreateExpenseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreateExpense' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateExpenseInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createExpense' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'data' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'data' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'category' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'date' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'note' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CreateExpenseMutation,
+  CreateExpenseMutationVariables
 >;
 export const GetDestinationsQueryDocument = {
   kind: 'Document',

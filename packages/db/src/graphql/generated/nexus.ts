@@ -50,6 +50,14 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CreateExpenseInput: {
+    // input type
+    amount: number; // Float!
+    category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
+    date: NexusGenScalars['DateTime']; // DateTime!
+    itineraryId: number; // Int!
+    note?: string | null; // String
+  };
   CreateTripInput: {
     // input type
     adultCount?: number | null; // Int
@@ -336,6 +344,7 @@ export interface NexusGenFieldTypes {
   };
   Mutation: {
     // field return type
+    createExpense: NexusGenRootTypes['Expense']; // Expense!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
@@ -375,6 +384,7 @@ export interface NexusGenFieldTypes {
   Query: {
     // field return type
     destinations: NexusGenRootTypes['Destination'][]; // [Destination!]!
+    getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
     places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
@@ -507,6 +517,7 @@ export interface NexusGenFieldTypeNames {
   };
   Mutation: {
     // field return type name
+    createExpense: 'Expense';
     createTrip: 'Trip';
     createUser: 'User';
     deleteTrip: 'Trip';
@@ -546,6 +557,7 @@ export interface NexusGenFieldTypeNames {
   Query: {
     // field return type name
     destinations: 'Destination';
+    getTransaction: 'Expense';
     itinerary: 'Itinerary';
     places: 'Place';
     travelerTrips: 'Trip';
@@ -590,6 +602,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    createExpense: {
+      // args
+      data: NexusGenInputs['CreateExpenseInput']; // CreateExpenseInput!
+    };
     createTrip: {
       // args
       data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
@@ -604,6 +620,10 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
+    getTransaction: {
+      // args
+      itineraryId: number; // Int!
+    };
     itinerary: {
       // args
       tripId: number; // Int!

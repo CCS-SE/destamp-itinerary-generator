@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FlatList, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
 import DayButton from '~/components/Button/DayButton';
@@ -15,7 +15,10 @@ import Map from '../../../assets/images/map-icon.svg';
 export const GetTravelersItineraryQuery = gql(
   `query GetTravelerItinerary($tripId: Int!) {
     itinerary(tripId: $tripId) {
+      id
+      totalCost
       itineraryDays {
+        id
         foodCost
         attractionCost
         transportationCost
@@ -33,6 +36,7 @@ export const GetTravelersItineraryQuery = gql(
     }
   
     trip(id: $tripId) {
+      budget
       startDate
       endDate
       departingLocation {
@@ -102,7 +106,9 @@ export default function ItineraryScreen() {
           <Back height={45} width={45} onPress={handleBack} />
           <View className="flex-row items-end">
             <Map height={45} width={45} style={{ marginRight: 10 }} />
-            <Expense height={45} width={45} />
+            <Link href={`/expense/${id}`}>
+              <Expense height={45} width={45} />
+            </Link>
           </View>
         </View>
       </SafeAreaView>
