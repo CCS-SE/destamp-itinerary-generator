@@ -953,6 +953,42 @@ export type GetTransactionsQueryVariables = Exact<{
   itineraryId: Scalars['Int']['input'];
 }>;
 
+export type GetPlaceQueryQueryVariables = Exact<{
+  placeId: Scalars['String']['input'];
+}>;
+
+export type GetPlaceQueryQuery = {
+  __typename?: 'Query';
+  place: {
+    __typename?: 'Place';
+    name: string;
+    description?: string | null;
+    contactNumber?: string | null;
+    address: string;
+    price: string;
+    images: Array<{ __typename?: 'Image'; url: string; id: string }>;
+    openingHours: Array<{
+      __typename?: 'OpeningHour';
+      id: number;
+      openTime: any;
+      closeTime: any;
+      day: number;
+    }>;
+    categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
+    amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
+    diningAtmospheres: Array<{
+      __typename?: 'DiningAtmosphere';
+      id: number;
+      name: string;
+    }>;
+    diningCuisines: Array<{
+      __typename?: 'DiningCuisine';
+      id: number;
+      name: string;
+    }>;
+  };
+};
+
 export type GetTransactionsQuery = {
   __typename?: 'Query';
   getTransaction: Array<{
@@ -1327,6 +1363,7 @@ export const GetTravelerItineraryDocument = {
   GetTravelerItineraryQuery,
   GetTravelerItineraryQueryVariables
 >;
+
 export const CreateExpenseDocument = {
   kind: 'Document',
   definitions: [
@@ -1478,6 +1515,140 @@ export const DeleteTripDocument = {
     },
   ],
 } as unknown as DocumentNode<DeleteTripMutation, DeleteTripMutationVariables>;
+
+export const GetPlaceQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPlaceQuery' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'placeId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'place' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'placeId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'placeId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'contactNumber' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'images' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'openingHours' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'openTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'closeTime' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'day' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'price' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'categories' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'amenities' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'diningAtmospheres' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'diningCuisines' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetPlaceQueryQuery, GetPlaceQueryQueryVariables>;
+
 export const GetBusinessQueryDocument = {
   kind: 'Document',
   definitions: [
