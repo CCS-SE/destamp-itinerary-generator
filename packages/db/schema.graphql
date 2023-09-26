@@ -17,6 +17,14 @@ type Category {
   name: String!
 }
 
+input CreateExpenseInput {
+  amount: Float!
+  category: ExpenseCategory!
+  date: DateTime!
+  itineraryId: Int!
+  note: String
+}
+
 input CreateTripInput {
   adultCount: Int
   budget: Float!
@@ -128,6 +136,7 @@ type ItineraryDay {
 }
 
 type Mutation {
+  createExpense(data: CreateExpenseInput!): Expense!
   createTrip(data: CreateTripInput!): Trip!
   createUser(data: CreateUserInput!): User!
   deleteTrip(id: Int!): Trip!
@@ -172,6 +181,7 @@ enum PlaceType {
 }
 
 type Query {
+  getTransaction(itineraryId: Int!): [Expense!]!
   itinerary(tripId: Int!): Itinerary!
   place(placeId: String!): Place!
   places: [Place!]!

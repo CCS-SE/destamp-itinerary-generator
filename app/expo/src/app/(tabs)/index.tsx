@@ -69,7 +69,7 @@ export default function MyTripScreen() {
           showsVerticalScrollIndicator={false}
         />
       )}
-      <AbsoluteButton title="+" />
+      <AbsoluteButton title="+" onPress={() => {}} />
     </View>
   );
 }
