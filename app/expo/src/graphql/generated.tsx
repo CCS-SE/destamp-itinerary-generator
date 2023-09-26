@@ -242,6 +242,7 @@ export type Query = {
   __typename?: 'Query';
   getTransaction: Array<Expense>;
   itinerary: Itinerary;
+  place: Place;
   places: Array<Place>;
   travelerTrips: Array<Trip>;
   trip: Trip;
@@ -253,6 +254,10 @@ export type QueryGetTransactionArgs = {
 
 export type QueryItineraryArgs = {
   tripId: Scalars['Int']['input'];
+};
+
+export type QueryPlaceArgs = {
+  placeId: Scalars['String']['input'];
 };
 
 export type QueryTravelerTripsArgs = {
@@ -795,6 +800,12 @@ export type QueryResolvers<
     ContextType,
     RequireFields<QueryItineraryArgs, 'tripId'>
   >;
+  place?: Resolver<
+    ResolversTypes['Place'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryPlaceArgs, 'placeId'>
+  >;
   places?: Resolver<Array<ResolversTypes['Place']>, ParentType, ContextType>;
   travelerTrips?: Resolver<
     Array<ResolversTypes['Trip']>,
@@ -950,6 +961,40 @@ export type GetTransactionsQuery = {
     category: ExpenseCategory;
     date: any;
   }>;
+export type GetPlaceQueryQueryVariables = Exact<{
+  placeId: Scalars['String']['input'];
+}>;
+
+export type GetPlaceQueryQuery = {
+  __typename?: 'Query';
+  place: {
+    __typename?: 'Place';
+    name: string;
+    description?: string | null;
+    contactNumber?: string | null;
+    address: string;
+    price: string;
+    images: Array<{ __typename?: 'Image'; url: string; id: string }>;
+    openingHours: Array<{
+      __typename?: 'OpeningHour';
+      id: number;
+      openTime: any;
+      closeTime: any;
+      day: number;
+    }>;
+    categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
+    amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
+    diningAtmospheres: Array<{
+      __typename?: 'DiningAtmosphere';
+      id: number;
+      name: string;
+    }>;
+    diningCuisines: Array<{
+      __typename?: 'DiningCuisine';
+      id: number;
+      name: string;
+    }>;
+  };
 };
 
 export type GetTravelerItineraryQueryVariables = Exact<{
@@ -1022,6 +1067,15 @@ export type DeleteTripMutationVariables = Exact<{
 export type DeleteTripMutation = {
   __typename?: 'Mutation';
   deleteTrip: { __typename?: 'Trip'; id: number; title: string };
+};
+
+export type GetBusinessQueryQueryVariables = Exact<{
+  placeId: Scalars['String']['input'];
+}>;
+
+export type GetBusinessQueryQuery = {
+  __typename?: 'Query';
+  place: { __typename?: 'Place'; name: string; address: string };
 };
 
 export const GetTravelerTripsDocument = {
@@ -1106,6 +1160,7 @@ export const GetTravelerTripsDocument = {
   GetTravelerTripsQuery,
   GetTravelerTripsQueryVariables
 >;
+
 export const GetTransactionsDocument = {
   kind: 'Document',
   definitions: [
@@ -1123,6 +1178,7 @@ export const GetTransactionsDocument = {
           type: {
             kind: 'NonNullType',
             type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+
           },
         },
       ],
@@ -1131,6 +1187,7 @@ export const GetTransactionsDocument = {
         selections: [
           {
             kind: 'Field',
+
             name: { kind: 'Name', value: 'getTransaction' },
             arguments: [
               {
@@ -1148,6 +1205,7 @@ export const GetTransactionsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'category' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'date' } },
+
               ],
             },
           },
@@ -1155,10 +1213,12 @@ export const GetTransactionsDocument = {
       },
     },
   ],
+
 } as unknown as DocumentNode<
   GetTransactionsQuery,
   GetTransactionsQueryVariables
 >;
+
 export const GetTravelerItineraryDocument = {
   kind: 'Document',
   definitions: [
@@ -1458,3 +1518,58 @@ export const DeleteTripDocument = {
     },
   ],
 } as unknown as DocumentNode<DeleteTripMutation, DeleteTripMutationVariables>;
+export const GetBusinessQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetBusinessQuery' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'placeId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'place' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'placeId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'placeId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetBusinessQueryQuery,
+  GetBusinessQueryQueryVariables
+>;

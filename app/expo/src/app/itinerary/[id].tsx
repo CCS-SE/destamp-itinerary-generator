@@ -17,6 +17,7 @@ export const GetTravelersItineraryQuery = gql(
     itinerary(tripId: $tripId) {
       id
       totalCost
+
       itineraryDays {
         id
         foodCost
