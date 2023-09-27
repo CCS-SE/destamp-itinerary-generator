@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View, ViewProps } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { ExpenseCategory, TravelSize } from '~/graphql/generated';
+import { truncateText } from '~/utils/utils';
 import Accommodation from '../../../assets/images/accommodation-field.svg';
 import Food from '../../../assets/images/food-field.svg';
 import Transpo from '../../../assets/images/transpo-field.svg';
@@ -19,6 +20,8 @@ interface ReviewCardProps extends ViewProps {
   isTravelSize?: boolean;
   section: string;
 }
+
+const MAX_TEXT_LENGTH = 28;
 
 export default function ReviewCard({
   icon,
@@ -59,9 +62,11 @@ export default function ReviewCard({
       {...viewProps}
     >
       {icon}
-      <Text className="ml-5 font-poppins  text-lg text-gray-600">
+      <Text
+        className={`ml-5  text-ellipsis font-poppins text-lg text-gray-600`}
+      >
         {!isTravelSize
-          ? title
+          ? truncateText(title, MAX_TEXT_LENGTH)
           : `${title} (${travelerCount[travelGroup as TravelSize]})`}
       </Text>
       {budgetInclusion ? (

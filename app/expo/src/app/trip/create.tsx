@@ -10,6 +10,7 @@ import StepperButton from '~/components/Button/StepperButton';
 import AmountTextInput from '~/components/FormField/AmountTextInput';
 import BudgetCategorySelection from '~/components/FormField/BudgetCategorySelection';
 import DateRangePicker from '~/components/FormField/DateRangePicker';
+import GeocoderSearch from '~/components/FormField/MapboxGeocoder';
 import SearchableTextInput from '~/components/FormField/SearchableTextInput';
 import TravelGroupCategorySelection from '~/components/FormField/TravelGroupCategorySelection';
 import Stepper from '~/components/Stepper/Stepper';
@@ -221,10 +222,9 @@ export default function CreateTripScreen() {
       data={data ? data.destinations : []}
       onChange={(value) => handleTripDataChange('travelDestination', value)}
     />,
-    <SearchableTextInput
+    <GeocoderSearch
       key={2}
       placeholder="Search Departing Location"
-      data={data ? data.destinations : []}
       onChange={(value) => handleTripDataChange('departureLocation', value)}
     />,
     <TravelGroupCategorySelection

@@ -30,6 +30,13 @@ export function toSentenceCase(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
+export function truncateText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
+}
+
 export const getPieChartData = (
   data: {
     __typename?: 'Expense' | undefined;
