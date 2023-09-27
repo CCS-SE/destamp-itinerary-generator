@@ -16,6 +16,9 @@ export const mockSupabaseClient = {
     signUp: jest.fn(() => ({
       error: null,
     })),
+    signOut: jest.fn(() => ({
+      error: null,
+    })),
   },
   error: null,
 };
