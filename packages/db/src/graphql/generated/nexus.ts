@@ -389,6 +389,7 @@ export interface NexusGenFieldTypes {
     destinations: NexusGenRootTypes['Destination'][]; // [Destination!]!
     getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
+    place: NexusGenRootTypes['Place']; // Place!
     places: NexusGenRootTypes['Place'][]; // [Place!]!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
@@ -562,6 +563,7 @@ export interface NexusGenFieldTypeNames {
     destinations: 'Destination';
     getTransaction: 'Expense';
     itinerary: 'Itinerary';
+    place: 'Place';
     places: 'Place';
     travelerTrips: 'Trip';
     trip: 'Trip';
@@ -630,6 +632,10 @@ export interface NexusGenArgTypes {
     itinerary: {
       // args
       tripId: number; // Int!
+    };
+    place: {
+      // args
+      placeId: string; // String!
     };
     travelerTrips: {
       // args

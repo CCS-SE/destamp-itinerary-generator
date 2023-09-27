@@ -187,6 +187,7 @@ type Query {
   destinations: [Destination!]!
   getTransaction(itineraryId: Int!): [Expense!]!
   itinerary(tripId: Int!): Itinerary!
+  place(placeId: String!): Place!
   places: [Place!]!
   travelerTrips(userId: String!): [Trip!]!
   trip(id: Int!): Trip!
