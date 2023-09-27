@@ -2,22 +2,105 @@
 ### Do not make changes to this file directly
 
 
+type Amenity {
+  id: Int!
+  name: String!
+}
+
 """
 The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
+
+type Category {
+  id: Int!
+  name: String!
+}
+
+input CreateExpenseInput {
+  amount: Float!
+  category: ExpenseCategory!
+  date: DateTime!
+  itineraryId: Int!
+  note: String
+}
+
+input CreateTripInput {
+  adultCount: Int
+  budget: Float!
+  childCount: Int
+  destinationId: Int!
+  endDate: DateTime!
+  startDate: DateTime!
+  title: String!
+  travelSize: TravelSize!
+}
+
+input CreateUserInput {
+  email: String!
+  id: String!
+  password: String!
+  userType: UserType!
+}
 
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
 
+type DepartingLocation {
+  address: String!
+  id: Int!
+  latitude: Float!
+  longitude: Float!
+  name: String!
+}
+
 type Destination {
   createdAt: DateTime!
-  id: ID!
-  image: Image!
+  id: Int!
+  image: Image
   name: String!
   updatedAt: DateTime!
+}
+
+type DiningAtmosphere {
+  id: Int!
+  name: String!
+}
+
+type DiningCuisine {
+  id: Int!
+  name: String!
+}
+
+type DiningOffering {
+  id: Int!
+  name: String!
+}
+
+type DiningOption {
+  id: Int!
+  name: String!
+}
+
+type Expense {
+  amount: Float!
+  category: ExpenseCategory!
+  createdAt: DateTime!
+  date: DateTime!
+  note: String
+  updatedAt: DateTime!
+}
+
+enum ExpenseCategory {
+  ACCOMMODATION
+  ACTIVITY
+  FOOD
+  OTHER
+  SHOPPING
+  SIGHTSEEING
+  TRANSPORTATION
 }
 
 type Image {
@@ -29,8 +112,81 @@ type Image {
   url: String!
 }
 
+type Itinerary {
+  createdAt: DateTime!
+  expenses: [Expense!]!
+  id: Int!
+  itineraryDays: [ItineraryDay!]!
+  totalCost: Float!
+  totalDuration: Float!
+  updatedAt: DateTime!
+  url: String!
+}
+
+type ItineraryDay {
+  accommodationCost: Float!
+  attractionCost: Float!
+  createdAt: DateTime!
+  dayIndex: Int!
+  destinations: [Place!]!
+  foodCost: Float!
+  id: Int!
+  transportationCost: Float!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  createExpense(data: CreateExpenseInput!): Expense!
+  createTrip(data: CreateTripInput!): Trip!
+  createUser(data: CreateUserInput!): User!
+  deleteTrip(id: Int!): Trip!
+}
+
+type OpeningHour {
+  closeTime: DateTime!
+  day: Int!
+  id: Int!
+  openTime: DateTime!
+}
+
+type Place {
+  address: String!
+  amenities: [Amenity!]!
+  categories: [Category!]!
+  contactNumber: String
+  createdAt: DateTime!
+  description: String
+  diningAtmospheres: [DiningAtmosphere!]!
+  diningCuisines: [DiningCuisine!]!
+  diningOfferings: [DiningOffering!]!
+  diningOptions: [DiningOption!]!
+  id: String!
+  images: [Image!]!
+  latitude: Float!
+  longitude: Float!
+  name: String!
+  openingHours: [OpeningHour!]!
+  price: String!
+  type: PlaceType!
+  updatedAt: DateTime!
+  url: String
+  visitDuration: Float!
+  website: String
+}
+
+enum PlaceType {
+  ACCOMMODATION
+  ATTRACTION
+  RESTAURANT
+}
+
 type Query {
-  trips: [Trip!]!
+  destinations: [Destination!]!
+  getTransaction(itineraryId: Int!): [Expense!]!
+  itinerary(tripId: Int!): Itinerary!
+  places: [Place!]!
+  travelerTrips(userId: String!): [Trip!]!
+  trip(id: Int!): Trip!
 }
 
 enum TravelSize {
@@ -40,16 +196,42 @@ enum TravelSize {
   SOLO
 }
 
+type Traveler {
+  contactNumber: String
+  firstName: String
+  id: Int!
+  lastName: String
+  trips: [Trip!]!
+}
+
 type Trip {
-  adultCount: Int!
+  adultCount: Int
   budget: Float!
-  childCount: Int!
+  childCount: Int
   createdAt: DateTime!
-  destination: Destination!
+  departingLocation: DepartingLocation
+  destination: Destination
   endDate: DateTime!
-  id: ID!
+  id: Int!
+  isAccommodationIncluded: Boolean!
+  isFoodIncluded: Boolean!
+  isTransportationIncluded: Boolean!
+  itinerary: Itinerary
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!
   updatedAt: DateTime!
+}
+
+type User {
+  email: String!
+  id: String!
+  password: String!
+  traveler: Traveler
+  userType: UserType!
+}
+
+enum UserType {
+  BUSINESS_OPERATOR
+  TRAVELER
 }

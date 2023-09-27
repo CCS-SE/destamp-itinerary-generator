@@ -1,20 +1,23 @@
-import { objectType } from "nexus";
+import { nullable, objectType } from 'nexus';
+
+import { Context } from '../../context';
+import Image from './Image';
 
 const Destination = objectType({
-  name: "Destination",
+  name: 'Destination',
   definition(t) {
-    t.id("id"), 
-    t.string("name");
-    t.field("image", {
-      type: "Image",
-      resolve: ({ id }, _, ctx) => {
+    t.int('id');
+    t.string('name');
+    t.nullable.field('image', {
+      type: nullable(Image),
+      resolve: (parent, _, ctx: Context) => {
         return ctx.prisma.destination
-          .findUniqueOrThrow({ where: { id: id } })
+          .findUnique({ where: { id: parent.id } })
           .image();
       },
     });
-    t.field("createdAt", { type: "DateTime" });
-    t.field("updatedAt", { type: "DateTime" });
+    t.field('createdAt', { type: 'DateTime' });
+    t.field('updatedAt', { type: 'DateTime' });
   },
 });
 

@@ -1,27 +1,47 @@
-import { objectType } from "nexus";
-import { TravelSize } from "../enum";
+import { nullable, objectType } from 'nexus';
+
+import { TravelSize } from '../enum';
 
 const Trip = objectType({
-  name: "Trip",
+  name: 'Trip',
   definition(t) {
-    t.id("id"), 
-    t.string("title");
-    t.float("budget");
-    t.field("destination", {
-      type: 'Destination',
-      resolve: ({ id }, _, ctx) => {
+    t.int('id');
+    t.string('title');
+    t.float('budget');
+    t.nullable.field('destination', {
+      type: nullable('Destination'),
+      resolve: (parent, _, ctx) => {
         return ctx.prisma.trip
-          .findUniqueOrThrow({ where: { id: id } })
+          .findUnique({ where: { id: parent.id } })
           .destination();
       },
     });
-    t.field("travelSize", { type: TravelSize });
-    t.int("adultCount");
-    t.int("childCount");
-    t.field("startDate", { type: "DateTime" });
-    t.field("endDate", { type: "DateTime" });
-    t.field("createdAt", { type: "DateTime" });
-    t.field("updatedAt", { type: "DateTime" });
+    t.nullable.field('departingLocation', {
+      type: nullable('DepartingLocation'),
+      resolve: (parent, _, ctx) => {
+        return ctx.prisma.trip
+          .findUnique({ where: { id: parent.id } })
+          .departingLocation();
+      },
+    });
+    t.nullable.field('itinerary', {
+      type: nullable('Itinerary'),
+      resolve: (parent, _, ctx) => {
+        return ctx.prisma.trip
+          .findUnique({ where: { id: parent.id } })
+          .itinerary();
+      },
+    });
+    t.field('travelSize', { type: TravelSize });
+    t.nullable.int('adultCount');
+    t.nullable.int('childCount');
+    t.boolean('isAccommodationIncluded');
+    t.boolean('isFoodIncluded');
+    t.boolean('isTransportationIncluded');
+    t.field('startDate', { type: 'DateTime' });
+    t.field('endDate', { type: 'DateTime' });
+    t.field('createdAt', { type: 'DateTime' });
+    t.field('updatedAt', { type: 'DateTime' });
   },
 });
 

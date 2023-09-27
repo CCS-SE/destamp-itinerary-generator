@@ -1,13 +1,18 @@
 export function getTripDateFormat(date: Date) {
-  return new Date(date).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: 'numeric'
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 }
 
-export function getDaysDifference(startDate: Date, endDate: Date) {
+export function tripDuration(
+  startDate: Date | null | string,
+  endDate: Date | null | string,
+) {
   return Math.floor(
-    (new Date(endDate).getTime() - new Date(startDate).getTime()) / (24 * 60 * 60 * 1000),
+    (new Date(endDate ? endDate : '').getTime() -
+      new Date(startDate ? startDate : '').getTime()) /
+      (24 * 60 * 60 * 1000),
   );
 }

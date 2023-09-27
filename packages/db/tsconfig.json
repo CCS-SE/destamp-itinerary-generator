@@ -1,4 +1,9 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["src/context.ts"]
+  "extends": "@destamp/tsconfig/base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
+    "resolveJsonModule": true
+  },
+  "include": [".", "src/**/*.json"],
+  "exclude": ["node_modules"]
 }

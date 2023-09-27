@@ -1,43 +1,52 @@
 /** @type {import("eslint").Linter.Config} */
 const config = {
   extends: [
-    "turbo",
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended-type-checked",
-    "plugin:@typescript-eslint/stylistic-type-checked",
-    "prettier",
+    'turbo',
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
   ],
   env: {
     es2022: true,
     node: true,
   },
-  parser: "@typescript-eslint/parser",
-  // parserOptions: {
-  //   project: true,
-  // },
-  plugins: ["@typescript-eslint", "import"],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: true,
+  },
+  plugins: ['@typescript-eslint'],
   rules: {
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksConditionals: false,
+        checksVoidReturn: false,
+      },
     ],
-    "@typescript-eslint/consistent-type-imports": [
-      "warn",
-      { prefer: "type-imports", fixStyle: "separate-type-imports" },
+    '@typescript-eslint/no-floating-promises': ['warn'],
+    '@typescript-eslint/no-unsafe-assignment': 'warn',
+    '@typescript-eslint/no-explicit-any': 'error',
+    indent: [1, 2, { SwitchCase: 1 }],
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
+    '@typescript-eslint/ban-types': [
+      'error',
+      {
+        extendDefaults: true,
+        types: {
+          '{}': false,
+        },
+      },
     ],
-    "@typescript-eslint/no-misused-promises": [
-      2,
-      { checksVoidReturn: { attributes: false } },
-    ],
-    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
+    'react/no-unescaped-entities': 0,
   },
   ignorePatterns: [
-    "**/.eslintrc.cjs",
-    "**/*.config.js",
-    "**/*.config.cjs",
-    "packages/config/**",
-    "dist",
-    "pnpm-lock.yaml",
+    '**/.eslintrc.cjs',
+    '**/*.config.js',
+    '**/*.config.cjs',
+    'packages/config/**',
+    'dist',
+    'pnpm-lock.yaml',
   ],
   reportUnusedDisableDirectives: true,
 };

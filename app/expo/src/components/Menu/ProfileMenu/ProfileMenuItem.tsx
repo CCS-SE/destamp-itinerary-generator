@@ -1,7 +1,8 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import type { ReactNode } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface ProfileMenu {
-  icon: any;
+  icon: ReactNode;
   title: string;
   color: string;
 }
@@ -14,15 +15,19 @@ interface ProfileMenuItemProps {
 function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       activeOpacity={0.8}
       onPress={() => {
         onPress();
       }}
     >
-      <View className="w-[360]">
-        <View className="flex-row items-center bg-white p-4 rounded-xl mt-5">
+      <View testID="profile-menu-item" className="w-[360]">
+        <View className="mt-5 flex-row items-center rounded-xl bg-white p-4">
           {item?.icon}
-          <Text style={{ color: item?.color }} className="ml-5 text-xl">
+          <Text
+            style={{ color: item?.color }}
+            className="ml-5 font-poppins text-xl"
+          >
             {item?.title}
           </Text>
         </View>

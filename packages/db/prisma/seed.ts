@@ -1,5 +1,5 @@
-import { PrismaClient, TravelSize } from "@prisma/client";
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker';
+import { PrismaClient, TravelSize } from '@prisma/client';
 
 const db = new PrismaClient();
 
@@ -28,7 +28,7 @@ const createDestination = async (count: number) => {
 
     await db.trip.update({
       where: {
-        id: randomTrip
+        id: randomTrip,
       },
       data: {
         destination: {
@@ -36,11 +36,11 @@ const createDestination = async (count: number) => {
             name: location.city(),
             image: {
               create: {
-                url: image.url()
-              }
-            }
-          }
-        }
+                url: image.url(),
+              },
+            },
+          },
+        },
       },
     });
   }
@@ -51,8 +51,8 @@ const createTrip = async (count: number) => {
   const travelSize = Object.values(TravelSize);
 
   for (let i = 0; i < count; i++) {
-    const startDate = date.between({ from: "2023-08-20", to: "2023-08-31" });
-    const endDate = date.between({ from: startDate, to: "2023-09-01" });
+    const startDate = date.between({ from: '2023-08-20', to: '2023-08-31' });
+    const endDate = date.between({ from: startDate, to: '2023-09-01' });
     const randomTravelSize = travelSize[getRandomInt(travelSize.length)];
 
     await db.trip.create({
@@ -61,7 +61,7 @@ const createTrip = async (count: number) => {
         endDate: endDate,
         startDate: startDate,
         title: `${word.noun()} trip`,
-        travelSize: randomTravelSize,
+        travelSize: randomTravelSize!,
       },
     });
   }

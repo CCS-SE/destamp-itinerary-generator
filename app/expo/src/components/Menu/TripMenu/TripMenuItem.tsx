@@ -1,28 +1,35 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import type { ReactNode } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface TripMenu {
-  icon: any;
+  icon: ReactNode;
   title: string;
   color: string;
 }
 
 interface TripMenuItemProps {
-  onCloseModal: () => void; // function of each menu
+  onClick: () => void; // function of each menu
   item: TripMenu;
 }
 
-function TripMenuItem({ onCloseModal, item }: TripMenuItemProps) {
+function TripMenuItem({ onClick, item }: TripMenuItemProps) {
   return (
     <TouchableOpacity
+      accessibilityRole="button"
       activeOpacity={0.8}
-      onPress={() => {
-        onCloseModal();
-      }}
+      onPress={onClick}
     >
-      <View className="p-4 justify-start items-start">
+      <View
+        testID={`trip-menu-${item.title}`}
+        className="items-start justify-start p-4"
+      >
         <View className="flex-row items-center p-1">
           {item?.icon}
-          <Text style={{ color: item?.color }} className="ml-5 text-lg">
+          <Text
+            testID="trip-menu-item-title"
+            style={{ color: item?.color }}
+            className="ml-5 font-poppins text-lg"
+          >
             {item?.title}
           </Text>
         </View>
