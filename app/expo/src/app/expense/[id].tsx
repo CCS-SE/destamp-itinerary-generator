@@ -112,6 +112,8 @@ const ExpensePage = () => {
             content={`₱${
               itinerary.data && totalSpending
                 ? (itinerary.data.trip.budget - totalSpending).toFixed(2)
+                : itinerary.data
+                ? itinerary.data.trip.budget.toFixed(2)
                 : 0
             }`}
             backgroundColor="#C6F3C7"
