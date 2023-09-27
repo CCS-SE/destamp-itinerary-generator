@@ -8,7 +8,7 @@ const ProfileDescription = ({
 }: {
   businessName: string;
   businessAddress: String;
-  description: string;
+  description: String;
 }) => {
   return (
     <View style={styles.container}>
