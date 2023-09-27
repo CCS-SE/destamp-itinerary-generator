@@ -49,7 +49,7 @@ export default function DateRangePicker({
         <Text className="top-3 self-center font-poppins text-base">
           Select Start Date - End Date
           {startDate && endDate
-            ? `• ${daysDifference + 1} ${daysDifference > 1 ? 'days' : 'day'}`
+            ? `• ${daysDifference} ${daysDifference > 1 ? 'days' : 'day'}`
             : ''}
         </Text>
       </View>

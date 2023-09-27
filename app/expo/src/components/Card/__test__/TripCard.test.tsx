@@ -32,7 +32,7 @@ describe('Trip Card', () => {
     expect(bugdetElement.children[0]).toBe(
       amountFormatter(tripCardData.budget),
     );
-    expect(dateElement.children[0]).toBe('Jun 9, 2023  •  3 days');
+    expect(dateElement.children[0]).toBe('Jun 9, 2023  •  4 days');
     expect(travelSizeElement.children[0]).toBe(tripCardData.travelSize);
   });
 

@@ -67,7 +67,7 @@ export default function ItineraryScreen() {
 
   const generateDayTabs = (startDate: Date, endDate: Date) => {
     const dateArray = Array.from(
-      { length: tripDuration(startDate, endDate) + 1 },
+      { length: tripDuration(startDate, endDate) },
       (_, index) => {
         const currentDate = new Date(startDate);
         currentDate.setDate(currentDate.getDate() + index);
