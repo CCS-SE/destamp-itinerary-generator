@@ -38,16 +38,40 @@ export const getPieChartData = (
     date: Date;
   }[],
 ) => {
-  return data.map((item, index) => {
-    const color = category[item.category]?.color;
+  return data
+    .reduce(
+      (
+        accumulator: {
+          __typename?: 'Expense' | undefined;
+          amount: number;
+          category: ExpenseCategory;
+          date: Date;
+        }[],
+        current,
+      ) => {
+        const existingItem = accumulator.find(
+          (item) => item.category === current.category,
+        );
 
-    return {
-      key: index,
-      value: item.amount,
-      svg: { fill: color },
-      arc: { cornerRadius: 7 },
-    };
-  });
+        if (existingItem) {
+          existingItem.amount += current.amount;
+        } else {
+          accumulator.push({ ...current });
+        }
+        return accumulator;
+      },
+      [],
+    )
+    .map((item, index) => {
+      const color = category[item.category]?.color;
+
+      return {
+        key: index,
+        value: item.amount,
+        svg: { fill: color },
+        arc: { cornerRadius: 7 },
+      };
+    });
 };
 
 interface CategoryColor {
