@@ -15,6 +15,7 @@ interface ProfileMenuItemProps {
 function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
   return (
     <TouchableOpacity
+      testID={`${item.title}-btn`}
       accessibilityRole="button"
       activeOpacity={0.8}
       onPress={() => {
