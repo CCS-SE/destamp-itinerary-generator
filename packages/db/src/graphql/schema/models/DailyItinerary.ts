@@ -1,7 +1,7 @@
 import { list, objectType } from 'nexus';
 
-const ItineraryDay = objectType({
-  name: 'ItineraryDay',
+const DailyItinerary = objectType({
+  name: 'DailyItinerary',
   definition(t) {
     t.int('id');
     t.float('accommodationCost');
@@ -12,7 +12,7 @@ const ItineraryDay = objectType({
     t.field('destinations', {
       type: list('Place'),
       resolve: ({ id }, _, ctx) => {
-        return ctx.prisma.itineraryDay
+        return ctx.prisma.dailyItinerary
           .findUniqueOrThrow({
             where: {
               id: id as number,
@@ -26,4 +26,4 @@ const ItineraryDay = objectType({
   },
 });
 
-export default ItineraryDay;
+export default DailyItinerary;

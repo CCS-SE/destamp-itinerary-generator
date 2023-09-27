@@ -1,5 +1,6 @@
 import Amenity from './Amenity';
 import Category from './Category';
+import DailyItinerary from './DailyItinerary';
 import DepartingLocation from './DepartingLocation';
 import Destination from './Destination';
 import DiningAtmosphere from './DiningAtmosphere';
@@ -9,7 +10,6 @@ import DiningOption from './DiningOption';
 import Expense from './Expense';
 import Image from './Image';
 import Itinerary from './Itinerary';
-import ItineraryDay from './ItineraryDay';
 import OpeningHour from './OpeningHour';
 import Place from './Place';
 import Traveler from './Traveler';
@@ -18,6 +18,7 @@ import User from './User';
 
 const Models = [
   Destination,
+  DailyItinerary,
   Trip,
   Image,
   User,
@@ -32,7 +33,6 @@ const Models = [
   Amenity,
   OpeningHour,
   Itinerary,
-  ItineraryDay,
   Expense,
 ];
 

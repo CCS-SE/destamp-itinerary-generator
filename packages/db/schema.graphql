@@ -31,6 +31,9 @@ input CreateTripInput {
   childCount: Int
   destinationId: Int!
   endDate: DateTime!
+  isAccommodationIncluded: Boolean!
+  isFoodIncluded: Boolean!
+  isTransportationIncluded: Boolean!
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!
@@ -41,6 +44,18 @@ input CreateUserInput {
   id: String!
   password: String!
   userType: UserType!
+}
+
+type DailyItinerary {
+  accommodationCost: Float!
+  attractionCost: Float!
+  createdAt: DateTime!
+  dayIndex: Int!
+  destinations: [Place!]!
+  foodCost: Float!
+  id: Int!
+  transportationCost: Float!
+  updatedAt: DateTime!
 }
 
 """
@@ -114,25 +129,13 @@ type Image {
 
 type Itinerary {
   createdAt: DateTime!
+  dailyItineraries: [DailyItinerary!]!
   expenses: [Expense!]!
   id: Int!
-  itineraryDays: [ItineraryDay!]!
   totalCost: Float!
   totalDuration: Float!
   updatedAt: DateTime!
   url: String!
-}
-
-type ItineraryDay {
-  accommodationCost: Float!
-  attractionCost: Float!
-  createdAt: DateTime!
-  dayIndex: Int!
-  destinations: [Place!]!
-  foodCost: Float!
-  id: Int!
-  transportationCost: Float!
-  updatedAt: DateTime!
 }
 
 type Mutation {

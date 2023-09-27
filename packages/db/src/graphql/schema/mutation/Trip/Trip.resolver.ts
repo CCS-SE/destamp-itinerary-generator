@@ -16,6 +16,9 @@ export const createTrip = (args: CreateTripInput, ctx: Context) => {
       adultCount: args.adultCount as number,
       childCount: args.childCount as number,
       destinationId: args.destinationId as number,
+      isAccommodationIncluded: args.isAccommodationIncluded as boolean,
+      isFoodIncluded: args.isFoodIncluded as boolean,
+      isTransportationIncluded: args.isTransportationIncluded as boolean,
     },
   });
 };
@@ -25,5 +28,13 @@ export const deleteTrip = (id: number, ctx: Context) => {
     where: {
       id: id,
     },
+    // include: {
+    //   itinerary: {
+    //     include: {
+    //       dailyItineraries: true,
+    //       expenses: true
+    //     }
+    //   }
+    // }
   });
 };
