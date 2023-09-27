@@ -45,6 +45,9 @@ describe('createTrip mutation', () => {
       adultCount: null,
       childCount: null,
       travelSize: TravelSize.COUPLE,
+      isAccommodationIncluded: false,
+      isFoodIncluded: true,
+      isTransportationIncluded: false,
     };
 
     mockContext.prisma.trip.create.mockResolvedValue({

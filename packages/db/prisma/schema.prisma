@@ -100,7 +100,7 @@ model Place {
   diningOfferings   DiningOffering[]
   diningCuisines    DiningCuisine[]
   amenities         Amenity[]
-  itineraryDays     ItineraryDay[]
+  dailyItineraries  DailyItinerary[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -168,14 +168,14 @@ model OpeningHour {
 }
 
 model Itinerary {
-  id            Int            @id @default(autoincrement())
-  url           String
-  totalCost     Float          @map("total_cost")
-  totalDuration Float          @map("total_duration")
-  trip          Trip?          @relation(fields: [tripId], references: [id])
-  tripId        Int?           @unique
-  itineraryDays ItineraryDay[]
-  expenses      Expense[]
+  id               Int              @id @default(autoincrement())
+  url              String
+  totalCost        Float            @map("total_cost")
+  totalDuration    Float            @map("total_duration")
+  trip             Trip?            @relation(fields: [tripId], references: [id])
+  tripId           Int?             @unique
+  dailyItineraries DailyItinerary[]
+  expenses         Expense[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -183,7 +183,7 @@ model Itinerary {
   @@map("itineraries")
 }
 
-model ItineraryDay {
+model DailyItinerary {
   id                 Int        @id @default(autoincrement())
   itinerary          Itinerary? @relation(fields: [itineraryId], references: [id])
   itineraryId        Int?
@@ -197,7 +197,7 @@ model ItineraryDay {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("itinerary_days")
+  @@map("daily_itineraries")
 }
 
 model Expense {

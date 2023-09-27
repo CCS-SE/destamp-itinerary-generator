@@ -65,6 +65,9 @@ export interface NexusGenInputs {
     childCount?: number | null; // Int
     destinationId: number; // Int!
     endDate: NexusGenScalars['DateTime']; // DateTime!
+    isAccommodationIncluded: boolean; // Boolean!
+    isFoodIncluded: boolean; // Boolean!
+    isTransportationIncluded: boolean; // Boolean!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -322,9 +325,9 @@ export interface NexusGenFieldTypes {
   Itinerary: {
     // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dailyItineraries: NexusGenRootTypes['ItineraryDay'][]; // [ItineraryDay!]!
     expenses: NexusGenRootTypes['Expense'][]; // [Expense!]!
     id: number; // Int!
-    itineraryDays: NexusGenRootTypes['ItineraryDay'][]; // [ItineraryDay!]!
     totalCost: number; // Float!
     totalDuration: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -495,9 +498,9 @@ export interface NexusGenFieldTypeNames {
   Itinerary: {
     // field return type name
     createdAt: 'DateTime';
+    dailyItineraries: 'ItineraryDay';
     expenses: 'Expense';
     id: 'Int';
-    itineraryDays: 'ItineraryDay';
     totalCost: 'Float';
     totalDuration: 'Float';
     updatedAt: 'DateTime';

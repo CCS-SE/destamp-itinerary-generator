@@ -152,9 +152,9 @@ export type Image = {
 export type Itinerary = {
   __typename?: 'Itinerary';
   createdAt: Scalars['DateTime']['output'];
+  dailyItineraries: Array<ItineraryDay>;
   expenses: Array<Expense>;
   id: Scalars['Int']['output'];
-  itineraryDays: Array<ItineraryDay>;
   totalCost: Scalars['Float']['output'];
   totalDuration: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -240,8 +240,8 @@ export enum PlaceType {
 
 export type Query = {
   __typename?: 'Query';
-  getTransaction: Array<Expense>;
   destinations: Array<Destination>;
+  getTransaction: Array<Expense>;
   itinerary: Itinerary;
   places: Array<Place>;
   travelerTrips: Array<Trip>;
@@ -623,17 +623,17 @@ export type ItineraryResolvers<
     ResolversParentTypes['Itinerary'] = ResolversParentTypes['Itinerary'],
 > = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  dailyItineraries?: Resolver<
+    Array<ResolversTypes['ItineraryDay']>,
+    ParentType,
+    ContextType
+  >;
   expenses?: Resolver<
     Array<ResolversTypes['Expense']>,
     ParentType,
     ContextType
   >;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  itineraryDays?: Resolver<
-    Array<ResolversTypes['ItineraryDay']>,
-    ParentType,
-    ContextType
-  >;
   totalCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   totalDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -784,16 +784,16 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  destinations?: Resolver<
+    Array<ResolversTypes['Destination']>,
+    ParentType,
+    ContextType
+  >;
   getTransaction?: Resolver<
     Array<ResolversTypes['Expense']>,
     ParentType,
     ContextType,
     RequireFields<QueryGetTransactionArgs, 'itineraryId'>
-  >;
-  destinations?: Resolver<
-    Array<ResolversTypes['Destination']>,
-    ParentType,
-    ContextType
   >;
   itinerary?: Resolver<
     ResolversTypes['Itinerary'],
@@ -968,7 +968,7 @@ export type GetTravelerItineraryQuery = {
     __typename?: 'Itinerary';
     id: number;
     totalCost: number;
-    itineraryDays: Array<{
+    dailyItineraries: Array<{
       __typename?: 'ItineraryDay';
       id: number;
       foodCost: number;
@@ -997,6 +997,15 @@ export type GetTravelerItineraryQuery = {
   };
 };
 
+export type GetDestinationsQueryQueryVariables = Exact<{
+  [key: string]: never;
+}>;
+
+export type GetDestinationsQueryQuery = {
+  __typename?: 'Query';
+  destinations: Array<{ __typename?: 'Destination'; id: number; name: string }>;
+};
+
 export type CreateExpenseMutationVariables = Exact<{
   data: CreateExpenseInput;
 }>;
@@ -1010,15 +1019,6 @@ export type CreateExpenseMutation = {
     date: any;
     note?: string | null;
   };
-};
-
-export type GetDestinationsQueryQueryVariables = Exact<{
-  [key: string]: never;
-}>;
-
-export type GetDestinationsQueryQuery = {
-  __typename?: 'Query';
-  destinations: Array<{ __typename?: 'Destination'; id: number; name: string }>;
 };
 
 export type CreateUserMutationVariables = Exact<{
@@ -1217,7 +1217,7 @@ export const GetTravelerItineraryDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalCost' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'itineraryDays' },
+                  name: { kind: 'Name', value: 'dailyItineraries' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
@@ -1322,6 +1322,35 @@ export const GetTravelerItineraryDocument = {
   GetTravelerItineraryQuery,
   GetTravelerItineraryQueryVariables
 >;
+export const GetDestinationsQueryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetDestinationsQuery' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'destinations' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetDestinationsQueryQuery,
+  GetDestinationsQueryQueryVariables
+>;
 export const CreateExpenseDocument = {
   kind: 'Document',
   definitions: [
@@ -1375,35 +1404,6 @@ export const CreateExpenseDocument = {
 } as unknown as DocumentNode<
   CreateExpenseMutation,
   CreateExpenseMutationVariables
->;
-export const GetDestinationsQueryDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetDestinationsQuery' },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'destinations' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<
-  GetDestinationsQueryQuery,
-  GetDestinationsQueryQueryVariables
 >;
 export const CreateUserDocument = {
   kind: 'Document',
