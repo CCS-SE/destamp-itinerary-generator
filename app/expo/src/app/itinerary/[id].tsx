@@ -17,7 +17,7 @@ export const GetTravelersItineraryQuery = gql(
     itinerary(tripId: $tripId) {
       id
       totalCost
-      itineraryDays {
+      dailyItineraries {
         id
         foodCost
         attractionCost
@@ -136,7 +136,7 @@ export default function ItineraryScreen() {
             </View>
             {data && (
               <FlatList
-                data={data.itinerary.itineraryDays.filter(
+                data={data.itinerary.dailyItineraries.filter(
                   (itinerary) => itinerary.dayIndex === selectedDay,
                 )}
                 renderItem={({ item }) => (

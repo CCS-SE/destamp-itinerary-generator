@@ -7,8 +7,8 @@ const Itinerary = objectType({
     t.string('url');
     t.float('totalCost');
     t.float('totalDuration');
-    t.field('itineraryDays', {
-      type: list('ItineraryDay'),
+    t.field('dailyItineraries', {
+      type: list('DailyItinerary'),
       resolve: ({ id }, _, ctx) => {
         return ctx.prisma.itinerary
           .findUniqueOrThrow({
@@ -16,7 +16,7 @@ const Itinerary = objectType({
               id: id as number,
             },
           })
-          .itineraryDays();
+          .dailyItineraries();
       },
     });
     t.field('expenses', {

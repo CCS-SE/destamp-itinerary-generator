@@ -11,6 +11,9 @@ const createTripInput = inputObjectType({
     t.nullable.int('childCount');
     t.field('startDate', { type: 'DateTime' });
     t.field('endDate', { type: 'DateTime' });
+    t.boolean('isAccommodationIncluded');
+    t.boolean('isFoodIncluded');
+    t.boolean('isTransportationIncluded');
   },
 });
 

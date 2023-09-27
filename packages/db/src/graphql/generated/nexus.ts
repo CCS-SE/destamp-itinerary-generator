@@ -65,6 +65,9 @@ export interface NexusGenInputs {
     childCount?: number | null; // Int
     destinationId: number; // Int!
     endDate: NexusGenScalars['DateTime']; // DateTime!
+    isAccommodationIncluded: boolean; // Boolean!
+    isFoodIncluded: boolean; // Boolean!
+    isTransportationIncluded: boolean; // Boolean!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -112,6 +115,17 @@ export interface NexusGenObjects {
     // root type
     id: number; // Int!
     name: string; // String!
+  };
+  DailyItinerary: {
+    // root type
+    accommodationCost: number; // Float!
+    attractionCost: number; // Float!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dayIndex: number; // Int!
+    foodCost: number; // Float!
+    id: number; // Int!
+    transportationCost: number; // Float!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   DepartingLocation: {
     // root type
@@ -174,17 +188,6 @@ export interface NexusGenObjects {
     totalDuration: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
-  };
-  ItineraryDay: {
-    // root type
-    accommodationCost: number; // Float!
-    attractionCost: number; // Float!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dayIndex: number; // Int!
-    foodCost: number; // Float!
-    id: number; // Int!
-    transportationCost: number; // Float!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   Mutation: {};
   OpeningHour: {
@@ -265,6 +268,18 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   };
+  DailyItinerary: {
+    // field return type
+    accommodationCost: number; // Float!
+    attractionCost: number; // Float!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dayIndex: number; // Int!
+    destinations: NexusGenRootTypes['Place'][]; // [Place!]!
+    foodCost: number; // Float!
+    id: number; // Int!
+    transportationCost: number; // Float!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  };
   DepartingLocation: {
     // field return type
     address: string; // String!
@@ -322,25 +337,13 @@ export interface NexusGenFieldTypes {
   Itinerary: {
     // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dailyItineraries: NexusGenRootTypes['DailyItinerary'][]; // [DailyItinerary!]!
     expenses: NexusGenRootTypes['Expense'][]; // [Expense!]!
     id: number; // Int!
-    itineraryDays: NexusGenRootTypes['ItineraryDay'][]; // [ItineraryDay!]!
     totalCost: number; // Float!
     totalDuration: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
-  };
-  ItineraryDay: {
-    // field return type
-    accommodationCost: number; // Float!
-    attractionCost: number; // Float!
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dayIndex: number; // Int!
-    destinations: NexusGenRootTypes['Place'][]; // [Place!]!
-    foodCost: number; // Float!
-    id: number; // Int!
-    transportationCost: number; // Float!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   Mutation: {
     // field return type
@@ -438,6 +441,18 @@ export interface NexusGenFieldTypeNames {
     id: 'Int';
     name: 'String';
   };
+  DailyItinerary: {
+    // field return type name
+    accommodationCost: 'Float';
+    attractionCost: 'Float';
+    createdAt: 'DateTime';
+    dayIndex: 'Int';
+    destinations: 'Place';
+    foodCost: 'Float';
+    id: 'Int';
+    transportationCost: 'Float';
+    updatedAt: 'DateTime';
+  };
   DepartingLocation: {
     // field return type name
     address: 'String';
@@ -495,25 +510,13 @@ export interface NexusGenFieldTypeNames {
   Itinerary: {
     // field return type name
     createdAt: 'DateTime';
+    dailyItineraries: 'DailyItinerary';
     expenses: 'Expense';
     id: 'Int';
-    itineraryDays: 'ItineraryDay';
     totalCost: 'Float';
     totalDuration: 'Float';
     updatedAt: 'DateTime';
     url: 'String';
-  };
-  ItineraryDay: {
-    // field return type name
-    accommodationCost: 'Float';
-    attractionCost: 'Float';
-    createdAt: 'DateTime';
-    dayIndex: 'Int';
-    destinations: 'Place';
-    foodCost: 'Float';
-    id: 'Int';
-    transportationCost: 'Float';
-    updatedAt: 'DateTime';
   };
   Mutation: {
     // field return type name

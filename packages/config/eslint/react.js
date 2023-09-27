@@ -1,20 +1,20 @@
 /** @type {import('eslint').Linter.Config} */
 const config = {
   extends: [
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended",
+    'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:jsx-a11y/recommended',
   ],
   rules: {
-    "react/prop-types": "off",
-    "react/no-unescaped-entities": 0
+    'react/prop-types': 'off',
+    'react/no-unescaped-entities': 0,
   },
   globals: {
-    React: "writable",
+    React: 'writable',
   },
   settings: {
     react: {
-      version: "detect",
+      version: 'detect',
     },
   },
   env: {
