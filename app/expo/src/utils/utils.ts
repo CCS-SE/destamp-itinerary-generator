@@ -13,10 +13,21 @@ export function confirmationAlert(
   leftBtnMsg: string,
   onPress?: () => void,
 ) {
-  return Alert.alert(`${title}`, `${message}`, [
-    { text: `${leftBtnMsg}`, style: 'cancel' },
-    { text: `${rightBtnMsg}`, onPress: onPress },
-  ]);
+  return Alert.alert(
+    `${title}`,
+    `${message}`,
+    [
+      { text: `${leftBtnMsg}`, style: 'cancel' },
+      { text: `${rightBtnMsg}`, onPress: onPress },
+    ],
+    {
+      cancelable: false,
+    },
+  );
+}
+
+export function toSentenceCase(word: string) {
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
 export const getPieChartData = (

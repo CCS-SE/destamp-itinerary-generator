@@ -181,6 +181,7 @@ enum PlaceType {
 }
 
 type Query {
+  destinations: [Destination!]!
   getTransaction(itineraryId: Int!): [Expense!]!
   itinerary(tripId: Int!): Itinerary!
   places: [Place!]!

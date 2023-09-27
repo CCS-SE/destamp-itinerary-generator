@@ -27,9 +27,9 @@ export default function CategoryList({ onCategoryChange }: CategoryListProps) {
   };
 
   return (
-    <View className="h-64">
+    <View className="h-[180]">
       <FlatList
-        numColumns={3}
+        numColumns={4}
         data={categoryList}
         renderItem={({ item }) => (
           <CategoryListItem

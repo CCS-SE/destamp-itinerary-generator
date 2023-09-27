@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import DashedLine from 'react-native-dashed-line';
 
 import DayExpenseCard from '~/components/Card/DayExpenseCard';
@@ -54,7 +54,7 @@ export default function ItineraryCard({
           dashColor="#DE4D6C"
           dashStyle={{ borderRadius: 8 }}
           axis="vertical"
-          style={{ marginLeft: 12, marginTop: 37 }}
+          style={{ marginLeft: 17, marginTop: 37 }}
         />
         <View>
           <View className="flex-row">
@@ -69,46 +69,48 @@ export default function ItineraryCard({
             />
             <DepartingFromCard locationName={departingLocation!} />
           </View>
-          {destinations?.map((destination, i) => (
-            <>
-              <View className="flex-row" key={i}>
-                {destination.type === PlaceType.Attraction ? (
-                  <Attraction
-                    height={33}
-                    width={33}
-                    style={{
-                      position: 'absolute',
-                      marginTop: 20,
-                      marginLeft: -18,
-                    }}
+          <FlatList
+            data={destinations}
+            renderItem={({ item }) => (
+              <>
+                <View className="flex-row">
+                  {item.type === PlaceType.Attraction ? (
+                    <Attraction
+                      height={33}
+                      width={33}
+                      style={{
+                        position: 'absolute',
+                        marginTop: 20,
+                        marginLeft: -18,
+                      }}
+                    />
+                  ) : (
+                    <Restaurant
+                      height={33}
+                      width={33}
+                      style={{
+                        position: 'absolute',
+                        marginTop: 20,
+                        marginLeft: -18,
+                      }}
+                    />
+                  )}
+                  <DestinationCard
+                    time="9:00 AM"
+                    title={item.name}
+                    price={item.price}
+                    imageList={item.images.map((image) => image.url)}
                   />
-                ) : (
-                  <Restaurant
-                    height={33}
-                    width={33}
-                    style={{
-                      position: 'absolute',
-                      marginTop: 20,
-                      marginLeft: -18,
-                    }}
-                  />
-                )}
-                <DestinationCard
-                  time="9:00 AM"
-                  title={destination.name}
-                  price={destination.price}
-                  imageList={destination.images.map((image) => image.url)}
+                </View>
+                <DirectionCard
+                  icon={
+                    <Walking height={22} width={22} style={{ marginLeft: 8 }} />
+                  }
+                  duration="3 min"
                 />
-              </View>
-              <DirectionCard
-                key={`${destination.name}-${i}`}
-                icon={
-                  <Walking height={22} width={22} style={{ marginLeft: 8 }} />
-                }
-                duration="3 min"
-              />
-            </>
-          ))}
+              </>
+            )}
+          />
         </View>
       </View>
     </>

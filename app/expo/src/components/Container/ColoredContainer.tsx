@@ -21,13 +21,13 @@ export default function ColoredContainer({
     >
       <Text
         style={{ color: textColor }}
-        className={`text-[${textColor}] text-base`}
+        className={`text-[${textColor}] font-poppins-medium text-lg`}
       >
         {title}
       </Text>
       <Text
         style={{ color: textColor }}
-        className={`text-[${textColor}] text-xl`}
+        className={`text-[${textColor}] font-poppins text-xl`}
       >
         {content}
       </Text>

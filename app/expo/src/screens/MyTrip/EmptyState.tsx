@@ -3,10 +3,12 @@ import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
 export default function MyTripEmptyState() {
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push('/trip/create/');
   };
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">

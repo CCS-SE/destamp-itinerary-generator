@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { FlatList, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
@@ -134,21 +134,24 @@ export default function ItineraryScreen() {
                   )}
               </ScrollView>
             </View>
-            {data &&
-              data.itinerary.itineraryDays.map((itinerary, i) => {
-                if (itinerary.dayIndex === selectedDay) {
-                  return (
-                    <ItineraryCard
-                      key={i}
-                      attractionCost={itinerary.attractionCost}
-                      foodCost={itinerary.foodCost}
-                      transportationCost={itinerary.transportationCost}
-                      departingLocation={data.trip.departingLocation?.name}
-                      destinations={itinerary.destinations}
-                    />
-                  );
-                }
-              })}
+            {data && (
+              <FlatList
+                data={data.itinerary.itineraryDays.filter(
+                  (itinerary) => itinerary.dayIndex === selectedDay,
+                )}
+                renderItem={({ item }) => (
+                  <ItineraryCard
+                    key={item.dayIndex}
+                    attractionCost={item.attractionCost}
+                    foodCost={item.foodCost}
+                    transportationCost={item.transportationCost}
+                    departingLocation={data.trip.departingLocation?.name}
+                    destinations={item.destinations}
+                  />
+                )}
+                scrollEnabled={false}
+              />
+            )}
           </View>
         </ScrollView>
       </SafeAreaView>
