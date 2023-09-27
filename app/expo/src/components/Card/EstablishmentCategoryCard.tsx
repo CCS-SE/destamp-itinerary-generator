@@ -3,18 +3,17 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  TouchableOpacity,
+  // TouchableOpacity,
   View,
 } from 'react-native';
 
 const EstablishmentCategory = ({
   mainCategory,
-  tags,
-  onPress,
+  tags, // onPress,
 }: {
   mainCategory: string;
   tags: string[];
-  onPress: (params: object) => void;
+  // onPress: (params: object) => void;
 }) => {
   return (
     <View style={styles.container}>
@@ -25,12 +24,12 @@ const EstablishmentCategory = ({
         <FlatList
           data={tags}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => onPress(tags)}
-              style={styles.buttonContainer}
-            >
-              <Text style={styles.tags}>{item}</Text>
-            </TouchableOpacity>
+            // <TouchableOpacity
+            //   onPress={() => onPress(tags)}
+            //   style={styles.buttonContainer}
+            // >
+            <Text style={styles.tags}>{item}</Text>
+            // </TouchableOpacity>
           )}
           keyExtractor={(item, index) => index.toString()}
           horizontal={true} // Render tags horizontally

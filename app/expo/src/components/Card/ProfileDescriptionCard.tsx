@@ -3,15 +3,23 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const ProfileDescription = ({
   businessName,
+  businessAddress,
   description,
 }: {
   businessName: string;
+  businessAddress: String;
   description: string;
 }) => {
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.businessName}>{businessName}</Text>
+      </View>
+      <View>
+        <Text style={styles.businessAddress}>
+          {businessAddress}
+          {'\n'}
+        </Text>
       </View>
       <View>
         <Text style={styles.description}>{description}</Text>
@@ -25,7 +33,10 @@ const styles = StyleSheet.create({
     width: 322,
     backgroundColor: '#FDE4C8',
     borderRadius: 20,
-    padding: 25,
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingLeft: 25,
+    paddingRight: 25,
     marginTop: 25,
   },
   description: {
@@ -34,10 +45,14 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   businessName: {
-    fontSize: 13,
+    fontSize: 15,
     fontFamily: 'Poppins',
     color: 'black',
     fontWeight: 'bold',
+  },
+  businessAddress: {
+    fontFamily: 'Poppins',
+    fontSize: 11,
   },
 });
 

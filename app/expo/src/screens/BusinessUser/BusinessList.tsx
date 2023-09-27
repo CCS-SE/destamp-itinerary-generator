@@ -5,10 +5,10 @@ import { gql, useQuery } from '@apollo/client';
 
 import BusinessProfileCard from '~/components/Card/BusinessCard';
 import SearchBar from '~/components/SearchBar/SearchBar';
-import { GetBusinessQueryDocument } from '~/graphql/generated';
+import { GetBusinessListDocument } from '~/graphql/generated';
 
 export const GetBusinessListQuery = gql(
-  `query GetBusinessQuery($placeId: String!) {
+  `query GetBusinessList($placeId: String!) {
   place(placeId: $placeId) {
     name
     address
@@ -21,9 +21,9 @@ const BusinessListScreen = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [businesses, setBusinesses] = useState<any[]>([]);
 
-  const { loading, error, data } = useQuery(GetBusinessQueryDocument, {
+  const { loading, error, data } = useQuery(GetBusinessListDocument, {
     variables: {
-      placeId: 'clmoxompn019fv72o09ue5vh8', // ${businessIndex} Use the index to fetch business data
+      placeId: 'ChIJafobTxjlrjMRmv5QKj6xO4o', // ${businessIndex} Use the index to fetch business data
     },
     skip: !businessIndex,
   });
@@ -52,7 +52,7 @@ const BusinessListScreen = () => {
 
   return (
     <View style={styles.container}>
-      <SearchBar searchTitle={'Search Listing'} value={businessIndex} />
+      <SearchBar searchTitle={'Search Listing'} />
       <BusinessProfileCard
         businessName={'Teepee'}
         businessAddress={'something'}

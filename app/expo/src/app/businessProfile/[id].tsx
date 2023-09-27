@@ -9,58 +9,69 @@ import ImageCollections from '~/components/Card/ImageCollections';
 import MealPrice from '~/components/Card/MealPrice';
 import ProfileDescription from '~/components/Card/ProfileDescriptionCard';
 import WorkingHours from '~/components/Card/WorkingHoursCard';
-import { GetPlaceQueryDocument } from '~/graphql/generated';
+import { GetBusinessDetailsDocument } from '~/graphql/generated';
 
-export const GetPlaceQuery = gql(
-  `query GetPlaceQuery($placeId: String!) {
-  place(placeId: $placeId) {
-    name
-    description
-    contactNumber
-    address
-    images {
-      url
-      id
-    }
-    openingHours {
-      id
-      openTime
-      closeTime
-      day
-    }
-    price
-    categories {
-      id
+export const GetBusinessDetailsQuery = gql(
+  `query GetBusinessDetails($placeId: String!){
+    place(placeId: $placeId) {
       name
+      address
+      contactNumber
+      description
+      website
+      categories {
+        id
+        name
+      }
+      price
+      images {
+        url
+      }
+      openingHours {
+        closeTime
+        day
+        openTime
+  
+      }
+      amenities {
+        id
+        name
+      }
+      diningAtmospheres {
+        id
+        name
+      }
+      diningCuisines {
+        id
+        name
+      }
+      diningOfferings {
+        id
+        name
+      }
+      diningOptions {
+        id
+        name
+      }
+      visitDuration
     }
-    amenities {
-      id
-      name
+    
+      
     }
-    diningAtmospheres {
-      id
-      name
-    }
-    diningCuisines {
-      id
-      name
-    }
-  }
-  }
   `,
 );
-export default function BusinessProfileScreen() {
-  // const { id } = useLocalSearchParams();
-  const [businessProfile] = useState('1'); // Initial index
+const BusinessProfileScreen = () => {
+  const [businessIndex] = useState('1'); // Initial index
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [businesses, setBusinesses] = useState<any[]>([]);
 
-  const { loading, error, data } = useQuery(GetPlaceQueryDocument, {
+  const { loading, error, data } = useQuery(GetBusinessDetailsDocument, {
     variables: {
-      placeId: 'clmoxompn019fv72o09ue5vh8', // ${businessProfile} Use the index to fetch business data
+      placeId: 'ChIJafobTxjlrjMRmv5QKj6xO4o', // ${businessIndex} Use the index to fetch business data
     },
-    skip: !businessProfile,
+    skip: !businessIndex,
   });
+
   useEffect(() => {
     if (data && data.place) {
       setBusinesses([data.place]);
@@ -77,11 +88,6 @@ export default function BusinessProfileScreen() {
     return <Text>Error: {error.message}</Text>;
   }
 
-  function handleTagPress(params: object): void {
-    // You can use the `params` parameter as needed in the future
-    console.log('Tag pressed with params:', params);
-  }
-
   return (
     <View>
       <Stack.Screen options={{ title: 'Business Profile' }} />
@@ -93,11 +99,13 @@ export default function BusinessProfileScreen() {
                 <ProfileDescription
                   key={index}
                   businessName={business.name}
+                  businessAddress={business.address}
                   description={business.description}
                 />
                 <ContactInformation
+                  key={index}
                   contactNumber={business.contactNumber}
-                  location={business.address}
+                  website={business.website}
                 />
                 <EstablishmentCategory
                   mainCategory={'test'}
@@ -105,7 +113,7 @@ export default function BusinessProfileScreen() {
                     business.categories.name,
                     business.diningAtmospheres.name,
                   ]}
-                  onPress={handleTagPress}
+                  // onPress={handleTagPress}
                 />
                 <WorkingHours
                   days={'Monday - Sunday'}
@@ -122,10 +130,12 @@ export default function BusinessProfileScreen() {
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     margin: 20,
   },
 });
+
+export default BusinessProfileScreen;
