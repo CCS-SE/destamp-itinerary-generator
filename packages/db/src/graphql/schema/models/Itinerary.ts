@@ -8,7 +8,7 @@ const Itinerary = objectType({
     t.float('totalCost');
     t.float('totalDuration');
     t.field('dailyItineraries', {
-      type: list('ItineraryDay'),
+      type: list('DailyItinerary'),
       resolve: ({ id }, _, ctx) => {
         return ctx.prisma.itinerary
           .findUniqueOrThrow({

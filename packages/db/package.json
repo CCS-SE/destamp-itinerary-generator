@@ -10,6 +10,7 @@
     "db:push": "pnpm with-env prisma db push --skip-generate",
     "db:migrate": "pnpm with-env prisma migrate dev",
     "db:seed": "pnpm with-env node prisma/seed.js",
+    "db:reset": "pnpm with-env npx prisma migrate reset",
     "with-env": "dotenv -e ../../.env --",
     "nexus:generate": "ts-node --transpile-only src/graphql/schema/index.ts",
     "generate": "pnpm db:generate",

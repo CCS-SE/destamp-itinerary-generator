@@ -46,6 +46,18 @@ input CreateUserInput {
   userType: UserType!
 }
 
+type DailyItinerary {
+  accommodationCost: Float!
+  attractionCost: Float!
+  createdAt: DateTime!
+  dayIndex: Int!
+  destinations: [Place!]!
+  foodCost: Float!
+  id: Int!
+  transportationCost: Float!
+  updatedAt: DateTime!
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -117,25 +129,13 @@ type Image {
 
 type Itinerary {
   createdAt: DateTime!
-  dailyItineraries: [ItineraryDay!]!
+  dailyItineraries: [DailyItinerary!]!
   expenses: [Expense!]!
   id: Int!
   totalCost: Float!
   totalDuration: Float!
   updatedAt: DateTime!
   url: String!
-}
-
-type ItineraryDay {
-  accommodationCost: Float!
-  attractionCost: Float!
-  createdAt: DateTime!
-  dayIndex: Int!
-  destinations: [Place!]!
-  foodCost: Float!
-  id: Int!
-  transportationCost: Float!
-  updatedAt: DateTime!
 }
 
 type Mutation {
