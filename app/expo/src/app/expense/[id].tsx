@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
+import { SelectList } from 'react-native-dropdown-select-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PieChart } from 'react-native-svg-charts';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
@@ -11,10 +12,11 @@ import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import TransactionsListItem from '~/components/List/ListItems/TransactionsListItem';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import {
+  ExpenseCategory,
   GetTransactionsDocument,
   GetTravelerItineraryDocument,
 } from '~/graphql/generated';
-import { getPieChartData } from '~/utils/utils';
+import { areDatesEqual, getDatesBetween, getPieChartData } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
 export const GetTransactionsQuery = gql(
@@ -29,7 +31,7 @@ export const GetTransactionsQuery = gql(
 
 const ExpensePage = () => {
   const { id } = useLocalSearchParams();
-
+  const [dateFilter, setDateFilter] = useState<Date | string>('All');
   const [modal, setModal] = useState(false);
 
   const handleBack = () => {
@@ -56,7 +58,27 @@ const ExpensePage = () => {
     0,
   );
 
-  const pieChartData = getPieChartData(data ? data.getTransaction : []);
+  const dropdownData = getDatesBetween(
+    new Date(itinerary.data?.trip.startDate),
+    new Date(itinerary.data?.trip.endDate),
+  );
+
+  const dateFilteredExpenses: {
+    __typename?: 'Expense' | undefined;
+    amount: number;
+    category: ExpenseCategory;
+    date: any;
+  }[] = data
+    ? data.getTransaction.filter((item) =>
+        areDatesEqual(new Date(item.date), new Date(dateFilter)),
+      )
+    : [];
+
+  const pieChartData = data
+    ? getPieChartData(
+        dateFilter === 'All' ? data.getTransaction : dateFilteredExpenses,
+      )
+    : [];
 
   if (error) return <Text>{`Error! ${error.message.toString()}`}</Text>;
 
@@ -108,17 +130,26 @@ const ExpensePage = () => {
           <View className="items-center justify-center p-5">
             <PieChart style={{ width: 200, height: 200 }} data={pieChartData} />
           </View>
-          <View className="mx-9 justify-between">
+          <View className="mx-9 flex-row justify-between">
             <Text className="font-poppins text-2xl text-[#5D5D5D]">
               Expenses
             </Text>
+            <SelectList
+              defaultOption={{ key: 'All', value: 'All' }}
+              data={['All', ...dropdownData]}
+              setSelected={(val: string) => setDateFilter(val)}
+              search={false}
+            />
           </View>
-          <View className="mx-1 h-[360]">
+          <View className="mx-1 h-[280]">
             {data && (
               <FlatList
-                showsVerticalScrollIndicator={false}
-                persistentScrollbar={true}
-                data={data.getTransaction}
+                scrollEnabled={true}
+                data={
+                  dateFilter === 'All'
+                    ? data.getTransaction
+                    : dateFilteredExpenses
+                }
                 renderItem={({ item }) => (
                   <TransactionsListItem
                     category={item.category}

@@ -102,3 +102,32 @@ const category: CategoryColor = {
     color: '#BE7B75',
   },
 };
+
+export const getDatesBetween = (startDate: Date, endDate: Date): string[] => {
+  const dates: string[] = [];
+  let currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    dates.push(new Date(currentDate).toDateString());
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+};
+
+export const areDatesEqual = (date1: Date, date2: Date) => {
+  // Extract the date portion of the two dates
+  const date1WithoutTime = new Date(
+    date1.getFullYear(),
+    date1.getMonth(),
+    date1.getDate(),
+  );
+  const date2WithoutTime = new Date(
+    date2.getFullYear(),
+    date2.getMonth(),
+    date2.getDate(),
+  );
+
+  // Compare the date portions
+  return date1WithoutTime.getTime() === date2WithoutTime.getTime();
+};
