@@ -87,6 +87,9 @@ importers:
       expo:
         specifier: ^49.0.7
         version: 49.0.7(@babel/core@7.22.10)
+      expo-checkbox:
+        specifier: ~2.4.0
+        version: 2.4.0
       expo-constants:
         specifier: ~14.4.2
         version: 14.4.2(expo@49.0.7)
@@ -9664,6 +9667,10 @@ packages:
     transitivePeerDependencies:
       - expo
       - supports-color
+    dev: false
+
+  /expo-checkbox@2.4.0:
+    resolution: {integrity: sha512-ZEe79B73I+NDkLZQ2pR1E5rv9ey1oleNI/s2/Jdb9zKWztS0KVU2K+drFn2t/zyoSbR1U+CNwik2v7h6JxrXcA==}
     dev: false
 
   /expo-constants@14.4.2(expo@49.0.7):
