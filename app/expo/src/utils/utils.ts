@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { ExpenseCategory } from '~/graphql/generated';
 
 export function amountFormatter(amount: number) {
-  return new Intl.NumberFormat().format(amount);
+  return new Intl.NumberFormat().format(Math.floor(amount));
 }
 
 export function confirmationAlert(

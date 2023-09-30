@@ -2,14 +2,14 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import DashedLine from 'react-native-dashed-line';
 
-import DayExpenseCard from '~/components/Card/DayExpenseCard';
-import DepartingFromCard from '~/components/Card/DepartingFromCard';
-import DirectionCard from '~/components/Card/DirectionCard';
+import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
+import DepartingFromCard from '~/components/Card/traveler/DepartingFromCard';
+import DirectionCard from '~/components/Card/traveler/DirectionCard';
 import { PlaceType } from '~/graphql/generated';
-import Attraction from '../../../assets/images/attraction-icon.svg';
-import Location from '../../../assets/images/location-icon.svg';
-import Restaurant from '../../../assets/images/restaurant-icon.svg';
-import Walking from '../../../assets/images/walking.svg';
+import Attraction from '../../../../assets/images/attraction-icon.svg';
+import Location from '../../../../assets/images/location-icon.svg';
+import Restaurant from '../../../../assets/images/restaurant-icon.svg';
+import Walking from '../../../../assets/images/walking.svg';
 import DestinationCard from './DestinationCard';
 
 interface Image {
@@ -26,7 +26,7 @@ interface Destination {
 
 interface ItineraryCardProps {
   attractionCost: number;
-  foodCost: number;
+  foodCost: string;
   transportationCost: number;
   departingLocation: string | undefined;
   destinations: Destination[] | [];
@@ -44,7 +44,7 @@ export default function ItineraryCard({
         attractionCost={attractionCost!}
         foodCost={foodCost!}
         transportationCost={transportationCost!}
-        totalCost={attractionCost! + foodCost! + transportationCost!}
+        totalCost={attractionCost! + transportationCost!}
       />
       <View className="w-[370] flex-row">
         <DashedLine

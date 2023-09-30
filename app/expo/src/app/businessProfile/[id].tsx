@@ -3,12 +3,12 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
-import ContactInformation from '~/components/Card/ContactInfoCard';
-import EstablishmentCategory from '~/components/Card/EstablishmentCategoryCard';
-import ImageCollections from '~/components/Card/ImageCollections';
-import MealPrice from '~/components/Card/MealPrice';
-import ProfileDescription from '~/components/Card/ProfileDescriptionCard';
-import WorkingHours from '~/components/Card/WorkingHoursCard';
+import ContactInformation from '~/components/Card/owner/ContactInfoCard';
+import EstablishmentCategory from '~/components/Card/owner/EstablishmentCategoryCard';
+import ImageCollections from '~/components/Card/owner/ImageCollections';
+import MealPrice from '~/components/Card/owner/MealPrice';
+import ProfileDescription from '~/components/Card/owner/ProfileDescriptionCard';
+import WorkingHours from '~/components/Card/owner/WorkingHoursCard';
 import { GetBusinessDetailsDocument } from '~/graphql/generated';
 
 export const GetBusinessDetailsQuery = gql(

@@ -4,7 +4,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
 import { amountFormatter } from '~/utils/utils';
-import TripCard from '../TripCard';
+import TripCard from '../traveler/TripCard';
 import { tripCardData, TripsQueryMock } from './mock/query.mock';
 
 jest.mock('@supabase/supabase-js', () => {

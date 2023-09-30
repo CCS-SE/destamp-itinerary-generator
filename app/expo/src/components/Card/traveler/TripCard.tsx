@@ -7,9 +7,9 @@ import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
 import { getTripDateFormat, tripDuration } from '~/utils/dates';
-import { amountFormatter } from '~/utils/utils';
-import TripMenuList from '../Menu/TripMenu/TripMenuList';
-import BottomHalfModal from '../Modal/BottomHalfModal';
+import { amountFormatter, toSentenceCase } from '~/utils/utils';
+import TripMenuList from '../../Menu/TripMenu/TripMenuList';
+import BottomHalfModal from '../../Modal/BottomHalfModal';
 
 interface TripCardProps {
   id: number;
@@ -99,7 +99,7 @@ function TripCard({
                 testID="trip-travel-size"
                 className="pl-1 text-center font-poppins text-base  text-gray-500"
               >
-                {travelSize}
+                {toSentenceCase(travelSize)}
               </Text>
               <Text className="pl-2 text-center font-poppins text-base  text-gray-500">
                 •

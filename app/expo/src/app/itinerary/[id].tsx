@@ -5,7 +5,7 @@ import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
 import DayButton from '~/components/Button/DayButton';
-import ItineraryCard from '~/components/Card/ItineraryCard';
+import ItineraryCard from '~/components/Card/traveler/ItineraryCard';
 import { GetTravelerItineraryDocument } from '~/graphql/generated';
 import { tripDuration } from '~/utils/dates';
 import Back from '../../../assets/images/back-icon.svg';

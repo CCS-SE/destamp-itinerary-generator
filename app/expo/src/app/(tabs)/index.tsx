@@ -4,10 +4,10 @@ import { router } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
-import TripCard from '~/components/Card/TripCard';
+import TripCard from '~/components/Card/traveler/TripCard';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerTripsDocument } from '~/graphql/generated';
-import MyTripEmptyState from '~/screens/MyTrip/EmptyState';
+import MyTripEmptyState from '~/screens/Traveler/MyTrip/EmptyState';
 
 export const GetTravelerTripsQuery = gql(
   `query GetTravelerTrips($userId: String!) {

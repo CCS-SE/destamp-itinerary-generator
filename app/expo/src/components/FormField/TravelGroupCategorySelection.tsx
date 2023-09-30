@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 
-import TravelGroupCard from '~/components/Card/TravelGroupCard';
+import TravelGroupCard from '~/components/Card/traveler/TravelGroupCard';
 import { TravelSize } from '~/graphql/generated';
 import Couple from '../../../assets/images/couple.svg';
 import Family from '../../../assets/images/family.svg';

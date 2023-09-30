@@ -4,9 +4,9 @@ import { useRouter } from 'expo-router';
 
 import { ExpenseCategory, TravelSize } from '~/graphql/generated';
 import { truncateText } from '~/utils/utils';
-import Accommodation from '../../../assets/images/accommodation-field.svg';
-import Food from '../../../assets/images/food-field.svg';
-import Transpo from '../../../assets/images/transpo-field.svg';
+import Accommodation from '../../../../assets/images/accommodation-field.svg';
+import Food from '../../../../assets/images/food-field.svg';
+import Transpo from '../../../../assets/images/transpo-field.svg';
 
 interface ReviewCardProps extends ViewProps {
   icon: ReactNode;
@@ -21,7 +21,7 @@ interface ReviewCardProps extends ViewProps {
   section: string;
 }
 
-const MAX_TEXT_LENGTH = 28;
+const MAX_TEXT_LENGTH = 23;
 
 export default function ReviewCard({
   icon,
@@ -58,7 +58,7 @@ export default function ReviewCard({
 
   return (
     <View
-      className="my-1.5 h-14 w-[370] flex-row items-center rounded-xl bg-gray-50 p-4 shadow-sm"
+      className="my-1.5 h-14 w-[340] flex-row items-center rounded-xl bg-gray-50 p-4 shadow-sm"
       {...viewProps}
     >
       {icon}

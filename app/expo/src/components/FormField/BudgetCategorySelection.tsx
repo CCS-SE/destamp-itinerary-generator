@@ -5,7 +5,7 @@ import { ExpenseCategory } from '~/graphql/generated';
 import Accommodation from '../../../assets/images/accommodation-field.svg';
 import Food from '../../../assets/images/food-field.svg';
 import Transpo from '../../../assets/images/transpo-field.svg';
-import BudgetCategoryCard from '../Card/BudgetCategoryCard';
+import BudgetCategoryCard from '../Card/traveler/BudgetCategoryCard';
 
 interface BudgetCategorySelectionProps {
   onOptionChange: (options: ExpenseCategory[]) => void;
