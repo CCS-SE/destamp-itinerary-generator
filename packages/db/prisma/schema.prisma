@@ -48,6 +48,7 @@ model Trip {
   isAccommodationIncluded  Boolean            @default(false)
   isFoodIncluded           Boolean            @default(false)
   isTransportationIncluded Boolean            @default(false)
+  preferredTime            Json[]             @map("preferred_time")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

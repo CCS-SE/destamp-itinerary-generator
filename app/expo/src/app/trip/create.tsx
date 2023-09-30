@@ -11,6 +11,7 @@ import AmountTextInput from '~/components/FormField/AmountTextInput';
 import BudgetCategorySelection from '~/components/FormField/BudgetCategorySelection';
 import DateRangePicker from '~/components/FormField/DateRangePicker';
 import GeocoderSearch from '~/components/FormField/MapboxGeocoder';
+import PreferedTimeSelection from '~/components/FormField/PreferedTimeSelection';
 import SearchableTextInput from '~/components/FormField/SearchableTextInput';
 import TravelGroupCategorySelection from '~/components/FormField/TravelGroupCategorySelection';
 import Stepper from '~/components/Stepper/Stepper';
@@ -19,6 +20,7 @@ import {
   GetDestinationsQueryDocument,
   TravelSize,
 } from '~/graphql/generated';
+import { tripDuration } from '~/utils/dates';
 import { confirmationAlert } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
@@ -40,9 +42,10 @@ interface TripDataProps {
   departureLocation: string;
   travelGroup: TravelSize;
   startDate: string | null;
-  endDate: string | null;
-  budget: string;
+  preferredTime: Array<[number, number]>;
   budgetInclusions: [ExpenseCategory];
+  budget: string;
+  endDate: string | null;
   adultCount: number;
   childCount: number;
   groupCount: number;
@@ -63,8 +66,9 @@ const initialTripData: TripDataProps = {
   travelGroup: TravelSize.Solo,
   startDate: null,
   endDate: null,
-  budget: '',
+  preferredTime: [[10, 18]],
   budgetInclusions: [ExpenseCategory.Accommodation],
+  budget: '',
   adultCount: 2,
   childCount: 1,
   groupCount: 2,
@@ -79,17 +83,22 @@ const initialLocationDate: LocationProps = {
 
 export default function CreateTripScreen() {
   const router = useRouter();
-  const { section } = useLocalSearchParams();
+  const { section, title } = useLocalSearchParams();
   const { data } = useQuery(GetDestinationsQueryDocument);
 
   const [activeSection, setActiveSection] = useState<number>(0);
   const [activeSections, setActiveSections] = useState<number[]>([0]);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [visitedSteps, setVisitedSteps] = useState<number[]>([0]);
+  const [tripDurationDays, setTripDurationDays] = useState<number>(1);
 
   const [tripData, setTripData] = useState<TripDataProps>(initialTripData);
   const [selectedDepartureLocation, setSelectedDepartureLocation] =
     useState<LocationProps>(initialLocationDate);
+
+  const [preferredTimeValues, setPreferredTimeValues] = useState<
+    Array<[number, number]>
+  >([]);
 
   const handleTripDataChange = (name: string, newValue: unknown) => {
     setTripData({
@@ -111,6 +120,17 @@ export default function CreateTripScreen() {
       startDate: startDate,
       endDate: endDate,
     }));
+
+    if (startDate && endDate) {
+      const newStartDate = new Date(startDate);
+      const newEndDate = new Date(endDate);
+      const numberOfDays = tripDuration(newStartDate, newEndDate);
+
+      // Ensure numberOfDays is a valid positive integer, default to 1 if not.
+      const validNumberOfDays = numberOfDays > 0 ? numberOfDays : 1;
+
+      setTripDurationDays(validNumberOfDays); // Update the number of days
+    }
   };
 
   const setSections = (sections: number[]) => {
@@ -180,7 +200,6 @@ export default function CreateTripScreen() {
       router.push({
         pathname: '/trip/review',
         params: {
-          travelDestination: tripData.travelDestination,
           departingLocation: selectedDepartureLocation.name,
           travelGroup: tripData.travelGroup,
           groupCount: tripData.groupCount,
@@ -198,7 +217,10 @@ export default function CreateTripScreen() {
           endDate: tripData.endDate || '',
           budget: tripData.budget,
           budgetInclusions: tripData.budgetInclusions,
-          title: `${tripData.travelDestination} Trip`,
+          preferredTime: preferredTimeValues.map(
+            ([start, end]) => `${start}:00-${end}:00`,
+          ),
+          title: title ? title : `${tripData.travelDestination} Trip`,
           locationName: selectedDepartureLocation.name,
           locationAddress: selectedDepartureLocation.place_name || '',
           locationLng: selectedDepartureLocation.center[0] || 0,
@@ -208,7 +230,6 @@ export default function CreateTripScreen() {
                 (a) => a.name === tripData.travelDestination,
               )!.id
             : '',
-          travelerId: 1,
         },
       });
     }
@@ -280,15 +301,19 @@ export default function CreateTripScreen() {
       key={4}
       onDateChange={(sd, ed) => handleDateChange(sd, ed)}
     />,
-    <AmountTextInput
-      key={5}
-      onChangeText={(value) => handleTripDataChange('budget', value)}
+    <PreferedTimeSelection
+      onValueChange={(values) => setPreferredTimeValues(values)}
+      tripDuration={tripDurationDays}
     />,
     <BudgetCategorySelection
       key={6}
       onOptionChange={(value) =>
         handleTripDataChange('budgetInclusions', value)
       }
+    />,
+    <AmountTextInput
+      key={5}
+      onChangeText={(value) => handleTripDataChange('budget', value)}
     />,
   ];
 
@@ -306,7 +331,7 @@ export default function CreateTripScreen() {
           title: 'Create Trip',
           headerTitleStyle: {
             color: '#504D4D',
-            fontSize: 20,
+            fontSize: 22,
           },
           headerLeft: () => (
             <TouchableOpacity onPress={handleBackButtonPress}>
@@ -348,8 +373,9 @@ const stepperProperty: (keyof TripDataProps)[] = [
   'departureLocation',
   'travelGroup',
   'startDate',
-  'budget',
+  'preferredTime',
   'budgetInclusions',
+  'budget',
 ];
 
 const Sections = [
@@ -366,9 +392,12 @@ const Sections = [
     title: 'When is your trip?',
   },
   {
-    title: 'How much is your budget?',
+    title: 'When is your free time?',
   },
   {
     title: 'What should be included in your budget?',
+  },
+  {
+    title: 'How much is your budget?',
   },
 ];
