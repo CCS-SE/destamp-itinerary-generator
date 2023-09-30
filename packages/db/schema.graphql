@@ -12,8 +12,28 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
+type BusinessOwner {
+  firstName: String!
+  id: Int!
+  lastName: String!
+  listings: [Place!]!
+  role: BusinessRole!
+}
+
+enum BusinessRole {
+  MANAGER
+  OWNER
+}
+
 type Category {
   id: Int!
+  name: String!
+}
+
+input CreateDepartingLocationInput {
+  address: String!
+  latitude: Float!
+  longitude: Float!
   name: String!
 }
 
@@ -37,6 +57,7 @@ input CreateTripInput {
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!
+  travelerId: Int!
 }
 
 input CreateUserInput {
@@ -52,7 +73,7 @@ type DailyItinerary {
   createdAt: DateTime!
   dayIndex: Int!
   destinations: [Place!]!
-  foodCost: Float!
+  foodCost: String!
   id: Int!
   transportationCost: Float!
   updatedAt: DateTime!
@@ -140,7 +161,7 @@ type Itinerary {
 
 type Mutation {
   createExpense(data: CreateExpenseInput!): Expense!
-  createTrip(data: CreateTripInput!): Trip!
+  createTrip(data: CreateTripInput!, locationData: CreateDepartingLocationInput!): Trip!
   createUser(data: CreateUserInput!): User!
   deleteTrip(id: Int!): Trip!
 }
@@ -189,6 +210,7 @@ type Query {
   itinerary(tripId: Int!): Itinerary!
   place(placeId: String!): Place!
   places: [Place!]!
+  traveler(userId: String!): Traveler!
   travelerTrips(userId: String!): [Trip!]!
   trip(id: Int!): Trip!
 }

@@ -80,6 +80,8 @@ model Destination {
 
 model Place {
   id                String             @id @default(cuid())
+  businessOwner     BusinessOwner?     @relation(fields: [businessOwnerId], references: [id])
+  businessOwnerId   Int?
   name              String
   description       String?
   type              PlaceType
@@ -189,7 +191,7 @@ model DailyItinerary {
   itineraryId        Int?
   accommodationCost  Float      @map("accommodation_cost")
   attractionCost     Float      @map("attraction_cost")
-  foodCost           Float      @map("food_cost")
+  foodCost           String     @map("food_cost")
   dayIndex           Int        @map("day_index")
   transportationCost Float      @map("transportation_cost")
   destinations       Place[]
@@ -229,6 +231,21 @@ model Image {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("images")
+}
+
+model BusinessOwner {
+  id        Int               @id @default(autoincrement())
+  firstName String            @map("first_name")
+  lastName  String            @map("last_name")
+  role      BusinessOwnerRole
+  listings  Place[]
+
+  @@map("business_owners")
+}
+
+enum BusinessOwnerRole {
+  OWNER
+  MANAGER
 }
 
 enum UserType {

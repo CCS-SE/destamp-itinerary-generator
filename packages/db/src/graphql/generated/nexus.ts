@@ -50,6 +50,13 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  CreateDepartingLocationInput: {
+    // input type
+    address: string; // String!
+    latitude: number; // Float!
+    longitude: number; // Float!
+    name: string; // String!
+  };
   CreateExpenseInput: {
     // input type
     amount: number; // Float!
@@ -71,6 +78,7 @@ export interface NexusGenInputs {
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
+    travelerId: number; // Int!
   };
   CreateUserInput: {
     // input type
@@ -82,6 +90,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  BusinessRole: 'MANAGER' | 'OWNER';
   ExpenseCategory:
     | 'ACCOMMODATION'
     | 'ACTIVITY'
@@ -111,6 +120,13 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   };
+  BusinessOwner: {
+    // root type
+    firstName: string; // String!
+    id: number; // Int!
+    lastName: string; // String!
+    role: NexusGenEnums['BusinessRole']; // BusinessRole!
+  };
   Category: {
     // root type
     id: number; // Int!
@@ -122,7 +138,7 @@ export interface NexusGenObjects {
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     dayIndex: number; // Int!
-    foodCost: number; // Float!
+    foodCost: string; // String!
     id: number; // Int!
     transportationCost: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -263,6 +279,14 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   };
+  BusinessOwner: {
+    // field return type
+    firstName: string; // String!
+    id: number; // Int!
+    lastName: string; // String!
+    listings: NexusGenRootTypes['Place'][]; // [Place!]!
+    role: NexusGenEnums['BusinessRole']; // BusinessRole!
+  };
   Category: {
     // field return type
     id: number; // Int!
@@ -275,7 +299,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     dayIndex: number; // Int!
     destinations: NexusGenRootTypes['Place'][]; // [Place!]!
-    foodCost: number; // Float!
+    foodCost: string; // String!
     id: number; // Int!
     transportationCost: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -391,6 +415,7 @@ export interface NexusGenFieldTypes {
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
     place: NexusGenRootTypes['Place']; // Place!
     places: NexusGenRootTypes['Place'][]; // [Place!]!
+    traveler: NexusGenRootTypes['Traveler']; // Traveler!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
   };
@@ -437,6 +462,14 @@ export interface NexusGenFieldTypeNames {
     id: 'Int';
     name: 'String';
   };
+  BusinessOwner: {
+    // field return type name
+    firstName: 'String';
+    id: 'Int';
+    lastName: 'String';
+    listings: 'Place';
+    role: 'BusinessRole';
+  };
   Category: {
     // field return type name
     id: 'Int';
@@ -449,7 +482,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime';
     dayIndex: 'Int';
     destinations: 'Place';
-    foodCost: 'Float';
+    foodCost: 'String';
     id: 'Int';
     transportationCost: 'Float';
     updatedAt: 'DateTime';
@@ -565,6 +598,7 @@ export interface NexusGenFieldTypeNames {
     itinerary: 'Itinerary';
     place: 'Place';
     places: 'Place';
+    traveler: 'Traveler';
     travelerTrips: 'Trip';
     trip: 'Trip';
   };
@@ -614,6 +648,7 @@ export interface NexusGenArgTypes {
     createTrip: {
       // args
       data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
+      locationData: NexusGenInputs['CreateDepartingLocationInput']; // CreateDepartingLocationInput!
     };
     createUser: {
       // args
@@ -636,6 +671,10 @@ export interface NexusGenArgTypes {
     place: {
       // args
       placeId: string; // String!
+    };
+    traveler: {
+      // args
+      userId: string; // String!
     };
     travelerTrips: {
       // args

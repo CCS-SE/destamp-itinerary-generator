@@ -1,5 +1,4 @@
-import { faker } from '@faker-js/faker';
-import { PrismaClient, TravelSize } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import set from 'date-fns/set';
 
 import accommodations from './accommodationsv3.json';
@@ -26,12 +25,6 @@ const days: Record<Day, DayValue> = {
   Thursday: 4,
   Friday: 5,
   Saturday: 6,
-};
-
-const getRandomInt = (max: number, min = 0) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min);
 };
 
 const convertTo24HourFormat = (timeString: string) => {
@@ -62,54 +55,18 @@ const clearDb = async () => {
   });
 };
 
-const createDestination = async (count: number) => {
-  const { location, image } = faker;
-
-  const trips = await db.trip.findMany({ select: { id: true } });
-  const tripIds = trips.map((trip) => trip.id);
-
-  for (let i = 0; i < count; i++) {
-    const randomTrip = tripIds[getRandomInt(tripIds.length)];
-
-    await db.trip.update({
-      where: {
-        id: randomTrip,
-      },
-      data: {
-        destination: {
-          create: {
-            name: location.city(),
-            image: {
-              create: {
-                url: image.url(),
-              },
-            },
-          },
+const createDestination = async () => {
+  await db.destination.create({
+    data: {
+      name: 'Iloilo City',
+      image: {
+        create: {
+          url: 'https://www.allproperties.com.ph/wp-content/uploads/2022/01/House-and-Lot-for-sale-in-Iloilo-Photo-Credit-Scholarris20-scaled-1.jpg',
+          name: 'iloilo-city',
         },
       },
-    });
-  }
-};
-
-const createTrip = async (count: number) => {
-  const { word, finance, date } = faker;
-  const travelSize = Object.values(TravelSize);
-
-  for (let i = 0; i < count; i++) {
-    const startDate = date.between({ from: '2023-08-20', to: '2023-08-31' });
-    const endDate = date.between({ from: startDate, to: '2023-09-01' });
-    const randomTravelSize = travelSize[getRandomInt(travelSize.length)];
-
-    await db.trip.create({
-      data: {
-        budget: parseInt(finance.amount()),
-        endDate: endDate,
-        startDate: startDate,
-        title: `${word.noun()} trip`,
-        travelSize: randomTravelSize!,
-      },
-    });
-  }
+    },
+  });
 };
 
 const createAttractions = async () => {
@@ -287,8 +244,7 @@ const createRestaurants = async () => {
 };
 
 clearDb()
-  .then(() => createTrip(20))
-  .then(() => createDestination(20))
+  .then(() => createDestination())
   .then(() => createAttractions())
   .then(() => createAccommodations())
   .then(() => createRestaurants())
