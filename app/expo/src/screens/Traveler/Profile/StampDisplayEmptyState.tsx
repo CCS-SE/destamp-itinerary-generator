@@ -12,13 +12,13 @@ export default function StampDisplayEmptyState() {
       />
       <Text
         testID="no-stamps-title"
-        className="mt-3 font-poppins text-base font-normal text-slate-700"
+        className="mb-2 mt-3 text-center font-poppins text-base text-slate-600"
       >
         You haven't claimed any stamps yet.
       </Text>
       <Text
         testID="no-stamps-subtitle"
-        className="text-center font-poppins text-base font-normal text-slate-500"
+        className="text-center font-poppins text-base text-slate-500"
       >
         Start planning your trip and collect stamps as you go. ✨
       </Text>

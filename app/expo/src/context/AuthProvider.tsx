@@ -29,7 +29,7 @@ const AuthProvider = (props: Props) => {
           if (session) {
             router.push('/(tabs)/');
           } else {
-            router.push('/login');
+            router.replace('/login');
           }
         },
       );

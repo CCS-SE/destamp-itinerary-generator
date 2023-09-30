@@ -11,11 +11,11 @@ export default function SignUpScreen() {
   return (
     <SafeAreaView
       edges={['top', 'bottom']}
-      className="mt-24 flex-1 bg-transparent p-3"
+      className="mt-12 flex-1 bg-transparent p-3"
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 ml-2 w-96 font-poppins-medium text-2xl font-bold text-orange-500">
+        <Text className="mb-6 ml-4 w-96 font-poppins-medium text-2xl font-bold text-orange-500">
           Start with creating an account
         </Text>
         <SignUpForm />
