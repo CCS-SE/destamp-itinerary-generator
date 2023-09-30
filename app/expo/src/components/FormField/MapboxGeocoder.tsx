@@ -10,19 +10,25 @@ import Constants from 'expo-constants';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
+type Coordinate = [number, number];
+
 interface ItemProps {
   id: number | string;
   name: string;
+  place_name: string;
+  center: Coordinate;
 }
 
 interface GeocoderProps {
   placeholder: string;
-  onChange: (selectedValue: string) => void;
+  onChange: (item: ItemProps) => void;
 }
 
 interface MapboxLocation {
   id: string;
   place_name: string;
+  name: string;
+  center: Coordinate;
 }
 
 export default function GeocoderSearch({
@@ -30,13 +36,28 @@ export default function GeocoderSearch({
   onChange,
 }: GeocoderProps) {
   const [search, setSearch] = useState('');
-  const [selectedValue, setSelectedValue] = useState('');
+  const [selectedValue, setSelectedValue] = useState<ItemProps>({
+    id: '',
+    name: '',
+    center: [0, 0],
+    place_name: '',
+  });
   const [results, setResults] = useState<MapboxLocation[]>([]);
 
   const handlOnClearPress = () => {
     setSearch('');
-    setSelectedValue('');
-    onChange('');
+    setSelectedValue({
+      id: '',
+      name: '',
+      center: [0, 0],
+      place_name: '',
+    });
+    onChange({
+      id: '',
+      name: '',
+      center: [0, 0],
+      place_name: '',
+    });
     setResults([]);
   };
 
@@ -63,11 +84,21 @@ export default function GeocoderSearch({
     }
   };
 
-  const ItemView = ({ name }: ItemProps) => {
+  const ItemView = ({ name, id, center, place_name }: ItemProps) => {
     const handleItemPress = () => {
       setSearch(name);
-      setSelectedValue(name);
-      onChange(name);
+      setSelectedValue({
+        id: id,
+        name: name,
+        center: center,
+        place_name: place_name,
+      });
+      onChange({
+        id: id,
+        name: name,
+        center: center,
+        place_name: place_name,
+      });
       setResults([]);
     };
 
@@ -86,7 +117,7 @@ export default function GeocoderSearch({
         <AntDesign name="search1" size={20} color="#808080" />
         <TextInput
           onChangeText={handleQueryChange}
-          placeholder={search ? selectedValue : placeholder}
+          placeholder={search ? selectedValue.place_name : placeholder}
           value={search}
           className="ml-2 flex-1 pb-0.5 font-poppins text-base text-gray-500"
         />
@@ -100,7 +131,12 @@ export default function GeocoderSearch({
         scrollEnabled={false}
         data={results}
         renderItem={({ item }) => (
-          <ItemView name={item.place_name} id={item.id} />
+          <ItemView
+            name={item.place_name}
+            id={item.id}
+            place_name={item.place_name}
+            center={item.center}
+          />
         )}
       />
     </View>

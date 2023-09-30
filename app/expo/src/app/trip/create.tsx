@@ -22,8 +22,17 @@ import {
 import { confirmationAlert } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
+type Coordinate = [number, number];
+
 interface SectionProps {
   title: string;
+}
+
+interface LocationProps {
+  id: number | string;
+  name: string;
+  place_name: string;
+  center: Coordinate;
 }
 
 interface TripDataProps {
@@ -61,6 +70,13 @@ const initialTripData: TripDataProps = {
   groupCount: 2,
 };
 
+const initialLocationDate: LocationProps = {
+  id: '',
+  name: '',
+  center: [0, 0],
+  place_name: '',
+};
+
 export default function CreateTripScreen() {
   const router = useRouter();
   const { section } = useLocalSearchParams();
@@ -72,12 +88,18 @@ export default function CreateTripScreen() {
   const [visitedSteps, setVisitedSteps] = useState<number[]>([0]);
 
   const [tripData, setTripData] = useState<TripDataProps>(initialTripData);
+  const [selectedDepartureLocation, setSelectedDepartureLocation] =
+    useState<LocationProps>(initialLocationDate);
 
-  const handleTripDataChange = (propertyName: string, newValue: unknown) => {
+  const handleTripDataChange = (name: string, newValue: unknown) => {
     setTripData({
       ...tripData,
-      [propertyName]: newValue,
+      [name]: newValue,
     });
+
+    if (name === 'departureLocation' && newValue) {
+      setSelectedDepartureLocation(newValue as LocationProps);
+    }
   };
 
   const handleDateChange = (
@@ -159,16 +181,34 @@ export default function CreateTripScreen() {
         pathname: '/trip/review',
         params: {
           travelDestination: tripData.travelDestination,
-          departingLocation: tripData.departureLocation,
+          departingLocation: selectedDepartureLocation.name,
           travelGroup: tripData.travelGroup,
           groupCount: tripData.groupCount,
-          adultCount: tripData.adultCount,
-          childCount: tripData.childCount,
+          adultCount:
+            tripData.travelGroup === TravelSize.Solo
+              ? 1
+              : tripData.travelGroup == TravelSize.Couple
+              ? 2
+              : tripData.adultCount,
+          childCount:
+            tripData.travelGroup === TravelSize.Family
+              ? tripData.childCount
+              : 0,
           startDate: tripData.startDate || '',
           endDate: tripData.endDate || '',
           budget: tripData.budget,
           budgetInclusions: tripData.budgetInclusions,
           title: `${tripData.travelDestination} Trip`,
+          locationName: selectedDepartureLocation.name,
+          locationAddress: selectedDepartureLocation.place_name || '',
+          locationLng: selectedDepartureLocation.center[0] || 0,
+          locationLat: selectedDepartureLocation.center[1] || 0,
+          destinationId: data
+            ? data.destinations.find(
+                (a) => a.name === tripData.travelDestination,
+              )!.id
+            : '',
+          travelerId: 1,
         },
       });
     }
