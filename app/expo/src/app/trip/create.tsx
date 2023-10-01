@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
+import { Moment } from 'moment';
 
 import StepperButton from '~/components/Button/StepperButton';
 import AmountTextInput from '~/components/FormField/AmountTextInput';
@@ -41,11 +42,11 @@ interface TripDataProps {
   travelDestination: string;
   departureLocation: string;
   travelGroup: TravelSize;
-  startDate: string | null;
+  startDate: Moment | null;
   preferredTime: Array<[number, number]>;
   budgetInclusions: [ExpenseCategory];
   budget: string;
-  endDate: string | null;
+  endDate: Moment | null;
   adultCount: number;
   childCount: number;
   groupCount: number;
@@ -112,8 +113,8 @@ export default function CreateTripScreen() {
   };
 
   const handleDateChange = (
-    startDate: string | null,
-    endDate: string | null,
+    startDate: Moment | null,
+    endDate: Moment | null,
   ) => {
     setTripData((prevData) => ({
       ...prevData,
@@ -122,9 +123,7 @@ export default function CreateTripScreen() {
     }));
 
     if (startDate && endDate) {
-      const newStartDate = new Date(startDate);
-      const newEndDate = new Date(endDate);
-      const numberOfDays = tripDuration(newStartDate, newEndDate);
+      const numberOfDays = endDate.diff(startDate, 'days') + 1;
 
       // Ensure numberOfDays is a valid positive integer, default to 1 if not.
       const validNumberOfDays = numberOfDays > 0 ? numberOfDays : 1;
@@ -195,6 +194,13 @@ export default function CreateTripScreen() {
 
     const missingDataSection = !tripData[currentStepIndex];
 
+    const startDateString = tripData.startDate
+      ? tripData.startDate.format('YYYY-MM-DD')
+      : '';
+    const endDateString = tripData.endDate
+      ? tripData.endDate.format('YYYY-MM-DD')
+      : '';
+
     if (!missingDataSection) {
       setCompletedSteps([...completedSteps, activeSection]);
       router.push({
@@ -213,8 +219,8 @@ export default function CreateTripScreen() {
             tripData.travelGroup === TravelSize.Family
               ? tripData.childCount
               : 0,
-          startDate: tripData.startDate || '',
-          endDate: tripData.endDate || '',
+          startDate: startDateString,
+          endDate: endDateString,
           budget: tripData.budget,
           budgetInclusions: tripData.budgetInclusions,
           preferredTime: preferredTimeValues.map(

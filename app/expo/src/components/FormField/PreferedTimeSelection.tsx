@@ -43,21 +43,31 @@ export default function PreferedTimeSelection({
     }
   };
 
+  const dayDisplay = (value: number) => {
+    return value >= 12
+      ? `${value === 12 ? value : value - 12}PM `
+      : `${value}AM`;
+  };
+
   return (
     <View className="items-start">
       {ranges.map((range, index) => (
         <View key={index}>
-          <View className="w-[310] flex-row items-center justify-between">
+          <View className="w-[330] flex-row items-center justify-between">
             <Text className="font-poppins-medium text-lg text-gray-500">{`Day  ${
               index + 1
             }`}</Text>
-            <Text className="font-poppins-medium text-lg text-gray-500">{`${range[0]}:00-${range[1]}:00`}</Text>
+            <View className="w-28 items-center rounded-lg bg-[#F9EBEE] py-0.5">
+              <Text className="font-poppins-medium text-base text-[#FF6E93] ">{`${dayDisplay(
+                range[0],
+              )} - ${dayDisplay(range[1])}`}</Text>
+            </View>
           </View>
           <View className="my-5 flex-row">
-            <Text className="font-poppins text-base text-gray-600">{MIN}</Text>
+            <Text className="font-poppins text-base text-gray-600">{`${MIN} AM`}</Text>
             <RangeSlider
               style={{
-                width: 280,
+                width: 250,
                 height: 25,
                 flexGrow: 0,
                 paddingHorizontal: 7,
@@ -66,13 +76,15 @@ export default function PreferedTimeSelection({
               step={1}
               CustomThumb={CustomThumb}
               onValueChange={(newRange) => handleRangeChange(index, newRange)}
-              outboundColor="#999999"
+              outboundColor="#DCDCDC"
               inboundColor="#FC8040"
               trackHeight={7}
               minimumValue={MIN}
               maximumValue={MAX}
             />
-            <Text className="font-poppins text-base text-gray-600">{MAX}</Text>
+            <Text className="font-poppins text-base text-gray-600">{`${
+              MAX - 12
+            } PM`}</Text>
           </View>
         </View>
       ))}
