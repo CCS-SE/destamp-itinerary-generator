@@ -45,7 +45,13 @@ export default function PreferedTimeSelection({
 
   const dayDisplay = (value: number) => {
     return value >= 12
-      ? `${value === 12 ? value : value - 12}PM `
+      ? `${
+          value === 12
+            ? `${value}PM`
+            : value - 12 == 12
+            ? `${value - 12}AM`
+            : `${value - 12}PM`
+        }`
       : `${value}AM`;
   };
 
@@ -84,7 +90,7 @@ export default function PreferedTimeSelection({
             />
             <Text className="font-poppins text-base text-gray-600">{`${
               MAX - 12
-            } PM`}</Text>
+            } AM`}</Text>
           </View>
         </View>
       ))}
