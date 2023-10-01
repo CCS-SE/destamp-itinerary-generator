@@ -11,6 +11,7 @@ import ColoredContainer from '~/components/Container/ColoredContainer';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import TransactionsListItem from '~/components/List/ListItems/TransactionsListItem';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import ExpenseScreenSkeleton from '~/components/Skeleton/ExpenseScreenSkeleton';
 import {
   ExpenseCategory,
   GetTransactionsDocument,
@@ -33,6 +34,7 @@ const ExpensePage = () => {
   const { id } = useLocalSearchParams();
   const [dateFilter, setDateFilter] = useState<Date | string>('All');
   const [modal, setModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleBack = () => {
     return router.back();
@@ -83,12 +85,7 @@ const ExpensePage = () => {
   if (error) return <Text>{`Error! ${error.message.toString()}`}</Text>;
 
   if (loading) {
-    return (
-      <View>
-        <Stack.Screen options={{ title: 'Expense' }} />
-        <Text>{'Loading...'}</Text>
-      </View>
-    );
+    return <ExpenseScreenSkeleton />;
   }
 
   return (
@@ -141,9 +138,21 @@ const ExpensePage = () => {
               data={['All', ...dropdownData]}
               setSelected={(val: string) => setDateFilter(val)}
               search={false}
+              dropdownStyles={{
+                backgroundColor: '#EDEBEB',
+                position: 'absolute',
+                borderWidth: 0,
+                width: 150,
+              }}
+              boxStyles={{
+                backgroundColor: '#EDEBEB',
+                width: 150,
+                borderWidth: 0,
+              }}
+              dropdownTextStyles={{ color: '#696969' }}
             />
           </View>
-          <View className="mx-1 h-[280]">
+          <View className="-z-10 mx-1 h-[280]">
             {data && (
               <FlatList
                 scrollEnabled={true}

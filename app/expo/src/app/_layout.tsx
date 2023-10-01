@@ -23,7 +23,7 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-const LOCAL_SYSTEM_IP_ADDRESS = '192.168.254.135';
+const LOCAL_SYSTEM_IP_ADDRESS = '192.168.0.24';
 // '192.168.254.135'; // change this with your own ip address
 const PORT = 4000;
 

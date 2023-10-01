@@ -6,6 +6,7 @@ import { gql, useQuery } from '@apollo/client';
 
 import DayButton from '~/components/Button/DayButton';
 import ItineraryCard from '~/components/Card/ItineraryCard';
+import ItineraryScreenSkeleton from '~/components/Skeleton/ItineraryScreenSkeleton';
 import { GetTravelerItineraryDocument } from '~/graphql/generated';
 import { tripDuration } from '~/utils/dates';
 import Back from '../../../assets/images/back-icon.svg';
@@ -90,11 +91,10 @@ export default function ItineraryScreen() {
     return <Text>{error.message}</Text>;
   }
 
-  if (loading) {
+  if (loading && !data) {
     return (
-      <View>
-        <Stack.Screen options={{ title: 'Itinerary' }} />
-        <Text>Loading...</Text>
+      <View className="flex-1 items-center">
+        <ItineraryScreenSkeleton />
       </View>
     );
   }
