@@ -50,7 +50,7 @@ export default function MyTripScreen() {
 
   if (loading && !data)
     return (
-      <View className="flex-1 items-center ">
+      <View className="flex-1 items-center" testID="my-trip-loading">
         <TripScreenSkeleton />
       </View>
     );
