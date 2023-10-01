@@ -10,4 +10,17 @@ const TravelerTrips = queryField('travelerTrips', {
   resolve: (_, args, ctx) => queryTravelerTrips(args.userId, ctx),
 });
 
-export default [TravelerTrips];
+const Traveler = queryField('traveler', {
+  type: 'Traveler',
+  args: {
+    userId: nonNull(stringArg()),
+  },
+  resolve: (_, args, ctx) =>
+    ctx.prisma.traveler.findUniqueOrThrow({
+      where: {
+        userId: args.userId as string,
+      },
+    }),
+});
+
+export default [TravelerTrips, Traveler];

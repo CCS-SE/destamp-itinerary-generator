@@ -24,6 +24,13 @@ declare global {
       fieldName: FieldName,
       opts?: core.CommonInputFieldConfig<TypeName, FieldName>,
     ): void; // "BigInt";
+    /**
+     * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(
+      fieldName: FieldName,
+      opts?: core.CommonInputFieldConfig<TypeName, FieldName>,
+    ): void; // "JSON";
   }
 }
 declare global {
@@ -42,6 +49,13 @@ declare global {
       fieldName: FieldName,
       ...opts: core.ScalarOutSpread<TypeName, FieldName>
     ): void; // "BigInt";
+    /**
+     * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+     */
+    json<FieldName extends string>(
+      fieldName: FieldName,
+      ...opts: core.ScalarOutSpread<TypeName, FieldName>
+    ): void; // "JSON";
   }
 }
 
@@ -75,6 +89,7 @@ export interface NexusGenInputs {
     isAccommodationIncluded: boolean; // Boolean!
     isFoodIncluded: boolean; // Boolean!
     isTransportationIncluded: boolean; // Boolean!
+    preferredTime: NexusGenScalars['JSON'][]; // [JSON!]!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -112,6 +127,7 @@ export interface NexusGenScalars {
   ID: string;
   BigInt: any;
   DateTime: any;
+  JSON: any;
 }
 
 export interface NexusGenObjects {

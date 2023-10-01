@@ -1,6 +1,6 @@
 import { inputObjectType } from 'nexus';
 
-const createExpenseInput = inputObjectType({
+const CreateExpenseInput = inputObjectType({
   name: 'CreateExpenseInput',
   definition(t) {
     t.field('itineraryId', { type: 'Int' });
@@ -11,4 +11,4 @@ const createExpenseInput = inputObjectType({
   },
 });
 
-export default createExpenseInput;
+export default CreateExpenseInput;
