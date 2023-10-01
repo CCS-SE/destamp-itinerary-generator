@@ -6,6 +6,7 @@ import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
 import DepartingFromCard from '~/components/Card/traveler/DepartingFromCard';
 import DirectionCard from '~/components/Card/traveler/DirectionCard';
 import { PlaceType } from '~/graphql/generated';
+import { calculateAveragePrice } from '~/utils/utils';
 import Attraction from '../../../../assets/images/attraction-icon.svg';
 import Location from '../../../../assets/images/location-icon.svg';
 import Restaurant from '../../../../assets/images/restaurant-icon.svg';
@@ -44,7 +45,11 @@ export default function ItineraryCard({
         attractionCost={attractionCost!}
         foodCost={foodCost!}
         transportationCost={transportationCost!}
-        totalCost={attractionCost! + transportationCost!}
+        totalCost={
+          attractionCost! +
+          transportationCost! +
+          calculateAveragePrice(foodCost)
+        }
       />
       <View className="w-[370] flex-row">
         <DashedLine

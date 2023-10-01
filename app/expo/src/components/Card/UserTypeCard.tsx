@@ -2,19 +2,20 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 interface TravelGroupCardProps {
-  selectedIcon: React.ReactNode;
-  unselectedIcon: React.ReactNode;
+  selectedIcon?: React.ReactNode;
+  unselectedIcon?: React.ReactNode;
   title: string;
   isSelected: boolean;
   onPress: () => void;
 }
-const UserTypeCard = ({
+
+export default function UserTypeCard({
   selectedIcon,
   unselectedIcon,
   title,
   isSelected,
   onPress,
-}: TravelGroupCardProps) => {
+}: TravelGroupCardProps) {
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
       <View
@@ -33,6 +34,4 @@ const UserTypeCard = ({
       </View>
     </TouchableOpacity>
   );
-};
-
-export default UserTypeCard;
+}

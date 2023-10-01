@@ -21,7 +21,6 @@ import {
   GetDestinationsQueryDocument,
   TravelSize,
 } from '~/graphql/generated';
-import { tripDuration } from '~/utils/dates';
 import { confirmationAlert } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
@@ -308,6 +307,7 @@ export default function CreateTripScreen() {
       onDateChange={(sd, ed) => handleDateChange(sd, ed)}
     />,
     <PreferedTimeSelection
+      key={5}
       onValueChange={(values) => setPreferredTimeValues(values)}
       tripDuration={tripDurationDays}
     />,
@@ -318,7 +318,7 @@ export default function CreateTripScreen() {
       }
     />,
     <AmountTextInput
-      key={5}
+      key={7}
       onChangeText={(value) => handleTripDataChange('budget', value)}
     />,
   ];

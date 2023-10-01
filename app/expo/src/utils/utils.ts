@@ -57,6 +57,15 @@ export const getPieChartData = (
   });
 };
 
+export const calculateAveragePrice = (priceRange: string) => {
+  const [min, max] = priceRange.split('-').map(Number);
+  if (isNaN(min!) || isNaN(max!)) {
+    return 0;
+  } else {
+    return (min! + max!) / 2;
+  }
+};
+
 interface CategoryColor {
   [key: string]: {
     color: string;

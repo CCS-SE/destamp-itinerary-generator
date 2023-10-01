@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/client/testing';
 import { fireEvent, render } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
-import { amountFormatter } from '~/utils/utils';
+import { amountFormatter, toSentenceCase } from '~/utils/utils';
 import TripCard from '../traveler/TripCard';
 import { tripCardData, TripsQueryMock } from './mock/query.mock';
 
@@ -33,7 +33,9 @@ describe('Trip Card', () => {
       amountFormatter(tripCardData.budget),
     );
     expect(dateElement.children[0]).toBe('Jun 9, 2023  •  4 days');
-    expect(travelSizeElement.children[0]).toBe(tripCardData.travelSize);
+    expect(travelSizeElement.children[0]).toBe(
+      toSentenceCase(tripCardData.travelSize),
+    );
   });
 
   it('calls the modal open function when menu button is clicked', async () => {

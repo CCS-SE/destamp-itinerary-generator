@@ -62,9 +62,7 @@ export default function ReviewCard({
       {...viewProps}
     >
       {icon}
-      <Text
-        className={`ml-5  text-ellipsis font-poppins text-lg text-gray-600`}
-      >
+      <Text className="ml-5  text-ellipsis font-poppins text-lg text-gray-600">
         {!isTravelSize
           ? truncateText(title, MAX_TEXT_LENGTH)
           : `${title} (${travelerCount[travelGroup as TravelSize]})`}
@@ -84,7 +82,7 @@ export default function ReviewCard({
           activeOpacity={0.8}
           className="absolute right-3"
         >
-          <Text className=" font-poppins-medium text-lg text-orange-400">
+          <Text className="font-poppins-medium text-lg text-orange-400">
             Edit
           </Text>
         </TouchableOpacity>

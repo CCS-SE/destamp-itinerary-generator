@@ -49,7 +49,7 @@ export const GetTravelersItineraryQuery = gql(
 export default function ItineraryScreen() {
   const { id } = useLocalSearchParams();
 
-  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedDay, setSelectedDay] = useState(0);
 
   const handleTabPress = (dayIndex: number) => {
     setSelectedDay(dayIndex);
@@ -80,8 +80,8 @@ export default function ItineraryScreen() {
         key={`day ${index + 1}`}
         date={date}
         day={index + 1}
-        isSelected={selectedDay === index + 1}
-        onPress={() => handleTabPress(index + 1)}
+        isSelected={selectedDay === index}
+        onPress={() => handleTabPress(index)}
       />
     ));
   };
