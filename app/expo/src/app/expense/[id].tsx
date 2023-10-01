@@ -34,7 +34,6 @@ const ExpensePage = () => {
   const { id } = useLocalSearchParams();
   const [dateFilter, setDateFilter] = useState<Date | string>('All');
   const [modal, setModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const handleBack = () => {
     return router.back();
@@ -69,7 +68,7 @@ const ExpensePage = () => {
     __typename?: 'Expense' | undefined;
     amount: number;
     category: ExpenseCategory;
-    date: any;
+    date: Date;
   }[] = data
     ? data.getTransaction.filter((item) =>
         areDatesEqual(new Date(item.date), new Date(dateFilter)),

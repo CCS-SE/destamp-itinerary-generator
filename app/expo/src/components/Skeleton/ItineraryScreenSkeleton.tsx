@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, SafeAreaView, Text, View } from 'react-native';
+import { Dimensions, SafeAreaView, View } from 'react-native';
 import { router, Stack } from 'expo-router';
 
 import Back from '../../../assets/images/back-icon.svg';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, ScrollView, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 import Skeleton from './Skeleton';
 
