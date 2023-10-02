@@ -10,7 +10,12 @@ import {
   MutationCreateUserArgs,
   UserType,
 } from '~/graphql/generated';
+import UnselectedBusinessOwner from '../../../assets/images/businessman-unselected.svg';
+import BusinessOwner from '../../../assets/images/businessman.svg';
+import UnselectedTraveler from '../../../assets/images/traveler-unselected.svg';
+import Traveler from '../../../assets/images/traveler.svg';
 import GradientButton from '../Button/GradientButton';
+import UserTypeCard from '../Card/UserTypeCard';
 import { CustomTextInput } from '../FormField/CustomTextInput';
 import ShowPasswordIcon from '../Icon/ShowPasswordIcon';
 import { SignUpSchema, signUpSchema } from './schema/signupSchema';
@@ -28,8 +33,14 @@ export default function SignUpForm() {
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
 
+  const [userType, setUserType] = useState<UserType>(UserType.Traveler);
+
+  const handleUserTypeChange = (value: UserType) => {
+    setUserType(value);
+  };
+
   const { handleSubmit, control } = useForm<SignUpSchema>({
-    mode: 'onBlur',
+    mode: 'onChange',
     resolver: zodResolver(signUpSchema),
   });
 
@@ -41,6 +52,14 @@ export default function SignUpForm() {
     const { error, data } = await supabase.auth.signUp({
       email: input.email,
       password: input.password,
+      options: {
+        data: {
+          user_metadata: {
+            role:
+              userType === UserType.Traveler ? 'traveler' : 'business_owner',
+          },
+        },
+      },
     });
 
     if (error) Alert.alert('Sign Up Error', error.message);
@@ -48,7 +67,7 @@ export default function SignUpForm() {
       const createUserInput: MutationCreateUserArgs = {
         data: {
           id: data.user!.id,
-          userType: UserType.Traveler,
+          userType: userType,
           email: input.email,
           password: input.password,
         },
@@ -69,6 +88,27 @@ export default function SignUpForm() {
 
   return (
     <View className="items-center">
+      <View className="-top-2 w-[370]">
+        <Text className="ml-2 self-start font-poppins text-lg text-gray-500">
+          Choose account type
+        </Text>
+        <View className="mx-2 flex-row justify-between">
+          <UserTypeCard
+            selectedIcon={<Traveler height={50} width={40} />}
+            unselectedIcon={<UnselectedTraveler height={50} width={40} />}
+            isSelected={userType === UserType.Traveler}
+            title="Traveler"
+            onPress={() => handleUserTypeChange(UserType.Traveler)}
+          />
+          <UserTypeCard
+            selectedIcon={<BusinessOwner height={43} width={40} />}
+            unselectedIcon={<UnselectedBusinessOwner height={43} width={40} />}
+            isSelected={userType === UserType.BusinessOperator}
+            title="Business Owner"
+            onPress={() => handleUserTypeChange(UserType.BusinessOperator)}
+          />
+        </View>
+      </View>
       <Controller
         control={control}
         name="email"

@@ -1,4 +1,8 @@
-import { BigIntResolver, DateTimeResolver } from 'graphql-scalars';
+import {
+  BigIntResolver,
+  DateTimeResolver,
+  JSONResolver,
+} from 'graphql-scalars';
 import { asNexusMethod, makeSchema } from 'nexus';
 import { validatePlugin } from 'nexus-validate';
 
@@ -9,13 +13,14 @@ import Query from './query';
 
 const DateTime = asNexusMethod(DateTimeResolver, 'date');
 const BigInt = asNexusMethod(BigIntResolver, 'bigInt');
+const Json = asNexusMethod(JSONResolver, 'json');
 
 const schema = makeSchema({
   nonNullDefaults: {
     input: true,
     output: true,
   },
-  types: [Models, Query, Mutation, Input, DateTime, BigInt],
+  types: [Models, Query, Mutation, Input, DateTime, BigInt, Json],
   outputs: {
     schema: `${__dirname}/../../../schema.graphql`,
     typegen: `${__dirname}/../generated/nexus.ts`,

@@ -10,12 +10,12 @@ import LoginForm from '~/components/Forms/LoginForm';
 export default function LoginScreen() {
   return (
     <SafeAreaView
-      edges={['top', 'bottom']}
+      edges={['top', 'bottom', 'left', 'right']}
       className="top-28 flex-1 bg-transparent p-3"
     >
       <ScrollView>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 ml-2 w-96 font-poppins-medium text-3xl font-medium text-orange-500">
+        <Text className="mb-6 ml-4 w-96 font-poppins-medium text-3xl font-medium text-orange-500">
           Welcome Back!
         </Text>
         <LoginForm />

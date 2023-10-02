@@ -28,4 +28,15 @@ export const ExpenseCategory = enumType({
   ],
 });
 
-export default [UserType, TravelSize, PlaceType, ExpenseCategory];
+export const BusinessOwnerRole = enumType({
+  name: 'BusinessRole',
+  members: ['OWNER', 'MANAGER'],
+});
+
+export default [
+  UserType,
+  TravelSize,
+  PlaceType,
+  ExpenseCategory,
+  BusinessOwnerRole,
+];

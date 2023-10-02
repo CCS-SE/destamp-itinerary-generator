@@ -5,7 +5,7 @@ const DailyItinerary = objectType({
   definition(t) {
     t.int('id');
     t.float('accommodationCost');
-    t.float('foodCost');
+    t.string('foodCost');
     t.float('attractionCost');
     t.float('transportationCost');
     t.int('dayIndex');

@@ -5,7 +5,7 @@ import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
 import DayButton from '~/components/Button/DayButton';
-import ItineraryCard from '~/components/Card/ItineraryCard';
+import ItineraryCard from '~/components/Card/traveler/ItineraryCard';
 import { GetTravelerItineraryDocument } from '~/graphql/generated';
 import { tripDuration } from '~/utils/dates';
 import Back from '../../../assets/images/back-icon.svg';
@@ -49,7 +49,7 @@ export const GetTravelersItineraryQuery = gql(
 export default function ItineraryScreen() {
   const { id } = useLocalSearchParams();
 
-  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedDay, setSelectedDay] = useState(0);
 
   const handleTabPress = (dayIndex: number) => {
     setSelectedDay(dayIndex);
@@ -67,7 +67,7 @@ export default function ItineraryScreen() {
 
   const generateDayTabs = (startDate: Date, endDate: Date) => {
     const dateArray = Array.from(
-      { length: tripDuration(startDate, endDate) + 1 },
+      { length: tripDuration(startDate, endDate) },
       (_, index) => {
         const currentDate = new Date(startDate);
         currentDate.setDate(currentDate.getDate() + index);
@@ -80,8 +80,8 @@ export default function ItineraryScreen() {
         key={`day ${index + 1}`}
         date={date}
         day={index + 1}
-        isSelected={selectedDay === index + 1}
-        onPress={() => handleTabPress(index + 1)}
+        isSelected={selectedDay === index}
+        onPress={() => handleTabPress(index)}
       />
     ));
   };

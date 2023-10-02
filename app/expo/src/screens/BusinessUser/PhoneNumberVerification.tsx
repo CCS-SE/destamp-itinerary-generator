@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 
 import SimpleButton from '~/components/Button/simpleButton';
-import AuthenticationStatement from '~/components/Card/authStatement';
+import AuthenticationStatement from '~/components/Card/owner/authStatement';
 import UserInformation from '~/components/Forms/UserInfoForm';
 
 const PhoneNumberVerification = ({

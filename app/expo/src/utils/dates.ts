@@ -13,6 +13,7 @@ export function tripDuration(
   return Math.floor(
     (new Date(endDate ? endDate : '').getTime() -
       new Date(startDate ? startDate : '').getTime()) /
-      (24 * 60 * 60 * 1000),
+      (24 * 60 * 60 * 1000) +
+      1,
   );
 }

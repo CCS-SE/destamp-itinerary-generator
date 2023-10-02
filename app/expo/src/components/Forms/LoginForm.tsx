@@ -14,7 +14,7 @@ export default function LoginForm() {
   const [hidePassword, setHidePassword] = useState(true);
 
   const { handleSubmit, control } = useForm<LoginSchema>({
-    mode: 'onBlur',
+    mode: 'onChange',
     resolver: zodResolver(loginSchema),
   });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 
-import VerificationOptionCard from '~/components/Card/VerificationOptionCard';
+import VerificationOptionCard from '~/components/Card/owner/VerificationOptionCard';
 
 const VerificationOption = () => {
   return (

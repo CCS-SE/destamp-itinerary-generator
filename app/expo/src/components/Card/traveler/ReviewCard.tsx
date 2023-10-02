@@ -3,9 +3,10 @@ import { Text, TouchableOpacity, View, ViewProps } from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { ExpenseCategory, TravelSize } from '~/graphql/generated';
-import Accommodation from '../../../assets/images/accommodation-field.svg';
-import Food from '../../../assets/images/food-field.svg';
-import Transpo from '../../../assets/images/transpo-field.svg';
+import { truncateText } from '~/utils/utils';
+import Accommodation from '../../../../assets/images/accommodation-field.svg';
+import Food from '../../../../assets/images/food-field.svg';
+import Transpo from '../../../../assets/images/transpo-field.svg';
 
 interface ReviewCardProps extends ViewProps {
   icon: ReactNode;
@@ -19,6 +20,8 @@ interface ReviewCardProps extends ViewProps {
   isTravelSize?: boolean;
   section: string;
 }
+
+const MAX_TEXT_LENGTH = 23;
 
 export default function ReviewCard({
   icon,
@@ -55,13 +58,13 @@ export default function ReviewCard({
 
   return (
     <View
-      className="my-1.5 h-14 w-[370] flex-row items-center rounded-xl bg-gray-50 p-4 shadow-sm"
+      className="my-1.5 h-14 w-[340] flex-row items-center rounded-xl bg-gray-50 p-4 shadow-sm"
       {...viewProps}
     >
       {icon}
-      <Text className="ml-5 font-poppins  text-lg text-gray-600">
+      <Text className="ml-5  text-ellipsis font-poppins text-lg text-gray-600">
         {!isTravelSize
-          ? title
+          ? truncateText(title, MAX_TEXT_LENGTH)
           : `${title} (${travelerCount[travelGroup as TravelSize]})`}
       </Text>
       {budgetInclusion ? (
@@ -79,7 +82,7 @@ export default function ReviewCard({
           activeOpacity={0.8}
           className="absolute right-3"
         >
-          <Text className=" font-poppins-medium text-lg text-orange-400">
+          <Text className="font-poppins-medium text-lg text-orange-400">
             Edit
           </Text>
         </TouchableOpacity>

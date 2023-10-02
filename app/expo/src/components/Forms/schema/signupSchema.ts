@@ -4,15 +4,13 @@ export const signUpSchema = z
   .object({
     email: z
       .string()
-      .min(1, { message: 'Email is required.' })
+      .nonempty('Email is required.')
       .email({ message: 'Enter a valid email.' }),
     password: z
       .string()
-      .min(1, { message: 'Password is required.' })
+      .nonempty('Password is required.')
       .min(6, { message: 'Password must be atleast 6 characters.' }),
-    confirmPassword: z
-      .string()
-      .min(1, { message: 'Confirm password is required.' }),
+    confirmPassword: z.string().nonempty('Confirm password is required.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],

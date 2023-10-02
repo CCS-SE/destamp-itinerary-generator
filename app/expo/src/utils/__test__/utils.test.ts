@@ -16,6 +16,6 @@ describe('tripDuration', () => {
 
     const difference = tripDuration(startDate, endDate);
 
-    expect(difference).toBe(3);
+    expect(difference).toBe(4);
   });
 });

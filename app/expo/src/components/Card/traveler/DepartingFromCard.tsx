@@ -1,8 +1,12 @@
 import { Text, View } from 'react-native';
 
+import { truncateText } from '~/utils/utils';
+
 interface DepartingFromCardProps {
   locationName: string;
 }
+
+const MAX_TEXT_LENGTH = 33;
 
 export default function DepartingFromCard({
   locationName,
@@ -12,8 +16,8 @@ export default function DepartingFromCard({
       <Text className="mx-3 font-poppins text-lg text-orange-500">
         Departing from
       </Text>
-      <Text className="mx-3 font-poppins text-lg text-gray-400">
-        {locationName}
+      <Text className="mx-3 font-poppins text-base text-gray-400">
+        {truncateText(locationName, MAX_TEXT_LENGTH)}
       </Text>
     </View>
   );

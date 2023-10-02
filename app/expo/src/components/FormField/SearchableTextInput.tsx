@@ -16,13 +16,17 @@ interface ItemProps {
   } | null;
 }
 
-interface DataProps {
+interface SearchableTextInputProps {
   placeholder: string;
   data: ItemProps[];
   onChange: (selectedValue: string) => void;
 }
 
-const SearchableTextInput = ({ placeholder, data, onChange }: DataProps) => {
+const SearchableTextInput = ({
+  placeholder,
+  data,
+  onChange,
+}: SearchableTextInputProps) => {
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [filteredData, setFilteredData] = useState<ItemProps[]>([]);
