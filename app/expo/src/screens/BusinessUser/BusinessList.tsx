@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
-import BusinessProfileCard from '~/components/Card/BusinessCard';
+import BusinessProfileCard from '~/components/Card/owner/BusinessCard';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import { GetBusinessListDocument } from '~/graphql/generated';
 

@@ -13,6 +13,7 @@ export default function TabLayout() {
           headerTitleStyle: {
             fontSize: 30,
             fontFamily: 'Poppins',
+            textAlign: 'left',
           },
           tabBarActiveTintColor: '#FC6873',
           tabBarIcon: ({ color }) => (

@@ -1,7 +1,13 @@
-import createExpenseInput from './Expense.input';
-import createTripInput from './Trip.input';
+import CreateDepartingLocationInput from './DepartingLocation.input';
+import CreateExpenseInput from './Expense.input';
+import CreateTripInput from './Trip.input';
 import CreateUserInput from './User.input';
 
-const Inputs = [CreateUserInput, createTripInput, createExpenseInput];
+const Inputs = [
+  CreateUserInput,
+  CreateTripInput,
+  CreateExpenseInput,
+  CreateDepartingLocationInput,
+];
 
 export default Inputs;

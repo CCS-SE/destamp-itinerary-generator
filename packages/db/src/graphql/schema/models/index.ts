@@ -1,4 +1,5 @@
 import Amenity from './Amenity';
+import BusinessOwner from './BusinessOwner';
 import Category from './Category';
 import DailyItinerary from './DailyItinerary';
 import DepartingLocation from './DepartingLocation';
@@ -34,6 +35,7 @@ const Models = [
   OpeningHour,
   Itinerary,
   Expense,
+  BusinessOwner,
 ];
 
 export default Models;

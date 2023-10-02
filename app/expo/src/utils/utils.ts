@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { ExpenseCategory } from '~/graphql/generated';
 
 export function amountFormatter(amount: number) {
-  return new Intl.NumberFormat().format(amount);
+  return new Intl.NumberFormat().format(Math.floor(amount));
 }
 
 export function confirmationAlert(
@@ -28,6 +28,13 @@ export function confirmationAlert(
 
 export function toSentenceCase(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+export function truncateText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength) + '...';
+  }
+  return text;
 }
 
 export const getPieChartData = (
@@ -72,6 +79,15 @@ export const getPieChartData = (
         arc: { cornerRadius: 7 },
       };
     });
+};
+
+export const calculateAveragePrice = (priceRange: string) => {
+  const [min, max] = priceRange.split('-').map(Number);
+  if (isNaN(min!) || isNaN(max!)) {
+    return 0;
+  } else {
+    return (min! + max!) / 2;
+  }
 };
 
 interface CategoryColor {

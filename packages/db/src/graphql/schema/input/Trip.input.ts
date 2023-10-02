@@ -1,9 +1,10 @@
 import { inputObjectType } from 'nexus';
 
-const createTripInput = inputObjectType({
+const CreateTripInput = inputObjectType({
   name: 'CreateTripInput',
   definition(t) {
     t.field('destinationId', { type: 'Int' });
+    t.field('travelerId', { type: 'Int' });
     t.string('title');
     t.float('budget');
     t.field('travelSize', { type: 'TravelSize' });
@@ -14,7 +15,10 @@ const createTripInput = inputObjectType({
     t.boolean('isAccommodationIncluded');
     t.boolean('isFoodIncluded');
     t.boolean('isTransportationIncluded');
+    t.list.field('preferredTime', {
+      type: 'JSON',
+    });
   },
 });
 
-export default createTripInput;
+export default CreateTripInput;

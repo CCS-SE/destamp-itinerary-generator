@@ -17,7 +17,7 @@ export default function GradientButton({
   onPress,
   title,
   isSubmitting,
-  size = 370,
+  size = 350,
   ...touchableOpacityProps
 }: GradientButtonProps) {
   return (

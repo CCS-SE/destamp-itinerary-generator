@@ -1,14 +1,16 @@
 import { intArg, mutationField, nonNull } from 'nexus';
 
-import createTripInput from '../../input/Trip.input';
+import CreateDepartingLocationInput from '../../input/DepartingLocation.input';
+import CreateTripInput from '../../input/Trip.input';
 import { createTrip, deleteTrip } from './Trip.resolver';
 
 export const CreateTrip = mutationField('createTrip', {
   type: 'Trip',
   args: {
-    data: nonNull(createTripInput),
+    data: nonNull(CreateTripInput),
+    locationData: nonNull(CreateDepartingLocationInput),
   },
-  resolve: (_, args, ctx) => createTrip(args.data, ctx),
+  resolve: (_, args, ctx) => createTrip(args.data, args.locationData, ctx),
 });
 
 export const DeleteTrip = mutationField('deleteTrip', {

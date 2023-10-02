@@ -1,13 +1,13 @@
 import { Text, View } from 'react-native';
 
 import { amountFormatter } from '~/utils/utils';
-import Attraction from '../../../assets/images/attraction.svg';
-import Food from '../../../assets/images/food.svg';
-import Transportation from '../../../assets/images/transportation.svg';
+import Attraction from '../../../../assets/images/attraction.svg';
+import Food from '../../../../assets/images/food.svg';
+import Transportation from '../../../../assets/images/transportation.svg';
 
 interface DayExpenseCardProps {
   attractionCost: number;
-  foodCost: number;
+  foodCost: string;
   transportationCost: number;
   totalCost: number;
 }
@@ -39,7 +39,7 @@ export default function DayExpenseCard({
         <Attraction height={25} width={21} style={{ marginLeft: 3 }} />
         <DayExpenseText value={formatCurrency(attractionCost)} />
         <Food height={25} width={21} />
-        <DayExpenseText value={formatCurrency(foodCost)} />
+        <DayExpenseText value={foodCost} />
         <Transportation height={25} width={21} />
         <DayExpenseText value={formatCurrency(transportationCost)} />
         <Text className="absolute left-[275] font-poppins-medium text-lg font-medium text-[#F65A82]">

@@ -12,8 +12,28 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
+type BusinessOwner {
+  firstName: String!
+  id: Int!
+  lastName: String!
+  listings: [Place!]!
+  role: BusinessRole!
+}
+
+enum BusinessRole {
+  MANAGER
+  OWNER
+}
+
 type Category {
   id: Int!
+  name: String!
+}
+
+input CreateDepartingLocationInput {
+  address: String!
+  latitude: Float!
+  longitude: Float!
   name: String!
 }
 
@@ -34,9 +54,11 @@ input CreateTripInput {
   isAccommodationIncluded: Boolean!
   isFoodIncluded: Boolean!
   isTransportationIncluded: Boolean!
+  preferredTime: [JSON!]!
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!
+  travelerId: Int!
 }
 
 input CreateUserInput {
@@ -52,7 +74,7 @@ type DailyItinerary {
   createdAt: DateTime!
   dayIndex: Int!
   destinations: [Place!]!
-  foodCost: Float!
+  foodCost: String!
   id: Int!
   transportationCost: Float!
   updatedAt: DateTime!
@@ -138,9 +160,14 @@ type Itinerary {
   url: String!
 }
 
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
+
 type Mutation {
   createExpense(data: CreateExpenseInput!): Expense!
-  createTrip(data: CreateTripInput!): Trip!
+  createTrip(data: CreateTripInput!, locationData: CreateDepartingLocationInput!): Trip!
   createUser(data: CreateUserInput!): User!
   deleteTrip(id: Int!): Trip!
 }
@@ -189,6 +216,7 @@ type Query {
   itinerary(tripId: Int!): Itinerary!
   place(placeId: String!): Place!
   places: [Place!]!
+  traveler(userId: String!): Traveler!
   travelerTrips(userId: String!): [Trip!]!
   trip(id: Int!): Trip!
 }

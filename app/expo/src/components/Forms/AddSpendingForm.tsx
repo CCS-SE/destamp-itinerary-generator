@@ -8,9 +8,11 @@ import {
   View,
 } from 'react-native';
 import { gql, useMutation } from '@apollo/client';
+import { zodResolver } from '@hookform/resolvers/zod';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import CategoryList from '~/components/List/CategoryList';
 import {
@@ -20,6 +22,11 @@ import {
   MutationCreateExpenseArgs,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
+import { CustomTextInput } from '../FormField/CustomTextInput';
+import {
+  AddSpendingSchema,
+  addSpendingSchema,
+} from './schema/addSpendingSchema';
 
 interface AddSpendingFormProps {
   closeModal: () => void;
@@ -30,13 +37,13 @@ interface AddSpendingFormProps {
 
 export const createExpense = gql(
   `mutation CreateExpense($data: CreateExpenseInput!) {
-  createExpense(data: $data) {
+    createExpense(data: $data) {
       amount,
       category,
       date,
       note,
-  }
-}`,
+    }
+  }`,
 );
 
 export default function AddSpendingForm({
@@ -46,7 +53,6 @@ export default function AddSpendingForm({
   maxDate,
 }: AddSpendingFormProps) {
   const [datePicker, setDatePicker] = useState(false);
-  const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
   const [date, setDate] = useState(new Date(minDate));
   const [category, setCategory] = useState<ExpenseCategory>(
@@ -78,12 +84,17 @@ export default function AddSpendingForm({
     }
   };
 
+  const { handleSubmit, control } = useForm<AddSpendingSchema>({
+    mode: 'onChange',
+    resolver: zodResolver(addSpendingSchema),
+  });
+
   const [createExpense] = useMutation(CreateExpenseDocument);
 
-  const onSubmit = async () => {
+  const onSubmit: SubmitHandler<AddSpendingSchema> = async (data) => {
     const createExpenseInput: MutationCreateExpenseArgs = {
       data: {
-        amount: parseFloat(amount),
+        amount: parseFloat(data.amount),
         category: category,
         itineraryId: itineraryId,
         date: date,
@@ -117,16 +128,30 @@ export default function AddSpendingForm({
           Add Spending
         </Text>
       </View>
-      <View className="mt-3 h-12 w-[330] rounded-xl border-2 border-[#F78E48] p-2">
-        <TextInput
-          keyboardType="numeric"
-          placeholder="Amount"
-          onChangeText={setAmount}
-          value={amount}
-          className="p-.5 font-poppins text-base text-gray-700"
-        />
-      </View>
-      <Text className="ml-10 mt-2 self-start font-poppins text-lg text-[#4C4C4C]">
+      <Controller
+        control={control}
+        name="amount"
+        render={({
+          field: { onChange, onBlur, value },
+          fieldState: { error },
+        }) => {
+          return (
+            <View>
+              <CustomTextInput
+                testID="amount-input"
+                placeholder="Amount"
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                keyboardType="numeric"
+                errorMessage={error?.message}
+                className="p-.5 mt-2 w-[320] font-poppins text-base text-gray-700"
+              />
+            </View>
+          );
+        }}
+      />
+      <Text className="-mt-2 ml-10 self-start font-poppins text-lg text-[#4C4C4C]">
         Category
       </Text>
       <CategoryList onCategoryChange={onCategoryChange} />
@@ -165,7 +190,7 @@ export default function AddSpendingForm({
       </View>
       <GradientButton
         title="Add"
-        onPress={onSubmit}
+        onPress={handleSubmit(onSubmit)}
         isSubmitting={false}
         size={290}
         className="mb-10"

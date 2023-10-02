@@ -14,7 +14,7 @@ export const CustomTextInput = ({
         autoCorrect={false}
         autoCapitalize="none"
         {...textInputProps}
-        className="h-14 w-[370] rounded-2xl border-2 border-orange-500 px-6 font-poppins"
+        className="h-14 w-[350] rounded-2xl border-2 border-orange-500 px-6 font-poppins"
       />
       {!!errorMessage && (
         <Text

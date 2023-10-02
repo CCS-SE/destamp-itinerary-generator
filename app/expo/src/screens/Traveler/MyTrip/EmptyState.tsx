@@ -13,7 +13,7 @@ export default function MyTripEmptyState() {
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">
       <Image
-        source={require('../../../assets/images/empty-state.png')}
+        source={require('../../../../assets/images/empty-state.png')}
         className="m-14 h-64 w-80"
       />
       <Text
