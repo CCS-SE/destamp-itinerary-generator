@@ -5,6 +5,7 @@ import { gql, useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import TripCard from '~/components/Card/traveler/TripCard';
+import TripScreenSkeleton from '~/components/Skeleton/TripScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerTripsDocument } from '~/graphql/generated';
 import MyTripEmptyState from '~/screens/Traveler/MyTrip/EmptyState';
@@ -48,7 +49,11 @@ export default function MyTripScreen() {
     );
 
   if (loading && !data)
-    return <Text testID="my-trip-loading">{'Loading...'}</Text>;
+    return (
+      <View className="flex-1 items-center" testID="my-trip-loading">
+        <TripScreenSkeleton />
+      </View>
+    );
 
   if (data?.travelerTrips.length === 0) {
     return <MyTripEmptyState />;

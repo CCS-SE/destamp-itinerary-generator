@@ -90,7 +90,6 @@ export type CreateTripInput = {
   isAccommodationIncluded: Scalars['Boolean']['input'];
   isFoodIncluded: Scalars['Boolean']['input'];
   isTransportationIncluded: Scalars['Boolean']['input'];
-  preferredTime: Array<Scalars['JSON']['input']>;
   startDate: Scalars['DateTime']['input'];
   title: Scalars['String']['input'];
   travelSize: TravelSize;
@@ -111,7 +110,7 @@ export type DailyItinerary = {
   createdAt: Scalars['DateTime']['output'];
   dayIndex: Scalars['Int']['output'];
   destinations: Array<Place>;
-  foodCost: Scalars['String']['output'];
+  foodCost: Scalars['Float']['output'];
   id: Scalars['Int']['output'];
   transportationCost: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -192,6 +191,7 @@ export type Image = {
 export type Itinerary = {
   __typename?: 'Itinerary';
   createdAt: Scalars['DateTime']['output'];
+  dailyItineraries: Array<DailyItinerary>;
   dailyItineraries: Array<DailyItinerary>;
   expenses: Array<Expense>;
   id: Scalars['Int']['output'];
@@ -470,6 +470,7 @@ export type ResolversTypes = {
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
+  DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   DepartingLocation: ResolverTypeWrapper<DepartingLocation>;
   Destination: ResolverTypeWrapper<Destination>;
@@ -484,7 +485,6 @@ export type ResolversTypes = {
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Itinerary: ResolverTypeWrapper<Itinerary>;
-  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OpeningHour: ResolverTypeWrapper<OpeningHour>;
   Place: ResolverTypeWrapper<Place>;
@@ -510,6 +510,7 @@ export type ResolversParentTypes = {
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: DailyItinerary;
+  DailyItinerary: DailyItinerary;
   DateTime: Scalars['DateTime']['output'];
   DepartingLocation: DepartingLocation;
   Destination: Destination;
@@ -523,7 +524,6 @@ export type ResolversParentTypes = {
   Image: Image;
   Int: Scalars['Int']['output'];
   Itinerary: Itinerary;
-  JSON: Scalars['JSON']['output'];
   Mutation: {};
   OpeningHour: OpeningHour;
   Place: Place;
@@ -590,7 +590,7 @@ export type DailyItineraryResolvers<
     ParentType,
     ContextType
   >;
-  foodCost?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  foodCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   transportationCost?: Resolver<
     ResolversTypes['Float'],
@@ -712,6 +712,7 @@ export type ItineraryResolvers<
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dailyItineraries?: Resolver<
     Array<ResolversTypes['DailyItinerary']>,
+    Array<ResolversTypes['DailyItinerary']>,
     ParentType,
     ContextType
   >;
@@ -727,11 +728,6 @@ export type ItineraryResolvers<
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
-
-export interface JsonScalarConfig
-  extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
-  name: 'JSON';
-}
 
 export type MutationResolvers<
   ContextType = any,
@@ -979,6 +975,7 @@ export type Resolvers<ContextType = any> = {
   BusinessOwner?: BusinessOwnerResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DailyItinerary?: DailyItineraryResolvers<ContextType>;
+  DailyItinerary?: DailyItineraryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   DepartingLocation?: DepartingLocationResolvers<ContextType>;
   Destination?: DestinationResolvers<ContextType>;
@@ -989,7 +986,6 @@ export type Resolvers<ContextType = any> = {
   Expense?: ExpenseResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
   Itinerary?: ItineraryResolvers<ContextType>;
-  JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   OpeningHour?: OpeningHourResolvers<ContextType>;
   Place?: PlaceResolvers<ContextType>;
@@ -1093,6 +1089,7 @@ export type GetTravelerItineraryQuery = {
     id: number;
     totalCost: number;
     dailyItineraries: Array<{
+      __typename?: 'DailyItinerary';
       __typename?: 'DailyItinerary';
       id: number;
       foodCost: string;

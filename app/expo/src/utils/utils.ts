@@ -45,16 +45,40 @@ export const getPieChartData = (
     date: Date;
   }[],
 ) => {
-  return data.map((item, index) => {
-    const color = category[item.category]?.color;
+  return data
+    .reduce(
+      (
+        accumulator: {
+          __typename?: 'Expense' | undefined;
+          amount: number;
+          category: ExpenseCategory;
+          date: Date;
+        }[],
+        current,
+      ) => {
+        const existingItem = accumulator.find(
+          (item) => item.category === current.category,
+        );
 
-    return {
-      key: index,
-      value: item.amount,
-      svg: { fill: color },
-      arc: { cornerRadius: 7 },
-    };
-  });
+        if (existingItem) {
+          existingItem.amount += current.amount;
+        } else {
+          accumulator.push({ ...current });
+        }
+        return accumulator;
+      },
+      [],
+    )
+    .map((item, index) => {
+      const color = category[item.category]?.color;
+
+      return {
+        key: index,
+        value: item.amount,
+        svg: { fill: color },
+        arc: { cornerRadius: 7 },
+      };
+    });
 };
 
 export const calculateAveragePrice = (priceRange: string) => {
@@ -93,4 +117,33 @@ const category: CategoryColor = {
   OTHER: {
     color: '#BE7B75',
   },
+};
+
+export const getDatesBetween = (startDate: Date, endDate: Date): string[] => {
+  const dates: string[] = [];
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    dates.push(new Date(currentDate).toDateString());
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
+};
+
+export const areDatesEqual = (date1: Date, date2: Date) => {
+  // Extract the date portion of the two dates
+  const date1WithoutTime = new Date(
+    date1.getFullYear(),
+    date1.getMonth(),
+    date1.getDate(),
+  );
+  const date2WithoutTime = new Date(
+    date2.getFullYear(),
+    date2.getMonth(),
+    date2.getDate(),
+  );
+
+  // Compare the date portions
+  return date1WithoutTime.getTime() === date2WithoutTime.getTime();
 };
