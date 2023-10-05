@@ -26,23 +26,23 @@ export default function DayExpenseCard({
     `₱${amountFormatter(amount)}`;
 
   return (
-    <View className="mt-5 h-[80] w-[370] rounded-2xl bg-pink-100 p-2">
+    <View className="mt-5 h-[75] w-[360] rounded-2xl bg-pink-100 p-2">
       <View className="flex-row ">
-        <Text className="m-1 font-poppins text-lg text-gray-500">
+        <Text className="m-1 font-poppins text-base text-gray-500">
           Day Expenses
         </Text>
-        <Text className="absolute left-[270] m-1  font-poppins-medium text-lg text-[#F65A82]">
+        <Text className="absolute left-[260] m-1  font-poppins-medium text-base text-[#F65A82]">
           Total
         </Text>
       </View>
       <View className="flex-row items-center">
-        <Attraction height={25} width={21} style={{ marginLeft: 3 }} />
+        <Attraction height={18} width={18} style={{ marginLeft: 3 }} />
         <DayExpenseText value={formatCurrency(attractionCost)} />
-        <Food height={25} width={21} />
+        <Food height={18} width={18} />
         <DayExpenseText value={foodCost} />
-        <Transportation height={25} width={21} />
+        <Transportation height={18} width={18} />
         <DayExpenseText value={formatCurrency(transportationCost)} />
-        <Text className="absolute left-[275] font-poppins-medium text-lg font-medium text-[#F65A82]">
+        <Text className="absolute left-[265] font-poppins-medium text-base font-medium text-[#F65A82]">
           {formatCurrency(totalCost)}
         </Text>
       </View>
@@ -52,8 +52,6 @@ export default function DayExpenseCard({
 
 const DayExpenseText = ({ value }: DayExpenseTextProps) => {
   return (
-    <Text className=" mx-2.5 font-poppins text-base text-gray-500 ">
-      {value}
-    </Text>
+    <Text className=" mx-2 font-poppins text-base text-gray-500 ">{value}</Text>
   );
 };

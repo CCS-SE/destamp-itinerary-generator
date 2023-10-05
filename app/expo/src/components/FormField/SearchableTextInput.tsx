@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Dimensions,
   FlatList,
   Text,
   TextInput,
@@ -30,6 +31,8 @@ const SearchableTextInput = ({
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState('');
   const [filteredData, setFilteredData] = useState<ItemProps[]>([]);
+
+  const inputWidth = Dimensions.get('window').width * 0.82;
 
   const searchFilterFunction = (text: string) => {
     if (text) {
@@ -64,7 +67,7 @@ const SearchableTextInput = ({
 
     return (
       <TouchableOpacity onPress={handleItemPress}>
-        <View className="flex- my-2">
+        <View className="my-2">
           <Text className="font-poppins text-base text-gray-600">{name}</Text>
         </View>
       </TouchableOpacity>
@@ -73,13 +76,16 @@ const SearchableTextInput = ({
 
   return (
     <View>
-      <View className="h-12 w-[330] flex-row items-center justify-center rounded-xl bg-gray-100 p-2">
+      <View
+        className="h-12 flex-row items-center justify-center rounded-xl bg-gray-100 p-2"
+        style={{ width: inputWidth }}
+      >
         <AntDesign name="search1" size={20} color="#808080" />
         <TextInput
           onChangeText={(text) => searchFilterFunction(text)}
           placeholder={search ? selectedValue : placeholder}
           value={search}
-          className="ml-2 flex-1 pb-0.5 font-poppins text-base text-gray-500"
+          className="ml-2 flex-1 font-poppins text-base text-gray-500"
         />
         {search ? (
           <TouchableOpacity onPress={handlOnClearPress}>

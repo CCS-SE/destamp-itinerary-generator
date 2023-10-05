@@ -90,6 +90,7 @@ export type CreateTripInput = {
   isAccommodationIncluded: Scalars['Boolean']['input'];
   isFoodIncluded: Scalars['Boolean']['input'];
   isTransportationIncluded: Scalars['Boolean']['input'];
+  preferredTime: Array<Scalars['JSON']['input']>;
   startDate: Scalars['DateTime']['input'];
   title: Scalars['String']['input'];
   travelSize: TravelSize;
@@ -110,9 +111,11 @@ export type DailyItinerary = {
   createdAt: Scalars['DateTime']['output'];
   dayIndex: Scalars['Int']['output'];
   destinations: Array<Place>;
-  foodCost: Scalars['Float']['output'];
+  foodCost: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   transportationCost: Scalars['Float']['output'];
+  travelDistances: Scalars['JSON']['output'];
+  travelDurations: Scalars['JSON']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -164,6 +167,7 @@ export type Expense = {
   category: ExpenseCategory;
   createdAt: Scalars['DateTime']['output'];
   date: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
   note?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -192,7 +196,6 @@ export type Itinerary = {
   __typename?: 'Itinerary';
   createdAt: Scalars['DateTime']['output'];
   dailyItineraries: Array<DailyItinerary>;
-  dailyItineraries: Array<DailyItinerary>;
   expenses: Array<Expense>;
   id: Scalars['Int']['output'];
   totalCost: Scalars['Float']['output'];
@@ -206,6 +209,7 @@ export type Mutation = {
   createExpense: Expense;
   createTrip: Trip;
   createUser: User;
+  deleteExpense: Expense;
   deleteTrip: Trip;
 };
 
@@ -220,6 +224,10 @@ export type MutationCreateTripArgs = {
 
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
+};
+
+export type MutationDeleteExpenseArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type MutationDeleteTripArgs = {
@@ -238,6 +246,7 @@ export type Place = {
   __typename?: 'Place';
   address: Scalars['String']['output'];
   amenities: Array<Amenity>;
+  businessOwnerId?: Maybe<Scalars['Int']['output']>;
   categories: Array<Category>;
   contactNumber?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
@@ -248,6 +257,7 @@ export type Place = {
   diningOptions: Array<DiningOption>;
   id: Scalars['String']['output'];
   images: Array<Image>;
+  isClaimed: Scalars['Boolean']['output'];
   latitude: Scalars['Float']['output'];
   longitude: Scalars['Float']['output'];
   name: Scalars['String']['output'];
@@ -332,6 +342,7 @@ export type Trip = {
   isFoodIncluded: Scalars['Boolean']['output'];
   isTransportationIncluded: Scalars['Boolean']['output'];
   itinerary?: Maybe<Itinerary>;
+  preferredTime: Scalars['JSON']['output'];
   startDate: Scalars['DateTime']['output'];
   title: Scalars['String']['output'];
   travelSize: TravelSize;
@@ -470,7 +481,6 @@ export type ResolversTypes = {
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
-  DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
   DepartingLocation: ResolverTypeWrapper<DepartingLocation>;
   Destination: ResolverTypeWrapper<Destination>;
@@ -485,6 +495,7 @@ export type ResolversTypes = {
   Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Itinerary: ResolverTypeWrapper<Itinerary>;
+  JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OpeningHour: ResolverTypeWrapper<OpeningHour>;
   Place: ResolverTypeWrapper<Place>;
@@ -510,7 +521,6 @@ export type ResolversParentTypes = {
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: DailyItinerary;
-  DailyItinerary: DailyItinerary;
   DateTime: Scalars['DateTime']['output'];
   DepartingLocation: DepartingLocation;
   Destination: Destination;
@@ -524,6 +534,7 @@ export type ResolversParentTypes = {
   Image: Image;
   Int: Scalars['Int']['output'];
   Itinerary: Itinerary;
+  JSON: Scalars['JSON']['output'];
   Mutation: {};
   OpeningHour: OpeningHour;
   Place: Place;
@@ -590,13 +601,15 @@ export type DailyItineraryResolvers<
     ParentType,
     ContextType
   >;
-  foodCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  foodCost?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   transportationCost?: Resolver<
     ResolversTypes['Float'],
     ParentType,
     ContextType
   >;
+  travelDistances?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  travelDurations?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -685,6 +698,7 @@ export type ExpenseResolvers<
   >;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   note?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -712,7 +726,6 @@ export type ItineraryResolvers<
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dailyItineraries?: Resolver<
     Array<ResolversTypes['DailyItinerary']>,
-    Array<ResolversTypes['DailyItinerary']>,
     ParentType,
     ContextType
   >;
@@ -728,6 +741,11 @@ export type ItineraryResolvers<
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface JsonScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
+  name: 'JSON';
+}
 
 export type MutationResolvers<
   ContextType = any,
@@ -751,6 +769,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationCreateUserArgs, 'data'>
+  >;
+  deleteExpense?: Resolver<
+    ResolversTypes['Expense'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteExpenseArgs, 'id'>
   >;
   deleteTrip?: Resolver<
     ResolversTypes['Trip'],
@@ -780,6 +804,11 @@ export type PlaceResolvers<
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   amenities?: Resolver<
     Array<ResolversTypes['Amenity']>,
+    ParentType,
+    ContextType
+  >;
+  businessOwnerId?: Resolver<
+    Maybe<ResolversTypes['Int']>,
     ParentType,
     ContextType
   >;
@@ -821,6 +850,7 @@ export type PlaceResolvers<
   >;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType>;
+  isClaimed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -945,6 +975,7 @@ export type TripResolvers<
     ParentType,
     ContextType
   >;
+  preferredTime?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
   startDate?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   travelSize?: Resolver<ResolversTypes['TravelSize'], ParentType, ContextType>;
@@ -975,7 +1006,6 @@ export type Resolvers<ContextType = any> = {
   BusinessOwner?: BusinessOwnerResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DailyItinerary?: DailyItineraryResolvers<ContextType>;
-  DailyItinerary?: DailyItineraryResolvers<ContextType>;
   DateTime?: GraphQLScalarType;
   DepartingLocation?: DepartingLocationResolvers<ContextType>;
   Destination?: DestinationResolvers<ContextType>;
@@ -986,6 +1016,7 @@ export type Resolvers<ContextType = any> = {
   Expense?: ExpenseResolvers<ContextType>;
   Image?: ImageResolvers<ContextType>;
   Itinerary?: ItineraryResolvers<ContextType>;
+  JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   OpeningHour?: OpeningHourResolvers<ContextType>;
   Place?: PlaceResolvers<ContextType>;
@@ -1072,10 +1103,20 @@ export type GetTransactionsQuery = {
   __typename?: 'Query';
   getTransaction: Array<{
     __typename?: 'Expense';
+    id: number;
     amount: number;
     category: ExpenseCategory;
     date: any;
   }>;
+};
+
+export type DeleteExpenseMutationVariables = Exact<{
+  deleteExpenseId: Scalars['Int']['input'];
+}>;
+
+export type DeleteExpenseMutation = {
+  __typename?: 'Mutation';
+  deleteExpense: { __typename?: 'Expense'; id: number };
 };
 
 export type GetTravelerItineraryQueryVariables = Exact<{
@@ -1090,11 +1131,13 @@ export type GetTravelerItineraryQuery = {
     totalCost: number;
     dailyItineraries: Array<{
       __typename?: 'DailyItinerary';
-      __typename?: 'DailyItinerary';
       id: number;
       foodCost: string;
       attractionCost: number;
       transportationCost: number;
+      accommodationCost: number;
+      travelDistances: any;
+      travelDurations: any;
       dayIndex: number;
       destinations: Array<{
         __typename?: 'Place';
@@ -1111,6 +1154,9 @@ export type GetTravelerItineraryQuery = {
     budget: number;
     startDate: any;
     endDate: any;
+    preferredTime: any;
+    isAccommodationIncluded: boolean;
+    isTransportationIncluded: boolean;
     departingLocation?: {
       __typename?: 'DepartingLocation';
       name: string;
@@ -1481,6 +1527,7 @@ export const GetTransactionsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'category' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'date' } },
@@ -1494,6 +1541,57 @@ export const GetTransactionsDocument = {
 } as unknown as DocumentNode<
   GetTransactionsQuery,
   GetTransactionsQueryVariables
+>;
+export const DeleteExpenseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeleteExpense' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'deleteExpenseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteExpense' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'deleteExpenseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeleteExpenseMutation,
+  DeleteExpenseMutationVariables
 >;
 export const GetTravelerItineraryDocument = {
   kind: 'Document',
@@ -1554,6 +1652,18 @@ export const GetTravelerItineraryDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'transportationCost' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'accommodationCost' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'travelDistances' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'travelDurations' },
                       },
                       {
                         kind: 'Field',
@@ -1622,6 +1732,18 @@ export const GetTravelerItineraryDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'budget' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'preferredTime' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'isAccommodationIncluded' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'isTransportationIncluded' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'departingLocation' },

@@ -77,6 +77,8 @@ type DailyItinerary {
   foodCost: String!
   id: Int!
   transportationCost: Float!
+  travelDistances: JSON!
+  travelDurations: JSON!
   updatedAt: DateTime!
 }
 
@@ -126,6 +128,7 @@ type Expense {
   category: ExpenseCategory!
   createdAt: DateTime!
   date: DateTime!
+  id: Int!
   note: String
   updatedAt: DateTime!
 }
@@ -169,6 +172,7 @@ type Mutation {
   createExpense(data: CreateExpenseInput!): Expense!
   createTrip(data: CreateTripInput!, locationData: CreateDepartingLocationInput!): Trip!
   createUser(data: CreateUserInput!): User!
+  deleteExpense(id: Int!): Expense!
   deleteTrip(id: Int!): Trip!
 }
 
@@ -182,6 +186,7 @@ type OpeningHour {
 type Place {
   address: String!
   amenities: [Amenity!]!
+  businessOwnerId: Int
   categories: [Category!]!
   contactNumber: String
   createdAt: DateTime!
@@ -192,6 +197,7 @@ type Place {
   diningOptions: [DiningOption!]!
   id: String!
   images: [Image!]!
+  isClaimed: Boolean!
   latitude: Float!
   longitude: Float!
   name: String!
@@ -249,6 +255,7 @@ type Trip {
   isFoodIncluded: Boolean!
   isTransportationIncluded: Boolean!
   itinerary: Itinerary
+  preferredTime: JSON!
   startDate: DateTime!
   title: String!
   travelSize: TravelSize!

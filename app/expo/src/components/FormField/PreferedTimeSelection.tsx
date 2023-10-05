@@ -63,20 +63,20 @@ export default function PreferedTimeSelection({
             <Text className="font-poppins-medium text-lg text-gray-500">{`Day  ${
               index + 1
             }`}</Text>
-            <View className="w-28 items-center rounded-lg bg-[#F9EBEE] py-0.5">
+            <View className="px-.5 w-[130] items-center rounded-lg bg-[#F9EBEE] py-1">
               <Text className="font-poppins-medium text-base text-[#FF6E93] ">{`${dayDisplay(
                 range[0],
               )} - ${dayDisplay(range[1])}`}</Text>
             </View>
           </View>
-          <View className="my-5 flex-row">
+          <View className="my-4 flex-row">
             <Text className="font-poppins text-base text-gray-600">{`${MIN} AM`}</Text>
             <RangeSlider
               style={{
                 width: 250,
                 height: 25,
                 flexGrow: 0,
-                paddingHorizontal: 7,
+                paddingHorizontal: 12,
               }}
               range={range}
               step={1}
@@ -84,7 +84,7 @@ export default function PreferedTimeSelection({
               onValueChange={(newRange) => handleRangeChange(index, newRange)}
               outboundColor="#DCDCDC"
               inboundColor="#FC8040"
-              trackHeight={7}
+              trackHeight={12}
               minimumValue={MIN}
               maximumValue={MAX}
             />

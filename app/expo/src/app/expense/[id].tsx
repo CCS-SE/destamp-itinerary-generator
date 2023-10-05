@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { FlatList, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PieChart } from 'react-native-svg-charts';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
+import ExpenseDeleteButton from '~/components/Button/ExpenseDeleteButton';
 import ColoredContainer from '~/components/Container/ColoredContainer';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import TransactionsListItem from '~/components/List/ListItems/TransactionsListItem';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import ExpenseScreenSkeleton from '~/components/Skeleton/ExpenseScreenSkeleton';
 import {
+  DeleteExpenseDocument,
   ExpenseCategory,
   GetTransactionsDocument,
   GetTravelerItineraryDocument,
@@ -23,9 +26,18 @@ import Back from '../../../assets/images/back-btn.svg';
 export const GetTransactionsQuery = gql(
   `query GetTransactions($itineraryId: Int!){
     getTransaction(itineraryId: $itineraryId) {
+      id
       amount
       category
       date
+    }
+  }`,
+);
+
+export const DeleteExpense = gql(
+  `mutation DeleteExpense($deleteExpenseId: Int!) {
+    deleteExpense(id: $deleteExpenseId) {
+      id
     }
   }`,
 );
@@ -34,6 +46,7 @@ const ExpensePage = () => {
   const { id } = useLocalSearchParams();
   const [dateFilter, setDateFilter] = useState<Date | string>('All');
   const [modal, setModal] = useState(false);
+  const [isDeleting, setDeleting] = useState(false);
 
   const handleBack = () => {
     return router.back();
@@ -54,6 +67,29 @@ const ExpensePage = () => {
     },
   });
 
+  const [deleteExpense] = useMutation(DeleteExpenseDocument);
+
+  const handleDeleteExpense = async (expenseID: number) => {
+    setDeleting(true);
+    await deleteExpense({
+      variables: {
+        deleteExpenseId: expenseID,
+      },
+      refetchQueries: [
+        {
+          query: GetTransactionsDocument,
+          variables: {
+            itineraryId: itinerary.data?.itinerary.id,
+          },
+        },
+      ],
+      onError: (error) => {
+        console.log('Error', error.message);
+      },
+      onCompleted: () => setDeleting(false),
+    });
+  };
+
   const totalSpending = data?.getTransaction.reduce(
     (accumulator, current) => accumulator + current.amount,
     0,
@@ -66,6 +102,7 @@ const ExpensePage = () => {
 
   const dateFilteredExpenses: {
     __typename?: 'Expense' | undefined;
+    id: number;
     amount: number;
     category: ExpenseCategory;
     date: Date;
@@ -88,8 +125,8 @@ const ExpensePage = () => {
   }
 
   return (
-    <>
-      <SafeAreaView edges={['top']} className="flex-0">
+    <View className="flex-1 bg-white">
+      <SafeAreaView edges={['top']} className="flex-">
         <View className="mx-4 flex-row justify-between">
           <Back height={35} width={35} onPress={handleBack} />
         </View>
@@ -151,9 +188,9 @@ const ExpensePage = () => {
               dropdownTextStyles={{ color: '#696969' }}
             />
           </View>
-          <View className="-z-10 mx-1 h-[280]">
+          <View className="-z-10 mx-1 h-[285]">
             {data && (
-              <FlatList
+              <SwipeListView
                 scrollEnabled={true}
                 data={
                   dateFilter === 'All'
@@ -166,6 +203,14 @@ const ExpensePage = () => {
                     amount={parseFloat(item.amount.toFixed(2))}
                   />
                 )}
+                renderHiddenItem={(item) => (
+                  <ExpenseDeleteButton
+                    onPress={() => handleDeleteExpense(item.item.id)}
+                    isDeleting={isDeleting}
+                  />
+                )}
+                leftOpenValue={0}
+                rightOpenValue={-75}
               />
             )}
           </View>
@@ -184,7 +229,7 @@ const ExpensePage = () => {
           maxDate={itinerary.data!.trip.endDate as Date}
         />
       </BottomHalfModal>
-    </>
+    </View>
   );
 };
 

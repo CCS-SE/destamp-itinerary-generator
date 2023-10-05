@@ -23,6 +23,9 @@ export const GetTravelersItineraryQuery = gql(
         foodCost
         attractionCost
         transportationCost
+        accommodationCost
+        travelDistances
+        travelDurations
         dayIndex
         destinations {
           name
@@ -40,6 +43,9 @@ export const GetTravelersItineraryQuery = gql(
       budget
       startDate
       endDate
+      preferredTime
+      isAccommodationIncluded
+      isTransportationIncluded
       departingLocation {
         name
       }
@@ -105,7 +111,7 @@ export default function ItineraryScreen() {
         <View className="mx-4 flex-row justify-between">
           <Back height={45} width={45} onPress={handleBack} />
           <View className="flex-row items-end">
-            <Map height={45} width={45} style={{ marginRight: 10 }} />
+            <Map height={45} width={45} style={{ marginRight: 12 }} />
             <Link href={`/expense/${id}`}>
               <Expense height={45} width={45} />
             </Link>
@@ -144,9 +150,17 @@ export default function ItineraryScreen() {
                     key={item.dayIndex}
                     attractionCost={item.attractionCost}
                     foodCost={item.foodCost}
+                    accommodationCost={item.accommodationCost}
                     transportationCost={item.transportationCost}
                     departingLocation={data.trip.departingLocation?.name}
                     destinations={item.destinations}
+                    preferredTime={data.trip.preferredTime}
+                    travelDistances={item.travelDistances}
+                    travelDurations={item.travelDurations}
+                    isAccommodationIncluded={data.trip.isAccommodationIncluded}
+                    isTransportationIncluded={
+                      data.trip.isTransportationIncluded
+                    }
                   />
                 )}
                 scrollEnabled={false}

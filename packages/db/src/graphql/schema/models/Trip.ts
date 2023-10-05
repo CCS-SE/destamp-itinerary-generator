@@ -38,6 +38,7 @@ const Trip = objectType({
     t.boolean('isAccommodationIncluded');
     t.boolean('isFoodIncluded');
     t.boolean('isTransportationIncluded');
+    t.field('preferredTime', { type: 'JSON' });
     t.field('startDate', { type: 'DateTime' });
     t.field('endDate', { type: 'DateTime' });
     t.field('createdAt', { type: 'DateTime' });

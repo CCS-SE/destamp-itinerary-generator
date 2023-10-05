@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   Text,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -17,9 +18,10 @@ export default function GradientButton({
   onPress,
   title,
   isSubmitting,
-  size = 350,
   ...touchableOpacityProps
 }: GradientButtonProps) {
+  const buttonWidth = Dimensions.get('window').width * 0.86;
+
   return (
     <TouchableOpacity
       accessibilityRole="button"
@@ -33,8 +35,8 @@ export default function GradientButton({
         colors={['#fd8139', '#f65a82']}
         start={{ x: 0, y: 0.1 }}
         end={{ x: 0.8, y: 0 }}
-        style={{ width: size }}
-        className={`m-5 items-center rounded-xl py-3 ${
+        style={{ width: buttonWidth, alignSelf: 'center' }}
+        className={`m-5 items-center rounded-xl py-4 ${
           isSubmitting ? 'opacity-40' : ''
         }`}
       >
@@ -48,7 +50,7 @@ export default function GradientButton({
         ) : (
           <Text
             testID="gradient-btn-text"
-            className="ml-2 items-center font-poppins-medium text-lg text-white"
+            className="ml-2 items-center font-poppins-medium text-base text-white"
           >
             {title}
           </Text>

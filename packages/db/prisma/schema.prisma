@@ -196,6 +196,8 @@ model DailyItinerary {
   dayIndex           Int        @map("day_index")
   transportationCost Float      @map("transportation_cost")
   destinations       Place[]
+  travelDistances    Json       @map("travel_distances")
+  travelDurations    Json       @map("travel_durations")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

@@ -346,8 +346,8 @@ export default function CreateTripScreen() {
           ),
         }}
       />
-      <ScrollView>
-        <View className="p-4">
+      <ScrollView className="flex-1">
+        <View className="p-3.5">
           <Accordion
             activeSections={activeSections}
             sections={Sections.filter((_, index) =>

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 
 interface ProfileMenu {
   icon: ReactNode;
@@ -13,6 +13,8 @@ interface ProfileMenuItemProps {
 }
 
 function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
+  const cardWidth = Dimensions.get('window').width * 0.88;
+
   return (
     <TouchableOpacity
       testID={`${item.title}-btn`}
@@ -22,12 +24,12 @@ function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
         onPress();
       }}
     >
-      <View testID="profile-menu-item" className="w-[360]">
-        <View className="mt-5 flex-row items-center rounded-xl bg-white p-4">
+      <View testID="profile-menu-item" style={{ width: cardWidth }}>
+        <View className="mt-5 flex-row items-center rounded-xl bg-white px-3 py-3 ">
           {item?.icon}
           <Text
             style={{ color: item?.color }}
-            className="ml-5 font-poppins text-xl"
+            className="ml-4 font-poppins text-xl"
           >
             {item?.title}
           </Text>

@@ -1,5 +1,11 @@
 import { ReactNode } from 'react';
-import { Text, TouchableOpacity, View, ViewProps } from 'react-native';
+import {
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewProps,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 
 import { ExpenseCategory, TravelSize } from '~/graphql/generated';
@@ -38,6 +44,8 @@ export default function ReviewCard({
 }: ReviewCardProps) {
   const router = useRouter();
 
+  const inputWidth = Dimensions.get('window').width * 0.88;
+
   const travelerCount = {
     [TravelSize.Solo]: 1,
     [TravelSize.Couple]: 2,
@@ -58,8 +66,9 @@ export default function ReviewCard({
 
   return (
     <View
-      className="my-1.5 h-14 w-[340] flex-row items-center rounded-xl bg-gray-50 p-4 shadow-sm"
+      className="my-2 h-14 flex-row items-center rounded-xl bg-gray-50 p-4 shadow-sm"
       {...viewProps}
+      style={{ width: inputWidth }}
     >
       {icon}
       <Text className="ml-5  text-ellipsis font-poppins text-lg text-gray-600">

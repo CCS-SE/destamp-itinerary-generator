@@ -1,10 +1,11 @@
 import { PlaceType } from '@prisma/client';
 
+import { generateItinerary } from '../../../../utils/ga-operations';
 import {
-  daySuggestions,
-  generatePopulation,
-  multiplyRangeByPeople,
-} from '../../../../utils/ga-operations/utils';
+  getDailyPlans,
+  getDaySuggestions,
+} from '../../../../utils/ga-operations/daySuggestion';
+import { multiplyRangeByPeople } from '../../../../utils/ga-operations/utils';
 import { tripDuration } from '../../../../utils/utils';
 import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
@@ -55,12 +56,15 @@ export const createTrip = async (
       new Date(tripInput.endDate),
     );
 
-    const initializedPopulation = generatePopulation(tripInput, places);
-    const randomIndex = Math.floor(
-      Math.random() * initializedPopulation.length - 1,
-    );
-    const currentPopulation = initializedPopulation[randomIndex]; // Randomly selects a chromosome
-    const dailyPlans = daySuggestions(currentPopulation!, duration);
+    const suggestedDestinations = await generateItinerary(tripInput, places);
+
+    const bestSoFar = suggestedDestinations[0];
+
+    const suggestedPlans = bestSoFar
+      ? getDaySuggestions(bestSoFar, tripInput)
+      : [];
+
+    const dailyPlans = await getDailyPlans(suggestedPlans, tripInput);
 
     return await ctx.prisma.trip.create({
       data: {
@@ -80,13 +84,9 @@ export const createTrip = async (
         preferredTime: tripInput.preferredTime as string[],
         itinerary: {
           create: {
-            totalCost: currentPopulation
-              ? currentPopulation.chrom.sumCost()
-              : 0,
-            totalDuration: currentPopulation
-              ? currentPopulation.chrom.sumDuration()
-              : 0,
-            url: 'sample',
+            totalCost: bestSoFar?.chrom.sumCost() || 0,
+            totalDuration: bestSoFar?.chrom.sumDuration() || 0,
+            url: '',
             dailyItineraries: {
               create: dailyPlans.map((dailyPlan, index) => ({
                 accommodationCost:
@@ -97,7 +97,9 @@ export const createTrip = async (
                 ),
                 attractionCost:
                   dailyPlan.chrom.attractionCost() * numberOfPeople,
-                transportationCost: 0,
+                transportationCost: dailyPlan.travelExpenses,
+                travelDistances: dailyPlan.travelDistances,
+                travelDurations: dailyPlan.travelDurations,
                 dayIndex: index,
                 destinations: {
                   connect: dailyPlan.chrom.genes

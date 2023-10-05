@@ -58,6 +58,7 @@ export default function AddSpendingForm({
   const [category, setCategory] = useState<ExpenseCategory>(
     ExpenseCategory.Accommodation,
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onCategoryChange = (newCategory: ExpenseCategory) => {
     setCategory(newCategory);
@@ -92,6 +93,8 @@ export default function AddSpendingForm({
   const [createExpense] = useMutation(CreateExpenseDocument);
 
   const onSubmit: SubmitHandler<AddSpendingSchema> = async (data) => {
+    setIsSubmitting(true);
+
     const createExpenseInput: MutationCreateExpenseArgs = {
       data: {
         amount: parseFloat(data.amount),
@@ -119,6 +122,8 @@ export default function AddSpendingForm({
       },
     });
     closeModal();
+
+    setTimeout(() => setIsSubmitting(false), 1000);
   };
 
   return (
@@ -191,7 +196,7 @@ export default function AddSpendingForm({
       <GradientButton
         title="Add"
         onPress={handleSubmit(onSubmit)}
-        isSubmitting={false}
+        isSubmitting={isSubmitting}
         size={290}
         className="mb-10"
       />

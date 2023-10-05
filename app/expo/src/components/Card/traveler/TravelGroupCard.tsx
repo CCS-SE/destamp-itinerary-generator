@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 
 interface TravelGroupCardProps {
   icon: React.ReactNode;
@@ -13,20 +13,28 @@ const TravelGroupCard = ({
   isSelected,
   onPress,
 }: TravelGroupCardProps) => {
+  const cardWidth = Dimensions.get('window').width * 0.36;
+
   return isSelected ? (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
-      <View className="m-3 h-[75] w-36 items-center justify-center rounded-lg  bg-orange-100">
+      <View
+        className="m-2 h-[65] items-center justify-center rounded-lg bg-orange-100 pt-2"
+        style={{ width: cardWidth }}
+      >
         {icon}
-        <Text className="font-poppins-medium text-base text-orange-500">
+        <Text className="text-small font-poppins-medium text-orange-500">
           {title}
         </Text>
       </View>
     </TouchableOpacity>
   ) : (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
-      <View className="m-3 h-[75] w-36 items-center justify-center rounded-lg bg-gray-100">
+      <View
+        className="m-2 h-[65] items-center justify-center rounded-lg bg-gray-100 pt-2"
+        style={{ width: cardWidth }}
+      >
         {icon}
-        <Text className="font-poppins text-base text-gray-500">{title}</Text>
+        <Text className="text-small font-poppins text-gray-500">{title}</Text>
       </View>
     </TouchableOpacity>
   );

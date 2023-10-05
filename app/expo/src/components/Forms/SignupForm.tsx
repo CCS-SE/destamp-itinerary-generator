@@ -89,20 +89,20 @@ export default function SignUpForm() {
   return (
     <View className="items-center">
       <View className="-top-2 w-[370]">
-        <Text className="ml-2 self-start font-poppins text-lg text-gray-500">
+        <Text className="ml-2.5 self-start font-poppins text-base text-gray-500">
           Choose account type
         </Text>
-        <View className="mx-2 flex-row justify-between">
+        <View className="mx-1.5 flex-row justify-between">
           <UserTypeCard
-            selectedIcon={<Traveler height={50} width={40} />}
-            unselectedIcon={<UnselectedTraveler height={50} width={40} />}
+            selectedIcon={<Traveler height={40} width={30} />}
+            unselectedIcon={<UnselectedTraveler height={40} width={30} />}
             isSelected={userType === UserType.Traveler}
             title="Traveler"
             onPress={() => handleUserTypeChange(UserType.Traveler)}
           />
           <UserTypeCard
-            selectedIcon={<BusinessOwner height={43} width={40} />}
-            unselectedIcon={<UnselectedBusinessOwner height={43} width={40} />}
+            selectedIcon={<BusinessOwner height={33} width={25} />}
+            unselectedIcon={<UnselectedBusinessOwner height={33} width={25} />}
             isSelected={userType === UserType.BusinessOperator}
             title="Business Owner"
             onPress={() => handleUserTypeChange(UserType.BusinessOperator)}
@@ -185,7 +185,7 @@ export default function SignUpForm() {
           );
         }}
       />
-      <View testID="sign-up-btn" className="mb-12 items-center">
+      <View testID="sign-up-btn" className="mb-6 items-center">
         <GradientButton
           onPress={handleSubmit(onSubmit)}
           title="Create Account"

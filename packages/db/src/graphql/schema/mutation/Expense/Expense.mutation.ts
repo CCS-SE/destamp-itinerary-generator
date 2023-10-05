@@ -1,7 +1,7 @@
-import { mutationField, nonNull } from 'nexus';
+import { intArg, mutationField, nonNull } from 'nexus';
 
 import CreateExpenseInput from '../../input/Expense.input';
-import { createExpense } from './Expense.resolver';
+import { createExpense, deleteExpense } from './Expense.resolver';
 
 export const CreateExpense = mutationField('createExpense', {
   type: 'Expense',
@@ -9,4 +9,12 @@ export const CreateExpense = mutationField('createExpense', {
     data: nonNull(CreateExpenseInput),
   },
   resolve: (_, args, ctx) => createExpense(args.data, ctx),
+});
+
+export const DeleteExpense = mutationField('deleteExpense', {
+  type: 'Expense',
+  args: {
+    id: nonNull(intArg()),
+  },
+  resolve: (_, args, ctx) => deleteExpense(args.id, ctx),
 });

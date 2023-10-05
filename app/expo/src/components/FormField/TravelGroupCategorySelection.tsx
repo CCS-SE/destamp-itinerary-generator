@@ -67,13 +67,13 @@ export default function TravelGroupCategorySelection({
     <View>
       <View className="flex-row">
         <TravelGroupCard
-          icon={<Solo height={30} width={30} />}
+          icon={<Solo height={25} width={25} />}
           title="Just me"
           onPress={() => handleValueChange(TravelSize.Solo)}
           isSelected={selectedValue === TravelSize.Solo}
         />
         <TravelGroupCard
-          icon={<Couple height={30} width={30} />}
+          icon={<Couple height={25} width={25} />}
           title="A partner"
           onPress={() => handleValueChange(TravelSize.Couple)}
           isSelected={selectedValue === TravelSize.Couple}
@@ -81,13 +81,13 @@ export default function TravelGroupCategorySelection({
       </View>
       <View className="flex-row">
         <TravelGroupCard
-          icon={<Group height={30} width={30} />}
+          icon={<Group height={25} width={30} />}
           title="Group"
           onPress={() => handleValueChange(TravelSize.Group)}
           isSelected={selectedValue === TravelSize.Group}
         />
         <TravelGroupCard
-          icon={<Family height={30} width={30} />}
+          icon={<Family height={25} width={25} />}
           title="Family"
           onPress={() => handleValueChange(TravelSize.Family)}
           isSelected={selectedValue === TravelSize.Family}

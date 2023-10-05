@@ -16,17 +16,17 @@ if (typeof MAPBOX_API_KEY !== 'string') {
 }
 
 const defineConfig = (): ExpoConfig => ({
-  name: 'expo',
+  name: 'Destamp',
   slug: 'expo',
   scheme: 'expo',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/images/destamp_logo.png',
+  icon: './assets/images/icon.png',
   userInterfaceStyle: 'light',
   splash: {
     image: './assets/images/splash.png',
     resizeMode: 'contain',
-    backgroundColor: '#1F104A',
+    backgroundColor: '#ffffff',
   },
   updates: {
     fallbackToCacheTimeout: 0,
@@ -37,15 +37,16 @@ const defineConfig = (): ExpoConfig => ({
     bundleIdentifier: 'your.bundle.identifier',
   },
   android: {
+    package: 'com.destamp.cpu.se',
     adaptiveIcon: {
-      foregroundImage: './assets/images/destamp_logo.png',
-      backgroundColor: '#1F104A',
+      foregroundImage: './assets/images/adaptive-icon.png',
+      backgroundColor: '#ffffff',
     },
   },
   extra: {
-    // eas: {
-    //   projectId: "ijgufbptbcpxemkduevh",
-    // },
+    eas: {
+      projectId: 'b8267833-d96d-457b-b504-3ac20709979e',
+    },
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     MAPBOX_API_KEY,
