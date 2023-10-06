@@ -190,10 +190,7 @@ export default function ReviewInfoScreen() {
   };
 
   return (
-    <SafeAreaView
-      className="flex-1 bg-white p-5"
-      edges={['left', 'right', 'bottom']}
-    >
+    <SafeAreaView className="flex-1 bg-white p-2" edges={['bottom']}>
       <ScrollView className="self-center">
         <View>
           <Stack.Screen
@@ -266,7 +263,7 @@ export default function ReviewInfoScreen() {
           />
         </View>
       </ScrollView>
-      <View className="self-center">
+      <View className="bottom-5 self-center">
         <TouchableOpacity
           className={`h-14 w-52 items-center justify-center rounded-2xl ${
             isSubmitting ? 'opacity-80' : ''

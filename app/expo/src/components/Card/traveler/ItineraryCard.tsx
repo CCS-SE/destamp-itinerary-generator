@@ -59,7 +59,6 @@ export default function ItineraryCard({
 }: ItineraryCardProps) {
   let hour = getStartTime(preferredTime, 0);
   let min = getStartTime(preferredTime, 1);
-
   const displayTime = (index: number) => {
     const firstPlaceTime = destinations[0]?.visitDuration || 0; // Ensure it's a number
 

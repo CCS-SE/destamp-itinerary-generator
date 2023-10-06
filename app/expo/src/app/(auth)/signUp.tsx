@@ -15,7 +15,7 @@ export default function SignUpScreen() {
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <Stack.Screen options={{ headerShown: false }} />
-        <Text className="mb-6 w-80 self-center font-poppins text-xl text-orange-500">
+        <Text className="mb-6 w-[350] self-center font-poppins text-xl text-orange-500">
           Start with creating an account
         </Text>
         <SignUpForm />
