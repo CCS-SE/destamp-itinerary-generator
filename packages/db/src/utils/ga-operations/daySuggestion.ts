@@ -94,8 +94,6 @@ export const getDaySuggestions = (
         currentPlans = [];
       }
     }
-    console.log(currentDayIndex, currentPlans.length);
-    console.log(dailyPlans[0]?.chrom.genes.length);
   }
 
   if (accommodationPlan.length > 0) {
@@ -125,8 +123,6 @@ export const getDailyPlans = async (
     const { chrom } = plan;
 
     const coordinatePairs = getCoordinatesParam(getCoordinates(chrom.genes));
-
-    console.log('coordinates', coordinatePairs.length);
 
     const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
 
