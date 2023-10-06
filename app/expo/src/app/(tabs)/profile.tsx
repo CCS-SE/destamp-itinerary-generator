@@ -5,7 +5,7 @@ import StampDisplayEmptyState from '~/screens/Traveler/Profile/StampDisplayEmpty
 
 export default function ProfileScreen() {
   return (
-    <View className="flex-1 items-center bg-gray-50 p-5">
+    <View className="flex-1 items-center bg-gray-50 pt-5">
       <StampDisplayEmptyState />
       <ProfileMenuList />
     </View>

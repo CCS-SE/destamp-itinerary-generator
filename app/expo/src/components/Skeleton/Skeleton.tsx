@@ -15,7 +15,7 @@ const Skeleton = ({ width, height, style }: SkeletonProps) => {
       Animated.timing(translateX, {
         toValue: width,
         useNativeDriver: true,
-        duration: 500,
+        duration: 800,
       }),
     ).start();
   }, [width]);

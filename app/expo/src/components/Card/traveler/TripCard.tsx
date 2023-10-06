@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import React, { memo, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
@@ -36,23 +36,31 @@ function TripCard({
     setIsModalVisible(false);
   };
 
+  const cardWidth = Dimensions.get('window').width * 0.9;
+
   const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   const daysDifference = tripDuration(startDate, endDate);
 
   return (
-    <View className="bg- m-3" testID="trip-card">
+    <View className="m-3" testID="trip-card">
       <Link href={`/itinerary/${id}`}>
-        <View className="w-[370] rounded-2xl bg-gray-50 shadow-md">
+        <View
+          className=" rounded-2xl bg-gray-50 shadow-md"
+          style={{ width: cardWidth }}
+        >
           <Image
             testID="trip-destination-img"
             source={imgSrc}
-            className="h-52 w-[370] rounded-2xl"
+            className="h-52 rounded-2xl"
             placeholder={blurhash}
-            transition={1_800}
+            transition={1_500}
           ></Image>
-          <View className=" container absolute h-52 rounded-2xl bg-black opacity-30" />
+          <View
+            className=" container absolute h-52 rounded-2xl bg-black opacity-30"
+            style={{ width: cardWidth }}
+          />
           <TouchableOpacity
             accessibilityRole="button"
             testID="trip-menu-btn"

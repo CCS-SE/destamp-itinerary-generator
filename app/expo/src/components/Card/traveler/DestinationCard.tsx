@@ -43,8 +43,8 @@ export default function DestinationCard({
   }, []);
 
   return (
-    <View className="rounded-2x mt-5 w-[370] ">
-      <View className="rounded-2x mx-8 h-[240] w-[320]">
+    <View className="rounded-2x mt-5 w-[360] ">
+      <View className="rounded-2x mx-8 h-[240] w-[310]">
         <Swiper
           loadMinimal
           loadMinimalSize={2}

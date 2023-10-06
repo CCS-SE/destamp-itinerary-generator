@@ -88,8 +88,8 @@ const ExpensePage = () => {
   }
 
   return (
-    <>
-      <SafeAreaView edges={['top']} className="flex-0">
+    <View className="flex-1 bg-white">
+      <SafeAreaView edges={['top']} className="flex-">
         <View className="mx-4 flex-row justify-between">
           <Back height={35} width={35} onPress={handleBack} />
         </View>
@@ -184,7 +184,7 @@ const ExpensePage = () => {
           maxDate={itinerary.data!.trip.endDate as Date}
         />
       </BottomHalfModal>
-    </>
+    </View>
   );
 };
 
