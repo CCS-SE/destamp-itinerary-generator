@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Dimensions,
   ScrollView,
   Text,
   TextInput,
@@ -88,6 +89,8 @@ export default function ReviewInfoScreen() {
     title as string,
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const inputWidth = Dimensions.get('window').width * 0.87;
 
   const handleTitleChange = (text: string) => {
     setUserEditedTitle(text);
@@ -209,9 +212,12 @@ export default function ReviewInfoScreen() {
             }}
           />
           <Text className="font-poppins text-xl text-gray-600">Title</Text>
-          <View className="mb-6 h-14 w-[340] flex-row items-center justify-center rounded-xl ">
+          <View
+            className="mb-6 h-16 flex-row items-center justify-center rounded-xl "
+            style={{ width: inputWidth }}
+          >
             <TextInput
-              className="h-[46] flex-1 rounded-xl border border-gray-500 p-3  font-poppins text-base text-gray-500 "
+              className="h-[46] flex-1 rounded-xl border border-gray-500 p-3.5  font-poppins text-base text-gray-500 "
               value={userEditedTitle}
               onChangeText={(text) => handleTitleChange(text)}
             />

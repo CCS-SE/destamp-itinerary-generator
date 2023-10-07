@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Dimensions,
   FlatList,
   Text,
   TextInput,
@@ -43,6 +44,8 @@ export default function GeocoderSearch({
     place_name: '',
   });
   const [results, setResults] = useState<MapboxLocation[]>([]);
+
+  const inputWidth = Dimensions.get('window').width * 0.82;
 
   const handlOnClearPress = () => {
     setSearch('');
@@ -104,7 +107,7 @@ export default function GeocoderSearch({
 
     return (
       <TouchableOpacity onPress={handleItemPress}>
-        <View className="flex- my-2">
+        <View className="my-2">
           <Text className="font-poppins text-base text-gray-600">{name}</Text>
         </View>
       </TouchableOpacity>
@@ -113,7 +116,10 @@ export default function GeocoderSearch({
 
   return (
     <View>
-      <View className="h-12 w-[330] flex-row items-center justify-center rounded-xl bg-gray-100 p-2">
+      <View
+        className="h-12 flex-row items-center justify-center rounded-xl bg-gray-100 p-2"
+        style={{ width: inputWidth }}
+      >
         <AntDesign name="search1" size={20} color="#808080" />
         <TextInput
           onChangeText={handleQueryChange}

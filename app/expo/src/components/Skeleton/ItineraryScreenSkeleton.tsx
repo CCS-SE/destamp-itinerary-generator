@@ -49,7 +49,7 @@ const ItineraryScreenSkeleton = () => {
         <Skeleton
           width={skeWidth * 0.97}
           height={80}
-          style={{ borderRadius: 16, marginTop: 16 }}
+          style={{ borderRadius: 16, marginTop: 30 }}
         />
         <Skeleton
           width={skeWidth * 0.97}

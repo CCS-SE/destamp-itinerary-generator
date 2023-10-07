@@ -57,8 +57,8 @@ export default function ItineraryCard({
   travelDurations,
   isTransportationIncluded,
 }: ItineraryCardProps) {
-  let hour = getStartTime(preferredTime, 0);
-  let min = getStartTime(preferredTime, 1);
+  const hour = getStartTime(preferredTime, 0);
+  const min = getStartTime(preferredTime, 1);
   const displayTime = (index: number) => {
     const firstPlaceTime = destinations[0]?.visitDuration || 0; // Ensure it's a number
 
@@ -191,13 +191,8 @@ export default function ItineraryCard({
   );
 }
 
-const getStartTime = (time: string[], index: number) =>
-  parseInt(time[0]?.split(':')[index]!);
-
-const convertToHoursMinutes = (duration: number) => {
-  const hours = Math.floor(duration / 60);
-  const minutes = Math.floor(duration % 60);
-  return { hours, minutes };
+const getStartTime = (time: string[], index: number) => {
+  return parseInt(time[0]!.split(':')[index]!);
 };
 
 const formatTime = (hour: number, min: number) => {
