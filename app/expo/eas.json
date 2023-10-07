@@ -7,6 +7,15 @@
       "node": "18.16.1",
       "ios": {
         "resourceClass": "m-medium"
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "DATABASE_URL": "@secret/DATABASE_URL",
+        "MAPBOX_API_KEY": "@secret/MAPBOX_API_KEY",
+        "SUPABASE_URL": "@secret/SUPABASE_URL",
+        "SUPABASE_ANON_KEY": "@secret/SUPABASE_ANON_KEY"
       }
     },
     "development": {
@@ -21,8 +30,23 @@
         "simulator": true
       }
     },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
     "production": {
-      "extends": "base"
+      "extends": "base",
+      "node": "18.16.1",
+      "env": {
+        "DATABASE_URL": "@secret/DATABASE_URL",
+        "MAPBOX_API_KEY": "@secret/MAPBOX_API_KEY",
+        "SUPABASE_URL": "@secret/SUPABASE_URL",
+        "SUPABASE_ANON_KEY": "@secret/SUPABASE_ANON_KEY"
+      }
     }
   },
   "submit": {
