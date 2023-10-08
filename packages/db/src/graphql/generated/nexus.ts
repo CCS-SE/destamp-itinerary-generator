@@ -3,24 +3,34 @@
  * Do not make changes to this file directly
  */
 
+import type { core } from 'nexus';
+import type { ValidateResolver } from 'nexus-validate';
 
-import type { Context } from "./../context"
-import type { ValidateResolver } from "nexus-validate"
-import type { core } from "nexus"
+import type { Context } from './../context';
+
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
-    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    date<FieldName extends string>(
+      fieldName: FieldName,
+      opts?: core.CommonInputFieldConfig<TypeName, FieldName>,
+    ): void; // "DateTime";
     /**
      * The `BigInt` scalar type represents non-fractional signed whole numeric values.
      */
-    bigInt<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "BigInt";
+    bigInt<FieldName extends string>(
+      fieldName: FieldName,
+      opts?: core.CommonInputFieldConfig<TypeName, FieldName>,
+    ): void; // "BigInt";
     /**
      * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
      */
-    json<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "JSON";
+    json<FieldName extends string>(
+      fieldName: FieldName,
+      opts?: core.CommonInputFieldConfig<TypeName, FieldName>,
+    ): void; // "JSON";
   }
 }
 declare global {
@@ -28,38 +38,49 @@ declare global {
     /**
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
-    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    date<FieldName extends string>(
+      fieldName: FieldName,
+      ...opts: core.ScalarOutSpread<TypeName, FieldName>
+    ): void; // "DateTime";
     /**
      * The `BigInt` scalar type represents non-fractional signed whole numeric values.
      */
-    bigInt<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "BigInt";
+    bigInt<FieldName extends string>(
+      fieldName: FieldName,
+      ...opts: core.ScalarOutSpread<TypeName, FieldName>
+    ): void; // "BigInt";
     /**
      * The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
      */
-    json<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "JSON";
+    json<FieldName extends string>(
+      fieldName: FieldName,
+      ...opts: core.ScalarOutSpread<TypeName, FieldName>
+    ): void; // "JSON";
   }
 }
-
 
 declare global {
   interface NexusGen extends NexusGenTypes {}
 }
 
 export interface NexusGenInputs {
-  CreateDepartingLocationInput: { // input type
+  CreateDepartingLocationInput: {
+    // input type
     address: string; // String!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
-  }
-  CreateExpenseInput: { // input type
+  };
+  CreateExpenseInput: {
+    // input type
     amount: number; // Float!
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     date: NexusGenScalars['DateTime']; // DateTime!
     itineraryId: number; // Int!
     note?: string | null; // String
-  }
-  CreateTripInput: { // input type
+  };
+  CreateTripInput: {
+    // input type
     adultCount?: number | null; // Int
     budget: number; // Float!
     childCount?: number | null; // Int
@@ -73,50 +94,62 @@ export interface NexusGenInputs {
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     travelerId: number; // Int!
-  }
-  CreateUserInput: { // input type
+  };
+  CreateUserInput: {
+    // input type
     email: string; // String!
     id: string; // String!
     password: string; // String!
     userType: NexusGenEnums['UserType']; // UserType!
-  }
+  };
 }
 
 export interface NexusGenEnums {
-  BusinessRole: "MANAGER" | "OWNER"
-  ExpenseCategory: "ACCOMMODATION" | "ACTIVITY" | "FOOD" | "OTHER" | "SHOPPING" | "SIGHTSEEING" | "TRANSPORTATION"
-  PlaceType: "ACCOMMODATION" | "ATTRACTION" | "RESTAURANT"
-  TravelSize: "COUPLE" | "FAMILY" | "GROUP" | "SOLO"
-  UserType: "BUSINESS_OPERATOR" | "TRAVELER"
+  BusinessRole: 'MANAGER' | 'OWNER';
+  ExpenseCategory:
+    | 'ACCOMMODATION'
+    | 'ACTIVITY'
+    | 'FOOD'
+    | 'OTHER'
+    | 'SHOPPING'
+    | 'SIGHTSEEING'
+    | 'TRANSPORTATION';
+  PlaceType: 'ACCOMMODATION' | 'ATTRACTION' | 'RESTAURANT';
+  TravelSize: 'COUPLE' | 'FAMILY' | 'GROUP' | 'SOLO';
+  UserType: 'BUSINESS_OPERATOR' | 'TRAVELER';
 }
 
 export interface NexusGenScalars {
-  String: string
-  Int: number
-  Float: number
-  Boolean: boolean
-  ID: string
-  BigInt: any
-  DateTime: any
-  JSON: any
+  String: string;
+  Int: number;
+  Float: number;
+  Boolean: boolean;
+  ID: string;
+  BigInt: any;
+  DateTime: any;
+  JSON: any;
 }
 
 export interface NexusGenObjects {
-  Amenity: { // root type
+  Amenity: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  BusinessOwner: { // root type
+  };
+  BusinessOwner: {
+    // root type
     firstName: string; // String!
     id: number; // Int!
     lastName: string; // String!
     role: NexusGenEnums['BusinessRole']; // BusinessRole!
-  }
-  Category: { // root type
+  };
+  Category: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  DailyItinerary: { // root type
+  };
+  DailyItinerary: {
+    // root type
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -127,37 +160,44 @@ export interface NexusGenObjects {
     travelDistances: NexusGenScalars['JSON']; // JSON!
     travelDurations: NexusGenScalars['JSON']; // JSON!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  DepartingLocation: { // root type
+  };
+  DepartingLocation: {
+    // root type
     address: string; // String!
     id: number; // Int!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
-  }
-  Destination: { // root type
+  };
+  Destination: {
+    // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     name: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  DiningAtmosphere: { // root type
+  };
+  DiningAtmosphere: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  DiningCuisine: { // root type
+  };
+  DiningCuisine: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  DiningOffering: { // root type
+  };
+  DiningOffering: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  DiningOption: { // root type
+  };
+  DiningOption: {
+    // root type
     id: number; // Int!
     name: string; // String!
-  }
-  Expense: { // root type
+  };
+  Expense: {
+    // root type
     amount: number; // Float!
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -165,31 +205,35 @@ export interface NexusGenObjects {
     id: number; // Int!
     note?: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  Image: { // root type
+  };
+  Image: {
+    // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     name?: string | null; // String
     size?: number | null; // Int
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
-  }
-  Itinerary: { // root type
+  };
+  Itinerary: {
+    // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     totalCost: number; // Float!
     totalDuration: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
-  }
+  };
   Mutation: {};
-  OpeningHour: { // root type
+  OpeningHour: {
+    // root type
     closeTime: NexusGenScalars['DateTime']; // DateTime!
     day: number; // Int!
     id: number; // Int!
     openTime: NexusGenScalars['DateTime']; // DateTime!
-  }
-  Place: { // root type
+  };
+  Place: {
+    // root type
     address: string; // String!
     businessOwnerId?: number | null; // Int
     contactNumber?: string | null; // String
@@ -206,15 +250,17 @@ export interface NexusGenObjects {
     url?: string | null; // String
     visitDuration: number; // Float!
     website?: string | null; // String
-  }
+  };
   Query: {};
-  Traveler: { // root type
+  Traveler: {
+    // root type
     contactNumber?: string | null; // String
     firstName?: string | null; // String
     id: number; // Int!
     lastName?: string | null; // String
-  }
-  Trip: { // root type
+  };
+  Trip: {
+    // root type
     adultCount?: number | null; // Int
     budget: number; // Float!
     childCount?: number | null; // Int
@@ -229,42 +275,47 @@ export interface NexusGenObjects {
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  User: { // root type
+  };
+  User: {
+    // root type
     email: string; // String!
     id: string; // String!
     password: string; // String!
     userType: NexusGenEnums['UserType']; // UserType!
-  }
+  };
 }
 
-export interface NexusGenInterfaces {
-}
+export interface NexusGenInterfaces {}
 
-export interface NexusGenUnions {
-}
+export interface NexusGenUnions {}
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenObjects;
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
+export type NexusGenAllTypes = NexusGenRootTypes &
+  NexusGenScalars &
+  NexusGenEnums;
 
 export interface NexusGenFieldTypes {
-  Amenity: { // field return type
+  Amenity: {
+    // field return type
     id: number; // Int!
     name: string; // String!
-  }
-  BusinessOwner: { // field return type
+  };
+  BusinessOwner: {
+    // field return type
     firstName: string; // String!
     id: number; // Int!
     lastName: string; // String!
     listings: NexusGenRootTypes['Place'][]; // [Place!]!
     role: NexusGenEnums['BusinessRole']; // BusinessRole!
-  }
-  Category: { // field return type
+  };
+  Category: {
+    // field return type
     id: number; // Int!
     name: string; // String!
-  }
-  DailyItinerary: { // field return type
+  };
+  DailyItinerary: {
+    // field return type
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -276,38 +327,45 @@ export interface NexusGenFieldTypes {
     travelDistances: NexusGenScalars['JSON']; // JSON!
     travelDurations: NexusGenScalars['JSON']; // JSON!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  DepartingLocation: { // field return type
+  };
+  DepartingLocation: {
+    // field return type
     address: string; // String!
     id: number; // Int!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
-  }
-  Destination: { // field return type
+  };
+  Destination: {
+    // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     image: NexusGenRootTypes['Image'] | null; // Image
     name: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  DiningAtmosphere: { // field return type
+  };
+  DiningAtmosphere: {
+    // field return type
     id: number; // Int!
     name: string; // String!
-  }
-  DiningCuisine: { // field return type
+  };
+  DiningCuisine: {
+    // field return type
     id: number; // Int!
     name: string; // String!
-  }
-  DiningOffering: { // field return type
+  };
+  DiningOffering: {
+    // field return type
     id: number; // Int!
     name: string; // String!
-  }
-  DiningOption: { // field return type
+  };
+  DiningOption: {
+    // field return type
     id: number; // Int!
     name: string; // String!
-  }
-  Expense: { // field return type
+  };
+  Expense: {
+    // field return type
     amount: number; // Float!
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -315,16 +373,18 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     note: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  Image: { // field return type
+  };
+  Image: {
+    // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     id: string; // ID!
     name: string | null; // String
     size: number | null; // Int
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
-  }
-  Itinerary: { // field return type
+  };
+  Itinerary: {
+    // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     dailyItineraries: NexusGenRootTypes['DailyItinerary'][]; // [DailyItinerary!]!
     expenses: NexusGenRootTypes['Expense'][]; // [Expense!]!
@@ -333,21 +393,24 @@ export interface NexusGenFieldTypes {
     totalDuration: number; // Float!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
-  }
-  Mutation: { // field return type
+  };
+  Mutation: {
+    // field return type
     createExpense: NexusGenRootTypes['Expense']; // Expense!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
-  }
-  OpeningHour: { // field return type
+  };
+  OpeningHour: {
+    // field return type
     closeTime: NexusGenScalars['DateTime']; // DateTime!
     day: number; // Int!
     id: number; // Int!
     openTime: NexusGenScalars['DateTime']; // DateTime!
-  }
-  Place: { // field return type
+  };
+  Place: {
+    // field return type
     address: string; // String!
     amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
     businessOwnerId: number | null; // Int
@@ -372,8 +435,9 @@ export interface NexusGenFieldTypes {
     url: string | null; // String
     visitDuration: number; // Float!
     website: string | null; // String
-  }
-  Query: { // field return type
+  };
+  Query: {
+    // field return type
     destinations: NexusGenRootTypes['Destination'][]; // [Destination!]!
     getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
@@ -382,15 +446,17 @@ export interface NexusGenFieldTypes {
     traveler: NexusGenRootTypes['Traveler']; // Traveler!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
-  }
-  Traveler: { // field return type
+  };
+  Traveler: {
+    // field return type
     contactNumber: string | null; // String
     firstName: string | null; // String
     id: number; // Int!
     lastName: string | null; // String
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
-  }
-  Trip: { // field return type
+  };
+  Trip: {
+    // field return type
     adultCount: number | null; // Int
     budget: number; // Float!
     childCount: number | null; // Int
@@ -408,14 +474,15 @@ export interface NexusGenFieldTypes {
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  }
-  User: { // field return type
+  };
+  User: {
+    // field return type
     email: string; // String!
     id: string; // String!
     password: string; // String!
     traveler: NexusGenRootTypes['Traveler'] | null; // Traveler
     userType: NexusGenEnums['UserType']; // UserType!
-  }
+  };
 }
 
 export interface NexusGenFieldTypeNames {
@@ -610,14 +677,17 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
-    createExpense: { // args
+    createExpense: {
+      // args
       data: NexusGenInputs['CreateExpenseInput']; // CreateExpenseInput!
-    }
-    createTrip: { // args
+    };
+    createTrip: {
+      // args
       data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
       locationData: NexusGenInputs['CreateDepartingLocationInput']; // CreateDepartingLocationInput!
-    }
-    createUser: { // args
+    };
+    createUser: {
+      // args
       data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
     };
     deleteExpense: {
@@ -627,35 +697,39 @@ export interface NexusGenArgTypes {
     deleteTrip: {
       // args
       id: number; // Int!
-    }
-  }
+    };
+  };
   Query: {
-    getTransaction: { // args
+    getTransaction: {
+      // args
       itineraryId: number; // Int!
-    }
-    itinerary: { // args
+    };
+    itinerary: {
+      // args
       tripId: number; // Int!
-    }
-    place: { // args
+    };
+    place: {
+      // args
       placeId: string; // String!
-    }
-    traveler: { // args
+    };
+    traveler: {
+      // args
       userId: string; // String!
-    }
-    travelerTrips: { // args
+    };
+    travelerTrips: {
+      // args
       userId: string; // String!
-    }
-    trip: { // args
+    };
+    trip: {
+      // args
       id: number; // Int!
-    }
-  }
+    };
+  };
 }
 
-export interface NexusGenAbstractTypeMembers {
-}
+export interface NexusGenAbstractTypeMembers {}
 
-export interface NexusGenTypeInterfaces {
-}
+export interface NexusGenTypeInterfaces {}
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
@@ -675,11 +749,11 @@ export type NexusGenAbstractsUsingStrategyResolveType = never;
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
-    isTypeOf: false
-    resolveType: true
-    __typename: false
-  }
-}
+    isTypeOf: false;
+    resolveType: true;
+    __typename: false;
+  };
+};
 
 export interface NexusGenTypes {
   context: Context;
@@ -697,9 +771,19 @@ export interface NexusGenTypes {
   interfaceNames: NexusGenInterfaceNames;
   scalarNames: NexusGenScalarNames;
   unionNames: NexusGenUnionNames;
-  allInputTypes: NexusGenTypes['inputNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['scalarNames'];
-  allOutputTypes: NexusGenTypes['objectNames'] | NexusGenTypes['enumNames'] | NexusGenTypes['unionNames'] | NexusGenTypes['interfaceNames'] | NexusGenTypes['scalarNames'];
-  allNamedTypes: NexusGenTypes['allInputTypes'] | NexusGenTypes['allOutputTypes']
+  allInputTypes:
+    | NexusGenTypes['inputNames']
+    | NexusGenTypes['enumNames']
+    | NexusGenTypes['scalarNames'];
+  allOutputTypes:
+    | NexusGenTypes['objectNames']
+    | NexusGenTypes['enumNames']
+    | NexusGenTypes['unionNames']
+    | NexusGenTypes['interfaceNames']
+    | NexusGenTypes['scalarNames'];
+  allNamedTypes:
+    | NexusGenTypes['allInputTypes']
+    | NexusGenTypes['allOutputTypes'];
   abstractTypes: NexusGenTypes['interfaceNames'] | NexusGenTypes['unionNames'];
   abstractTypeMembers: NexusGenAbstractTypeMembers;
   objectsUsingAbstractStrategyIsTypeOf: NexusGenObjectsUsingAbstractStrategyIsTypeOf;
@@ -707,22 +791,22 @@ export interface NexusGenTypes {
   features: NexusGenFeaturesConfig;
 }
 
-
 declare global {
-  interface NexusGenPluginTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginInputTypeConfig<TypeName extends string> {
-  }
-  interface NexusGenPluginFieldConfig<TypeName extends string, FieldName extends string> {
+  interface NexusGenPluginTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginInputTypeConfig<TypeName extends string> {}
+  interface NexusGenPluginFieldConfig<
+    TypeName extends string,
+    FieldName extends string,
+  > {
     /**
      * Validate mutation arguments.
      */
-    validate?: ValidateResolver<TypeName, FieldName>
+    validate?: ValidateResolver<TypeName, FieldName>;
   }
-  interface NexusGenPluginInputFieldConfig<TypeName extends string, FieldName extends string> {
-  }
-  interface NexusGenPluginSchemaConfig {
-  }
-  interface NexusGenPluginArgConfig {
-  }
+  interface NexusGenPluginInputFieldConfig<
+    TypeName extends string,
+    FieldName extends string,
+  > {}
+  interface NexusGenPluginSchemaConfig {}
+  interface NexusGenPluginArgConfig {}
 }
