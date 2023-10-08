@@ -197,6 +197,7 @@ export default function AddSpendingForm({
         title="Add"
         onPress={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
+        isSubmitting={isSubmitting}
         size={290}
         className="mb-10"
       />
