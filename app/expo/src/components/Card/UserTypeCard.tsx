@@ -25,7 +25,7 @@ export default function UserTypeCard({
       >
         {isSelected ? selectedIcon : unselectedIcon}
         <Text
-          className={`font-poppins-medium text-base ${
+          className={`text-small font-poppins-medium ${
             isSelected ? 'text-orange-500' : 'text-gray-400'
           }`}
         >

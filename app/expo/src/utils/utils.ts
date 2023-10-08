@@ -90,6 +90,30 @@ export const calculateAveragePrice = (priceRange: string) => {
   }
 };
 
+export const getTravelDuration = (duration: number) => {
+  const hours = Math.floor(duration / 3600);
+  const minutes = Math.floor((duration % 3600) / 60);
+
+  if (hours > 0) {
+    return `${hours} hour ${minutes} min`;
+  } else {
+    return `${minutes} min`;
+  }
+};
+
+export const getTravelDistance = (distance: number) =>
+  (distance / 1000).toFixed(1);
+
+export const calculateTravelExpense = (distance: number) => {
+  const travelDistanceInKilometers = distance / 1000;
+  const flagDown = 40;
+  const additionalCostPerKm = 13.5;
+
+  return Math.round(
+    flagDown + travelDistanceInKilometers * additionalCostPerKm,
+  );
+};
+
 interface CategoryColor {
   [key: string]: {
     color: string;

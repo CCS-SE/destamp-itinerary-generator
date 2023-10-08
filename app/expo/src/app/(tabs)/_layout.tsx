@@ -11,7 +11,7 @@ export default function TabLayout() {
         options={{
           title: 'My Trips',
           headerTitleStyle: {
-            fontSize: 30,
+            fontSize: 25,
             fontFamily: 'Poppins',
             textAlign: 'left',
           },
@@ -26,7 +26,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           headerTitleStyle: {
-            fontSize: 30,
+            fontSize: 25,
             fontFamily: 'Poppins',
             textAlign: 'left',
           },

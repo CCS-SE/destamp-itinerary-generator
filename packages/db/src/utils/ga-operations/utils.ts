@@ -1,169 +1,156 @@
-import { PlaceType } from '@prisma/client';
+import { NexusGenObjects } from '../../graphql/generated/nexus';
 
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
-import { tripDuration } from '../utils';
-import { Chromosome } from './chromosome';
-import { Chromosome as Chrom } from './types';
-
-type CreateTripInput = NexusGenInputs['CreateTripInput'];
 type Place = NexusGenObjects['Place'];
-
-const POPULATION_SIZE = 15;
-const FOOD_RATE = 0.3; // 30%  goes to food
-const ATTRACTION_RATE = 0.25; // 25%  goes to food
-const ACCOMMODATION_RATE = 0.25; // 25% goes to accommodation --> the rest transpo
-const TRAVEL_DURATION = 8; //  assuming 8 hours of travel per day --> use user's preferred time
-
-export function generatePopulation(input: CreateTripInput, places: Place[]) {
-  const { budget, adultCount, childCount } = input;
-
-  const duration = tripDuration(
-    new Date(input.startDate),
-    new Date(input.endDate),
-  );
-
-  const numOfPeople = (adultCount || 0) + (childCount || 0);
-
-  const foodMaxDuration = 120 * duration; // max 2 hours of food per day
-  const durationThreshold = duration * TRAVEL_DURATION * 60;
-
-  const attractionThreshold = budget * ATTRACTION_RATE; // 20% of the budget will goes to attractions
-  const foodThreshold = budget * FOOD_RATE; // 35% of the budget will goes to food
-  const accommodationThreshold = budget * ACCOMMODATION_RATE; // 25% of the budget will goes to accommodation
-
-  const newPopulation: Chrom[] = []; // placeholder for initialized population
-
-  for (let i = 0; i < POPULATION_SIZE; i++) {
-    let totalDuration = 0;
-    let foodDuration = 0;
-    let foodBudget = 0;
-    let attractionBudget = 0;
-    let accommodationBuget = 0;
-
-    const chromosome: Place[] = []; // list of destinations within budget and timeframe
-    const randomIndexes: number[] = []; // list of used random number
-
-    while (
-      totalDuration < durationThreshold &&
-      (foodBudget < foodThreshold ||
-        attractionBudget < attractionThreshold ||
-        accommodationBuget < accommodationThreshold)
-    ) {
-      const randomIndex = Math.floor(Math.random() * (places.length - 1));
-
-      // to make sure no duplicate places
-      if (!randomIndexes.includes(randomIndex)) {
-        const place = places[randomIndex];
-        if (place?.type === PlaceType.RESTAURANT) {
-          const averagePrice = calculateAveragePrice(place.price);
-          const foodCost = averagePrice * numOfPeople;
-          if (foodDuration + place.visitDuration <= foodMaxDuration) {
-            foodBudget += foodCost;
-            foodDuration += place.visitDuration;
-            totalDuration += place.visitDuration;
-            randomIndexes.push(randomIndex);
-            chromosome.push(place);
-          }
-        } else if (place?.type === PlaceType.ATTRACTION) {
-          const attractionCost = parseFloat(place.price) * numOfPeople;
-          if (parseInt(place.price) + totalDuration <= durationThreshold) {
-            attractionBudget += attractionCost;
-            totalDuration += place.visitDuration;
-            randomIndexes.push(randomIndex);
-            chromosome.push(place);
-          }
-        } else if (place?.type === PlaceType.ACCOMMODATION) {
-          const accommodationCost = parseFloat(place.price) * duration;
-          accommodationBuget += accommodationCost;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
-        }
-      }
-    }
-
-    newPopulation.push({
-      chrom: new Chromosome(chromosome),
-      fitnessScore: 0,
-      totalCost: 0,
-      totalDuration: 0,
-      travelDuration: 0,
-      travelExpenses: 0,
-    });
-  }
-  return newPopulation;
-}
-
-const createDailyPlan = (genes: Place[]): Chrom => {
-  const chrom = new Chromosome(genes);
-  return {
-    chrom,
-    fitnessScore: 0,
-    totalCost: 0,
-    totalDuration: 0,
-    travelDuration: 0,
-    travelExpenses: 0,
-  };
-};
-
-export function daySuggestions(chromosome: Chrom, numDays: number): Chrom[] {
-  const genes = chromosome.chrom.genes;
-
-  const dailyPlans: Chrom[] = [];
-
-  const avgGenesPerDay = Math.ceil(genes.length / numDays);
-
-  let currentDayIndex = 0;
-  let currentDayDuration = 0;
-  let currentPlan: Place[] = [];
-
-  for (const gene of genes) {
-    const geneDuration = gene.visitDuration / 60;
-
-    if (currentDayDuration + geneDuration > TRAVEL_DURATION - 3.5) {
-      if (currentPlan.length > 0) {
-        dailyPlans.push(createDailyPlan(currentPlan));
-      }
-      currentDayIndex++;
-      currentDayDuration = 0;
-      currentPlan = [];
-    }
-
-    if (currentDayIndex <= numDays && dailyPlans.length < numDays) {
-      currentPlan.push(gene);
-      currentDayDuration += geneDuration;
-
-      // Check if we have reached the desired number of genes for the current day
-      if (
-        currentPlan.length === avgGenesPerDay &&
-        dailyPlans.length < numDays
-      ) {
-        dailyPlans.push(createDailyPlan(currentPlan));
-        currentPlan = [];
-        currentDayIndex++;
-        currentDayDuration = 0;
-      }
-    }
-  }
-  return dailyPlans;
-}
 
 export const multiplyRangeByPeople = (
   range: string,
-  numberOfPeople: number,
+  totalTravelers: number,
 ) => {
   const [min, max] = range.split('-').map(Number); // Split the range and convert to numbers
 
   if (min && max) {
-    const minResult = min! * numberOfPeople;
-    const maxResult = max! * numberOfPeople;
+    const minResult = min! * totalTravelers;
+    const maxResult = max! * totalTravelers;
 
     return `${minResult}-${maxResult}`;
   }
-
   return '0';
 };
 
 export const calculateAveragePrice = (priceRange: string) => {
   const [min, max] = priceRange.split('-').map(Number);
   return (min! + max!) / 2;
+};
+
+export const calculateCostScore = (
+  budget: number,
+  accommodationCost: number,
+  foodCost: number,
+  attractionCost: number,
+  totalTravelers: number,
+  duration: number,
+  travelExpenses: number,
+) => {
+  // Calculate the overall cost score
+  return (
+    Math.abs(
+      budget -
+        (accommodationCost * duration +
+          attractionCost * totalTravelers +
+          foodCost * totalTravelers +
+          travelExpenses),
+    ) / 10_000
+  );
+};
+
+export const calculateDurationScore = (
+  totalDuration: number,
+  duration: number,
+  travelDuration: number,
+  totalDesiredTravelHours: number,
+) => {
+  return Math.abs(
+    totalDuration / 60 +
+      calculateTravelDuration(travelDuration) -
+      duration * totalDesiredTravelHours,
+  );
+};
+
+export const getCoordinates = (places: Place[]): [number, number][] => {
+  return places.map((place) => {
+    if (place.latitude && place.longitude) {
+      return [place.longitude, place.latitude];
+    } else {
+      return [-1, -1];
+    }
+  });
+};
+
+export const calculateFitnessScore = (
+  costScore: number,
+  durationScore: number,
+) => {
+  return 1 / (costScore + durationScore);
+};
+
+export const calculateTotalCost = (
+  placesTotalCost: number,
+  totalTravelers: number,
+  travelExpeses: number,
+) => {
+  return placesTotalCost * totalTravelers + travelExpeses;
+};
+
+export const calculateTotalDuration = (
+  placesTotalDuration: number,
+  travelDuration: number,
+) => {
+  return placesTotalDuration + travelDuration / 60;
+};
+
+export const calculateTravelDuration = (travelDuration: number) => {
+  return travelDuration / 3600; // convert sec to hrs
+};
+
+export const getMatrixAvg = (matrix: number[][]): number => {
+  const totalElements = matrix.length * matrix[0]!.length; // Calculate the total number of elements
+  const sum = matrix.reduce(
+    (sum, row) => sum + row.reduce((rowSum, value) => rowSum + value, 0),
+    0,
+  );
+  return sum / totalElements; // Calculate the average of the matrix
+};
+
+export const calculateTravelExpense = (distance: number) => {
+  const travelDistanceInKilometers = distance / 1000;
+  const flagDown = 40;
+  const additionalCostPerKm = 13.5;
+
+  return Math.round(
+    flagDown + travelDistanceInKilometers * additionalCostPerKm,
+  );
+};
+
+export const calculateTravelExpenses = (distances: number[]) => {
+  return distances.reduce(
+    (totalExpense, distance) => totalExpense + calculateTravelExpense(distance),
+    0,
+  );
+};
+
+export const getTotalDesiredTravelHours = (preferredTime: string[]): number => {
+  return preferredTime.reduce((total, range) => {
+    return total + getDesiredTravelHour(range);
+  }, 0);
+};
+
+export const getDesiredTravelHour = (time: string) => {
+  const [startTime, endTime] = time.split('-').map((time) => parseInt(time));
+  return endTime! - startTime!;
+};
+
+export const getCoordinatesParam = (coordinates: number[][]) => {
+  return coordinates.map((coord) => coord.join(',')).join(';');
+};
+
+export const getRandomInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+export const randomChoices = (genePool: Place[]) => {
+  return genePool[Math.floor(Math.random() * genePool.length)];
+};
+
+export const getDuplicateIndex = (list: Place[]) => {
+  const unique: Place[] = [];
+  const duplicateIndex = [];
+
+  for (let i = 0; i < list.length; i++) {
+    if (!unique.includes(list[i]!)) {
+      unique.push(list[i]!);
+    } else if (unique.includes(list[i]!)) {
+      duplicateIndex.push(i);
+    }
+  }
+  return duplicateIndex;
 };

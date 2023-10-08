@@ -16,18 +16,13 @@ export interface Gene {
   type: PlaceType;
 }
 
-export interface FitnessInput {
-  population: Chromosome[];
-  duration: number;
-  budget: number;
-  numOfPeople: number;
-}
-
 export interface Chromosome {
   chrom: Chrom;
   fitnessScore: number;
   totalCost: number;
-  totalDuration: number;
-  travelExpenses: number;
-  travelDuration: number;
+  totalDuration: number; // total duration for the whole trip (travel duration + places duration)
+  travelExpenses: number; // transport expenses for the whole trip
+  travelDuration: number; // total travel duration (in meter)
+  travelDistances: number[]; // travel distance between destinations (in meter)
+  travelDurations: number[]; // travel durations between destinations (in second)
 }

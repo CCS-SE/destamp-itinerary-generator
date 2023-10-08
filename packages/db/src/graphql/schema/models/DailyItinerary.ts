@@ -21,6 +21,8 @@ const DailyItinerary = objectType({
           .destinations();
       },
     });
+    t.field('travelDistances', { type: 'JSON' });
+    t.field('travelDurations', { type: 'JSON' });
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
   },

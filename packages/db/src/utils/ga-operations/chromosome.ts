@@ -27,7 +27,12 @@ export class Chromosome {
 
   sumDuration(): number {
     //  calculate total duration of a chromosome (list of destinations)
-    return this.genes.reduce((sum, gene) => sum + gene.visitDuration, 0);
+    return this.genes.reduce((sum, gene) => {
+      if (gene.type !== PlaceType.ACCOMMODATION) {
+        sum += gene.visitDuration;
+      }
+      return sum;
+    }, 0);
   }
 
   attractionCost(): number {

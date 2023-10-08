@@ -29,25 +29,25 @@ export default function DateRangePicker({
   const daysDifference = endDate ? endDate.diff(startDate, 'days') + 1 : 1;
 
   return (
-    <View className="top-10 h-[390] flex-row items-center justify-between">
-      <View className="-ml-7 h-[480] flex-1">
+    <View className="top-16 h-[260] flex-row items-center justify-between">
+      <View className="mr-10 h-[380] flex-1">
         <CalendarPicker
           minDate={minDate}
-          maxRangeDuration={5}
+          maxRangeDuration={4}
           allowRangeSelection={true}
           onDateChange={handleChange}
           todayBackgroundColor="#F6CAD4"
-          scaleFactor={380}
+          scaleFactor={340}
           selectedDayColor="#FC8040"
           selectedDayTextColor="#FFFFFF"
           previousTitleStyle={{ fontSize: 14, marginLeft: 18 }}
           nextTitleStyle={{ fontSize: 14, marginRight: 18 }}
-          width={370}
+          width={320}
           height={400}
         />
         <View className="top-2 flex-row justify-center">
           <Text className="font-poppins text-base text-gray-600">
-            Selet Start Date - End Date
+            Select Start Date - End Date
           </Text>
           <Text className="font-poppins text-base text-gray-600">
             {startDate && endDate

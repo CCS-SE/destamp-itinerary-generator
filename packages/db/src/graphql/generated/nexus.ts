@@ -157,6 +157,8 @@ export interface NexusGenObjects {
     foodCost: string; // String!
     id: number; // Int!
     transportationCost: number; // Float!
+    travelDistances: NexusGenScalars['JSON']; // JSON!
+    travelDurations: NexusGenScalars['JSON']; // JSON!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   DepartingLocation: {
@@ -232,10 +234,12 @@ export interface NexusGenObjects {
   Place: {
     // root type
     address: string; // String!
+    businessOwnerId?: number | null; // Int
     contactNumber?: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description?: string | null; // String
     id: string; // String!
+    isClaimed: boolean; // Boolean!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
@@ -265,6 +269,7 @@ export interface NexusGenObjects {
     isAccommodationIncluded: boolean; // Boolean!
     isFoodIncluded: boolean; // Boolean!
     isTransportationIncluded: boolean; // Boolean!
+    preferredTime: NexusGenScalars['JSON']; // JSON!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -318,6 +323,8 @@ export interface NexusGenFieldTypes {
     foodCost: string; // String!
     id: number; // Int!
     transportationCost: number; // Float!
+    travelDistances: NexusGenScalars['JSON']; // JSON!
+    travelDurations: NexusGenScalars['JSON']; // JSON!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   DepartingLocation: {
@@ -403,6 +410,7 @@ export interface NexusGenFieldTypes {
     // field return type
     address: string; // String!
     amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
+    businessOwnerId: number | null; // Int
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     contactNumber: string | null; // String
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -413,6 +421,7 @@ export interface NexusGenFieldTypes {
     diningOptions: NexusGenRootTypes['DiningOption'][]; // [DiningOption!]!
     id: string; // String!
     images: NexusGenRootTypes['Image'][]; // [Image!]!
+    isClaimed: boolean; // Boolean!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
@@ -457,6 +466,7 @@ export interface NexusGenFieldTypes {
     isFoodIncluded: boolean; // Boolean!
     isTransportationIncluded: boolean; // Boolean!
     itinerary: NexusGenRootTypes['Itinerary'] | null; // Itinerary
+    preferredTime: NexusGenScalars['JSON']; // JSON!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
@@ -501,6 +511,8 @@ export interface NexusGenFieldTypeNames {
     foodCost: 'String';
     id: 'Int';
     transportationCost: 'Float';
+    travelDistances: 'JSON';
+    travelDurations: 'JSON';
     updatedAt: 'DateTime';
   };
   DepartingLocation: {
@@ -586,6 +598,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     address: 'String';
     amenities: 'Amenity';
+    businessOwnerId: 'Int';
     categories: 'Category';
     contactNumber: 'String';
     createdAt: 'DateTime';
@@ -596,6 +609,7 @@ export interface NexusGenFieldTypeNames {
     diningOptions: 'DiningOption';
     id: 'String';
     images: 'Image';
+    isClaimed: 'Boolean';
     latitude: 'Float';
     longitude: 'Float';
     name: 'String';
@@ -640,6 +654,7 @@ export interface NexusGenFieldTypeNames {
     isFoodIncluded: 'Boolean';
     isTransportationIncluded: 'Boolean';
     itinerary: 'Itinerary';
+    preferredTime: 'JSON';
     startDate: 'DateTime';
     title: 'String';
     travelSize: 'TravelSize';

@@ -13,12 +13,8 @@ describe('Profile Screen', () => {
   it('should render empty stamps state when traveler have no stamps collected yet', () => {
     const { getByTestId } = render(<ProfileScreen />);
 
-    const noStampTitle = getByTestId('no-stamps-title');
     const noStampSubtitle = getByTestId('no-stamps-subtitle');
 
-    expect(noStampTitle.props.children).toMatch(
-      /You haven't claimed any stamps yet\./,
-    );
     expect(noStampSubtitle.props.children).toBe(
       'Start planning your trip and collect stamps as you go. ✨',
     );

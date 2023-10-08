@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextInput, TextInputProps, View } from 'react-native';
+import { Dimensions, TextInput, TextInputProps, View } from 'react-native';
 
 import Peso from '../../../assets/images/peso-sign.svg';
 
@@ -13,6 +13,8 @@ export default function AmountTextInput({
 }: AmountTextInputProps) {
   const [amount, setAmount] = useState('');
 
+  const inputWidth = Dimensions.get('window').width * 0.82;
+
   const handleAmountChange = (amount: string) => {
     setAmount(amount);
     onChangeText(amount);
@@ -20,7 +22,7 @@ export default function AmountTextInput({
 
   return (
     <View>
-      <View className="flex-row items-center">
+      <View className="flex-row items-center" style={{ width: inputWidth }}>
         <Peso
           height={18}
           width={18}

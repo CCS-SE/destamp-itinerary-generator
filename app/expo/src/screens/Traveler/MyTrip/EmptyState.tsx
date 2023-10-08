@@ -41,7 +41,7 @@ export default function MyTripEmptyState() {
         >
           <Text
             testID="empty-state-create-btn"
-            className="mx-6 p-2 font-poppins text-lg font-medium text-zinc-100"
+            className="mx-6 p-2.5 font-poppins text-lg font-medium text-zinc-100"
           >
             Create a Trip
           </Text>

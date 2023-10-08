@@ -6,6 +6,7 @@ const Place = objectType({
   name: 'Place',
   definition(t) {
     t.string('id');
+    t.nullable.int('businessOwnerId');
     t.string('name');
     t.nullable.string('description');
     t.string('address');
@@ -17,6 +18,7 @@ const Place = objectType({
     t.float('visitDuration');
     t.nullable.string('url');
     t.nullable.string('website');
+    t.boolean('isClaimed');
     t.field('images', {
       type: list('Image'),
       resolve: ({ id }, _, ctx) => {
