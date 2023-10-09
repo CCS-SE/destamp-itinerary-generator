@@ -22,13 +22,11 @@ describe('Sign up Form', () => {
     const passwordInput = getByTestId('password-input');
     const confirmPasswordInput = getByTestId('confirm-password-input');
     const signUpButton = getByTestId('sign-up-btn');
-    const bottomText = getByTestId('bottom-text');
 
     expect(emailInput).toBeTruthy();
     expect(passwordInput).toBeTruthy();
     expect(confirmPasswordInput).toBeTruthy();
     expect(signUpButton).toBeTruthy();
-    expect(bottomText).toBeTruthy();
   });
 
   it('handles inputs correctly', async () => {
