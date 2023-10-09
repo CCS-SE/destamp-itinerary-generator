@@ -167,6 +167,7 @@ export type Expense = {
   category: ExpenseCategory;
   createdAt: Scalars['DateTime']['output'];
   date: Scalars['DateTime']['output'];
+  id: Scalars['Int']['output'];
   note?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -208,6 +209,7 @@ export type Mutation = {
   createExpense: Expense;
   createTrip: Trip;
   createUser: User;
+  deleteExpense: Expense;
   deleteTrip: Trip;
 };
 
@@ -222,6 +224,10 @@ export type MutationCreateTripArgs = {
 
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
+};
+
+export type MutationDeleteExpenseArgs = {
+  id: Scalars['Int']['input'];
 };
 
 export type MutationDeleteTripArgs = {
@@ -692,6 +698,7 @@ export type ExpenseResolvers<
   >;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   note?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -762,6 +769,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationCreateUserArgs, 'data'>
+  >;
+  deleteExpense?: Resolver<
+    ResolversTypes['Expense'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeleteExpenseArgs, 'id'>
   >;
   deleteTrip?: Resolver<
     ResolversTypes['Trip'],
@@ -1090,10 +1103,20 @@ export type GetTransactionsQuery = {
   __typename?: 'Query';
   getTransaction: Array<{
     __typename?: 'Expense';
+    id: number;
     amount: number;
     category: ExpenseCategory;
     date: any;
   }>;
+};
+
+export type DeleteExpenseMutationVariables = Exact<{
+  deleteExpenseId: Scalars['Int']['input'];
+}>;
+
+export type DeleteExpenseMutation = {
+  __typename?: 'Mutation';
+  deleteExpense: { __typename?: 'Expense'; id: number };
 };
 
 export type GetTravelerItineraryQueryVariables = Exact<{
@@ -1504,6 +1527,7 @@ export const GetTransactionsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'category' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'date' } },
@@ -1517,6 +1541,57 @@ export const GetTransactionsDocument = {
 } as unknown as DocumentNode<
   GetTransactionsQuery,
   GetTransactionsQueryVariables
+>;
+export const DeleteExpenseDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeleteExpense' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'deleteExpenseId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteExpense' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'deleteExpenseId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeleteExpenseMutation,
+  DeleteExpenseMutationVariables
 >;
 export const GetTravelerItineraryDocument = {
   kind: 'Document',

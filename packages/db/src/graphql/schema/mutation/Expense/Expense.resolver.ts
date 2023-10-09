@@ -16,3 +16,11 @@ export const createExpense = (args: CreateExpenseInput, ctx: Context) => {
     },
   });
 };
+
+export const deleteExpense = async (id: number, ctx: Context) => {
+  return await ctx.prisma.expense.delete({
+    where: {
+      id: id,
+    },
+  });
+};

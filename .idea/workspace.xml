@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e19a7392-c3a8-4c0a-b198-c02b63dc0497" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/eas.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/eas.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/src/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/src/app/_layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/src/app/expense/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/src/app/expense/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/src/components/Forms/AddSpendingForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/src/components/Forms/AddSpendingForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/src/components/List/ListItems/TransactionsListItem.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/src/components/List/ListItems/TransactionsListItem.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/expo/src/graphql/generated.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/expo/src/graphql/generated.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/prisma/migrations/migration_lock.toml" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/prisma/migrations/migration_lock.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/schema.graphql" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/schema.graphql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/src/graphql/generated/nexus.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/src/graphql/generated/nexus.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/src/graphql/schema/models/DailyItinerary.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/src/graphql/schema/models/DailyItinerary.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/src/graphql/schema/models/Expense.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/src/graphql/schema/models/Expense.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/src/graphql/schema/mutation/Expense/Expense.mutation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/src/graphql/schema/mutation/Expense/Expense.mutation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/src/graphql/schema/mutation/Expense/Expense.resolver.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/src/graphql/schema/mutation/Expense/Expense.resolver.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/db/src/graphql/schema/mutation/Expense/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/db/src/graphql/schema/mutation/Expense/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2WL31lGHTiKDVwWHQQ40Seg5FnE" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "last_opened_file_path": "C:/Users/HP/OneDrive/Documents/code/Capstone/destamp-itinerary-generator",
+    "settings.editor.selected.configurable": "AndroidSdkUpdater"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e19a7392-c3a8-4c0a-b198-c02b63dc0497" name="Changes" comment="" />
+      <created>1696497821420</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1696497821420</updated>
+    </task>
+    <servers />
+  </component>
+</project>
