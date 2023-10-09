@@ -10,7 +10,7 @@ import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 type Place = NexusGenObjects['Place'];
 
-const POPULATION_SIZE = 30;
+const POPULATION_SIZE = 40;
 
 export function generatePopulation(input: CreateTripInput, places: Place[]) {
   const { budget, adultCount, childCount, preferredTime } = input;
@@ -26,35 +26,33 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
     new Date(input.endDate),
   );
 
-  const MAX_ITERATIONS = 25; // max number of iterations
+  // const MAX_ITERATIONS = 20; // max number of iterations
 
   const totalDesiredHours = getTotalDesiredTravelHours(preferredTime);
   const totalTravelers = (adultCount || 0) + (childCount || 0);
 
+  const foodMaxDuration = 240 * duration;
   const durationThreshold = duration * totalDesiredHours * 60;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
+    let foodDuration = 0;
     let foodBudget = 0;
     let attractionBudget = 0;
     let accommodationBuget = 0;
-    let iteration = 0;
+    // let iteration = 0;
+
+    let totalCost = 0;
 
     const chromosome: Place[] = []; // list of destinations within budget and timeframe
     const randomIndexes: number[] = [];
 
-    while (
-      (totalDuration < durationThreshold ||
-        (input.isAccommodationIncluded &&
-          accommodationBuget < accommodationThreshold) ||
-        (input.isFoodIncluded && foodBudget < foodThreshold) ||
-        attractionBudget < attractionThreshold) &&
-      iteration < MAX_ITERATIONS
-    ) {
+    while (totalDuration < durationThreshold && totalCost < budget) {
       const randomIndex = Math.floor(Math.random() * (places.length - 1));
 
+      console.log(totalDuration);
       if (!randomIndexes.includes(randomIndex)) {
         // make sure no duplicate
         const place = places[randomIndex];
@@ -63,28 +61,55 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
           const averagePrice = calculateAveragePrice(place.price);
           const foodCost = averagePrice * totalTravelers;
 
-          foodBudget += foodCost;
-          totalDuration += place.visitDuration;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
+          if (
+            place.visitDuration + foodDuration <= foodMaxDuration &&
+            parseFloat(place.price) + foodBudget < foodThreshold
+          ) {
+            totalCost += foodCost;
+            foodBudget += foodCost;
+            foodDuration += place.visitDuration;
+            totalDuration += place.visitDuration;
+
+            randomIndexes.push(randomIndex);
+            chromosome.push(place);
+          }
         }
+
         if (place?.type === PlaceType.ATTRACTION) {
           const attractionCost = parseFloat(place.price) * totalTravelers;
 
-          attractionBudget += attractionCost;
-          totalDuration += place.visitDuration;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
+          if (
+            place.visitDuration + totalDuration <= durationThreshold &&
+            parseFloat(place.price) + attractionBudget < attractionThreshold
+          ) {
+            totalCost += attractionCost;
+            attractionBudget += attractionCost;
+            totalDuration += place.visitDuration;
+            randomIndexes.push(randomIndex);
+            chromosome.push(place);
+          }
         }
-        if (place?.type === PlaceType.ACCOMMODATION) {
+
+        if (
+          place?.type === PlaceType.ACCOMMODATION &&
+          input.isAccommodationIncluded
+        ) {
+          const suggestedPrice = Math.round(accommodationThreshold / duration);
           const accommodationCost = parseFloat(place.price) * duration;
 
-          accommodationBuget += accommodationCost;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
+          if (
+            suggestedPrice <= parseFloat(place.price) &&
+            parseFloat(place.price) + accommodationBuget <
+              accommodationThreshold
+          ) {
+            totalCost += accommodationCost;
+            accommodationBuget += accommodationCost;
+            randomIndexes.push(randomIndex);
+            chromosome.push(place);
+          }
         }
       }
-      iteration++;
+      // iteration++;
     }
 
     newPopulation.push({

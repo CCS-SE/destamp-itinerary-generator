@@ -64,6 +64,8 @@ export const createTrip = async (
       ? getDaySuggestions(bestSoFar, tripInput)
       : [];
 
+    console.log(`length: ${bestSoFar?.chrom.genes.length}`);
+
     const dailyPlans = await getDailyPlans(suggestedPlans, tripInput);
 
     return await ctx.prisma.trip.create({

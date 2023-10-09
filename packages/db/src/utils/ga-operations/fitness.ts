@@ -41,10 +41,14 @@ export async function evaluateFitness(
 
   const totalDesiredTravelHours = getTotalDesiredTravelHours(preferredTime);
 
-  for (let i = 0; i < population.length; i++) {
+  for (let i = 0; i < population.length - 1; i++) {
     const currentPopulation = population[i]!;
+
     const chromosome = currentPopulation.chrom;
     const genes = chromosome.genes;
+
+    console.log(population.length);
+    console.log(`gene: ${genes.length}`);
 
     const coordinatePairs = getCoordinatesParam(getCoordinates(genes));
 
@@ -56,7 +60,7 @@ export async function evaluateFitness(
     const travelDistances: number[] = [];
     const travelDurations: number[] = [];
 
-    for (let x = 0; x < genes?.length; x++) {
+    for (let x = 0; x < genes?.length - 1; x++) {
       const placeDistance = matrix.distances[x]![x + 1];
       const placeDuration = matrix.durations[x]![x + 1];
 

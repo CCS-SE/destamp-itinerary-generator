@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import {
@@ -23,13 +24,15 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-const LOCAL_SYSTEM_IP_ADDRESS = '192.168.0.24';
-// '192.168.254.135'; // change this with your own ip address
+const LOCAL_SYSTEM_IP_ADDRESS = '10.10.10.99'; // change this with your own ip address
 const PORT = 4000;
+
+const devUrl = `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`;
+const prodUrl = 'https://destamp-cpu.onrender.com/graphql';
 
 const client = new ApolloClient({
   link: createHttpLink({
-    uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
+    uri: devUrl,
     fetch,
   }),
   cache: new InMemoryCache({
@@ -90,13 +93,15 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <ApolloProvider client={client}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </ApolloProvider>
-      </AuthProvider>
+      <AutocompleteDropdownContextProvider>
+        <AuthProvider>
+          <ApolloProvider client={client}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </ApolloProvider>
+        </AuthProvider>
+      </AutocompleteDropdownContextProvider>
     </ThemeProvider>
   );
 }
