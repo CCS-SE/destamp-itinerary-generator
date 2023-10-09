@@ -6,9 +6,14 @@ dotenv.config();
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const MAPBOX_API_KEY = process.env.MAPBOX_API_KEY;
+const CLERK_PUBLISHABLE_KEY = process.env.CLERK_PUBLISHABLE_KEY;
 
 if (typeof SUPABASE_URL !== 'string' || typeof SUPABASE_ANON_KEY !== 'string') {
   throw new Error('Missing Supabase URL or anonymous key');
+}
+
+if (typeof CLERK_PUBLISHABLE_KEY !== 'string') {
+  throw new Error('Missing Clerk Publishable key');
 }
 
 if (typeof MAPBOX_API_KEY !== 'string') {
@@ -50,6 +55,7 @@ const defineConfig = (): ExpoConfig => ({
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     MAPBOX_API_KEY,
+    CLERK_PUBLISHABLE_KEY,
   },
   experiments: {
     tsconfigPaths: true,

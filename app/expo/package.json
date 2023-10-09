@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.1",
+    "@clerk/clerk-expo": "^0.19.8",
     "@expo/metro-config": "^0.10.7",
     "@hookform/resolvers": "^3.3.1",
     "@react-native-assets/slider": "^7.0.5",

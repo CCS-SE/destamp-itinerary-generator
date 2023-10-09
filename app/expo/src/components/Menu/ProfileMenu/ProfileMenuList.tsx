@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { Alert, FlatList } from 'react-native';
+import { router } from 'expo-router';
+import { useAuth } from '@clerk/clerk-expo';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { supabase } from 'config/initSupabase';
 
@@ -8,14 +10,34 @@ import ProfileMenuItem from './ProfileMenuItem';
 
 function ProfileMenuList() {
   const [profileMenu] = useState<ProfileMenu[]>(profileMenus);
+  const { isLoaded, signOut } = useAuth();
+
+  if (!isLoaded) {
+    return null;
+  }
 
   return (
     <FlatList
       testID="profile-menu-list"
       data={profileMenu}
-      renderItem={({ item }) => (
-        <ProfileMenuItem key={item.title} onPress={item.onPress!} item={item} />
-      )}
+      renderItem={({ item }) =>
+        item.title == 'Logout' ? (
+          <ProfileMenuItem
+            key={item.title}
+            onPress={() => {
+              item.onPress!();
+              signOut();
+            }}
+            item={item}
+          />
+        ) : (
+          <ProfileMenuItem
+            key={item.title}
+            onPress={item.onPress!}
+            item={item}
+          />
+        )
+      }
       scrollEnabled={false}
     />
   );

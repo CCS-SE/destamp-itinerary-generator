@@ -1056,6 +1056,7 @@ export type GetBusinessDetailsQuery = {
   __typename?: 'Query';
   place: {
     __typename?: 'Place';
+    id: string;
     name: string;
     address: string;
     contactNumber?: string | null;
@@ -1065,12 +1066,6 @@ export type GetBusinessDetailsQuery = {
     visitDuration: number;
     categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
     images: Array<{ __typename?: 'Image'; url: string }>;
-    openingHours: Array<{
-      __typename?: 'OpeningHour';
-      closeTime: any;
-      day: number;
-      openTime: any;
-    }>;
     amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
     diningAtmospheres: Array<{
       __typename?: 'DiningAtmosphere';
@@ -1370,6 +1365,7 @@ export const GetBusinessDetailsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'address' } },
                 {
@@ -1397,24 +1393,6 @@ export const GetBusinessDetailsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'openingHours' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'closeTime' },
-                      },
-                      { kind: 'Field', name: { kind: 'Name', value: 'day' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'openTime' },
-                      },
                     ],
                   },
                 },
