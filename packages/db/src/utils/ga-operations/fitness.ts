@@ -47,9 +47,6 @@ export async function evaluateFitness(
     const chromosome = currentPopulation.chrom;
     const genes = chromosome.genes;
 
-    console.log(population.length);
-    console.log(`gene: ${genes.length}`);
-
     const coordinatePairs = getCoordinatesParam(getCoordinates(genes));
 
     const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);

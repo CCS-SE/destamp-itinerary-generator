@@ -186,9 +186,9 @@ export default function ReviewInfoScreen() {
         },
       ],
       onError: (err) => {
-        setIsSubmitting(false);
         Alert.alert('Error', err.message);
         console.log('Error', err.message);
+        setIsSubmitting(false);
       },
     });
   };

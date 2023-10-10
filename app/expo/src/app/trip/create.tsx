@@ -71,7 +71,7 @@ const initialTripData: TripDataProps = {
   budget: '',
   adultCount: 2,
   childCount: 1,
-  groupCount: 2,
+  groupCount: 3,
 };
 
 const initialLocationDate: LocationProps = {

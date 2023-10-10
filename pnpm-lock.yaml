@@ -171,6 +171,9 @@ importers:
       react-native:
         specifier: 0.72.5
         version: 0.72.5(@babel/core@7.22.10)(@babel/preset-env@7.22.10)(react@18.2.0)
+      react-native-autocomplete-dropdown:
+        specifier: ^3.0.2
+        version: 3.0.2(react-native-svg@13.9.0)(react-native@0.72.5)(react@18.2.0)
       react-native-calendar-picker:
         specifier: ^7.1.4
         version: 7.1.4(moment@2.29.4)(react-native@0.72.5)(react@18.2.0)
@@ -14628,6 +14631,23 @@ packages:
       prop-types: 15.8.1
     dev: false
 
+  /react-native-autocomplete-dropdown@3.0.2(react-native-svg@13.9.0)(react-native@0.72.5)(react@18.2.0):
+    resolution: {integrity: sha512-TNQyrCOT0qPYvmChbxc+pLnD+W1mTCxQZ4R5a//AMstzPvaQPEyE6m5eIkKgp5j8m2EZYJ/tMD3q72+q0LqXoA==}
+    peerDependencies:
+      react: '*'
+      react-native: '>=0.40.0'
+      react-native-svg: ^13.0.0 || 13
+    dependencies:
+      lodash.debounce: 4.0.8
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-native: 0.72.5(@babel/core@7.22.10)(@babel/preset-env@7.22.10)(react@18.2.0)
+      react-native-animatable: 1.3.3
+      react-native-feather: 1.1.2(react-native-svg@13.9.0)(react-native@0.72.5)
+      react-native-size-matters: 0.4.2(react-native@0.72.5)
+      react-native-svg: 13.9.0(react-native@0.72.5)(react@18.2.0)
+    dev: false
+
   /react-native-calendar-picker@7.1.4(moment@2.29.4)(react-native@0.72.5)(react@18.2.0):
     resolution: {integrity: sha512-wzDfi7EGuODTr6sul4uHczGFvCHrUmLusKN4HHZINPs3/b/wXfywNI9LL8qKpwY+OwasXko2p3BREjcdsEyX0A==}
     engines: {node: '>=4.0.0'}
@@ -14696,6 +14716,16 @@ packages:
 
   /react-native-dropdown-select-list@2.0.5:
     resolution: {integrity: sha512-TepbcagQVUMB6nLuIlVU2ghRpQHAECOeZWe8K04ymW6NqbKbxuczZSDFfdCiABiiQ2dFD+8Dz65y4K7/uUEqGg==}
+    dev: false
+
+  /react-native-feather@1.1.2(react-native-svg@13.9.0)(react-native@0.72.5):
+    resolution: {integrity: sha512-qBc0+XegKkX4JV6ykgScasguEV3RdlbYp9IrCMnbozngOgJ7vi76pyRpb+dnZ1AZVkYsbYnpdA9JXeP7EJbMCA==}
+    peerDependencies:
+      react-native: '>=0.46'
+      react-native-svg: '>=5.3 || 13'
+    dependencies:
+      react-native: 0.72.5(@babel/core@7.22.10)(@babel/preset-env@7.22.10)(react@18.2.0)
+      react-native-svg: 13.9.0(react-native@0.72.5)(react@18.2.0)
     dev: false
 
   /react-native-gesture-handler@2.12.1(react-native@0.72.5)(react@18.2.0):
@@ -14781,6 +14811,14 @@ packages:
       react-freeze: 1.0.3(react@18.2.0)
       react-native: 0.72.5(@babel/core@7.22.10)(@babel/preset-env@7.22.10)(react@18.2.0)
       warn-once: 0.1.1
+    dev: false
+
+  /react-native-size-matters@0.4.2(react-native@0.72.5):
+    resolution: {integrity: sha512-DKE3f/sdcozd24oASgkP1iGg+YU3HoajRa5k3a4wkRzpiqREq8SGX12Y5zBgAt/8IivLQoTMYkyQu1/Giuy+zQ==}
+    peerDependencies:
+      react-native: '*'
+    dependencies:
+      react-native: 0.72.5(@babel/core@7.22.10)(@babel/preset-env@7.22.10)(react@18.2.0)
     dev: false
 
   /react-native-svg-charts@5.4.0(react-native-svg@13.9.0)(react-native@0.72.5)(react@18.2.0):

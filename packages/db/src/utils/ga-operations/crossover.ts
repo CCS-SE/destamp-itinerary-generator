@@ -2,8 +2,9 @@ import { PlaceType } from '@prisma/client';
 
 import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
 import { tripDuration } from '../utils';
+import { getBudgetAllocation } from './budgetAllocation';
 import { Chromosome } from './chromosome';
-import { calculateAveragePrice } from './utils';
+import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 type Place = NexusGenObjects['Place'];
@@ -32,7 +33,6 @@ export const crossover = (
   const newParent1 = firstParentHead.concat(secondParentTail);
   const newParent2 = secondParentHead.concat(firstParentTail);
 
-  console.log();
   // evaluate crossovered parent
   const chrom1 = crossoverEval(newParent1, tripInput);
   const chrom2 = crossoverEval(newParent2, tripInput);
@@ -41,30 +41,30 @@ export const crossover = (
 };
 
 export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
-  const { adultCount, childCount } = tripInput;
-
-  // const budgetRate = getBudgetAllocation(tripInput)!;
-
-  // const attractionThreshold = budget * budgetRate.ATTRACTION;
-  // const foodThreshold = budget * budgetRate.FOOD;
-  // const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
+  const { budget, adultCount, childCount } = tripInput;
 
   const duration = tripDuration(
     new Date(tripInput.startDate),
     new Date(tripInput.endDate),
   );
 
-  // const totalDesiredTravelHours = getTotalDesiredTravelHours(
-  //   tripInput.preferredTime,
-  // );
+  const budgetRate = getBudgetAllocation(tripInput)!;
+
+  const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
+  const foodThreshold = budget * budgetRate.FOOD;
+
+  const totalDesiredTravelHours = getTotalDesiredTravelHours(
+    tripInput.preferredTime,
+  );
 
   const totalTravelers = (adultCount || 0) + (childCount || 0);
-  // const durationThreshold = duration * totalDesiredTravelHours * 60;
+  const durationThreshold = duration * totalDesiredTravelHours * 60;
 
-  const foodMaxDuration = 180 * duration; // max 4 hours of food per day
+  const foodMaxDuration = 150 * duration; // max 3 hours of food per day
 
   let foodDuration = 0;
-  // let totalCost = 0;
+  let totalCost = 0;
+  let totalDuration = 0;
 
   const budgets = {
     food: 0,
@@ -75,33 +75,36 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
   const chromosome: Place[] = [];
 
   for (const spot of spots) {
-    // if (totalDuration >= durationThreshold || totalCost >= budget) {
-    //   return chromosome;
-    // }
-    if (spot.type === PlaceType.RESTAURANT && tripInput.isFoodIncluded) {
-      if (foodDuration + spot.visitDuration <= foodMaxDuration) {
-        const averagePrice = calculateAveragePrice(spot.price);
-        const foodCost = averagePrice * totalTravelers;
-
-        budgets.food += foodCost;
-        foodDuration += spot.visitDuration;
-        chromosome.push(spot);
-      }
+    if (
+      totalDuration >= durationThreshold &&
+      totalCost >= budget - accommodationThreshold
+    ) {
+      return chromosome;
     }
+
     if (spot.type === PlaceType.ATTRACTION) {
       const attractionCost = parseFloat(spot.price) * totalTravelers;
 
       budgets.attraction += attractionCost;
+      totalDuration += spot.visitDuration;
+      totalCost += attractionCost;
       chromosome.push(spot);
     }
-    if (
-      spot.type === PlaceType.ACCOMMODATION &&
-      tripInput.isAccommodationIncluded
-    ) {
-      const accommodationCost = parseFloat(spot.price) * duration;
 
-      budgets.accommodation += accommodationCost;
-      chromosome.push(spot);
+    if (spot.type === PlaceType.RESTAURANT && tripInput.isFoodIncluded) {
+      const averagePrice = calculateAveragePrice(spot.price);
+      const foodCost = averagePrice * totalTravelers;
+
+      if (
+        foodDuration + spot.visitDuration <= foodMaxDuration &&
+        budgets.food + averagePrice <= foodThreshold
+      ) {
+        budgets.food += foodCost;
+        foodDuration += spot.visitDuration;
+        totalCost += foodCost;
+        totalDuration += spot.visitDuration;
+        chromosome.push(spot);
+      }
     }
   }
   return chromosome;

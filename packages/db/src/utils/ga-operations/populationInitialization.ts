@@ -17,8 +17,6 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
 
   const budgetRate = getBudgetAllocation(input)!;
 
-  const attractionThreshold = budget * budgetRate.ATTRACTION;
-  const foodThreshold = budget * budgetRate.FOOD;
   const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
 
   const duration = tripDuration(
@@ -37,9 +35,7 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
-    let foodBudget = 0;
-    let attractionBudget = 0;
-    let accommodationBuget = 0;
+    let totalCost = 0;
     let iteration = 0;
 
     const chromosome: Place[] = []; // list of destinations within budget and timeframe
@@ -47,10 +43,7 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
 
     while (
       (totalDuration < durationThreshold ||
-        (input.isAccommodationIncluded &&
-          accommodationBuget < accommodationThreshold) ||
-        (input.isFoodIncluded && foodBudget < foodThreshold) ||
-        attractionBudget < attractionThreshold) &&
+        totalCost < budget - accommodationThreshold) &&
       iteration < MAX_ITERATIONS
     ) {
       const randomIndex = Math.floor(Math.random() * (places.length - 1));
@@ -62,24 +55,15 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
         if (place?.type === PlaceType.RESTAURANT && input.isFoodIncluded) {
           const averagePrice = calculateAveragePrice(place.price);
           const foodCost = averagePrice * totalTravelers;
-
-          foodBudget += foodCost;
+          totalCost += foodCost;
           totalDuration += place.visitDuration;
           randomIndexes.push(randomIndex);
           chromosome.push(place);
         }
         if (place?.type === PlaceType.ATTRACTION) {
           const attractionCost = parseFloat(place.price) * totalTravelers;
-
-          attractionBudget += attractionCost;
+          totalCost += attractionCost;
           totalDuration += place.visitDuration;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
-        }
-        if (place?.type === PlaceType.ACCOMMODATION) {
-          const accommodationCost = parseFloat(place.price) * duration;
-
-          accommodationBuget += accommodationCost;
           randomIndexes.push(randomIndex);
           chromosome.push(place);
         }
