@@ -21,7 +21,10 @@
     "development": {
       "extends": "base",
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
     },
     "preview": {
       "extends": "base",
@@ -40,6 +43,10 @@
     },
     "production": {
       "extends": "base",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
       "node": "18.16.1",
       "env": {
         "DATABASE_URL": "@secret/DATABASE_URL",

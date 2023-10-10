@@ -202,6 +202,7 @@ export interface NexusGenObjects {
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     date: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
     note?: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
@@ -369,6 +370,7 @@ export interface NexusGenFieldTypes {
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     date: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
     note: string | null; // String
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
@@ -397,6 +399,7 @@ export interface NexusGenFieldTypes {
     createExpense: NexusGenRootTypes['Expense']; // Expense!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
+    deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
   };
   OpeningHour: {
@@ -557,6 +560,7 @@ export interface NexusGenFieldTypeNames {
     category: 'ExpenseCategory';
     createdAt: 'DateTime';
     date: 'DateTime';
+    id: 'Int';
     note: 'String';
     updatedAt: 'DateTime';
   };
@@ -585,6 +589,7 @@ export interface NexusGenFieldTypeNames {
     createExpense: 'Expense';
     createTrip: 'Trip';
     createUser: 'User';
+    deleteExpense: 'Expense';
     deleteTrip: 'Trip';
   };
   OpeningHour: {
@@ -684,6 +689,10 @@ export interface NexusGenArgTypes {
     createUser: {
       // args
       data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+    };
+    deleteExpense: {
+      // args
+      id: number; // Int!
     };
     deleteTrip: {
       // args

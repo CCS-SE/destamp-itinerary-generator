@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
+import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import {
@@ -9,6 +10,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { ClerkProvider } from '@clerk/clerk-expo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -29,10 +31,11 @@ const PORT = 4000;
 
 const devUrl = `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`;
 const prodUrl = 'https://destamp-cpu.onrender.com/graphql';
+const URL = 'https://destamp-cpu.onrender.com';
 
 const client = new ApolloClient({
   link: createHttpLink({
-    uri: devUrl,
+    uri: `${URL}/graphql`,
     fetch,
   }),
   cache: new InMemoryCache({
@@ -95,13 +98,21 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AutocompleteDropdownContextProvider>
         <AuthProvider>
-          <ApolloProvider client={client}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            </Stack>
-          </ApolloProvider>
+          <ClerkProvider
+            publishableKey={
+              Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY as string
+            }
+          >
+            <ApolloProvider client={client}>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack>
+            </ApolloProvider>
+          </ClerkProvider>
         </AuthProvider>
       </AutocompleteDropdownContextProvider>
     </ThemeProvider>
   );
 }
+
+export { RootLayoutNav };

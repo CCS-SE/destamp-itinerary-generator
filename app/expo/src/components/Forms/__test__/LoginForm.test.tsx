@@ -17,12 +17,10 @@ describe('Login Form', () => {
     const { getByTestId, getByRole } = render(<LoginForm />);
     const emailInput = getByTestId('email-input');
     const passwordInput = getByTestId('password-input');
-    const loginWithText = getByTestId('login-with-text');
     const loginBtn = getByRole('button', { name: 'Login' });
     expect(emailInput).toBeTruthy();
     expect(passwordInput).toBeTruthy();
     expect(loginBtn).toBeTruthy();
-    expect(loginWithText).toBeTruthy();
   });
   it('handles email and password input correctly', async () => {
     const { getByTestId } = render(<LoginForm />);

@@ -58,7 +58,7 @@ export default function AddSpendingForm({
   const [category, setCategory] = useState<ExpenseCategory>(
     ExpenseCategory.Accommodation,
   );
-  const [isSubmitting, setSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onCategoryChange = (newCategory: ExpenseCategory) => {
     setCategory(newCategory);
@@ -93,7 +93,8 @@ export default function AddSpendingForm({
   const [createExpense] = useMutation(CreateExpenseDocument);
 
   const onSubmit: SubmitHandler<AddSpendingSchema> = async (data) => {
-    setSubmitting(true);
+    setIsSubmitting(true);
+
     const createExpenseInput: MutationCreateExpenseArgs = {
       data: {
         amount: parseFloat(data.amount),
@@ -121,7 +122,8 @@ export default function AddSpendingForm({
       },
     });
     closeModal();
-    setInterval(() => setSubmitting(false), 1000);
+
+    setTimeout(() => setIsSubmitting(false), 1000);
   };
 
   return (

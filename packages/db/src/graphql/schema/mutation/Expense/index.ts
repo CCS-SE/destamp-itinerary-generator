@@ -1,5 +1,5 @@
-import { CreateExpense } from './Expense.mutation';
+import { CreateExpense, DeleteExpense } from './Expense.mutation';
 
-const Mutations = [CreateExpense];
+const Mutations = [CreateExpense, DeleteExpense];
 
 export default Mutations;

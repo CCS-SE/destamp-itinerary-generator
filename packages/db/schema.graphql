@@ -128,6 +128,7 @@ type Expense {
   category: ExpenseCategory!
   createdAt: DateTime!
   date: DateTime!
+  id: Int!
   note: String
   updatedAt: DateTime!
 }
@@ -171,6 +172,7 @@ type Mutation {
   createExpense(data: CreateExpenseInput!): Expense!
   createTrip(data: CreateTripInput!, locationData: CreateDepartingLocationInput!): Trip!
   createUser(data: CreateUserInput!): User!
+  deleteExpense(id: Int!): Expense!
   deleteTrip(id: Int!): Trip!
 }
 

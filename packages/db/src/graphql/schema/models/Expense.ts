@@ -5,6 +5,7 @@ import { ExpenseCategory } from '../enum';
 const Expense = objectType({
   name: 'Expense',
   definition(t) {
+    t.int('id');
     t.float('amount');
     t.field('date', { type: 'DateTime' });
     t.field('category', { type: ExpenseCategory });

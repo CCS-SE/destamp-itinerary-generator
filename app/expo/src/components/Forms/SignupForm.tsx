@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
+import OTPTextInput from 'react-native-otp-textinput';
 import { gql, useMutation } from '@apollo/client';
+import { useSignUp } from '@clerk/clerk-expo';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from 'config/initSupabase';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -18,6 +20,7 @@ import GradientButton from '../Button/GradientButton';
 import UserTypeCard from '../Card/UserTypeCard';
 import { CustomTextInput } from '../FormField/CustomTextInput';
 import ShowPasswordIcon from '../Icon/ShowPasswordIcon';
+import BottomHalfModal from '../Modal/BottomHalfModal';
 import { SignUpSchema, signUpSchema } from './schema/signupSchema';
 
 export const CreateUser = gql(
@@ -28,10 +31,27 @@ export const CreateUser = gql(
   }`,
 );
 
+interface ErrorJson {
+  status: number;
+  clerkError: boolean;
+  errors: {
+    code: string;
+    message: string;
+    longMessage: string;
+    meta: {
+      paramName: string;
+    };
+  }[];
+}
+
 export default function SignUpForm() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState('');
 
   const [userType, setUserType] = useState<UserType>(UserType.Traveler);
 
@@ -49,42 +69,84 @@ export default function SignUpForm() {
   const onSubmit: SubmitHandler<SignUpSchema> = async (input) => {
     setIsSubmitting(true);
 
-    const { error, data } = await supabase.auth.signUp({
-      email: input.email,
-      password: input.password,
-      options: {
-        data: {
-          user_metadata: {
-            role:
-              userType === UserType.Traveler ? 'traveler' : 'business_owner',
-          },
-        },
-      },
-    });
-
-    if (error) Alert.alert('Sign Up Error', error.message);
-    else if (data && data.user) {
-      const createUserInput: MutationCreateUserArgs = {
-        data: {
-          id: data.user!.id,
-          userType: userType,
-          email: input.email,
-          password: input.password,
-        },
-      };
-
-      await createProgram({
-        variables: {
-          data: createUserInput.data,
-        },
-        onError: (err) => {
-          Alert.alert('Error', err.message);
-        },
+    if (!isLoaded) {
+      return;
+    }
+    try {
+      await signUp.create({
+        emailAddress: input.email,
+        password: input.password,
       });
 
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+
+      setPendingVerification(true);
+    } catch (err) {
+      const error = err as ErrorJson;
+      if (error.errors.length > 0) {
+        Alert.alert('Error signing up', error.errors[0]!.message);
+      }
       setIsSubmitting(false);
     }
   };
+
+  const onPressVerify: SubmitHandler<SignUpSchema> = async (input) => {
+    setPendingVerification(true);
+    if (!isLoaded) {
+      return;
+    }
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+
+      const { error, data } = await supabase.auth.signUp({
+        email: input.email,
+        password: input.password,
+        options: {
+          data: {
+            user_metadata: {
+              role:
+                userType === UserType.Traveler ? 'traveler' : 'business_owner',
+            },
+          },
+        },
+      });
+
+      if (error) Alert.alert('Sign Up Error', error.message);
+      else if (data && data.user) {
+        const createUserInput: MutationCreateUserArgs = {
+          data: {
+            id: data.user!.id,
+            userType: userType,
+            email: input.email,
+            password: input.password,
+          },
+        };
+
+        await createProgram({
+          variables: {
+            data: createUserInput.data,
+          },
+          onError: (err) => {
+            Alert.alert('Error', err.message);
+          },
+        });
+      }
+
+      await setActive({ session: completeSignUp.createdSessionId });
+      setIsSubmitting(false);
+      setPendingVerification(false);
+    } catch (err) {
+      const error = err as ErrorJson;
+      if (error.errors.length > 0) {
+        Alert.alert('Error', error.errors[0]!.longMessage);
+        console.log(JSON.stringify(err, null, 2));
+      }
+    }
+  };
+  111;
 
   return (
     <View className="items-center">
@@ -192,12 +254,33 @@ export default function SignUpForm() {
           isSubmitting={isSubmitting}
         />
       </View>
-      <Text
-        testID="bottom-text"
-        className="mb-1 font-poppins text-lg font-normal text-gray-500"
+      <BottomHalfModal
+        isVisible={pendingVerification}
+        onClose={() => {
+          setPendingVerification(false);
+          setIsSubmitting(false);
+        }}
       >
-        Or login with
-      </Text>
+        <View className="items-center">
+          <Text className="mt-3 text-2xl font-bold">Email Verification</Text>
+          <Text className="mt-5 text-center text-lg">
+            Please enter the 6-digit code that {'\n'}
+            was sent to your email.
+          </Text>
+        </View>
+        <View className="mt-3 items-center">
+          <OTPTextInput
+            tintColor={'#FB2E53'}
+            inputCount={6}
+            handleTextChange={(code) => setCode(code)}
+          />
+        </View>
+        <GradientButton
+          onPress={handleSubmit(onPressVerify)}
+          title="Verify Email"
+          isSubmitting={!pendingVerification}
+        />
+      </BottomHalfModal>
     </View>
   );
 }

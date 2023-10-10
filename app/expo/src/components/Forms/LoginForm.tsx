@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert, View } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from 'config/initSupabase';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -90,12 +90,6 @@ export default function LoginForm() {
           isSubmitting={isSubmitting}
         />
       </View>
-      <Text
-        testID="login-with-text"
-        className="font-poppins text-lg font-normal text-gray-500"
-      >
-        Or login with
-      </Text>
     </View>
   );
 }
