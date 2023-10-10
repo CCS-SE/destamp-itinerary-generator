@@ -6,7 +6,6 @@ import {
   getDaySuggestions,
 } from '../../../../utils/ga-operations/daySuggestion';
 import { multiplyRangeByPeople } from '../../../../utils/ga-operations/utils';
-import { tripDuration } from '../../../../utils/utils';
 import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
