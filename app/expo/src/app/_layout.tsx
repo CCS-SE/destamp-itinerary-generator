@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import {
@@ -8,6 +9,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { ClerkProvider } from '@clerk/clerk-expo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
   DarkTheme,
@@ -23,7 +25,7 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-const URL = 'http://192.168.254.135:4000';
+const URL = 'https://destamp-cpu.onrender.com';
 
 const client = new ApolloClient({
   link: createHttpLink({
@@ -89,12 +91,20 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <ApolloProvider client={client}>
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
-        </ApolloProvider>
+        <ClerkProvider
+          publishableKey={
+            Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY as string
+          }
+        >
+          <ApolloProvider client={client}>
+            <Stack>
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </ApolloProvider>
+        </ClerkProvider>
       </AuthProvider>
     </ThemeProvider>
   );
 }
+
+export { RootLayoutNav };
