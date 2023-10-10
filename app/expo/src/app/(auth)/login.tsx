@@ -2,7 +2,6 @@ import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, Stack } from 'expo-router';
 
-import IconButton from '~/components/Button/IconButton';
 import LoginForm from '~/components/Forms/LoginForm';
 
 export default function LoginScreen() {

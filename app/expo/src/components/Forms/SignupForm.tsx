@@ -32,6 +32,8 @@ export const CreateUser = gql(
 );
 
 export default function SignUpForm() {
+  const { isLoaded, signUp, setActive } = useSignUp();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
@@ -39,8 +41,6 @@ export default function SignUpForm() {
   const [code, setCode] = useState('');
 
   const [userType, setUserType] = useState<UserType>(UserType.Traveler);
-
-  const { isLoaded, signUp, setActive } = useSignUp();
 
   const handleUserTypeChange = (value: UserType) => {
     setUserType(value);
@@ -69,7 +69,7 @@ export default function SignUpForm() {
 
       setPendingVerification(true);
     } catch (err: any) {
-      console.log(JSON.stringify(err, null, 2));
+      Alert.alert('Error signing up', err.errors[0].message);
       setIsSubmitting(false);
     }
   };
@@ -123,7 +123,7 @@ export default function SignUpForm() {
       setIsSubmitting(false);
       setPendingVerification(false);
     } catch (err: any) {
-      Alert.alert('Error', 'Incorrect Code');
+      Alert.alert('Error', err.errors[0].longMessage);
     }
   };
   111;

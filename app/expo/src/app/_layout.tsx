@@ -89,20 +89,22 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ClerkProvider
-      publishableKey={
-        Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY as string
-      }
-    >
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <AuthProvider>
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AuthProvider>
+        <ClerkProvider
+          publishableKey={
+            Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY as string
+          }
+        >
           <ApolloProvider client={client}>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
           </ApolloProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </ClerkProvider>
+        </ClerkProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
+
+export { RootLayoutNav };
