@@ -18,7 +18,7 @@ const TransactionsListItem = ({
   amount,
 }: TransactionsListItemProps) => {
   return (
-    <View className="mt-1 flex-row items-center justify-between bg-[#f2f2f2] px-9 py-3">
+    <View className="mt-1 flex-row items-center justify-between bg-[#ffffff] px-9 py-3">
       <View className="flex-row items-center justify-center">
         <View
           className="h-8 w-8 items-center justify-center rounded-full"
