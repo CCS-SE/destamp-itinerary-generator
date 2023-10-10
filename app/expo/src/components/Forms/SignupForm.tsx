@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 import { gql, useMutation } from '@apollo/client';
 import { useSignUp } from '@clerk/clerk-expo';
@@ -30,6 +30,19 @@ export const CreateUser = gql(
     }
   }`,
 );
+
+interface ErrorJson {
+  status: number;
+  clerkError: boolean;
+  errors: {
+    code: string;
+    message: string;
+    longMessage: string;
+    meta: {
+      paramName: string;
+    };
+  }[];
+}
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -68,8 +81,11 @@ export default function SignUpForm() {
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
 
       setPendingVerification(true);
-    } catch (err: any) {
-      Alert.alert('Error signing up', err.errors[0].message);
+    } catch (err) {
+      const error = err as ErrorJson;
+      if (error.errors.length > 0) {
+        Alert.alert('Error signing up', error.errors[0]!.message);
+      }
       setIsSubmitting(false);
     }
   };
@@ -122,8 +138,12 @@ export default function SignUpForm() {
       await setActive({ session: completeSignUp.createdSessionId });
       setIsSubmitting(false);
       setPendingVerification(false);
-    } catch (err: any) {
-      Alert.alert('Error', err.errors[0].longMessage);
+    } catch (err) {
+      const error = err as ErrorJson;
+      if (error.errors.length > 0) {
+        Alert.alert('Error', error.errors[0]!.longMessage);
+        console.log(JSON.stringify(err, null, 2));
+      }
     }
   };
   111;

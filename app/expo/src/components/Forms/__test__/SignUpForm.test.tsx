@@ -12,11 +12,6 @@ jest.mock('@supabase/supabase-js', () => ({
   createClient: jest.fn(() => mockSupabaseClient),
 }));
 
-jest.mock('@clerk/clerk-expo', () => ({
-  ClerkProvider: jest.fn((publishableKey) => {}),
-  useSignUp: jest.fn(() => {}),
-}));
-
 describe('Sign up Form', () => {
   it('should test', () => {});
   //   it('renders the Sign up form', async () => {
