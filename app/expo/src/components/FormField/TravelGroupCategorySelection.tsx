@@ -27,7 +27,7 @@ export default function TravelGroupCategorySelection({
   );
   const [childCount, setChildCount] = useState(1);
   const [adultCount, setAdultCount] = useState(2);
-  const [groupCount, setGroupCount] = useState(2);
+  const [groupCount, setGroupCount] = useState(3);
 
   const incrementCount = (
     count: number,

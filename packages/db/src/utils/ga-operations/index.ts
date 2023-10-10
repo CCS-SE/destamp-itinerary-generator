@@ -24,10 +24,10 @@ export async function generateItinerary(
   let currentGeneration = population;
 
   while (counter < REPETITION_RATE) {
-    const selected = selection(currentGeneration); // select random two chromosomes as new parents
-    const nextGeneration = selectNextGeneration(places, tripInput, selected); // create a new generation by combining two parents children
+    const selected = selection(currentGeneration);
+    const nextGeneration = selectNextGeneration(tripInput, selected);
     await evaluateFitness(tripInput, nextGeneration);
-    nextGeneration.sort((a, b) => a.fitnessScore - b.fitnessScore); // the closer the score to 0 the fitter the chromosome
+    nextGeneration.sort((a, b) => a.fitnessScore - b.fitnessScore);
     bestSoFar.push(nextGeneration[0]!);
     currentGeneration = nextGeneration;
     counter += 1;

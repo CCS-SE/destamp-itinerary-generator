@@ -10,15 +10,13 @@ import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 type Place = NexusGenObjects['Place'];
 
-const POPULATION_SIZE = 10;
+const POPULATION_SIZE = 30;
 
 export function generatePopulation(input: CreateTripInput, places: Place[]) {
   const { budget, adultCount, childCount, preferredTime } = input;
 
   const budgetRate = getBudgetAllocation(input)!;
 
-  const attractionThreshold = budget * budgetRate.ATTRACTION;
-  const foodThreshold = budget * budgetRate.FOOD;
   const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
 
   const duration = tripDuration(
@@ -31,27 +29,21 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
   const totalDesiredHours = getTotalDesiredTravelHours(preferredTime);
   const totalTravelers = (adultCount || 0) + (childCount || 0);
 
-  const foodMaxDuration = 240 * duration;
   const durationThreshold = duration * totalDesiredHours * 60;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
-    let foodDuration = 0;
-    let foodBudget = 0;
-    let attractionBudget = 0;
-    let accommodationBuget = 0;
+    let totalCost = 0;
     let iteration = 0;
 
     const chromosome: Place[] = []; // list of destinations within budget and timeframe
     const randomIndexes: number[] = [];
 
     while (
-      totalDuration < durationThreshold &&
-      (accommodationBuget < accommodationThreshold ||
-        foodBudget < foodThreshold ||
-        attractionBudget < attractionThreshold) &&
+      (totalDuration < durationThreshold ||
+        totalCost < budget - accommodationThreshold) &&
       iteration < MAX_ITERATIONS
     ) {
       const randomIndex = Math.floor(Math.random() * (places.length - 1));
@@ -63,50 +55,17 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
         if (place?.type === PlaceType.RESTAURANT && input.isFoodIncluded) {
           const averagePrice = calculateAveragePrice(place.price);
           const foodCost = averagePrice * totalTravelers;
-
-          if (
-            place.visitDuration + foodDuration <= foodMaxDuration &&
-            parseFloat(place.price) + foodBudget < foodThreshold
-          ) {
-            foodBudget += foodCost;
-            foodDuration += place.visitDuration;
-            totalDuration += place.visitDuration;
-
-            randomIndexes.push(randomIndex);
-            chromosome.push(place);
-          }
+          totalCost += foodCost;
+          totalDuration += place.visitDuration;
+          randomIndexes.push(randomIndex);
+          chromosome.push(place);
         }
-
         if (place?.type === PlaceType.ATTRACTION) {
           const attractionCost = parseFloat(place.price) * totalTravelers;
-
-          if (
-            place.visitDuration + totalDuration <= durationThreshold &&
-            parseFloat(place.price) + attractionBudget < attractionThreshold
-          ) {
-            attractionBudget += attractionCost;
-            totalDuration += place.visitDuration;
-            randomIndexes.push(randomIndex);
-            chromosome.push(place);
-          }
-        }
-
-        if (
-          place?.type === PlaceType.ACCOMMODATION &&
-          input.isAccommodationIncluded
-        ) {
-          const suggestedPrice = Math.round(accommodationThreshold / duration);
-          const accommodationCost = parseFloat(place.price) * duration;
-
-          if (
-            suggestedPrice <= parseFloat(place.price) &&
-            parseFloat(place.price) + accommodationBuget <
-              accommodationThreshold
-          ) {
-            accommodationBuget += accommodationCost;
-            randomIndexes.push(randomIndex);
-            chromosome.push(place);
-          }
+          totalCost += attractionCost;
+          totalDuration += place.visitDuration;
+          randomIndexes.push(randomIndex);
+          chromosome.push(place);
         }
       }
       iteration++;

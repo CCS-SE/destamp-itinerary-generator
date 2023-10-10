@@ -28,6 +28,26 @@ export const fetchMapboxMatrix = async (
     const data = (await response.data) as MapboxMatrixResponse;
     return data;
   } catch (error) {
-    throw new Error(`Error fetching Mapbox Matrix data: ${error}`);
+    // console.log(error.response.data.message)
+
+    if (error.response.data.message === 'Too Many Requests') {
+      throw new Error('Too many requests. Please try again later.');
+    } else if (
+      error.response.data.message ===
+      'Too many coordinates; maximum number of coordinates is 25.'
+    ) {
+      throw new Error('Invalid input length. Too many coordinates');
+    } else if (
+      error.response.data.message ===
+      'Not enough input coordinates given; minimum number of coordinates is 2.'
+    ) {
+      throw new Error(
+        'Invalid input length. Not enough input coordinates given.',
+      );
+    }
+
+    throw new Error(
+      `Error fetching Mapbox Matrix data: ${error.response.data.message}`,
+    );
   }
 };
