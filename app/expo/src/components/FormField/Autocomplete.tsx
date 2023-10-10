@@ -18,7 +18,7 @@ export default function AutoComplete({
 }: AutoCompleteInputProps) {
   const inputWidth = Dimensions.get('window').width * 0.8;
 
-  const [_, setSelectedItem] = useState<ItemProps>();
+  const [, setSelectedItem] = useState<ItemProps>();
 
   const handleChange = (item: ItemProps) => {
     if (item) {
