@@ -20,7 +20,12 @@ import {
   GetTransactionsDocument,
   GetTravelerItineraryDocument,
 } from '~/graphql/generated';
-import { areDatesEqual, getDatesBetween, getPieChartData } from '~/utils/utils';
+import {
+  areDatesEqual,
+  confirmationAlert,
+  getDatesBetween,
+  getPieChartData,
+} from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
 export const GetTransactionsQuery = gql(
@@ -189,12 +194,16 @@ const ExpensePage = () => {
             />
           </View>
           <View className="-z-10 mx-1 h-[285]">
-            {data && (
+            {pieChartData.length == 0 ? (
+              <View className="mt-20 items-center justify-center">
+                <Text className="text-lg">No expense in the given date.</Text>
+              </View>
+            ) : (
               <SwipeListView
                 scrollEnabled={true}
                 data={
                   dateFilter === 'All'
-                    ? data.getTransaction
+                    ? data!.getTransaction
                     : dateFilteredExpenses
                 }
                 renderItem={({ item }) => (
@@ -205,7 +214,15 @@ const ExpensePage = () => {
                 )}
                 renderHiddenItem={(item) => (
                   <ExpenseDeleteButton
-                    onPress={() => handleDeleteExpense(item.item.id)}
+                    onPress={() =>
+                      confirmationAlert(
+                        'Delete expense',
+                        'Are you sure you want to delete this expense?',
+                        'Delete',
+                        'Cancel',
+                        () => handleDeleteExpense(item.item.id),
+                      )
+                    }
                     isDeleting={isDeleting}
                   />
                 )}
