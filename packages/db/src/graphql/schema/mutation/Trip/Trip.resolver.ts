@@ -6,7 +6,6 @@ import {
   getDaySuggestions,
 } from '../../../../utils/ga-operations/daySuggestion';
 import { multiplyRangeByPeople } from '../../../../utils/ga-operations/utils';
-import { tripDuration } from '../../../../utils/utils';
 import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
@@ -51,11 +50,6 @@ export const createTrip = async (
     const numberOfPeople =
       (tripInput.adultCount || 0) + (tripInput.childCount || 0);
 
-    const duration = tripDuration(
-      new Date(tripInput.startDate),
-      new Date(tripInput.endDate),
-    );
-
     const suggestedDestinations = await generateItinerary(tripInput, places);
 
     const bestSoFar = suggestedDestinations[0];
@@ -64,7 +58,7 @@ export const createTrip = async (
       ? getDaySuggestions(bestSoFar, tripInput)
       : [];
 
-    const dailyPlans = await getDailyPlans(suggestedPlans, tripInput);
+    const dailyPlans = await getDailyPlans(suggestedPlans, tripInput, places);
 
     return await ctx.prisma.trip.create({
       data: {
@@ -89,8 +83,7 @@ export const createTrip = async (
             url: '',
             dailyItineraries: {
               create: dailyPlans.map((dailyPlan, index) => ({
-                accommodationCost:
-                  dailyPlan.chrom.accommodationCost() * duration,
+                accommodationCost: dailyPlan.chrom.accommodationCost(),
                 foodCost: multiplyRangeByPeople(
                   dailyPlan.chrom.foodCostRange(),
                   numberOfPeople,

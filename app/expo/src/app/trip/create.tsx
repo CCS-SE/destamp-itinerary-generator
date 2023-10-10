@@ -9,11 +9,11 @@ import { Moment } from 'moment';
 
 import StepperButton from '~/components/Button/StepperButton';
 import AmountTextInput from '~/components/FormField/AmountTextInput';
+import AutoComplete from '~/components/FormField/Autocomplete';
 import BudgetCategorySelection from '~/components/FormField/BudgetCategorySelection';
 import DateRangePicker from '~/components/FormField/DateRangePicker';
 import GeocoderSearch from '~/components/FormField/MapboxGeocoder';
 import PreferedTimeSelection from '~/components/FormField/PreferedTimeSelection';
-import SearchableTextInput from '~/components/FormField/SearchableTextInput';
 import TravelGroupCategorySelection from '~/components/FormField/TravelGroupCategorySelection';
 import Stepper from '~/components/Stepper/Stepper';
 import {
@@ -21,7 +21,7 @@ import {
   GetDestinationsQueryDocument,
   TravelSize,
 } from '~/graphql/generated';
-import { confirmationAlert } from '~/utils/utils';
+import { confirmationAlert, getPreferredTime } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
 type Coordinate = [number, number];
@@ -71,7 +71,7 @@ const initialTripData: TripDataProps = {
   budget: '',
   adultCount: 2,
   childCount: 1,
-  groupCount: 2,
+  groupCount: 3,
 };
 
 const initialLocationDate: LocationProps = {
@@ -222,17 +222,15 @@ export default function CreateTripScreen() {
           endDate: endDateString,
           budget: tripData.budget,
           budgetInclusions: tripData.budgetInclusions,
-          preferredTime: preferredTimeValues.map(
-            ([start, end]) => `${start}:00-${end}:00`,
-          ),
-          title: title ? title : `${tripData.travelDestination} Trip`,
+          preferredTime: getPreferredTime(preferredTimeValues),
+          title: title ? title : `${tripData?.travelDestination} Trip`,
           locationName: selectedDepartureLocation.name,
           locationAddress: selectedDepartureLocation.place_name || '',
           locationLng: selectedDepartureLocation.center[0] || 0,
           locationLat: selectedDepartureLocation.center[1] || 0,
           destinationId: data
             ? data.destinations.find(
-                (a) => a.name === tripData.travelDestination,
+                (a) => a.name === tripData?.travelDestination,
               )!.id
             : '',
         },
@@ -281,11 +279,17 @@ export default function CreateTripScreen() {
     );
   };
 
+  const destinations = data
+    ? data.destinations.map((destination) => ({
+        id: destination.id.toString(),
+        title: destination.name,
+      }))
+    : [];
+
   const fields = [
-    <SearchableTextInput
+    <AutoComplete
       key={1}
-      placeholder="Search Destination"
-      data={data ? data.destinations : []}
+      data={destinations}
       onChange={(value) => handleTripDataChange('travelDestination', value)}
     />,
     <GeocoderSearch

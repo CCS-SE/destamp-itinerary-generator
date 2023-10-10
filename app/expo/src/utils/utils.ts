@@ -171,3 +171,7 @@ export const areDatesEqual = (date1: Date, date2: Date) => {
   // Compare the date portions
   return date1WithoutTime.getTime() === date2WithoutTime.getTime();
 };
+
+export const getPreferredTime = (preferredTimeValues: [number, number][]) => {
+  return preferredTimeValues.map(([start, end]) => `${start}:00-${end}:00`);
+};

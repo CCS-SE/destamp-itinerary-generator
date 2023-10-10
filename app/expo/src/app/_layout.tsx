@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
@@ -90,19 +91,21 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
-        <ClerkProvider
-          publishableKey={
-            Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY as string
-          }
-        >
-          <ApolloProvider client={client}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            </Stack>
-          </ApolloProvider>
-        </ClerkProvider>
-      </AuthProvider>
+      <AutocompleteDropdownContextProvider>
+        <AuthProvider>
+          <ClerkProvider
+            publishableKey={
+              Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY as string
+            }
+          >
+            <ApolloProvider client={client}>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack>
+            </ApolloProvider>
+          </ClerkProvider>
+        </AuthProvider>
+      </AutocompleteDropdownContextProvider>
     </ThemeProvider>
   );
 }

@@ -1,12 +1,11 @@
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { Chromosome } from './chromosome';
 import { crossover } from './crossover';
 import { Chromosome as Chrom } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-type Place = NexusGenObjects['Place'];
 
-const POPULATION_SIZE = 40;
+const POPULATION_SIZE = 30;
 
 export const selection = (population: Chrom[]) => {
   const selected: Chrom[] = [];
@@ -32,22 +31,17 @@ export const selection = (population: Chrom[]) => {
 };
 
 export const selectNextGeneration = (
-  genePool: Place[],
   tripInput: CreateTripInput,
   population: Chrom[],
 ) => {
   const nextGeneration: Chrom[] = [];
 
-  for (let i = 0; i < population.length - 1; i += 2) {
+  for (let i = 0; i < population.length; i += 2) {
     const chromosome1 = population[i]!.chrom;
     const chromosome2 = population[i + 1]!.chrom;
 
-    const { chrom1, chrom2 } = crossover(
-      genePool,
-      chromosome1,
-      chromosome2,
-      tripInput,
-    );
+    const { chrom1, chrom2 } = crossover(chromosome1, chromosome2, tripInput);
+
     nextGeneration.push({
       chrom: new Chromosome(chrom1),
       fitnessScore: 0,
