@@ -159,7 +159,7 @@ export default function AddSpendingForm({
       <Text className="-mt-2 ml-10 self-start font-poppins text-lg text-[#4C4C4C]">
         Category
       </Text>
-      <CategoryList onCategoryChange={onCategoryChange} />
+      <CategoryList category={category} onCategoryChange={onCategoryChange} />
       {datePicker && (
         <View>
           <View>
