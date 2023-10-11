@@ -177,10 +177,10 @@ type Mutation {
 }
 
 type OpeningHour {
-  closeTime: DateTime!
+  closeTime: DateTime
   day: Int!
   id: Int!
-  openTime: DateTime!
+  openTime: DateTime
 }
 
 type Place {

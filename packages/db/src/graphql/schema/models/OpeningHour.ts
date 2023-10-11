@@ -5,8 +5,8 @@ const OpeningHour = objectType({
   definition(t) {
     t.int('id');
     t.int('day');
-    t.field('openTime', { type: 'DateTime' });
-    t.field('closeTime', { type: 'DateTime' });
+    t.nullable.field('openTime', { type: 'DateTime' });
+    t.nullable.field('closeTime', { type: 'DateTime' });
   },
 });
 
