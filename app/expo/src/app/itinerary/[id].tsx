@@ -28,12 +28,21 @@ export const GetTravelersItineraryQuery = gql(
         travelDurations
         dayIndex
         destinations {
+          id
           name
           price
           type
           visitDuration
+          contactNumber
+          address
+          isClaimed
           images {
             url
+          }
+          openingHours {
+            day
+            openTime
+            closeTime
           }
         }
       }

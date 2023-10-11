@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Image } from 'expo-image';
 import { Model } from 'react-model';
@@ -20,11 +20,12 @@ interface SlideProps {
   loaded: number | undefined;
 }
 
-interface ItineraryCardProps {
+interface DestinationCardProps {
   time: string;
   title: string;
   price: string;
   imageList: string[];
+  onPress: () => void;
 }
 
 export default function DestinationCard({
@@ -32,7 +33,8 @@ export default function DestinationCard({
   title,
   price,
   imageList,
-}: ItineraryCardProps) {
+  onPress,
+}: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
 
@@ -43,7 +45,7 @@ export default function DestinationCard({
   }, []);
 
   return (
-    <View className="rounded-2x mt-5 w-[360] ">
+    <View className="rounded-2x mt-5 w-[360]">
       <View className="rounded-2x mx-8 h-[240] w-[310]">
         <Swiper
           loadMinimal
@@ -61,17 +63,19 @@ export default function DestinationCard({
             />
           ))}
         </Swiper>
-        <View className="-mt-4 rounded-bl-2xl  rounded-br-2xl bg-gray-100 p-1">
-          <Text className="mx-2.5 font-poppins text-base text-gray-500">
-            {title}
-          </Text>
-          <View className="mb-1 flex-row">
-            <Text className="mx-2.5 font-poppins text-base text-gray-400">
-              {time}
+        <TouchableOpacity onPress={onPress} activeOpacity={1}>
+          <View className="-mt-4 rounded-bl-2xl  rounded-br-2xl bg-gray-100 p-1">
+            <Text className="mx-2.5 font-poppins text-base text-gray-500">
+              {title}
             </Text>
-            <PriceTag isFree={isFree} price={price} />
+            <View className="mb-1 flex-row">
+              <Text className="mx-2.5 font-poppins text-base text-gray-400">
+                {time}
+              </Text>
+              <PriceTag isFree={isFree} price={price} />
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

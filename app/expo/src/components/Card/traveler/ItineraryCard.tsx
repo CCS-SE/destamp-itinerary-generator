@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import DashedLine from 'react-native-dashed-line';
+import { useRouter } from 'expo-router';
 
 import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
 import DepartingFromCard from '~/components/Card/traveler/DepartingFromCard';
@@ -23,9 +24,20 @@ interface Image {
   url: string;
 }
 
+interface OpeningHour {
+  openTime?: string;
+  closeTime?: string;
+  day: number;
+}
+
 interface Destination {
+  id: string;
   type: PlaceType;
   visitDuration: number;
+  contactNumber?: string | null;
+  address: string;
+  isClaimed: boolean;
+  openingHours: OpeningHour[];
   name: string;
   price: string;
   images: Image[];
@@ -57,6 +69,8 @@ export default function ItineraryCard({
   travelDurations,
   isTransportationIncluded,
 }: ItineraryCardProps) {
+  const { push } = useRouter();
+
   const hour = getStartTime(preferredTime, 0);
   const min = getStartTime(preferredTime, 1);
   const displayTime = (index: number) => {
@@ -78,6 +92,26 @@ export default function ItineraryCard({
         endMin,
       )}`;
     }
+  };
+
+  const handleViewDestinationDetail = (
+    id: string,
+    name: string,
+    address: string,
+    contactNumber: string,
+    openingHours: OpeningHour[],
+    images: Image[],
+  ) => {
+    push({
+      pathname: `/itinerary/destinationDetail/${id}`,
+      params: {
+        name: name,
+        address: address,
+        contactNumber: contactNumber,
+        openingHours: JSON.stringify(openingHours),
+        images: JSON.stringify(images),
+      },
+    });
   };
 
   return (
@@ -158,6 +192,16 @@ export default function ItineraryCard({
                       title={item.name}
                       price={item.price}
                       imageList={item.images.map((image) => image.url)}
+                      onPress={() =>
+                        handleViewDestinationDetail(
+                          item.id,
+                          item.name,
+                          item.address,
+                          item.contactNumber ?? '',
+                          item.openingHours,
+                          item.images,
+                        )
+                      }
                     />
                   </View>
                   {index === travelDurations.length - 1 ? (
