@@ -227,10 +227,10 @@ export interface NexusGenObjects {
   Mutation: {};
   OpeningHour: {
     // root type
-    closeTime: NexusGenScalars['DateTime']; // DateTime!
+    closeTime?: NexusGenScalars['DateTime'] | null; // DateTime
     day: number; // Int!
     id: number; // Int!
-    openTime: NexusGenScalars['DateTime']; // DateTime!
+    openTime?: NexusGenScalars['DateTime'] | null; // DateTime
   };
   Place: {
     // root type
@@ -404,10 +404,10 @@ export interface NexusGenFieldTypes {
   };
   OpeningHour: {
     // field return type
-    closeTime: NexusGenScalars['DateTime']; // DateTime!
+    closeTime: NexusGenScalars['DateTime'] | null; // DateTime
     day: number; // Int!
     id: number; // Int!
-    openTime: NexusGenScalars['DateTime']; // DateTime!
+    openTime: NexusGenScalars['DateTime'] | null; // DateTime
   };
   Place: {
     // field return type
