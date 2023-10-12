@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
-import { gql, useMutation } from '@apollo/client';
+import { router } from 'expo-router';
 import { useSignUp } from '@clerk/clerk-expo';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from 'config/initSupabase';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
-import {
-  CreateUserDocument,
-  MutationCreateUserArgs,
-  UserType,
-} from '~/graphql/generated';
+import { UserType } from '~/graphql/generated';
 import UnselectedBusinessOwner from '../../../assets/images/businessman-unselected.svg';
 import BusinessOwner from '../../../assets/images/businessman.svg';
 import UnselectedTraveler from '../../../assets/images/traveler-unselected.svg';
@@ -22,14 +17,6 @@ import { CustomTextInput } from '../FormField/CustomTextInput';
 import ShowPasswordIcon from '../Icon/ShowPasswordIcon';
 import BottomHalfModal from '../Modal/BottomHalfModal';
 import { SignUpSchema, signUpSchema } from './schema/signupSchema';
-
-export const CreateUser = gql(
-  `mutation CreateUser($data: CreateUserInput!) {
-    createUser(data: $data) {
-      id
-    }
-  }`,
-);
 
 interface ErrorJson {
   status: number;
@@ -63,8 +50,6 @@ export default function SignUpForm() {
     mode: 'onChange',
     resolver: zodResolver(signUpSchema),
   });
-
-  const [createProgram] = useMutation(CreateUserDocument);
 
   const onSubmit: SubmitHandler<SignUpSchema> = async (input) => {
     setIsSubmitting(true);
@@ -101,43 +86,20 @@ export default function SignUpForm() {
         code,
       });
 
-      const { error, data } = await supabase.auth.signUp({
-        email: input.email,
-        password: input.password,
-        options: {
-          data: {
-            user_metadata: {
-              role:
-                userType === UserType.Traveler ? 'traveler' : 'business_owner',
-            },
-          },
-        },
-      });
-
-      if (error) Alert.alert('Sign Up Error', error.message);
-      else if (data && data.user) {
-        const createUserInput: MutationCreateUserArgs = {
-          data: {
-            id: data.user!.id,
-            userType: userType,
-            email: input.email,
-            password: input.password,
-          },
-        };
-
-        await createProgram({
-          variables: {
-            data: createUserInput.data,
-          },
-          onError: (err) => {
-            Alert.alert('Error', err.message);
-          },
-        });
-      }
-
       await setActive({ session: completeSignUp.createdSessionId });
       setIsSubmitting(false);
       setPendingVerification(false);
+
+      if (completeSignUp && completeSignUp.createdSessionId) {
+        router.push({
+          pathname: '/(auth)/profile',
+          params: {
+            email: input.email,
+            password: input.password,
+            type: userType,
+          },
+        });
+      }
     } catch (err) {
       const error = err as ErrorJson;
       if (error.errors.length > 0) {
@@ -146,7 +108,6 @@ export default function SignUpForm() {
       }
     }
   };
-  111;
 
   return (
     <View className="items-center">
