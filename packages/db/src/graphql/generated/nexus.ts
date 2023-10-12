@@ -79,6 +79,11 @@ export interface NexusGenInputs {
     itineraryId: number; // Int!
     note?: string | null; // String
   };
+  CreateTravelerInput: {
+    // input type
+    firstName: string; // String!
+    lastName: string; // String!
+  };
   CreateTripInput: {
     // input type
     adultCount?: number | null; // Int
@@ -697,7 +702,8 @@ export interface NexusGenArgTypes {
     };
     createUser: {
       // args
-      data: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+      travelerInput: NexusGenInputs['CreateTravelerInput']; // CreateTravelerInput!
+      userInput: NexusGenInputs['CreateUserInput']; // CreateUserInput!
     };
     deleteExpense: {
       // args

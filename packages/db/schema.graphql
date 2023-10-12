@@ -45,6 +45,11 @@ input CreateExpenseInput {
   note: String
 }
 
+input CreateTravelerInput {
+  firstName: String!
+  lastName: String!
+}
+
 input CreateTripInput {
   adultCount: Int
   budget: Float!
@@ -171,7 +176,7 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 type Mutation {
   createExpense(data: CreateExpenseInput!): Expense!
   createTrip(data: CreateTripInput!, locationData: CreateDepartingLocationInput!): Trip!
-  createUser(data: CreateUserInput!): User!
+  createUser(travelerInput: CreateTravelerInput!, userInput: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
   deleteTrip(id: Int!): Trip!
   updateExpense(data: UpdateExpenseInput!, id: Int!): Expense!
