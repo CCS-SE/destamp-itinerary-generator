@@ -1,7 +1,7 @@
 import { useContext, type ReactNode } from 'react';
 import { FlatList } from 'react-native';
 import { router } from 'expo-router';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
@@ -23,15 +23,6 @@ interface TripMenuListProps {
   id: number;
   onModalClose: () => void;
 }
-
-export const DeleteTrip = gql(
-  `mutation DeleteTrip($deleteTripId: Int!) {
-    deleteTrip(id: $deleteTripId) {
-      id
-      title
-    }
-  }`,
-);
 
 function TripMenuList({ onModalClose, id }: TripMenuListProps) {
   const { session } = useContext(AuthContext);

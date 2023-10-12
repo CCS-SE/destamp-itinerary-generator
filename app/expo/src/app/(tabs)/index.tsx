@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import TripCard from '~/components/Card/traveler/TripCard';
@@ -9,26 +9,6 @@ import TripScreenSkeleton from '~/components/Skeleton/TripScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerTripsDocument } from '~/graphql/generated';
 import MyTripEmptyState from '~/screens/Traveler/MyTrip/EmptyState';
-
-export const GetTravelerTripsQuery = gql(
-  `query GetTravelerTrips($userId: String!) {
-    travelerTrips(userId: $userId) {
-      id
-      title
-      budget
-      destination {
-        name
-        image {
-          url
-        }
-      }
-      travelSize
-      startDate
-      endDate
-    }
-  }
-  `,
-);
 
 export default function MyTripScreen() {
   const { session } = useContext(AuthContext);
