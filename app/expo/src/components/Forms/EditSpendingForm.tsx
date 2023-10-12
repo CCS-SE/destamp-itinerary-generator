@@ -7,7 +7,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -16,52 +16,54 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import CategoryList from '~/components/List/CategoryList';
 import {
-  CreateExpenseDocument,
   ExpenseCategory,
   GetTransactionsDocument,
-  MutationCreateExpenseArgs,
+  UpdateExpenseDocument,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
 import { CustomTextInput } from '../FormField/CustomTextInput';
 import {
-  AddSpendingSchema,
-  addSpendingSchema,
-} from './schema/addSpendingSchema';
+  EditSpendingSchema,
+  editSpendingSchema,
+} from './schema/editSpendingSchema';
 
-interface AddSpendingFormProps {
+interface EditSpendingFormProps {
   closeModal: () => void;
   itineraryId: number;
+  id: number;
+  amount: string;
+  date: string;
+  note: string;
+  category: ExpenseCategory;
   minDate: Date;
   maxDate: Date;
 }
 
-export const createExpense = gql(
-  `mutation CreateExpense($data: CreateExpenseInput!) {
-    createExpense(data: $data) {
-      amount,
-      category,
-      date,
-      note,
-    }
-  }`,
-);
-
-export default function AddSpendingForm({
+export default function EditSpendingForm({
   closeModal,
   itineraryId,
+  id,
+  amount,
+  date,
+  category,
+  note,
   minDate,
   maxDate,
-}: AddSpendingFormProps) {
+}: EditSpendingFormProps) {
   const [datePicker, setDatePicker] = useState(false);
-  const [note, setNote] = useState('');
-  const [date, setDate] = useState(new Date(minDate));
-  const [category, setCategory] = useState<ExpenseCategory>(
-    ExpenseCategory.Accommodation,
-  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onCategoryChange = (newCategory: ExpenseCategory) => {
-    setCategory(newCategory);
+  const initialData = {
+    amount: amount,
+    category: category,
+    note: note || '',
+    date: new Date(date),
+  };
+
+  const [expenseData, setExpenseData] = useState(initialData);
+
+  const onCategoryChange = (category: ExpenseCategory) => {
+    setExpenseData({ ...expenseData, category: category });
   };
 
   const toggleDatePicker = () => {
@@ -76,7 +78,8 @@ export default function AddSpendingForm({
       const newDate = selectedDate;
       if (Platform.OS === 'android' && newDate) {
         toggleDatePicker();
-        setDate(newDate!);
+
+        setExpenseData({ ...expenseData, date: newDate });
       } else {
         toggleDatePicker();
       }
@@ -85,29 +88,33 @@ export default function AddSpendingForm({
     }
   };
 
-  const { handleSubmit, control } = useForm<AddSpendingSchema>({
+  const { handleSubmit, control } = useForm<EditSpendingSchema>({
     mode: 'onChange',
-    resolver: zodResolver(addSpendingSchema),
+    resolver: zodResolver(editSpendingSchema),
   });
 
-  const [createExpense] = useMutation(CreateExpenseDocument);
+  const [updateExpense] = useMutation(UpdateExpenseDocument);
 
-  const onSubmit: SubmitHandler<AddSpendingSchema> = async (data) => {
+  const onSubmit: SubmitHandler<EditSpendingSchema> = async (data) => {
     setIsSubmitting(true);
 
-    const createExpenseInput: MutationCreateExpenseArgs = {
-      data: {
-        amount: parseFloat(data.amount),
-        category: category,
-        itineraryId: itineraryId,
-        date: date,
-        note: note,
-      },
-    };
+    const hasChanged =
+      JSON.stringify(expenseData) !== JSON.stringify(initialData);
 
-    await createExpense({
+    if (!hasChanged) {
+      setIsSubmitting(false);
+      closeModal();
+    }
+
+    await updateExpense({
       variables: {
-        data: createExpenseInput.data,
+        updateExpenseId: id,
+        data: {
+          amount: parseFloat(data.amount),
+          category: expenseData.category,
+          date: new Date(expenseData.date),
+          note: expenseData.note,
+        },
       },
       refetchQueries: [
         {
@@ -122,7 +129,6 @@ export default function AddSpendingForm({
       },
     });
     closeModal();
-
     setTimeout(() => setIsSubmitting(false), 1000);
   };
 
@@ -130,12 +136,13 @@ export default function AddSpendingForm({
     <View className="items-center">
       <View className="mt-3">
         <Text className="font-poppins text-2xl text-[#4C4C4C]">
-          Add Spending
+          Edit Spending
         </Text>
       </View>
       <Controller
         control={control}
         name="amount"
+        defaultValue={amount}
         render={({
           field: { onChange, onBlur, value },
           fieldState: { error },
@@ -159,12 +166,15 @@ export default function AddSpendingForm({
       <Text className="-mt-2 ml-10 self-start font-poppins text-lg text-[#4C4C4C]">
         Category
       </Text>
-      <CategoryList category={category} onCategoryChange={onCategoryChange} />
+      <CategoryList
+        category={expenseData.category}
+        onCategoryChange={onCategoryChange}
+      />
       {datePicker && (
         <View>
           <View>
             <DateTimePicker
-              value={date}
+              value={expenseData.date}
               mode="date"
               onChange={onDateChange}
               minimumDate={new Date(minDate)}
@@ -176,8 +186,8 @@ export default function AddSpendingForm({
       <View className="p.5 mt-1 h-12 w-[330] rounded-xl border-2 border-[#F78E48]">
         <Pressable onPress={toggleDatePicker}>
           <TextInput
-            placeholder={date.toDateString()}
-            value={date.toDateString()}
+            placeholder={expenseData.date.toDateString()}
+            value={expenseData.date.toDateString()}
             editable={false}
             className="p-1.5 font-poppins text-base text-gray-600"
           />
@@ -188,16 +198,18 @@ export default function AddSpendingForm({
           placeholder="Note"
           maxLength={25}
           multiline
-          onChangeText={setNote}
-          value={note}
+          onChangeText={(value) =>
+            setExpenseData({ ...expenseData, note: value })
+          }
+          value={expenseData.note}
           className="p-1.5 font-poppins text-base text-gray-700"
         />
       </View>
       <GradientButton
-        title="Add"
+        title="Save"
         onPress={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
-        size={290}
+        size={280}
         className="mb-10"
       />
     </View>

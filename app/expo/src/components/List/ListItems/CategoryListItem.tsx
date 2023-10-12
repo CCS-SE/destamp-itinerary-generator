@@ -12,8 +12,8 @@ interface Category {
 
 interface CategoryListItemProps {
   item: Category;
-  onPress: (key: string) => void;
-  selectedCategory: Category | undefined;
+  onPress: (value: ExpenseCategory) => void;
+  selectedCategory: ExpenseCategory;
 }
 export default function CategoryListItem({
   item,
@@ -22,19 +22,19 @@ export default function CategoryListItem({
 }: CategoryListItemProps) {
   return (
     <TouchableOpacity
-      onPress={() => onPress(item.key)}
+      onPress={() => onPress(item.value)}
       className="mx-1 mt-1 h-20 w-20 items-center"
     >
       <View
         className={`items-center justify-center rounded-lg bg-[#efeeee] p-4 ${
-          item == selectedCategory ? 'border-2 border-[#F78E48]' : ''
+          item.value == selectedCategory ? 'border-2 border-[#F78E48]' : ''
         }`}
       >
         {item.icon}
       </View>
       <Text
         className={`text-xs text-gray-600  ${
-          item === selectedCategory ? 'text-[#F78E48]' : ''
+          item.value === selectedCategory ? 'text-[#F78E48]' : ''
         }`}
       >
         {item.title}

@@ -102,6 +102,13 @@ export interface NexusGenInputs {
     password: string; // String!
     userType: NexusGenEnums['UserType']; // UserType!
   };
+  UpdateExpenseInput: {
+    // input type
+    amount?: number | null; // Float
+    category?: NexusGenEnums['ExpenseCategory'] | null; // ExpenseCategory
+    date?: NexusGenScalars['DateTime'] | null; // DateTime
+    note?: string | null; // String
+  };
 }
 
 export interface NexusGenEnums {
@@ -401,6 +408,7 @@ export interface NexusGenFieldTypes {
     createUser: NexusGenRootTypes['User']; // User!
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
+    updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
   OpeningHour: {
     // field return type
@@ -591,6 +599,7 @@ export interface NexusGenFieldTypeNames {
     createUser: 'User';
     deleteExpense: 'Expense';
     deleteTrip: 'Trip';
+    updateExpense: 'Expense';
   };
   OpeningHour: {
     // field return type name
@@ -696,6 +705,11 @@ export interface NexusGenArgTypes {
     };
     deleteTrip: {
       // args
+      id: number; // Int!
+    };
+    updateExpense: {
+      // args
+      data: NexusGenInputs['UpdateExpenseInput']; // UpdateExpenseInput!
       id: number; // Int!
     };
   };

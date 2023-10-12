@@ -1,6 +1,6 @@
 import { inputObjectType } from 'nexus';
 
-const CreateExpenseInput = inputObjectType({
+export const CreateExpenseInput = inputObjectType({
   name: 'CreateExpenseInput',
   definition(t) {
     t.field('itineraryId', { type: 'Int' });
@@ -11,4 +11,12 @@ const CreateExpenseInput = inputObjectType({
   },
 });
 
-export default CreateExpenseInput;
+export const UpdateExpenseInput = inputObjectType({
+  name: 'UpdateExpenseInput',
+  definition(t) {
+    t.nullable.float('amount');
+    t.nullable.field('category', { type: 'ExpenseCategory' });
+    t.nullable.date('date');
+    t.nullable.string('note');
+  },
+});
