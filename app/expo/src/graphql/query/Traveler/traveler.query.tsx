@@ -7,7 +7,6 @@ export const GetTravelerInfo = gql(
         firstName
         lastName
       }
-    
       user(id: $userId) {
         email
       }
