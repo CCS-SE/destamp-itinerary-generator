@@ -231,6 +231,7 @@ type Query {
   traveler(userId: String!): Traveler!
   travelerTrips(userId: String!): [Trip!]!
   trip(id: Int!): Trip!
+  user(id: String!): User!
 }
 
 enum TravelSize {

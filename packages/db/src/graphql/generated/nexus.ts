@@ -459,6 +459,7 @@ export interface NexusGenFieldTypes {
     traveler: NexusGenRootTypes['Traveler']; // Traveler!
     travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
+    user: NexusGenRootTypes['User']; // User!
   };
   Traveler: {
     // field return type
@@ -650,6 +651,7 @@ export interface NexusGenFieldTypeNames {
     traveler: 'Traveler';
     travelerTrips: 'Trip';
     trip: 'Trip';
+    user: 'User';
   };
   Traveler: {
     // field return type name
@@ -743,6 +745,10 @@ export interface NexusGenArgTypes {
     trip: {
       // args
       id: number; // Int!
+    };
+    user: {
+      // args
+      id: string; // String!
     };
   };
 }
