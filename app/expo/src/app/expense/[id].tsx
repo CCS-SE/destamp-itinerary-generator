@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { PieChart } from 'react-native-svg-charts';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import ExpenseSwipeButton from '~/components/Button/ExpenseSwipeButton';
@@ -28,26 +28,6 @@ import {
   getPieChartData,
 } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
-
-export const GetTransactionsQuery = gql(
-  `query GetTransactions($itineraryId: Int!){
-    getTransaction(itineraryId: $itineraryId) {
-      id
-      amount
-      category
-      date
-      note
-    }
-  }`,
-);
-
-export const DeleteExpense = gql(
-  `mutation DeleteExpense($deleteExpenseId: Int!) {
-    deleteExpense(id: $deleteExpenseId) {
-      id
-    }
-  }`,
-);
 
 const ExpensePage = () => {
   const { id } = useLocalSearchParams();

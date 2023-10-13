@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import BusinessProfileCard from '~/components/Card/owner/BusinessCard';
 import SearchBar from '~/components/SearchBar/SearchBar';
 import { GetBusinessListDocument } from '~/graphql/generated';
-
-export const GetBusinessListQuery = gql(
-  `query GetBusinessList($placeId: String!) {
-  place(placeId: $placeId) {
-    name
-    address
-  }
-}`,
-);
 
 const BusinessListScreen = () => {
   const [businessIndex] = useState('1'); // Initial index
