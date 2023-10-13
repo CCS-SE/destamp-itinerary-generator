@@ -46,12 +46,12 @@ interface ErrorJson {
 
 export default function SignUpForm() {
   const { isLoaded, signUp, setActive } = useSignUp();
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hidePassword, setHidePassword] = useState(true);
   const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
+  const [verifying, setVerifying] = useState(false);
 
   const [userType, setUserType] = useState<UserType>(UserType.Traveler);
 
@@ -91,7 +91,7 @@ export default function SignUpForm() {
   };
 
   const onPressVerify: SubmitHandler<SignUpSchema> = async (input) => {
-    setPendingVerification(true);
+    setVerifying(true);
     if (!isLoaded) {
       return;
     }
@@ -114,8 +114,11 @@ export default function SignUpForm() {
         },
       });
 
-      if (error) Alert.alert('Sign Up Error', error.message);
-      else if (data && data.user) {
+      if (error) {
+        setVerifying(false);
+        Alert.alert('Sign Up Error', error.message);
+        return;
+      } else if (data && data.user) {
         const createUserInput: MutationCreateUserArgs = {
           data: {
             id: data.user!.id,
@@ -136,17 +139,17 @@ export default function SignUpForm() {
       }
 
       await setActive({ session: completeSignUp.createdSessionId });
-      setIsSubmitting(false);
       setPendingVerification(false);
     } catch (err) {
       const error = err as ErrorJson;
       if (error.errors.length > 0) {
-        Alert.alert('Error', error.errors[0]!.longMessage);
+        Alert.alert('Email verification error', error.errors[0]!.longMessage);
         console.log(JSON.stringify(err, null, 2));
       }
     }
+    setIsSubmitting(false);
+    setVerifying(false);
   };
-  111;
 
   return (
     <View className="items-center">
@@ -278,7 +281,7 @@ export default function SignUpForm() {
         <GradientButton
           onPress={handleSubmit(onPressVerify)}
           title="Verify Email"
-          isSubmitting={!pendingVerification}
+          isSubmitting={verifying}
         />
       </BottomHalfModal>
     </View>
