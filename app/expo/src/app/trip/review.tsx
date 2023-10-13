@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import ReviewCard from '~/components/Card/traveler/ReviewCard';
@@ -19,7 +19,7 @@ import { AuthContext } from '~/context/AuthProvider';
 import {
   CreateTripDocument,
   ExpenseCategory,
-  GetTravelerDocument,
+  GetTravelerInfoDocument,
   GetTravelerTripsDocument,
   MutationCreateTripArgs,
   TravelSize,
@@ -30,31 +30,6 @@ import Peso from '../../../assets/images/review-budget.svg';
 import Calendar from '../../../assets/images/review-calendar.svg';
 import Destination from '../../../assets/images/review-destination.svg';
 import TravelGroupSize from '../../../assets/images/review-travel-size.svg';
-
-export const CreateTrip = gql(
-  `mutation CreateTrip($data: CreateTripInput!, $locationData: CreateDepartingLocationInput!) {
-    createTrip(data: $data, locationData: $locationData) {
-      id
-      itinerary {
-        id
-        dailyItineraries {
-          id
-          destinations {
-            id
-          }
-        }
-      }
-    }
-  }`,
-);
-
-export const GetTravelerQuery = gql(
-  `query GetTraveler($userId: String!) {
-    traveler(userId: $userId) {
-      id
-    }
-  }`,
-);
 
 const isIncluded = (
   value: ExpenseCategory,
@@ -116,7 +91,7 @@ export default function ReviewInfoScreen() {
     });
   };
 
-  const { data } = useQuery(GetTravelerDocument, {
+  const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
       userId: session ? session.user.id : '',
     },

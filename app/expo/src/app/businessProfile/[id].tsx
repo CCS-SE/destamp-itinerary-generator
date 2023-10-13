@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import ContactInformation from '~/components/Card/owner/ContactInfoCard';
 import EstablishmentCategory from '~/components/Card/owner/EstablishmentCategoryCard';
@@ -11,55 +11,6 @@ import ProfileDescription from '~/components/Card/owner/ProfileDescriptionCard';
 import WorkingHours from '~/components/Card/owner/WorkingHoursCard';
 import { GetBusinessDetailsDocument } from '~/graphql/generated';
 
-export const GetBusinessDetailsQuery = gql(
-  `query GetBusinessDetails($placeId: String!){
-    place(placeId: $placeId) {
-      name
-      address
-      contactNumber
-      description
-      website
-      categories {
-        id
-        name
-      }
-      price
-      images {
-        url
-      }
-      openingHours {
-        closeTime
-        day
-        openTime
-  
-      }
-      amenities {
-        id
-        name
-      }
-      diningAtmospheres {
-        id
-        name
-      }
-      diningCuisines {
-        id
-        name
-      }
-      diningOfferings {
-        id
-        name
-      }
-      diningOptions {
-        id
-        name
-      }
-      visitDuration
-    }
-    
-      
-    }
-  `,
-);
 const BusinessProfileScreen = () => {
   const [businessIndex] = useState('1'); // Initial index
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
