@@ -4,7 +4,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { Moment } from 'moment';
 
 import StepperButton from '~/components/Button/StepperButton';
@@ -50,15 +50,6 @@ interface TripDataProps {
   childCount: number;
   groupCount: number;
 }
-
-export const GetDestinationsQuery = gql(
-  `query GetDestinationsQuery {
-    destinations {
-      id
-      name
-    }
-  }`,
-);
 
 const initialTripData: TripDataProps = {
   travelDestination: '',

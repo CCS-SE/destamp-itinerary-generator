@@ -6,7 +6,6 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from '@expo/vector-icons';
-import gql from 'graphql-tag';
 
 import {
   ExpenseCategory,
@@ -23,14 +22,6 @@ interface TransactionsListItemProps {
   note?: string | null;
   amount: number;
 }
-
-export const UpdateExpense = gql(
-  `mutation UpdateExpense($updateExpenseId: Int!, $data: UpdateExpenseInput!) {
-    updateExpense(id: $updateExpenseId, data: $data) {
-      id
-    }
-  }`,
-);
 
 const TransactionsListItem = ({
   itineraryId,
