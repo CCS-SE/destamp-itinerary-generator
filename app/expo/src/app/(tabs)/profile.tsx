@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client';
 
 import ProfileIcon from '~/components/Icon/ProfileIcon';
 import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
+import ProfileScreenSkeleton from '~/components/Skeleton/ProfileScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerInfoDocument } from '~/graphql/generated';
 import StampDisplayEmptyState from '~/screens/Traveler/Profile/StampDisplayEmptyState';
@@ -19,7 +20,7 @@ export default function ProfileScreen() {
   });
 
   if (loading && !data) {
-    return <Text>Loading...</Text>;
+    return <ProfileScreenSkeleton />;
   }
 
   const width = Dimensions.get('window').width * 0.88;
@@ -32,8 +33,8 @@ export default function ProfileScreen() {
           style={{ width: width }}
         >
           <ProfileIcon
-            firstName={data?.traveler.firstName!}
-            lastName={data?.traveler.lastName!}
+            firstName={data?.traveler.firstName}
+            lastName={data?.traveler.lastName}
           />
           <View className="mx-5">
             <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.traveler.firstName}`}</Text>
