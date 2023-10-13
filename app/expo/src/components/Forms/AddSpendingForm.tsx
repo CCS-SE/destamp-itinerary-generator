@@ -7,7 +7,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -34,17 +34,6 @@ interface AddSpendingFormProps {
   minDate: Date;
   maxDate: Date;
 }
-
-export const createExpense = gql(
-  `mutation CreateExpense($data: CreateExpenseInput!) {
-    createExpense(data: $data) {
-      amount,
-      category,
-      date,
-      note,
-    }
-  }`,
-);
 
 export default function AddSpendingForm({
   closeModal,

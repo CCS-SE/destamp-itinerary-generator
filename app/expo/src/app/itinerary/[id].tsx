@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FlatList, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
 import DayButton from '~/components/Button/DayButton';
 import ItineraryCard from '~/components/Card/traveler/ItineraryCard';
@@ -12,55 +12,6 @@ import { tripDuration } from '~/utils/dates';
 import Back from '../../../assets/images/back-icon.svg';
 import Expense from '../../../assets/images/expense-icon.svg';
 import Map from '../../../assets/images/map-icon.svg';
-
-export const GetTravelersItineraryQuery = gql(
-  `query GetTravelerItinerary($tripId: Int!) {
-    itinerary(tripId: $tripId) {
-      id
-      totalCost
-      dailyItineraries {
-        id
-        foodCost
-        attractionCost
-        transportationCost
-        accommodationCost
-        travelDistances
-        travelDurations
-        dayIndex
-        destinations {
-          id
-          name
-          price
-          type
-          visitDuration
-          contactNumber
-          address
-          isClaimed
-          images {
-            url
-          }
-          openingHours {
-            day
-            openTime
-            closeTime
-          }
-        }
-      }
-    }
-  
-    trip(id: $tripId) {
-      budget
-      startDate
-      endDate
-      preferredTime
-      isAccommodationIncluded
-      isTransportationIncluded
-      departingLocation {
-        name
-      }
-    }
-  }`,
-);
 
 export default function ItineraryScreen() {
   const { id } = useLocalSearchParams();

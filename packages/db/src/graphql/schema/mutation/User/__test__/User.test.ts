@@ -19,19 +19,33 @@ afterEach(() => {
 
 describe('createUser mutation', () => {
   it('should create a user with valid input', async () => {
-    const user = {
-      email: 'test@yahoo.com',
-      password: 'testing',
-      userType: UserType.TRAVELER,
-    };
-
     const userInput = {
       id: 'testing',
       email: 'test@yahoo.com',
       password: 'testing',
       userType: UserType.TRAVELER,
+    };
+
+    const travelerInput = {
+      firstName: 'Juan',
+      lastName: 'Dela Cruz',
+    };
+
+    const user = {
+      id: 'testing',
+      email: 'test@yahoo.com',
+      password: 'testing',
+      userType: UserType.TRAVELER,
       traveler: {
-        create: {},
+        connectOrCreate: {
+          create: {
+            firstName: 'Juan',
+            lastName: 'Dela Cruz',
+          },
+          where: {
+            userId: 'testing',
+          },
+        },
       },
     };
 
@@ -41,22 +55,20 @@ describe('createUser mutation', () => {
     bcrypt.hash = jest.fn().mockResolvedValue(expectedHashedPassword);
 
     mockContext.prisma.user.create.mockResolvedValue({
-      id: 'testing',
       ...user,
     });
 
     const expectedResult = {
-      id: 'testing',
       ...user,
     };
 
-    const result = await createUser(userInput, context);
+    const result = await createUser(userInput, travelerInput, context);
 
     expect(bcrypt.hash).toHaveBeenCalledWith(userInput.password, saltRounds);
 
     expect(mockContext.prisma.user.create).toBeCalledWith({
       data: {
-        ...userInput,
+        ...user,
         password: expectedHashedPassword,
       },
     });
