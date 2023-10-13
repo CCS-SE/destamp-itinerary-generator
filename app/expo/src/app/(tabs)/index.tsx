@@ -69,7 +69,7 @@ export default function MyTripScreen() {
             <TripCard
               id={item.id}
               imgSrc={item.destination!.image!.url}
-              destination={item.destination!.name}
+              destination={item!.title}
               startDate={item.startDate}
               endDate={item.endDate}
               budget={item.budget}
