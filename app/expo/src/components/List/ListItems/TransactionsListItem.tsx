@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useMutation } from '@apollo/client';
 import {
+  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -31,6 +32,8 @@ const TransactionsListItem = ({
   category,
   amount,
 }: TransactionsListItemProps) => {
+  const [expanded, setExpanded] = useState(false);
+
   const initial = {
     amount: amount.toString(),
   };
@@ -100,37 +103,60 @@ const TransactionsListItem = ({
   };
 
   return (
-    <View className="mt-1 flex-row items-center justify-between bg-[#ffffff] px-9 py-3">
-      <View className="flex-row items-center justify-center">
-        <View
-          className="h-8 w-8 items-center justify-center rounded-full"
-          style={{ backgroundColor: categoryIcon[category]?.color }}
-        >
-          {categoryIcon[category]?.icon}
+    <>
+      <View className="flex-row items-center justify-between bg-[#ffffff] px-9 py-3">
+        <View className="justify-center">
+          <View className="flex-row">
+            <View
+              className="h-8 w-8 items-center justify-center rounded-full"
+              style={{ backgroundColor: categoryIcon[category]?.color }}
+            >
+              {categoryIcon[category]?.icon}
+            </View>
+            <TouchableOpacity
+              className="flex-row"
+              onPress={() => setExpanded(!expanded)}
+            >
+              <Text className="ml-2.5 mt-1 font-poppins text-base text-gray-600">
+                {category.charAt(0) + category.slice(1).toLowerCase()}
+              </Text>
+              <View className="ml-2 mt-2">
+                {expanded ? (
+                  <AntDesign name="up" size={14} color="black" />
+                ) : (
+                  <AntDesign name="down" size={14} color="black" />
+                )}
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text className="ml-2.5 font-poppins text-base text-gray-600">
-          {category.charAt(0) + category.slice(1).toLowerCase()}
+        <View className="ml-10 mt-1">
+          {isEditting ? (
+            <TextInput
+              className="w-20 justify-center rounded-lg border border-gray-300 px-1 pb-1 text-right font-poppins text-lg text-gray-700"
+              onBlur={handleOnBlur}
+              onChangeText={(value) => setValue({ amount: value })}
+              value={value.amount}
+              inputMode="numeric"
+            ></TextInput>
+          ) : (
+            <Text
+              className="font-poppins text-lg text-gray-600"
+              onPress={handleEdittable}
+            >
+              -₱{amount}
+            </Text>
+          )}
+        </View>
+      </View>
+      {expanded ? (
+        <Text className="ml-20 text-xs text-gray-500 ">
+          {note == '' || !note ? 'No note provided.' : `note: ${note}`}
         </Text>
-      </View>
-      <View className="ml-10 mt-1">
-        {isEditting ? (
-          <TextInput
-            className="w-20 justify-center rounded-lg border border-gray-300 px-1 pb-1 text-right font-poppins text-lg text-gray-700"
-            onBlur={handleOnBlur}
-            onChangeText={(value) => setValue({ amount: value })}
-            value={value.amount}
-            inputMode="numeric"
-          ></TextInput>
-        ) : (
-          <Text
-            className="font-poppins text-lg text-gray-600"
-            onPress={handleEdittable}
-          >
-            -₱{amount}
-          </Text>
-        )}
-      </View>
-    </View>
+      ) : (
+        <View />
+      )}
+    </>
   );
 };
 
