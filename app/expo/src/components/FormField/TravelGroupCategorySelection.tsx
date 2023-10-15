@@ -103,7 +103,7 @@ export default function TravelGroupCategorySelection({
             incrementCount(groupCount, setGroupCount, onGroupCountChange)
           }
           onDecrement={() =>
-            decrementCount(groupCount, setGroupCount, onGroupCountChange, 2)
+            decrementCount(groupCount, setGroupCount, onGroupCountChange, 3)
           }
         />
       ) : selectedValue === TravelSize.Family ? (
