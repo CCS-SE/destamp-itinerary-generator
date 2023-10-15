@@ -47,7 +47,7 @@ describe('My Trip Screen', () => {
       name: /create a trip/i,
     });
 
-    expect(titleElement.props.children).toBe('No trips yet');
+    expect(titleElement.props.children).toBe('You have no trips yet');
     expect(subTitleElement.props.children).toBe(
       'Start planning your adventure!',
     );
