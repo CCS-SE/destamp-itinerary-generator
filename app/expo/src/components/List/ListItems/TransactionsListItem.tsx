@@ -150,11 +150,11 @@ const TransactionsListItem = ({
         </View>
       </View>
       {expanded ? (
-        <Text className="ml-20 text-xs text-gray-500 ">
+        <Text className="ml-20 mr-8 bg-[#ffffff] text-xs text-gray-500">
           {note == '' || !note ? 'No note provided.' : `note: ${note}`}
         </Text>
       ) : (
-        <View />
+        <></>
       )}
     </>
   );
