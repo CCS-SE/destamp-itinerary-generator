@@ -42,8 +42,10 @@ export default function TravelGroupCategorySelection({
     count: number,
     setCount: (count: number) => void,
     onChange: (count: number) => void,
+    minCount: number = 0,
+    familyCount: number = 0,
   ) => {
-    if (count > 0) {
+    if (count + familyCount > minCount) {
       setCount(count - 1);
       onChange(count - 1);
     }
@@ -101,7 +103,7 @@ export default function TravelGroupCategorySelection({
             incrementCount(groupCount, setGroupCount, onGroupCountChange)
           }
           onDecrement={() =>
-            decrementCount(groupCount, setGroupCount, onGroupCountChange)
+            decrementCount(groupCount, setGroupCount, onGroupCountChange, 2)
           }
         />
       ) : selectedValue === TravelSize.Family ? (
@@ -113,7 +115,13 @@ export default function TravelGroupCategorySelection({
               incrementCount(adultCount, setAdultCount, onAdultCountChange)
             }
             onDecrement={() =>
-              decrementCount(adultCount, setAdultCount, onAdultCountChange)
+              decrementCount(
+                adultCount,
+                setAdultCount,
+                onAdultCountChange,
+                2,
+                childCount,
+              )
             }
           />
           <Counter
@@ -123,7 +131,13 @@ export default function TravelGroupCategorySelection({
               incrementCount(childCount, setChildCount, onChildCountChange)
             }
             onDecrement={() =>
-              decrementCount(childCount, setChildCount, onChildCountChange)
+              decrementCount(
+                childCount,
+                setChildCount,
+                onChildCountChange,
+                2,
+                adultCount,
+              )
             }
           />
         </View>
