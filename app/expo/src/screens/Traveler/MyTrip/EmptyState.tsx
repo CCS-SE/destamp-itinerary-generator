@@ -15,16 +15,11 @@ export default function MyTripEmptyState() {
     router.push('/trip/create/');
   };
   const { session } = useContext(AuthContext);
-  const { data, error } = useQuery(GetTravelerInfoDocument, {
+  const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
       userId: session ? session.user.id : '',
     },
   });
-
-  if (error)
-    return (
-      <Text testID="my-trip-error">{`Error! ${error.message.toString()}`}</Text>
-    );
 
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">
