@@ -1,5 +1,10 @@
-import { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { ReactNode, useState } from 'react';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+import AddSpendingForm from '~/components/Forms/AddSpendingForm';
+import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import { ExpenseCategory, PlaceType } from '~/graphql/generated';
 
 interface DirectionCardProps {
   icon: ReactNode;
@@ -7,6 +12,9 @@ interface DirectionCardProps {
   distance: string;
   transportationPrice: string;
   isTransportationIncluded: boolean;
+  itineraryId: number;
+  date: Date;
+  categoryType: ExpenseCategory;
 }
 
 export default function DirectionCard({
@@ -15,9 +23,17 @@ export default function DirectionCard({
   distance,
   transportationPrice,
   isTransportationIncluded,
+  itineraryId,
+  date,
+  categoryType,
 }: DirectionCardProps) {
+  const [addExpenseModal, setAddExpenseModal] = useState(false);
+  const screenWidth = Dimensions.get('window').width;
   return (
-    <View className="mx-8 mt-5 h-[45] w-[310] flex-row items-center rounded-xl bg-gray-100">
+    <View
+      className="ml-8 mr-2 h-[45] flex-row items-center rounded-xl bg-gray-100 pr-3"
+      style={{ width: screenWidth / 1.3 }}
+    >
       <View className="mx-2">{icon}</View>
       <View className="flex-1 flex-row items-center justify-between">
         <Text className="mx-2 font-poppins text-base text-gray-400">
@@ -33,6 +49,25 @@ export default function DirectionCard({
           <></>
         )}
       </View>
+      <TouchableOpacity onPress={() => setAddExpenseModal(true)}>
+        {!transportationPrice ||
+          (transportationPrice == '' && (
+            <MaterialCommunityIcons name="cash-plus" size={24} color="gray" />
+          ))}
+      </TouchableOpacity>
+      <BottomHalfModal
+        isVisible={addExpenseModal}
+        onClose={() => setAddExpenseModal(false)}
+      >
+        <AddSpendingForm
+          itineraryId={itineraryId}
+          closeModal={() => setAddExpenseModal(false)}
+          minDate={date}
+          maxDate={date}
+          amount={transportationPrice}
+          categoryType={categoryType}
+        />
+      </BottomHalfModal>
     </View>
   );
 }

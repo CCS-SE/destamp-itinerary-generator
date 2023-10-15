@@ -32,8 +32,8 @@ export default function ItineraryScreen() {
     },
   });
 
-  const generateDayTabs = (startDate: Date, endDate: Date) => {
-    const dateArray = Array.from(
+  const dateArray = (startDate: Date, endDate: Date) => {
+    return Array.from(
       { length: tripDuration(startDate, endDate) },
       (_, index) => {
         const currentDate = new Date(startDate);
@@ -41,8 +41,12 @@ export default function ItineraryScreen() {
         return currentDate;
       },
     );
+  };
 
-    return dateArray.map((date, index) => (
+  const generateDayTabs = (startDate: Date, endDate: Date) => {
+    const dates = dateArray(startDate, endDate);
+
+    return dates.map((date, index) => (
       <DayButton
         key={`day ${index + 1}`}
         date={date}
@@ -107,6 +111,13 @@ export default function ItineraryScreen() {
                 )}
                 renderItem={({ item }) => (
                   <ItineraryCard
+                    date={
+                      dateArray(
+                        new Date(data.trip.startDate),
+                        new Date(data.trip.endDate),
+                      )[item.dayIndex]!
+                    }
+                    itineraryId={data.itinerary.id}
                     key={item.dayIndex}
                     attractionCost={item.attractionCost}
                     foodCost={item.foodCost}
