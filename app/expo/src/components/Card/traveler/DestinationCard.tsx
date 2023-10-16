@@ -7,6 +7,7 @@ import { Model } from 'react-model';
 
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import { PlaceType } from '~/graphql/generated';
 
 interface SlideStateProps {
   imgList: string[];
