@@ -1,5 +1,3 @@
-import { PlaceType } from '@prisma/client';
-
 import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
 import { tripDuration } from '../utils';
 import { getBudgetAllocation } from './budgetAllocation';
@@ -10,65 +8,95 @@ import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 type Place = NexusGenObjects['Place'];
 
-const POPULATION_SIZE = 30;
+const POPULATION_SIZE = 10;
 
-export function generatePopulation(input: CreateTripInput, places: Place[]) {
+export function generatePopulation(
+  input: CreateTripInput,
+  restaurants: Place[],
+  attractions: Place[],
+) {
   const { budget, adultCount, childCount, preferredTime } = input;
 
-  const budgetRate = getBudgetAllocation(input)!;
+  const rate = getBudgetAllocation(input)!;
 
-  const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
+  const foodCostThreshold = budget * rate.FOOD;
+  const attractionCostThreshold = budget * rate.ATTRACTION;
 
   const duration = tripDuration(
     new Date(input.startDate),
     new Date(input.endDate),
   );
 
-  const MAX_ITERATIONS = 25; // max number of iterations
+  const MAX_ITERATIONS = 24; // max number of iterations
 
   const totalDesiredHours = getTotalDesiredTravelHours(preferredTime);
   const totalTravelers = (adultCount || 0) + (childCount || 0);
 
-  const durationThreshold = duration * totalDesiredHours * 60;
+  const estimatedTranspoDuration = input.isTransportationIncluded
+    ? duration * (totalDesiredHours * rate.TRANSPORT)
+    : 0; // assuming 30% of the time will go to transpo
+  const durationThreshold =
+    duration * totalDesiredHours - estimatedTranspoDuration;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
-    let totalCost = 0;
-    let iteration = 0;
+    let totalFoodCost = 0;
+    let totalAttractionCost = 0;
 
     const chromosome: Place[] = []; // list of destinations within budget and timeframe
-    const randomIndexes: number[] = [];
+
+    const restaurantIndexes: number[] = [];
+    const attractionIndexes: number[] = [];
 
     while (
-      (totalDuration < durationThreshold ||
-        totalCost < budget - accommodationThreshold) &&
-      iteration < MAX_ITERATIONS
+      totalDuration < durationThreshold &&
+      (totalFoodCost < foodCostThreshold ||
+        totalAttractionCost < attractionCostThreshold) &&
+      chromosome.length < MAX_ITERATIONS
     ) {
-      const randomIndex = Math.floor(Math.random() * (places.length - 1));
+      const restaurantIndex = Math.floor(
+        Math.random() * (restaurants.length - 1),
+      );
+      const attractionIndex = Math.floor(
+        Math.random() * (attractions.length - 1),
+      );
 
-      if (!randomIndexes.includes(randomIndex)) {
-        // make sure no duplicate
-        const place = places[randomIndex];
+      if (
+        input.isFoodIncluded &&
+        !restaurantIndexes.includes(restaurantIndex)
+      ) {
+        const restaurant = restaurants[restaurantIndex]!;
 
-        if (place?.type === PlaceType.RESTAURANT && input.isFoodIncluded) {
-          const averagePrice = calculateAveragePrice(place.price);
-          const foodCost = averagePrice * totalTravelers;
-          totalCost += foodCost;
-          totalDuration += place.visitDuration;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
-        }
-        if (place?.type === PlaceType.ATTRACTION) {
-          const attractionCost = parseFloat(place.price) * totalTravelers;
-          totalCost += attractionCost;
-          totalDuration += place.visitDuration;
-          randomIndexes.push(randomIndex);
-          chromosome.push(place);
-        }
+        const averagePrice = calculateAveragePrice(restaurant.price);
+        const foodCost = averagePrice * totalTravelers;
+        const placeDuration = restaurant.visitDuration / 60;
+
+        totalFoodCost += foodCost;
+        totalDuration += placeDuration;
+        restaurantIndexes.push(restaurantIndex);
+        chromosome.push(restaurant);
       }
-      iteration++;
+
+      if (!attractionIndexes.includes(attractionIndex)) {
+        const attraction = attractions[attractionIndex]!;
+        const attractionCost = parseFloat(attraction.price) * totalTravelers;
+        const placeDuration = attraction.visitDuration / 60;
+
+        totalAttractionCost += attractionCost;
+        totalDuration += placeDuration;
+        attractionIndexes.push(attractionIndex);
+        chromosome.push(attraction);
+      }
+
+      if (
+        totalDuration > durationThreshold &&
+        (totalFoodCost > foodCostThreshold ||
+          totalAttractionCost > attractionCostThreshold)
+      ) {
+        break;
+      }
     }
 
     newPopulation.push({
@@ -82,6 +110,5 @@ export function generatePopulation(input: CreateTripInput, places: Place[]) {
       travelDurations: [],
     });
   }
-
   return newPopulation;
 }
