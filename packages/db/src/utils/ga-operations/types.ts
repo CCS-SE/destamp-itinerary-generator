@@ -23,6 +23,6 @@ export interface Chromosome {
   totalDuration: number; // total duration for the whole trip (travel duration + places duration)
   travelExpenses: number; // transport expenses for the whole trip
   travelDuration: number; // total travel duration (in meter)
-  travelDistances: number[]; // travel distance between destinations (in meter)
+  travelDistances: number[]; // travel distances between destinations (in meter)
   travelDurations: number[]; // travel durations between destinations (in second)
 }
