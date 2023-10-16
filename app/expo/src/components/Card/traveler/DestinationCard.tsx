@@ -85,12 +85,15 @@ export default function DestinationCard({
             onPress={onPress}
             activeOpacity={1}
           >
-            <Text className="ml-2.5 font-poppins text-base text-gray-500">
+            <Text
+              className="ml-2.5 font-poppins text-base text-gray-500"
+              style={{ width: screenWidth / 1.6 }}
+            >
               {title}
             </Text>
             <View className="mb-1 flex-row">
               <Text
-                className={`+ ml-2 font-poppins text-base text-gray-400 ${
+                className={`+ ml-2 font-poppins text-sm text-gray-400 ${
                   time ? 'mr-1' : ''
                 }  `}
               >
@@ -99,20 +102,21 @@ export default function DestinationCard({
               <PriceTag isFree={isFree} price={price} />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            className="justify-end"
-            onPress={() => setAddExpenseModal(true)}
-          >
-            <View className="mr-3 justify-end">
-              {!isFree && (
+
+          {!isFree && (
+            <TouchableOpacity
+              className="justify-end"
+              onPress={() => setAddExpenseModal(true)}
+            >
+              <View className="mr-3 justify-end">
                 <MaterialCommunityIcons
                   name="cash-plus"
                   size={24}
                   color="gray"
                 />
-              )}
-            </View>
-          </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <BottomHalfModal
@@ -177,7 +181,7 @@ const PriceTag = ({ price, isFree }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
       <Text
-        className={`mx-2.5 font-poppins text-base ${
+        className={`px-1 font-poppins text-sm ${
           isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
         } `}
       >

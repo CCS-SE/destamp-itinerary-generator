@@ -49,12 +49,11 @@ export default function DirectionCard({
           <></>
         )}
       </View>
-      <TouchableOpacity onPress={() => setAddExpenseModal(true)}>
-        {!transportationPrice ||
-          (transportationPrice == '' && (
-            <MaterialCommunityIcons name="cash-plus" size={24} color="gray" />
-          ))}
-      </TouchableOpacity>
+      {isTransportationIncluded && (
+        <TouchableOpacity onPress={() => setAddExpenseModal(true)}>
+          <MaterialCommunityIcons name="cash-plus" size={24} color="gray" />
+        </TouchableOpacity>
+      )}
       <BottomHalfModal
         isVisible={addExpenseModal}
         onClose={() => setAddExpenseModal(false)}
