@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
-import { ExpenseCategory, PlaceType } from '~/graphql/generated';
+import { ExpenseCategory } from '~/graphql/generated';
 
 interface DirectionCardProps {
   icon: ReactNode;
