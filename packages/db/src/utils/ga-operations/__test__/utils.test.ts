@@ -1,3 +1,4 @@
+import { NexusGenInputs } from '../../../graphql/generated/nexus';
 import {
   calculateAveragePrice,
   calculateCostScore,
@@ -17,6 +18,8 @@ import {
 } from '../utils';
 import { places } from './mock/mock';
 
+type CreateTripInput = NexusGenInputs['CreateTripInput'];
+
 describe('multiplyRangeByPeople', () => {
   it('should get get a total range if multiplied by number of travelers', () => {
     const total = multiplyRangeByPeople('366-650', 3);
@@ -35,9 +38,24 @@ describe('calculateAveragePrice', () => {
 
 describe('calculateCostScore', () => {
   it('should get the cost score', () => {
-    const costScore = calculateCostScore(2_500, 0, 750, 450, 2, 2, 345);
+    const tripInput: CreateTripInput = {
+      budget: 2_500,
+      endDate: new Date('2023-08-12'),
+      isAccommodationIncluded: false,
+      isFoodIncluded: true,
+      isTransportationIncluded: true,
+      startDate: new Date('2023-08-10'),
+      title: 'Iloilo City Trip',
+      preferredTime: ['10:00-13:00', '14:00-16:00'],
+      adultCount: 2,
+      childCount: 0,
+      destinationId: 1,
+      travelerId: 1,
+      travelSize: 'COUPLE',
+    };
+    const costScore = calculateCostScore(tripInput, 0, 750, 450, 2, 2, 345);
 
-    expect(costScore).toBe(0.0245);
+    expect(costScore).toBe(0.1445);
   });
 });
 
@@ -51,12 +69,28 @@ describe('calculateDurationScore', () => {
 
 describe('calculateFitnessScore', () => {
   it('should get the fitness score', () => {
-    const costScore = calculateCostScore(2_500, 0, 750, 450, 2, 2, 345);
+    const tripInput: CreateTripInput = {
+      budget: 2_500,
+      endDate: new Date('2023-08-12'),
+      isAccommodationIncluded: false,
+      isFoodIncluded: true,
+      isTransportationIncluded: true,
+      startDate: new Date('2023-08-10'),
+      title: 'Iloilo City Trip',
+      preferredTime: ['10:00-13:00', '14:00-16:00'],
+      adultCount: 2,
+      childCount: 0,
+      destinationId: 1,
+      travelerId: 1,
+      travelSize: 'COUPLE',
+    };
+
+    const costScore = calculateCostScore(tripInput, 0, 750, 450, 2, 2, 345);
     const durationScore = calculateDurationScore(480, 2, 12_600, 9);
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(0.1532684496896314);
+    expect(fitnessScore).toBe(0.48753138483289865);
   });
 });
 
@@ -67,6 +101,11 @@ describe('getCoordinates', () => {
     expect(coordinates).toStrictEqual([
       [places[0]?.longitude, places[0]?.latitude],
       [places[1]?.longitude, places[1]?.latitude],
+      [places[2]?.longitude, places[2]?.latitude],
+      [places[3]?.longitude, places[3]?.latitude],
+      [places[4]?.longitude, places[4]?.latitude],
+      [places[5]?.longitude, places[5]?.latitude],
+      [places[6]?.longitude, places[6]?.latitude],
     ]);
   });
 });
@@ -76,7 +115,9 @@ describe('getCoordinatesParam', () => {
     const coordinates = getCoordinates(places);
     const coordsParams = getCoordinatesParam(coordinates);
 
-    expect(coordsParams).toBe('122.5706695,10.711599;122.5538653,10.7026051');
+    expect(coordsParams).toBe(
+      '122.5706695,10.711599;122.5538653,10.7026051;122.5703695,10.6921669;122.539675,10.7183491;122.5478876,10.7170505;122.568212,10.7014032;122.5508008,10.7025543',
+    );
   });
 });
 
