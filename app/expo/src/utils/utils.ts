@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 
-import { ExpenseCategory } from '~/graphql/generated';
+import { ExpenseCategory, TravelSize } from '~/graphql/generated';
 
 export function amountFormatter(amount: number) {
   return new Intl.NumberFormat().format(Math.floor(amount));
@@ -112,6 +112,30 @@ export const calculateTravelExpense = (distance: number) => {
   return Math.round(
     flagDown + travelDistanceInKilometers * additionalCostPerKm,
   );
+};
+
+export const getAdultCount = (
+  size: TravelSize,
+  adultCount: number,
+  groupCount: number,
+) => {
+  if (size === TravelSize.Solo) {
+    return 1;
+  } else if (size === TravelSize.Couple) {
+    return 2;
+  } else if (size === TravelSize.Group) {
+    return groupCount;
+  } else {
+    return adultCount;
+  }
+};
+
+export const getChildCount = (size: TravelSize, childCount: number) => {
+  if (size === TravelSize.Family) {
+    return childCount;
+  } else {
+    return 0;
+  }
 };
 
 interface CategoryColor {
