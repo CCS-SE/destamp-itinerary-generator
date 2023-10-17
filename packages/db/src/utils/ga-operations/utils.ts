@@ -1,5 +1,3 @@
-import { PlaceType } from '@prisma/client';
-
 import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
 import { getBudgetAllocation } from './budgetAllocation';
 
