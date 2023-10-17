@@ -20,6 +20,7 @@ import {
   ExpenseCategory,
   GetTransactionsDocument,
   MutationCreateExpenseArgs,
+  PlaceType,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
 import { CustomTextInput } from '../FormField/CustomTextInput';
@@ -33,6 +34,9 @@ interface AddSpendingFormProps {
   itineraryId: number;
   minDate: Date;
   maxDate: Date;
+  noteString?: string;
+  amount?: string;
+  categoryType?: PlaceType | ExpenseCategory;
 }
 
 export default function AddSpendingForm({
@@ -40,12 +44,26 @@ export default function AddSpendingForm({
   itineraryId,
   minDate,
   maxDate,
+  noteString,
+  amount,
+  categoryType,
 }: AddSpendingFormProps) {
+  const defaultCategory = (): ExpenseCategory => {
+    if (categoryType === PlaceType.Accommodation) {
+      return ExpenseCategory.Accommodation;
+    } else if (categoryType === PlaceType.Attraction) {
+      return ExpenseCategory.Sightseeing;
+    } else if (categoryType === PlaceType.Restaurant) {
+      return ExpenseCategory.Food;
+    } else if (categoryType === ExpenseCategory.Transportation) {
+      return ExpenseCategory.Transportation;
+    } else return ExpenseCategory.Accommodation;
+  };
   const [datePicker, setDatePicker] = useState(false);
-  const [note, setNote] = useState('');
+  const [note, setNote] = useState(noteString ? noteString : '');
   const [date, setDate] = useState(new Date(minDate));
   const [category, setCategory] = useState<ExpenseCategory>(
-    ExpenseCategory.Accommodation,
+    categoryType ? defaultCategory : ExpenseCategory.Accommodation,
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -125,16 +143,14 @@ export default function AddSpendingForm({
       <Controller
         control={control}
         name="amount"
-        render={({
-          field: { onChange, onBlur, value },
-          fieldState: { error },
-        }) => {
+        defaultValue={amount ? amount : ''}
+        render={({ field: { onChange, onBlur }, fieldState: { error } }) => {
           return (
             <View>
               <CustomTextInput
                 testID="amount-input"
                 placeholder="Amount"
-                value={value}
+                defaultValue={amount ? amount : ''}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 keyboardType="numeric"

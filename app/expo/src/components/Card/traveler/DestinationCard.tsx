@@ -1,8 +1,13 @@
 import { useCallback, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { Image } from 'expo-image';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Model } from 'react-model';
+
+import AddSpendingForm from '~/components/Forms/AddSpendingForm';
+import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import { PlaceType } from '~/graphql/generated';
 
 interface SlideStateProps {
   imgList: string[];
@@ -21,22 +26,29 @@ interface SlideProps {
 }
 
 interface DestinationCardProps {
+  itineraryId: number;
   time: string;
   title: string;
   price: string;
   imageList: string[];
+  date: Date;
+  categoryType: PlaceType;
   onPress: () => void;
 }
 
 export default function DestinationCard({
+  itineraryId,
   time,
   title,
   price,
   imageList,
+  date,
   onPress,
+  categoryType,
 }: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
+  const [addExpenseModal, setAddExpenseModal] = useState(false);
 
   const isFree = price === '0';
 
@@ -44,9 +56,13 @@ export default function DestinationCard({
     actions.loaded(i);
   }, []);
 
+  const screenWidth = Dimensions.get('window').width;
   return (
-    <View className="rounded-2x mt-5 w-[360]">
-      <View className="rounded-2x mx-8 h-[240] w-[310]">
+    <View className="rounded-2x mt-5 w-[360] flex-row ">
+      <View
+        className="rounded-2x ml-8 mr-2 h-[200] pr-3"
+        style={{ width: screenWidth / 1.25 }}
+      >
         <Swiper
           loadMinimal
           loadMinimalSize={2}
@@ -63,20 +79,60 @@ export default function DestinationCard({
             />
           ))}
         </Swiper>
-        <TouchableOpacity onPress={onPress} activeOpacity={1}>
-          <View className="-mt-4 rounded-bl-2xl  rounded-br-2xl bg-gray-100 p-1">
-            <Text className="mx-2.5 font-poppins text-base text-gray-500">
+        <View className="-mt-4 flex-row justify-between rounded-bl-2xl rounded-br-2xl bg-gray-100 py-1 ">
+          <TouchableOpacity
+            className="ml-1"
+            onPress={onPress}
+            activeOpacity={1}
+          >
+            <Text
+              className="ml-2.5 font-poppins text-base text-gray-500"
+              style={{ width: screenWidth / 1.6 }}
+            >
               {title}
             </Text>
             <View className="mb-1 flex-row">
-              <Text className="mx-2.5 font-poppins text-base text-gray-400">
+              <Text
+                className={`+ ml-2 font-poppins text-sm text-gray-400 ${
+                  time ? 'mr-1' : ''
+                }  `}
+              >
                 {time}
               </Text>
               <PriceTag isFree={isFree} price={price} />
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+
+          {!isFree && (
+            <TouchableOpacity
+              className="justify-end"
+              onPress={() => setAddExpenseModal(true)}
+            >
+              <View className="mr-3 justify-end">
+                <MaterialCommunityIcons
+                  name="cash-plus"
+                  size={24}
+                  color="gray"
+                />
+              </View>
+            </TouchableOpacity>
+          )}
+        </View>
       </View>
+      <BottomHalfModal
+        isVisible={addExpenseModal}
+        onClose={() => setAddExpenseModal(false)}
+      >
+        <AddSpendingForm
+          itineraryId={itineraryId}
+          closeModal={() => setAddExpenseModal(false)}
+          minDate={date}
+          maxDate={date}
+          noteString={title}
+          amount={price}
+          categoryType={categoryType}
+        />
+      </BottomHalfModal>
     </View>
   );
 }
@@ -125,7 +181,7 @@ const PriceTag = ({ price, isFree }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
       <Text
-        className={`mx-2.5 font-poppins text-base ${
+        className={`px-1 font-poppins text-sm ${
           isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
         } `}
       >

@@ -172,8 +172,20 @@ const ExpensePage = () => {
                 ? itinerary.data.trip.budget.toFixed(2)
                 : 0
             }`}
-            backgroundColor="#C6F3C7"
-            textColor="#13B510"
+            backgroundColor={
+              itinerary.data &&
+              totalSpending &&
+              itinerary.data.trip.budget - totalSpending < 0
+                ? '#FF0000' // Red
+                : '#C6F3C7'
+            }
+            textColor={
+              itinerary.data &&
+              totalSpending &&
+              itinerary.data.trip.budget - totalSpending < 0
+                ? '#FFFFFF' // White
+                : '#13B510'
+            }
           />
         </View>
       </View>

@@ -1,4 +1,4 @@
-import { Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 
 import { amountFormatter } from '~/utils/utils';
 import Accommodation from '../../../../assets/images/accommodation.svg';
@@ -28,9 +28,14 @@ export default function DayExpenseCard({
   const formatCurrency = (amount: number): string =>
     `₱${amountFormatter(amount)}`;
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View className="mt-5 h-[75] w-[360] rounded-2xl bg-pink-100 p-2">
-      <View className="flex-row">
+    <View
+      className="mt-5 h-[75] rounded-2xl bg-pink-100 p-2"
+      style={{ width: screenWidth / 1.13 }}
+    >
+      <View className="flex-row ">
         <Text className="m-1 font-poppins text-base text-gray-500">
           Day Expenses
         </Text>
