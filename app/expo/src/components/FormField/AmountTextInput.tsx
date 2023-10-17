@@ -1,23 +1,74 @@
 import { useState } from 'react';
-import { Dimensions, TextInput, TextInputProps, View } from 'react-native';
+import {
+  Dimensions,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
+} from 'react-native';
 
+import { ExpenseCategory } from '~/graphql/generated';
 import Peso from '../../../assets/images/peso-sign.svg';
 
 interface AmountTextInputProps extends TextInputProps {
+  budgetInlusions: ExpenseCategory[];
+  duration: number;
+  totalTraveler: number;
   onChangeText: (value: string) => void;
+  onBudgetError: (value: string) => void;
 }
 
 export default function AmountTextInput({
+  budgetInlusions,
+  duration,
+  totalTraveler,
   onChangeText,
+  onBudgetError,
   ...textInputProps
 }: AmountTextInputProps) {
   const [amount, setAmount] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+  const [minBugdget, setMinBudget] = useState(0);
 
   const inputWidth = Dimensions.get('window').width * 0.82;
 
-  const handleAmountChange = (amount: string) => {
-    setAmount(amount);
-    onChangeText(amount);
+  const handleAmountChange = (value: string) => {
+    setAmount(value);
+    onChangeText(value);
+
+    let costCutoff = 200;
+    const MIN_HOTEL_PRICE = 385;
+    let accommodationCutoff = 0;
+
+    if (duration && totalTraveler && !isNaN(parseFloat(value))) {
+      const parsedValue = parseFloat(value.trim());
+      const input = parsedValue / totalTraveler;
+
+      if (budgetInlusions.includes(ExpenseCategory.Accommodation)) {
+        accommodationCutoff = MIN_HOTEL_PRICE / totalTraveler;
+      }
+
+      if (
+        !budgetInlusions.includes(ExpenseCategory.Food) &&
+        !budgetInlusions.includes(ExpenseCategory.Transportation) &&
+        !budgetInlusions.includes(ExpenseCategory.Accommodation)
+      ) {
+        costCutoff = 0;
+      }
+
+      const minBudget = Math.ceil(costCutoff + accommodationCutoff);
+
+      setMinBudget(minBudget);
+
+      if (input < minBudget) {
+        setErrorMsg('Try increasing your budget or scale down duration.');
+        onBudgetError('Try increasing your budget or scale down duration.');
+      } else {
+        setErrorMsg('');
+        onBudgetError('');
+        setMinBudget(0);
+      }
+    }
   };
 
   return (
@@ -39,8 +90,25 @@ export default function AmountTextInput({
           value={amount}
           onChangeText={handleAmountChange}
           inputMode="numeric"
+          maxLength={5}
         />
       </View>
+      {!!errorMsg && !!amount && (
+        <>
+          <Text
+            testID={textInputProps.testID + '-error'}
+            className="mt-2 font-poppins text-xs text-red-500"
+          >
+            {errorMsg}
+          </Text>
+          <Text
+            testID={textInputProps.testID + '-error'}
+            className=" font-poppins text-xs text-gray-500"
+          >
+            {minBugdget != 0 ? `Min Budget: ₱${minBugdget} per peson` : ''}
+          </Text>
+        </>
+      )}
     </View>
   );
 }

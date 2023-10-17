@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
+import { Platform, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { Image } from 'expo-image';
@@ -124,9 +124,21 @@ export default function DestinationDetailScreen() {
                   color="gray"
                   style={{ marginLeft: 7 }}
                 />
-                <Text className="mx-2 font-poppins text-base text-gray-500">
-                  {contactNumber}
-                </Text>
+                {Platform.OS === 'ios' ? (
+                  <TextInput
+                    className="mx-2 font-poppins text-base text-gray-500"
+                    value={contactNumber as string}
+                    editable={false}
+                    multiline
+                  />
+                ) : (
+                  <Text
+                    className="mx-2 font-poppins text-base text-gray-500"
+                    selectable
+                  >
+                    {contactNumber}
+                  </Text>
+                )}
               </View>
             ) : (
               <Text className="mx-3 font-poppins text-base text-gray-500">

@@ -23,13 +23,7 @@ export async function evaluateFitness(
   tripInput: CreateTripInput,
   population: Chromosome[],
 ) {
-  const {
-    budget,
-    adultCount,
-    childCount,
-    preferredTime,
-    isTransportationIncluded,
-  } = tripInput;
+  const { adultCount, childCount, preferredTime } = tripInput;
 
   const totalTravelers = (adultCount || 0) + (childCount || 0);
   let totalTravelDuration = 0;
@@ -41,7 +35,7 @@ export async function evaluateFitness(
 
   const totalDesiredTravelHours = getTotalDesiredTravelHours(preferredTime);
 
-  for (let i = 0; i < population.length - 1; i++) {
+  for (let i = 0; i < population.length; i++) {
     const currentPopulation = population[i]!;
 
     const chromosome = currentPopulation.chrom;
@@ -75,7 +69,7 @@ export async function evaluateFitness(
       }
     }
 
-    const estimatedTravelExpense = isTransportationIncluded
+    const estimatedTravelExpense = tripInput.isTransportationIncluded
       ? calculateTravelExpenses(travelDistances)
       : 0;
 
@@ -86,7 +80,7 @@ export async function evaluateFitness(
     const sumCost = chromosome?.sumCost();
 
     const costScore = calculateCostScore(
-      budget,
+      tripInput,
       accommodationCost,
       calculateAveragePrice(foodCostRange),
       attractionCost,

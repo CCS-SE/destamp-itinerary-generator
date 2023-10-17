@@ -21,7 +21,13 @@ import {
   GetDestinationsQueryDocument,
   TravelSize,
 } from '~/graphql/generated';
-import { confirmationAlert, getPreferredTime } from '~/utils/utils';
+import { tripDuration } from '~/utils/dates';
+import {
+  confirmationAlert,
+  getAdultCount,
+  getChildCount,
+  getPreferredTime,
+} from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
 type Coordinate = [number, number];
@@ -82,6 +88,7 @@ export default function CreateTripScreen() {
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [visitedSteps, setVisitedSteps] = useState<number[]>([0]);
   const [tripDurationDays, setTripDurationDays] = useState<number>(1);
+  const [budgetError, setBudgetError] = useState('');
 
   const [tripData, setTripData] = useState<TripDataProps>(initialTripData);
   const [selectedDepartureLocation, setSelectedDepartureLocation] =
@@ -90,6 +97,13 @@ export default function CreateTripScreen() {
   const [preferredTimeValues, setPreferredTimeValues] = useState<
     Array<[number, number]>
   >([]);
+
+  const startDateString = tripData.startDate
+    ? tripData.startDate.format('YYYY-MM-DD')
+    : '';
+  const endDateString = tripData.endDate
+    ? tripData.endDate.format('YYYY-MM-DD')
+    : '';
 
   const handleTripDataChange = (name: string, newValue: unknown) => {
     setTripData({
@@ -184,14 +198,7 @@ export default function CreateTripScreen() {
 
     const missingDataSection = !tripData[currentStepIndex];
 
-    const startDateString = tripData.startDate
-      ? tripData.startDate.format('YYYY-MM-DD')
-      : '';
-    const endDateString = tripData.endDate
-      ? tripData.endDate.format('YYYY-MM-DD')
-      : '';
-
-    if (!missingDataSection) {
+    if (!missingDataSection && budgetError == '') {
       setCompletedSteps([...completedSteps, activeSection]);
       router.push({
         pathname: '/trip/review',
@@ -199,16 +206,12 @@ export default function CreateTripScreen() {
           departingLocation: selectedDepartureLocation.name,
           travelGroup: tripData.travelGroup,
           groupCount: tripData.groupCount,
-          adultCount:
-            tripData.travelGroup === TravelSize.Solo
-              ? 1
-              : tripData.travelGroup == TravelSize.Couple
-              ? 2
-              : tripData.adultCount,
-          childCount:
-            tripData.travelGroup === TravelSize.Family
-              ? tripData.childCount
-              : 0,
+          adultCount: getAdultCount(
+            tripData.travelGroup,
+            tripData.adultCount,
+            tripData.groupCount,
+          ),
+          childCount: getChildCount(tripData.travelGroup, tripData.childCount),
           startDate: startDateString,
           endDate: endDateString,
           budget: tripData.budget,
@@ -314,7 +317,17 @@ export default function CreateTripScreen() {
     />,
     <AmountTextInput
       key={7}
+      budgetInlusions={tripData.budgetInclusions}
+      duration={tripDuration(startDateString, endDateString)}
+      totalTraveler={
+        getAdultCount(
+          tripData.travelGroup,
+          tripData.adultCount,
+          tripData.groupCount,
+        ) + getChildCount(tripData.travelGroup, tripData.childCount)
+      }
       onChangeText={(value) => handleTripDataChange('budget', value)}
+      onBudgetError={(value) => setBudgetError(value)}
     />,
   ];
 

@@ -81,7 +81,7 @@ export default function DestinationCard({
     <View className="rounded-2x mt-5 w-[360] flex-row ">
       <View
         className="rounded-2x ml-8 mr-2 h-[200] pr-3"
-        style={{ width: screenWidth / 1.25 }}
+        style={{ width: screenWidth / 1.24 }}
       >
         <Swiper
           loadMinimal
@@ -128,11 +128,11 @@ export default function DestinationCard({
               className="justify-end"
               onPress={() => setAddExpenseModal(true)}
             >
-              <View className="mr-3 justify-end">
+              <View className="mb-0.5 mr-3 justify-end">
                 <MaterialCommunityIcons
                   name="cash-plus"
-                  size={24}
-                  color="gray"
+                  size={25}
+                  color="#989FB0"
                 />
               </View>
             </TouchableOpacity>
@@ -201,7 +201,7 @@ const PriceTag = ({ price, isFree }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
       <Text
-        className={`px-1 font-poppins text-sm ${
+        className={`px-1.5 font-poppins-medium text-sm ${
           isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
         } `}
       >
