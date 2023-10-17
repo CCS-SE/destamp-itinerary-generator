@@ -132,6 +132,8 @@ export default function ItineraryScreen() {
                     isTransportationIncluded={
                       data.trip.isTransportationIncluded
                     }
+                    adultCount={data.trip.adultCount || 0}
+                    childCount={data.trip.childCount || 0}
                   />
                 )}
                 scrollEnabled={false}

@@ -34,6 +34,8 @@ interface DestinationCardProps {
   date: Date;
   categoryType: PlaceType;
   onPress: () => void;
+  adultCount: number;
+  childCount: number;
 }
 
 export default function DestinationCard({
@@ -45,13 +47,31 @@ export default function DestinationCard({
   date,
   onPress,
   categoryType,
+  adultCount,
+  childCount,
 }: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
   const [addExpenseModal, setAddExpenseModal] = useState(false);
 
   const isFree = price === '0';
+  const travellerCount = adultCount + childCount;
 
+  const splitPriceRange = (priceRange: string) => {
+    return priceRange.split('-');
+  };
+
+  const checkIfRangeString = (numStr: string) => {
+    return numStr.includes('-');
+  };
+
+  const getPrice = (numStr: string) => {
+    if (!checkIfRangeString(numStr)) {
+      return parseFloat(numStr);
+    } else {
+      return parseFloat(splitPriceRange(numStr)[1]!);
+    }
+  };
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
   }, []);
@@ -129,7 +149,7 @@ export default function DestinationCard({
           minDate={date}
           maxDate={date}
           noteString={title}
-          amount={price}
+          amount={(getPrice(price) * travellerCount).toFixed(2)}
           categoryType={categoryType}
         />
       </BottomHalfModal>

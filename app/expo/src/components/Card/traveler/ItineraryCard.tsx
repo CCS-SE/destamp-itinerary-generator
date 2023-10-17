@@ -57,6 +57,8 @@ interface ItineraryCardProps {
   travelDurations: number[];
   preferredTime: string[];
   destinations: Destination[] | [];
+  adultCount: number;
+  childCount: number;
 }
 
 export default function ItineraryCard({
@@ -72,6 +74,8 @@ export default function ItineraryCard({
   preferredTime,
   travelDurations,
   isTransportationIncluded,
+  adultCount,
+  childCount,
 }: ItineraryCardProps) {
   const { push } = useRouter();
 
@@ -211,6 +215,8 @@ export default function ItineraryCard({
                           item.images,
                         )
                       }
+                      adultCount={adultCount}
+                      childCount={childCount}
                     />
                   </View>
 
@@ -238,7 +244,10 @@ export default function ItineraryCard({
                         isTransportationIncluded={isTransportationIncluded}
                         transportationPrice={`${calculateTravelExpense(
                           travelDistances[index]!,
+                          travelDurations[index]!,
                         )}`}
+                        adultCount={adultCount}
+                        childCount={childCount}
                       />
                     </View>
                   )}
