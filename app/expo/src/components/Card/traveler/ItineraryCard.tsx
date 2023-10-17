@@ -81,6 +81,21 @@ export default function ItineraryCard({
 
   const hour = getStartTime(preferredTime, 0);
   const min = getStartTime(preferredTime, 1);
+
+  function moveAccommodationToFront() {
+    const itemToMove = destinations.find(
+      (item) => item?.type === PlaceType.Accommodation,
+    ) as never;
+    if (destinations.includes(itemToMove)) {
+      destinations = destinations.filter((item) => item !== itemToMove);
+
+      destinations = [itemToMove as Destination, ...destinations];
+    }
+    return destinations;
+  }
+
+  moveAccommodationToFront();
+
   const displayTime = (index: number) => {
     const firstPlaceTime = destinations[0]?.visitDuration || 0; // Ensure it's a number
 
