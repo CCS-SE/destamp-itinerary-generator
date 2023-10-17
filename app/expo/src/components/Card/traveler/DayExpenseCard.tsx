@@ -33,7 +33,7 @@ export default function DayExpenseCard({
   return (
     <View
       className="mt-5 h-[75] rounded-2xl bg-pink-100 p-2"
-      style={{ width: screenWidth / 1.13 }}
+      style={{ width: screenWidth / 1.109 }}
     >
       <View className="flex-row ">
         <Text className="m-1 font-poppins text-base text-gray-500">

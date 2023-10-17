@@ -32,7 +32,7 @@ export default function DirectionCard({
   return (
     <View
       className="ml-8 mr-2 h-[45] flex-row items-center rounded-xl bg-gray-100 pr-3"
-      style={{ width: screenWidth / 1.3 }}
+      style={{ width: screenWidth / 1.29 }}
     >
       <View className="mx-2">{icon}</View>
       <View className="flex-1 flex-row items-center justify-between">

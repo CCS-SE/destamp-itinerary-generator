@@ -61,7 +61,7 @@ export default function DestinationCard({
     <View className="rounded-2x mt-5 w-[360] flex-row ">
       <View
         className="rounded-2x ml-8 mr-2 h-[200] pr-3"
-        style={{ width: screenWidth / 1.25 }}
+        style={{ width: screenWidth / 1.24 }}
       >
         <Swiper
           loadMinimal
