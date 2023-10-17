@@ -105,11 +105,11 @@ export const getTravelDistance = (distance: number) =>
   (distance / 1000).toFixed(1);
 
 export const calculateTravelExpense = (distance: number, duration: number) => {
-  const travelDistanceInKilometers = distance / 1000;
+  const travelDistanceInKilometers = Math.floor(distance / 1000);
   const flagDown = 40;
   const additionalCostPerKm = 13.5;
   const durationMinutes = Math.floor(duration / 60);
-  const additionalCostPerMin = 3;
+  const additionalCostPerMin = 2;
 
   return Math.round(
     flagDown +
