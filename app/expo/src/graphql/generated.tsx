@@ -1278,6 +1278,8 @@ export type GetTravelerItineraryQuery = {
     preferredTime: any;
     isAccommodationIncluded: boolean;
     isTransportationIncluded: boolean;
+    adultCount?: number | null;
+    childCount?: number | null;
     departingLocation?: {
       __typename?: 'DepartingLocation';
       name: string;
@@ -1314,6 +1316,8 @@ export type GetTravelerTripsQuery = {
     travelSize: TravelSize;
     startDate: any;
     endDate: any;
+    adultCount?: number | null;
+    childCount?: number | null;
     destination?: {
       __typename?: 'Destination';
       name: string;
@@ -2212,6 +2216,8 @@ export const GetTravelerItineraryDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'isTransportationIncluded' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'adultCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'childCount' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'departingLocation' },
@@ -2380,6 +2386,8 @@ export const GetTravelerTripsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'travelSize' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'adultCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'childCount' } },
               ],
             },
           },
