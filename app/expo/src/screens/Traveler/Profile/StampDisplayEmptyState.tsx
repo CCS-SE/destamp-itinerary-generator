@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
-import { Image } from 'expo-image';
+
+import Stamp from '../../../../assets/images/stamp.svg';
 
 export default function StampDisplayEmptyState() {
   const cardWidth = Dimensions.get('window').width * 0.88;
@@ -10,11 +11,9 @@ export default function StampDisplayEmptyState() {
       className="h-44 items-center rounded-2xl bg-gray-100 p-10"
       style={{ width: cardWidth }}
     >
-      <Image
-        source={require('../../../../assets/images/stamp.png')}
-        contentFit="scale-down"
-        className="-mt-3 h-14 w-72"
-      />
+      <View className="-mt-2">
+        <Stamp height={50} width={50} />
+      </View>
       <Text
         testID="no-stamps-subtitle"
         className="text-small mt-3 text-center font-poppins text-slate-500"

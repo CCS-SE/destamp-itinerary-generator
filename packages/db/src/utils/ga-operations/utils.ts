@@ -1,6 +1,8 @@
-import { NexusGenObjects } from '../../graphql/generated/nexus';
+import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { getBudgetAllocation } from './budgetAllocation';
 
 type Place = NexusGenObjects['Place'];
+type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
 export const multiplyRangeByPeople = (
   range: string,
@@ -23,7 +25,7 @@ export const calculateAveragePrice = (priceRange: string) => {
 };
 
 export const calculateCostScore = (
-  budget: number,
+  tripInput: CreateTripInput,
   accommodationCost: number,
   foodCost: number,
   attractionCost: number,
@@ -31,29 +33,79 @@ export const calculateCostScore = (
   duration: number,
   travelExpenses: number,
 ) => {
-  // Calculate the overall cost score
-  return (
-    Math.abs(
-      budget -
-        (accommodationCost * duration +
-          attractionCost * totalTravelers +
-          foodCost * totalTravelers +
-          travelExpenses),
-    ) / 10_000
-  );
+  const { budget } = tripInput;
+
+  const budgetRate = getBudgetAllocation(tripInput);
+
+  const foodBudgetRate = budgetRate?.FOOD || 0;
+  const attractionBudgetRate = budgetRate?.ATTRACTION || 0;
+  const accommodationBudgetRate = budgetRate?.ACCOMMODATION || 0;
+  const transporationBudgetRate = budgetRate?.TRANSPORT || 0;
+
+  const totalCost =
+    accommodationCost * duration +
+    attractionCost * totalTravelers +
+    foodCost * totalTravelers +
+    travelExpenses;
+
+  let costDifference = tripInput.budget - totalCost;
+
+  if (totalCost === 0) {
+    return 0;
+  }
+
+  const actualFoodRate = (foodCost * totalTravelers) / budget;
+  const actualAccommodationRate = (accommodationCost * duration) / budget;
+  const actualAttractionRate = (attractionCost * totalTravelers) / budget;
+  const actualTransportRate = travelExpenses / budget;
+
+  // check if each category exceeds allocated budget rate
+  if (actualFoodRate > accommodationBudgetRate && foodBudgetRate !== 0) {
+    costDifference -= (budget * actualFoodRate) / duration;
+  }
+  if (
+    actualAccommodationRate > accommodationBudgetRate &&
+    accommodationBudgetRate !== 0
+  ) {
+    costDifference -= (budget * actualAccommodationRate) / duration;
+  }
+  if (
+    actualAttractionRate > attractionBudgetRate &&
+    attractionBudgetRate !== 0
+  ) {
+    costDifference -= (budget * actualAttractionRate) / duration;
+  }
+  if (
+    actualTransportRate > transporationBudgetRate &&
+    transporationBudgetRate !== 0
+  ) {
+    costDifference -= (budget * actualTransportRate) / duration;
+  }
+
+  const costScore = Math.abs(costDifference) / 10_000;
+
+  return costScore;
 };
 
 export const calculateDurationScore = (
-  totalDuration: number,
+  totalPlaceDuration: number,
   duration: number,
   travelDuration: number,
   totalDesiredTravelHours: number,
 ) => {
-  return Math.abs(
-    totalDuration / 60 +
-      calculateTravelDuration(travelDuration) -
-      duration * totalDesiredTravelHours,
-  );
+  const totalDuration =
+    totalPlaceDuration / 60 + calculateTravelDuration(travelDuration);
+  const desiredDuration = duration * totalDesiredTravelHours;
+  let durationDifference = desiredDuration - totalDuration;
+
+  if (durationDifference < 0) {
+    // if duration differenc is negative
+    durationDifference += totalDuration / duration; // penalize overtime
+  }
+
+  const durationScore = Math.abs(durationDifference);
+
+  return durationScore;
 };
 
 export const getCoordinates = (places: Place[]): [number, number][] => {
@@ -70,7 +122,10 @@ export const calculateFitnessScore = (
   costScore: number,
   durationScore: number,
 ) => {
-  return 1 / (costScore + durationScore);
+  const COST_RATE = 0.7;
+  const DURATION_RATE = 0.3;
+
+  return 1 / (costScore * COST_RATE + durationScore * DURATION_RATE);
 };
 
 export const calculateTotalCost = (

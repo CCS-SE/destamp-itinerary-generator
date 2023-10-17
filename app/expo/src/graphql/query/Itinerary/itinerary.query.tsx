@@ -20,6 +20,8 @@ export const GetTravelersItineraryQuery = gql(
               price
               type
               visitDuration
+              latitude
+              longitude
               contactNumber
               address
               isClaimed

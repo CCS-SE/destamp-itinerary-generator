@@ -60,8 +60,6 @@ export class Chromosome {
       { totalMin: 0, totalMax: 0 },
     );
 
-    const average = (value: number) => value / priceRanges.length;
-
-    return `${Math.floor(average(totalMin))}-${Math.floor(average(totalMax))}`;
+    return `${Math.floor(totalMin)}-${Math.floor(totalMax)}`;
   }
 }

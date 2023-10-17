@@ -12,12 +12,13 @@ const REPETITION_RATE = 1;
 
 export async function generateItinerary(
   tripInput: CreateTripInput,
-  places: Place[],
+  restaurants: Place[],
+  attractions: Place[],
 ) {
   const bestSoFar: Chromosome[] = [];
   let counter = 0;
 
-  const population = generatePopulation(tripInput, places); // initialize population
+  const population = generatePopulation(tripInput, restaurants, attractions); // initialize population
   await evaluateFitness(tripInput, population); // perform fitness evaluation
   bestSoFar.push(population[0]!);
 
@@ -27,11 +28,11 @@ export async function generateItinerary(
     const selected = selection(currentGeneration);
     const nextGeneration = selectNextGeneration(tripInput, selected);
     await evaluateFitness(tripInput, nextGeneration);
-    nextGeneration.sort((a, b) => a.fitnessScore - b.fitnessScore);
+    nextGeneration.sort((a, b) => b.fitnessScore - a.fitnessScore);
     bestSoFar.push(nextGeneration[0]!);
     currentGeneration = nextGeneration;
     counter += 1;
   }
-  bestSoFar.sort((a, b) => a.fitnessScore - b.fitnessScore);
+  bestSoFar.sort((a, b) => b.fitnessScore - a.fitnessScore);
   return bestSoFar;
 }

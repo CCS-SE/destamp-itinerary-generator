@@ -38,7 +38,7 @@ export default function ProfileScreen() {
           />
           <View className="mx-5">
             <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.traveler.firstName}`}</Text>
-            <Text className="text-small font-poppins text-gray-500">
+            <Text className="font-poppins text-xs text-gray-500">
               {data?.user.email}
             </Text>
           </View>

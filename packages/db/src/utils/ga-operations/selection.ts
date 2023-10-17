@@ -5,7 +5,7 @@ import { Chromosome as Chrom } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
-const POPULATION_SIZE = 30;
+const POPULATION_SIZE = 10;
 
 export const selection = (population: Chrom[]) => {
   const selected: Chrom[] = [];
@@ -21,7 +21,7 @@ export const selection = (population: Chrom[]) => {
     const ch1 = population[randomIndex]!;
     const ch2 = population[randomIndex1]!;
 
-    if (ch1.fitnessScore < ch2.fitnessScore) {
+    if (ch1.fitnessScore > ch2.fitnessScore) {
       selected.push(ch1);
     } else {
       selected.push(ch2);

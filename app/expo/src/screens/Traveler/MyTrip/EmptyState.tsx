@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerInfoDocument } from '~/graphql/generated';
+import NoTripIcon from '../../../../assets/images/empty-trip.svg';
 
 export default function MyTripEmptyState() {
   const onPress = () => {
@@ -23,16 +23,14 @@ export default function MyTripEmptyState() {
 
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">
-      <Image
-        source={require('../../../../assets/images/empty-state.png')}
-        className="m-14 h-60 w-80"
-      />
-      <View className="text-center ">
+      <View className="my-7">
+        <NoTripIcon height={300} width={500} />
+      </View>
+      <View className="text-center">
         <Text className="font-poppins text-xl font-normal text-slate-700">
           Welcome, {data?.traveler.firstName}!
         </Text>
       </View>
-
       <Text
         testID="empty-state-title"
         className="pt-3 font-poppins text-lg font-normal text-slate-600"

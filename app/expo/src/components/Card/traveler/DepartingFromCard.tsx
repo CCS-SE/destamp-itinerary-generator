@@ -15,7 +15,7 @@ export default function DepartingFromCard({
   return (
     <View
       className="mx-8 mt-5 h-[65] rounded-xl bg-gray-100 p-1.5"
-      style={{ width: screenWidth / 1.3 }}
+      style={{ width: screenWidth / 1.28 }}
     >
       <Text className="mx-3 font-poppins text-lg text-orange-500">
         Departing from

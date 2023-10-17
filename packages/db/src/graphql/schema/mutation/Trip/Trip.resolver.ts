@@ -1,10 +1,5 @@
-import { PlaceType } from '@prisma/client';
-
 import { generateItinerary } from '../../../../utils/ga-operations';
-import {
-  getDailyPlans,
-  getDaySuggestions,
-} from '../../../../utils/ga-operations/daySuggestion';
+import { getDaySuggestions } from '../../../../utils/ga-operations/daySuggestion';
 import { multiplyRangeByPeople } from '../../../../utils/ga-operations/utils';
 import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
@@ -19,27 +14,24 @@ export const createTrip = async (
   ctx: Context,
 ) => {
   try {
-    const filters = [];
-
-    filters.push({
-      type: PlaceType.ATTRACTION,
+    const restaurants = await ctx.prisma.place.findMany({
+      where: {
+        type: 'RESTAURANT',
+      },
     });
 
-    if (tripInput.isAccommodationIncluded) {
-      filters.push({
-        type: PlaceType.ACCOMMODATION,
-      });
-    }
-
-    if (tripInput.isFoodIncluded) {
-      filters.push({
-        type: PlaceType.RESTAURANT,
-      });
-    }
-
-    const places = await ctx.prisma.place.findMany({
+    const attractions = await ctx.prisma.place.findMany({
       where: {
-        OR: filters,
+        type: 'ATTRACTION',
+      },
+    });
+
+    const accomodations = await ctx.prisma.place.findMany({
+      where: {
+        type: 'ACCOMMODATION',
+      },
+      orderBy: {
+        id: 'asc',
       },
     });
 
@@ -50,15 +42,21 @@ export const createTrip = async (
     const numberOfPeople =
       (tripInput.adultCount || 0) + (tripInput.childCount || 0);
 
-    const suggestedDestinations = await generateItinerary(tripInput, places);
+    const suggestedDestinations = await generateItinerary(
+      tripInput,
+      restaurants,
+      attractions,
+    );
 
     const bestSoFar = suggestedDestinations[0];
 
     const suggestedPlans = bestSoFar
-      ? getDaySuggestions(bestSoFar, tripInput)
+      ? getDaySuggestions(bestSoFar, tripInput, accomodations)
       : [];
 
-    const dailyPlans = await getDailyPlans(suggestedPlans, tripInput, places);
+    const dailyPlans = suggestedPlans;
+
+    // const dailyPlans = await getDailyPlans(suggestedPlans, tripInput, places);
 
     return await ctx.prisma.trip.create({
       data: {

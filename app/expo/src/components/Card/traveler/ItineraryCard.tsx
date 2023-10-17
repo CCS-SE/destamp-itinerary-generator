@@ -123,6 +123,7 @@ export default function ItineraryCard({
   return (
     <View>
       <DayExpenseCard
+        accommodationCost={accommodationCost}
         attractionCost={attractionCost!}
         foodCost={foodCost!}
         transportationCost={transportationCost!}

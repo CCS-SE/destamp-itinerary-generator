@@ -1257,6 +1257,8 @@ export type GetTravelerItineraryQuery = {
         price: string;
         type: PlaceType;
         visitDuration: number;
+        latitude: number;
+        longitude: number;
         contactNumber?: string | null;
         address: string;
         isClaimed: boolean;
@@ -2125,6 +2127,14 @@ export const GetTravelerItineraryDocument = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'visitDuration' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'latitude' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'longitude' },
                             },
                             {
                               kind: 'Field',
