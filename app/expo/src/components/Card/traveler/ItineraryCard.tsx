@@ -1,12 +1,12 @@
 import React from 'react';
-import { FlatList, View } from 'react-native';
+import { Dimensions, FlatList, View } from 'react-native';
 import DashedLine from 'react-native-dashed-line';
 import { useRouter } from 'expo-router';
 
 import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
 import DepartingFromCard from '~/components/Card/traveler/DepartingFromCard';
 import DirectionCard from '~/components/Card/traveler/DirectionCard';
-import { PlaceType } from '~/graphql/generated';
+import { ExpenseCategory, PlaceType } from '~/graphql/generated';
 import {
   calculateAveragePrice,
   calculateTravelExpense,
@@ -44,6 +44,8 @@ interface Destination {
 }
 
 interface ItineraryCardProps {
+  date: Date;
+  itineraryId: number;
   attractionCost: number;
   foodCost: string;
   transportationCost: number;
@@ -58,6 +60,8 @@ interface ItineraryCardProps {
 }
 
 export default function ItineraryCard({
+  date,
+  itineraryId,
   attractionCost,
   foodCost,
   transportationCost,
@@ -114,6 +118,8 @@ export default function ItineraryCard({
     });
   };
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
     <View>
       <DayExpenseCard
@@ -127,7 +133,7 @@ export default function ItineraryCard({
           accommodationCost
         }
       />
-      <View className="w-[350] flex-row">
+      <View className="flex-row" style={{ width: screenWidth }}>
         <DashedLine
           dashLength={4}
           dashThickness={2}
@@ -188,6 +194,9 @@ export default function ItineraryCard({
                       />
                     )}
                     <DestinationCard
+                      date={date}
+                      categoryType={item.type}
+                      itineraryId={itineraryId}
                       time={displayTime(index)!}
                       title={item.name}
                       price={item.price}
@@ -204,26 +213,34 @@ export default function ItineraryCard({
                       }
                     />
                   </View>
+
                   {index === travelDurations.length - 1 ? (
                     <></>
                   ) : (
-                    <DirectionCard
-                      icon={
-                        <Driving
-                          height={22}
-                          width={22}
-                          style={{ marginLeft: 8 }}
-                        />
-                      }
-                      duration={`${getTravelDuration(travelDurations[index]!)}`}
-                      distance={`${getTravelDistance(
-                        travelDistances[index]!,
-                      )} km`}
-                      isTransportationIncluded={isTransportationIncluded}
-                      transportationPrice={`${calculateTravelExpense(
-                        travelDistances[index]!,
-                      )}`}
-                    />
+                    <View className="mt-5 flex-row">
+                      <DirectionCard
+                        date={date}
+                        categoryType={ExpenseCategory.Transportation}
+                        itineraryId={itineraryId}
+                        icon={
+                          <Driving
+                            height={22}
+                            width={22}
+                            style={{ marginLeft: 8 }}
+                          />
+                        }
+                        duration={`${getTravelDuration(
+                          travelDurations[index]!,
+                        )}`}
+                        distance={`${getTravelDistance(
+                          travelDistances[index]!,
+                        )} km`}
+                        isTransportationIncluded={isTransportationIncluded}
+                        transportationPrice={`${calculateTravelExpense(
+                          travelDistances[index]!,
+                        )}`}
+                      />
+                    </View>
                   )}
                 </View>
               );

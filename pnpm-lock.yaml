@@ -57,6 +57,9 @@ importers:
       '@react-native-community/datetimepicker':
         specifier: 7.2.0
         version: 7.2.0
+      '@react-navigation/core':
+        specifier: ^6.4.9
+        version: 6.4.9(react@18.2.0)
       '@shopify/flash-list':
         specifier: 1.4.3
         version: 1.4.3(@babel/runtime@7.23.1)(react-native@0.72.5)(react@18.2.0)
