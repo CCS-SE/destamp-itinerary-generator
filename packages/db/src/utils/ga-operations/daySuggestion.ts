@@ -1,11 +1,19 @@
 import { PlaceType } from '@prisma/client';
 
 import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { fetchMapboxMatrix } from '../../service/mapboxService';
 import { tripDuration } from '../utils';
 import { getBudgetAllocation } from './budgetAllocation';
 import { Chromosome } from './chromosome';
 import { Chromosome as Chrom } from './types';
-import { getDesiredTravelHour, getRandomInt } from './utils';
+import {
+  calculateTravelExpenses,
+  getCoordinates,
+  getCoordinatesParam,
+  getDesiredTravelHour,
+  getMatrixAvg,
+  getRandomInt,
+} from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 type Place = NexusGenObjects['Place'];
@@ -134,79 +142,51 @@ const findPlaceWithNearestPrice = (places: Place[], targetPrice: number) => {
   });
 };
 
-// export const getDailyPlans = async (
-//   plans: Chrom[],
-//   tripInput: CreateTripInput,
-//   accommodations: Place[],
-// ) => {
-//   const { budget } = tripInput;
-//   const dailyPlan: Chrom[] = [];
+export const getDailyPlans = async (
+  plans: Chrom[],
+  tripInput: CreateTripInput,
+) => {
+  const dailyPlan: Chrom[] = [];
 
-//   const duration = tripDuration(
-//     new Date(tripInput.startDate),
-//     new Date(tripInput.endDate),
-//   );
+  for (const plan of plans) {
+    const { chrom } = plan;
 
-//   const budgetRate = getBudgetAllocation(tripInput)!;
+    const coordinatePairs = getCoordinatesParam(getCoordinates(chrom.genes));
 
-//   const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
+    const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
 
-//   const suggestedAccommodationPricePerDay = Math.ceil(
-//     accommodationThreshold / duration,
-//   );
+    const travelDistances = [];
+    const travelDurations = [];
 
-//   const suggestedAccommodations = accommodations.filter(
-//     (place) => parseFloat(place.price) <= suggestedAccommodationPricePerDay,
-//   );
+    const avgDistance = getMatrixAvg(matrix.distances);
+    const avgDuration = getMatrixAvg(matrix.durations);
 
-//   const accommodation =
-//     suggestedAccommodations[getRandomInt(0, accommodations.length - 1)];
+    for (let i = 0; i < chrom.genes.length; i++) {
+      const placeDistance = matrix.distances[i]![i + 1];
+      const placeDuration = matrix.durations[i]![i + 1];
 
-//   if (tripInput.isAccommodationIncluded && accommodation) {
-//     plans.map((plan) => {
-//       plan.chrom.genes.push(accommodation);
-//     });
-//   }
+      if (placeDistance == null || placeDistance <= 0) {
+        travelDistances.push(avgDistance);
+      } else {
+        travelDistances.push(placeDistance);
+      }
+      if (placeDuration == null || placeDuration <= 0) {
+        travelDurations.push(avgDuration);
+      } else {
+        travelDurations.push(placeDuration);
+      }
+    }
 
-//   for (const plan of plans) {
-//     const { chrom } = plan;
+    const validDistances = travelDistances.slice(0, -1);
 
-//     const coordinatePairs = getCoordinatesParam(getCoordinates(chrom.genes));
-
-//     const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
-
-//     const travelDistances = [];
-//     const travelDurations = [];
-
-//     const avgDistance = getMatrixAvg(matrix.distances);
-//     const avgDuration = getMatrixAvg(matrix.durations);
-
-//     for (let i = 0; i < chrom.genes.length; i++) {
-//       const placeDistance = matrix.distances[i]![i + 1];
-//       const placeDuration = matrix.durations[i]![i + 1];
-
-//       if (placeDistance == null || placeDistance <= 0) {
-//         travelDistances.push(avgDistance);
-//       } else {
-//         travelDistances.push(placeDistance);
-//       }
-//       if (placeDuration == null || placeDuration <= 0) {
-//         travelDurations.push(avgDuration);
-//       } else {
-//         travelDurations.push(placeDuration);
-//       }
-//     }
-
-//     const validDistances = travelDistances.slice(0, -1);
-
-//     dailyPlan.push({
-//       ...plan,
-//       travelExpenses: tripInput.isTransportationIncluded
-//         ? calculateTravelExpenses(validDistances)
-//         : 0,
-//       travelDurations: travelDurations,
-//       travelDistances: travelDistances,
-//     });
-//   }
-//   return dailyPlan;
-// };
+    dailyPlan.push({
+      ...plan,
+      travelExpenses: tripInput.isTransportationIncluded
+        ? calculateTravelExpenses(validDistances)
+        : 0,
+      travelDurations: travelDurations,
+      travelDistances: travelDistances,
+    });
+  }
+  return dailyPlan;
+};
