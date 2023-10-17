@@ -1,5 +1,8 @@
 import { generateItinerary } from '../../../../utils/ga-operations';
-import { getDaySuggestions } from '../../../../utils/ga-operations/daySuggestion';
+import {
+  getDailyPlans,
+  getDaySuggestions,
+} from '../../../../utils/ga-operations/daySuggestion';
 import { multiplyRangeByPeople } from '../../../../utils/ga-operations/utils';
 import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
@@ -54,9 +57,9 @@ export const createTrip = async (
       ? getDaySuggestions(bestSoFar, tripInput, accomodations)
       : [];
 
-    const dailyPlans = suggestedPlans;
+    // const dailyPlans = suggestedPlans;
 
-    // const dailyPlans = await getDailyPlans(suggestedPlans, tripInput, places);
+    const dailyPlans = await getDailyPlans(suggestedPlans, tripInput);
 
     return await ctx.prisma.trip.create({
       data: {
