@@ -51,9 +51,9 @@ export function generatePopulation(
     const attractionIndexes: number[] = [];
 
     while (
-      totalDuration < durationThreshold &&
-      (totalFoodCost < foodCostThreshold ||
-        totalAttractionCost < attractionCostThreshold) &&
+      totalDuration <= durationThreshold &&
+      (totalFoodCost <= foodCostThreshold ||
+        totalAttractionCost <= attractionCostThreshold) &&
       chromosome.length < MAX_ITERATIONS
     ) {
       const restaurantIndex = Math.floor(
@@ -98,7 +98,7 @@ export function generatePopulation(
         break;
       }
     }
-
+    console.log(chromosome.length);
     newPopulation.push({
       chrom: new Chromosome(chromosome),
       fitnessScore: 0,

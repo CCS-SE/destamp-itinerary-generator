@@ -50,8 +50,7 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
 
   const rate = getBudgetAllocation(tripInput)!;
 
-  const accommodationThreshold = budget * rate.ACCOMMODATION;
-  const transporationThreshold = budget * rate.TRANSPORT;
+  const attractionThreshold = budget * rate.ATTRACTION;
   const foodThreshold = budget * rate.FOOD;
 
   const totalDesiredTravelHours = getTotalDesiredTravelHours(
@@ -69,29 +68,31 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
   const foodMaxDuration = durationThreshold * 0.3;
 
   let foodDuration = 0;
-  let totalCost = 0;
   let totalDuration = 0;
 
   const budgets = {
     food: 0,
+    attraction: 0,
   };
 
   const chromosome: Place[] = [];
 
   for (const spot of spots) {
-    if (
-      totalDuration >= durationThreshold ||
-      totalCost >= budget - (accommodationThreshold + transporationThreshold)
-    ) {
+    if (totalDuration >= durationThreshold) {
       return chromosome;
     } else {
       if (spot.type === PlaceType.ATTRACTION) {
         const attractionCost = parseFloat(spot.price) * totalTravelers;
         const spotDuration = spot.visitDuration / 60;
 
-        totalDuration += spotDuration;
-        totalCost += attractionCost;
-        chromosome.push(spot);
+        if (
+          budgets.attraction + attractionCost <= attractionThreshold &&
+          totalDuration + spotDuration <= durationThreshold
+        ) {
+          budgets.attraction += attractionCost;
+          totalDuration += spotDuration;
+          chromosome.push(spot);
+        }
       }
 
       if (spot.type === PlaceType.RESTAURANT) {
@@ -101,16 +102,53 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
 
         if (
           budgets.food + averagePrice <= foodThreshold &&
-          foodDuration + spotDuration <= foodMaxDuration
+          foodDuration + spotDuration <= foodMaxDuration &&
+          totalDuration + spotDuration <= durationThreshold
         ) {
           budgets.food += foodCost;
           foodDuration += spotDuration;
-          totalCost += foodCost;
           totalDuration += spotDuration;
           chromosome.push(spot);
         }
       }
     }
   }
+
+  // for (const spot of spots) {
+  //   if (
+  //     totalDuration >= durationThreshold ||
+  //     totalCost >= budget - (accommodationThreshold + transporationThreshold)
+  //   ) {
+  //     return chromosome;
+  //   } else {
+  //     if (spot.type === PlaceType.ATTRACTION) {
+  //       const attractionCost = parseFloat(spot.price) * totalTravelers;
+  //       const spotDuration = spot.visitDuration / 60;
+
+  //       totalDuration += spotDuration;
+  //       totalCost += attractionCost;
+  //       chromosome.push(spot);
+  //     }
+
+  //     if (spot.type === PlaceType.RESTAURANT) {
+  //       const averagePrice = calculateAveragePrice(spot.price);
+  //       const foodCost = averagePrice * totalTravelers;
+  //       const spotDuration = spot.visitDuration / 60;
+
+  //       if (
+  //         budgets.food + averagePrice <= foodThreshold &&
+  //         foodDuration + spotDuration <= foodMaxDuration
+  //       ) {
+  //         budgets.food += foodCost;
+  //         foodDuration += spotDuration;
+  //         totalCost += foodCost;
+  //         totalDuration += spotDuration;
+  //         chromosome.push(spot);
+  //       }
+  //     }
+  //   }
+
+  //   console.log(chromosome.length)
+  // }
   return chromosome;
 };
