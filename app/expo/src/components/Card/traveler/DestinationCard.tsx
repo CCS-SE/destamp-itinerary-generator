@@ -108,7 +108,7 @@ export default function DestinationCard({
               className="justify-end"
               onPress={() => setAddExpenseModal(true)}
             >
-              <View className="justify-end mb-0.5 mr-3">
+              <View className="mb-0.5 mr-3 justify-end">
                 <MaterialCommunityIcons
                   name="cash-plus"
                   size={25}
