@@ -15,6 +15,8 @@ interface DirectionCardProps {
   itineraryId: number;
   date: Date;
   categoryType: ExpenseCategory;
+  adultCount: number;
+  childCount: number;
 }
 
 export default function DirectionCard({
@@ -26,9 +28,24 @@ export default function DirectionCard({
   itineraryId,
   date,
   categoryType,
+  adultCount,
+  childCount,
 }: DirectionCardProps) {
   const [addExpenseModal, setAddExpenseModal] = useState(false);
   const screenWidth = Dimensions.get('window').width;
+
+  const taxisNeeded = () => {
+    const personCount = adultCount + childCount;
+    if (personCount < 1) {
+      return 0;
+    } else if (personCount <= 4) {
+      return 1;
+    } else {
+      const taxisNeeded = (personCount - 1) / 4;
+      return Math.floor(taxisNeeded) + 1;
+    }
+  };
+
   return (
     <View
       className="ml-8 mr-2 h-[45] flex-row items-center rounded-xl bg-gray-100 pr-3"
@@ -63,7 +80,7 @@ export default function DirectionCard({
           closeModal={() => setAddExpenseModal(false)}
           minDate={date}
           maxDate={date}
-          amount={transportationPrice}
+          amount={(parseFloat(transportationPrice) * taxisNeeded()).toFixed(2)}
           categoryType={categoryType}
         />
       </BottomHalfModal>
