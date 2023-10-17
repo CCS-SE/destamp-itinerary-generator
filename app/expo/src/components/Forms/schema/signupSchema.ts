@@ -9,7 +9,8 @@ export const signUpSchema = z
     password: z
       .string()
       .nonempty('Password is required.')
-      .min(8, { message: 'Password must be atleast 8 characters.' }),
+      .min(8, { message: 'Password must be atleast 8 characters.' })
+      .refine((s) => !s.includes(' '), 'Password must not contain spaces.'),
     confirmPassword: z.string().nonempty('Confirm password is required.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
