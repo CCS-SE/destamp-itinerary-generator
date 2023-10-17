@@ -8,6 +8,7 @@ import { Model } from 'react-model';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import { PlaceType } from '~/graphql/generated';
+import { calculateAveragePrice } from '~/utils/utils';
 
 interface SlideStateProps {
   imgList: string[];
@@ -57,21 +58,6 @@ export default function DestinationCard({
   const isFree = price === '0';
   const travellerCount = adultCount + childCount;
 
-  const splitPriceRange = (priceRange: string) => {
-    return priceRange.split('-');
-  };
-
-  const checkIfRangeString = (numStr: string) => {
-    return numStr.includes('-');
-  };
-
-  const getPrice = (numStr: string) => {
-    if (!checkIfRangeString(numStr)) {
-      return parseFloat(numStr);
-    } else {
-      return parseFloat(splitPriceRange(numStr)[1]!);
-    }
-  };
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
   }, []);
@@ -151,7 +137,7 @@ export default function DestinationCard({
           noteString={title}
           amount={
             categoryType == PlaceType.Restaurant
-              ? (getPrice(price) * travellerCount).toFixed(2)
+              ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
               : price
           }
           categoryType={categoryType}
