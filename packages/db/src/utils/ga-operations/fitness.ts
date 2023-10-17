@@ -35,7 +35,7 @@ export async function evaluateFitness(
 
   const totalDesiredTravelHours = getTotalDesiredTravelHours(preferredTime);
 
-  for (let i = 0; i < population.length - 1; i++) {
+  for (let i = 0; i < population.length; i++) {
     const currentPopulation = population[i]!;
 
     const chromosome = currentPopulation.chrom;

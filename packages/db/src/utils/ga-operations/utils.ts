@@ -50,6 +50,10 @@ export const calculateCostScore = (
 
   let costDifference = tripInput.budget - totalCost;
 
+  if (totalCost === 0) {
+    return 0;
+  }
+
   const actualFoodRate = (foodCost * totalTravelers) / budget;
   const actualAccommodationRate = (accommodationCost * duration) / budget;
   const actualAttractionRate = (attractionCost * totalTravelers) / budget;
