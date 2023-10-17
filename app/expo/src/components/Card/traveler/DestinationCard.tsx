@@ -108,11 +108,11 @@ export default function DestinationCard({
               className="justify-end"
               onPress={() => setAddExpenseModal(true)}
             >
-              <View className="mr-3 justify-end">
+              <View className="justify-en mb-0.5 mr-3">
                 <MaterialCommunityIcons
                   name="cash-plus"
-                  size={24}
-                  color="gray"
+                  size={25}
+                  color="#989FB0"
                 />
               </View>
             </TouchableOpacity>
@@ -181,7 +181,7 @@ const PriceTag = ({ price, isFree }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
       <Text
-        className={`px-1 font-poppins text-sm ${
+        className={`px-1.5 font-poppins-medium text-sm ${
           isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
         } `}
       >
