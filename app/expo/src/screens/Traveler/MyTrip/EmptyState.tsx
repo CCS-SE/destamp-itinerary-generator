@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+
+import NoTripIcon from '../../../../assets/images/empty-trip.svg';
 
 export default function MyTripEmptyState() {
   const onPress = () => {
@@ -12,10 +13,9 @@ export default function MyTripEmptyState() {
   };
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">
-      <Image
-        source={require('../../../../assets/images/empty-state.png')}
-        className="m-14 h-64 w-80"
-      />
+      <View className="my-7">
+        <NoTripIcon height={300} width={500} />
+      </View>
       <Text
         testID="empty-state-title"
         className="-my-3 font-poppins text-2xl font-normal text-slate-700"
