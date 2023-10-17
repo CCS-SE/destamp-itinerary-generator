@@ -113,5 +113,42 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
       }
     }
   }
+
+  // for (const spot of spots) {
+  //   if (
+  //     totalDuration >= durationThreshold ||
+  //     totalCost >= budget - (accommodationThreshold + transporationThreshold)
+  //   ) {
+  //     return chromosome;
+  //   } else {
+  //     if (spot.type === PlaceType.ATTRACTION) {
+  //       const attractionCost = parseFloat(spot.price) * totalTravelers;
+  //       const spotDuration = spot.visitDuration / 60;
+
+  //       totalDuration += spotDuration;
+  //       totalCost += attractionCost;
+  //       chromosome.push(spot);
+  //     }
+
+  //     if (spot.type === PlaceType.RESTAURANT) {
+  //       const averagePrice = calculateAveragePrice(spot.price);
+  //       const foodCost = averagePrice * totalTravelers;
+  //       const spotDuration = spot.visitDuration / 60;
+
+  //       if (
+  //         budgets.food + averagePrice <= foodThreshold &&
+  //         foodDuration + spotDuration <= foodMaxDuration
+  //       ) {
+  //         budgets.food += foodCost;
+  //         foodDuration += spotDuration;
+  //         totalCost += foodCost;
+  //         totalDuration += spotDuration;
+  //         chromosome.push(spot);
+  //       }
+  //     }
+  //   }
+
+  //   console.log(chromosome.length)
+  // }
   return chromosome;
 };
