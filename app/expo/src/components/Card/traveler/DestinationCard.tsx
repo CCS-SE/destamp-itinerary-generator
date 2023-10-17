@@ -149,7 +149,11 @@ export default function DestinationCard({
           minDate={date}
           maxDate={date}
           noteString={title}
-          amount={(getPrice(price) * travellerCount).toFixed(2)}
+          amount={
+            categoryType == PlaceType.Restaurant
+              ? (getPrice(price) * travellerCount).toFixed(2)
+              : price
+          }
           categoryType={categoryType}
         />
       </BottomHalfModal>
