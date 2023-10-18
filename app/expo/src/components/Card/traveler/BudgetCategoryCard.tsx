@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 
 interface BudgetCategoryCardProps {
   icon: React.ReactNode;
