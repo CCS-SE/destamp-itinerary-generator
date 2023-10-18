@@ -94,6 +94,33 @@ export default function ItineraryCard({
     return destinations;
   }
 
+  const arrangedDestinations = (): Destination[] => {
+    const restaurants = destinations.filter(
+      (dest) => dest.type === PlaceType.Restaurant,
+    ) as Destination[];
+    const otherDestinations = destinations.filter(
+      (dest) => dest.type !== PlaceType.Restaurant,
+    ) as Destination[];
+
+    const arrangedDestinations: Destination[] = [];
+    let i = 0;
+    let j = 0;
+
+    while (i < otherDestinations.length || j < restaurants.length) {
+      if (j < restaurants.length) {
+        arrangedDestinations.push(restaurants[j]!);
+        j++;
+      }
+      if (i < otherDestinations.length) {
+        arrangedDestinations.push(otherDestinations[i]!);
+        i++;
+      }
+    }
+
+    return arrangedDestinations;
+  };
+
+  destinations = arrangedDestinations();
   moveAccommodationToFront();
 
   const displayTime = (index: number) => {
