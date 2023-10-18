@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 
 import { ExpenseCategory } from '~/graphql/generated';
 import Accommodation from '../../../assets/images/accommodation-field.svg';
@@ -27,8 +27,10 @@ export default function BudgetCategorySelection({
     onOptionChange(updatedOptions);
   };
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View>
+    <View style={{ width: screenWidth / 1.5 }}>
       <View className="flex-row">
         <BudgetCategoryCard
           icon={<Accommodation height={25} width={25} />}

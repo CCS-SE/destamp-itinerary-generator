@@ -44,6 +44,8 @@ export const GetTravelersItineraryQuery = gql(
           preferredTime
           isAccommodationIncluded
           isTransportationIncluded
+          adultCount
+          childCount
           departingLocation {
             name
           }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { RangeSlider } from '@react-native-assets/slider';
 
 interface PreferedTimeProps {
@@ -56,10 +56,10 @@ export default function PreferedTimeSelection({
   };
 
   return (
-    <View className="items-start">
+    <ScrollView showsVerticalScrollIndicator={true} className="h-44">
       {ranges.map((range, index) => (
         <View key={index}>
-          <View className="w-[330] flex-row items-center justify-between">
+          <View className="w-[310] flex-row items-center justify-between">
             <Text className="font-poppins-medium text-lg text-gray-500">{`Day  ${
               index + 1
             }`}</Text>
@@ -73,7 +73,7 @@ export default function PreferedTimeSelection({
             <Text className="font-poppins text-base text-gray-600">{`${MIN} AM`}</Text>
             <RangeSlider
               style={{
-                width: 250,
+                width: 225,
                 height: 25,
                 flexGrow: 0,
                 paddingHorizontal: 12,
@@ -94,6 +94,6 @@ export default function PreferedTimeSelection({
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }

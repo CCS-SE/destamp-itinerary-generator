@@ -54,6 +54,7 @@ export default function MyTripScreen() {
               endDate={item.endDate}
               budget={item.budget}
               travelSize={item.travelSize}
+              totalTravellers={item.adultCount! + item.childCount!}
             />
           )}
           showsVerticalScrollIndicator={false}

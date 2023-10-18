@@ -57,6 +57,8 @@ interface ItineraryCardProps {
   travelDurations: number[];
   preferredTime: string[];
   destinations: Destination[] | [];
+  adultCount: number;
+  childCount: number;
 }
 
 export default function ItineraryCard({
@@ -72,11 +74,55 @@ export default function ItineraryCard({
   preferredTime,
   travelDurations,
   isTransportationIncluded,
+  adultCount,
+  childCount,
 }: ItineraryCardProps) {
   const { push } = useRouter();
 
   const hour = getStartTime(preferredTime, 0);
   const min = getStartTime(preferredTime, 1);
+
+  function moveAccommodationToFront() {
+    const itemToMove = destinations.find(
+      (item) => item?.type === PlaceType.Accommodation,
+    ) as never;
+    if (destinations.includes(itemToMove)) {
+      destinations = destinations.filter((item) => item !== itemToMove);
+
+      destinations = [itemToMove as Destination, ...destinations];
+    }
+    return destinations;
+  }
+
+  const arrangedDestinations = (): Destination[] => {
+    const restaurants = destinations.filter(
+      (dest) => dest.type === PlaceType.Restaurant,
+    ) as Destination[];
+    const otherDestinations = destinations.filter(
+      (dest) => dest.type !== PlaceType.Restaurant,
+    ) as Destination[];
+
+    const arrangedDestinations: Destination[] = [];
+    let i = 0;
+    let j = 0;
+
+    while (i < otherDestinations.length || j < restaurants.length) {
+      if (j < restaurants.length) {
+        arrangedDestinations.push(restaurants[j]!);
+        j++;
+      }
+      if (i < otherDestinations.length) {
+        arrangedDestinations.push(otherDestinations[i]!);
+        i++;
+      }
+    }
+
+    return arrangedDestinations;
+  };
+
+  destinations = arrangedDestinations();
+  moveAccommodationToFront();
+
   const displayTime = (index: number) => {
     const firstPlaceTime = destinations[0]?.visitDuration || 0; // Ensure it's a number
 
@@ -212,6 +258,8 @@ export default function ItineraryCard({
                           item.images,
                         )
                       }
+                      adultCount={adultCount}
+                      childCount={childCount}
                     />
                   </View>
 
@@ -239,7 +287,10 @@ export default function ItineraryCard({
                         isTransportationIncluded={isTransportationIncluded}
                         transportationPrice={`${calculateTravelExpense(
                           travelDistances[index]!,
+                          travelDurations[index]!,
                         )}`}
+                        adultCount={adultCount}
+                        childCount={childCount}
                       />
                     </View>
                   )}

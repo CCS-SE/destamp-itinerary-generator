@@ -8,6 +8,7 @@ import { Model } from 'react-model';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import { PlaceType } from '~/graphql/generated';
+import { calculateAveragePrice } from '~/utils/utils';
 
 interface SlideStateProps {
   imgList: string[];
@@ -34,6 +35,8 @@ interface DestinationCardProps {
   date: Date;
   categoryType: PlaceType;
   onPress: () => void;
+  adultCount: number;
+  childCount: number;
 }
 
 export default function DestinationCard({
@@ -45,12 +48,15 @@ export default function DestinationCard({
   date,
   onPress,
   categoryType,
+  adultCount,
+  childCount,
 }: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
   const [addExpenseModal, setAddExpenseModal] = useState(false);
 
   const isFree = price === '0';
+  const travellerCount = adultCount + childCount;
 
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
@@ -129,7 +135,11 @@ export default function DestinationCard({
           minDate={date}
           maxDate={date}
           noteString={title}
-          amount={price}
+          amount={
+            categoryType == PlaceType.Restaurant
+              ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
+              : price
+          }
           categoryType={categoryType}
         />
       </BottomHalfModal>
