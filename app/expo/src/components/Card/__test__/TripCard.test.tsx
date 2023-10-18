@@ -34,7 +34,10 @@ describe('Trip Card', () => {
     );
     expect(dateElement.children[0]).toBe('Jun 9, 2023  •  4 days');
     expect(travelSizeElement.children[0]).toBe(
-      toSentenceCase(tripCardData.travelSize),
+      toSentenceCase(tripCardData.travelSize) +
+        ' (' +
+        toSentenceCase(tripCardData.totalTravellers.toString()) +
+        ') ',
     );
   });
 
