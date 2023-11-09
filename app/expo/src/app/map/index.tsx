@@ -32,18 +32,10 @@ export default function MapScreen() {
     },
   });
 
-  let mapIndex = 0;
-  let mapAnimation = new Animated.Value(0);
-
-  let firstDestination: any;
-  if (data) {
-    const destinations =
-      data.itinerary.dailyItineraries[parseInt(selectedDay as string)]!
-        .destinations;
-    firstDestination = destinations[0];
-  }
+  const mapAnimation = new Animated.Value(0);
 
   useEffect(() => {
+    let mapIndex = 0;
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3);
       const destinations =
@@ -73,17 +65,6 @@ export default function MapScreen() {
       }, 100);
     });
   });
-
-  const onMarkerPress = (mapEventData: any) => {
-    const markerID = mapEventData._targetInst.return.key;
-
-    let x = markerID * CARD_WIDTH + markerID * 20;
-    if (Platform.OS === 'ios') {
-      x = x - SPACING_FOR_CARD_INSET;
-    }
-
-    scrollView?.current?.scrollTo({ x: x, y: 0, animated: true });
-  };
 
   const interpolations = data!.itinerary.dailyItineraries[
     parseInt(selectedDay as string)
@@ -117,11 +98,16 @@ export default function MapScreen() {
         className="h-screen w-screen"
         provider={PROVIDER_GOOGLE}
         onMapReady={() => {
-          if (firstDestination && mapRef.current) {
+          const destinations =
+            data?.itinerary.dailyItineraries[parseInt(selectedDay as string)]!
+              .destinations;
+          const firstDestination = destinations![0];
+
+          if (destinations![0] && mapRef.current) {
             mapRef.current.animateToRegion(
               {
-                latitude: firstDestination.latitude,
-                longitude: firstDestination.longitude,
+                latitude: firstDestination!.latitude,
+                longitude: firstDestination!.longitude,
                 latitudeDelta: 0.09422,
                 longitudeDelta: 0.04422,
               },
@@ -151,7 +137,6 @@ export default function MapScreen() {
                   longitude: destination.longitude,
                 }}
                 pinColor="#F65A82"
-                onPress={(e) => onMarkerPress(e)}
               >
                 <Animated.View className="h-32 w-32 items-center justify-center">
                   <Animated.View
