@@ -48,17 +48,17 @@ export default function DirectionCard({
 
   return (
     <View
-      className="ml-8 mr-2 h-[45] flex-row items-center rounded-xl bg-gray-100 pr-3"
-      style={{ width: screenWidth / 1.29 }}
+      className="mx-7 h-[45] flex-row items-center rounded-xl bg-gray-100 pr-3"
+      style={{ width: screenWidth / 1.31 }}
     >
       <View className="mx-2">{icon}</View>
       <View className="flex-1 flex-row items-center justify-between">
-        <Text className="mx-2 font-poppins text-base text-gray-400">
+        <Text className="mx-2 font-poppins text-sm text-gray-400">
           {`${duration} • ${distance}`}
         </Text>
         {isTransportationIncluded ? (
           <View className="mr-3 rounded-md bg-orange-100 px-2">
-            <Text className="font-poppins text-base text-orange-600">
+            <Text className="font-poppins text-sm text-orange-600">
               {`₱${transportationPrice}`}
             </Text>
           </View>
@@ -68,7 +68,7 @@ export default function DirectionCard({
       </View>
       {isTransportationIncluded && (
         <TouchableOpacity onPress={() => setAddExpenseModal(true)}>
-          <MaterialCommunityIcons name="cash-plus" size={24} color="gray" />
+          <MaterialCommunityIcons name="cash-plus" size={24} color="#989FB0" />
         </TouchableOpacity>
       )}
       <BottomHalfModal
