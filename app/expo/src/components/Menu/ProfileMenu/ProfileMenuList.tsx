@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Alert, FlatList, Text } from 'react-native';
+import { Alert, FlatList } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@clerk/clerk-expo';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
