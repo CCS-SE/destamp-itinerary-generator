@@ -14,10 +14,10 @@ export default function MyTripEmptyState() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     router.push('/trip/create/');
   };
-  const { session } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
-      userId: session ? session.user.id : '',
+      userId: user ? user.id : '',
     },
   });
 

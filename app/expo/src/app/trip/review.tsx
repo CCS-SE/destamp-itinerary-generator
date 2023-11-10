@@ -40,7 +40,7 @@ const isIncluded = (
 
 export default function ReviewInfoScreen() {
   const router = useRouter();
-  const { session } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const {
     destinationId,
@@ -93,7 +93,7 @@ export default function ReviewInfoScreen() {
 
   const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
-      userId: session ? session.user.id : '',
+      userId: user ? user.id : '',
     },
   });
 
@@ -156,7 +156,7 @@ export default function ReviewInfoScreen() {
         {
           query: GetTravelerTripsDocument,
           variables: {
-            userId: session ? session.user.id : '',
+            userId: user ? user.id : '',
           },
         },
       ],
