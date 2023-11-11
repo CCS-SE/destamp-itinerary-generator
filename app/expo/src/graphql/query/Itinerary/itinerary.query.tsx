@@ -25,6 +25,8 @@ export const GetTravelersItineraryQuery = gql(
               contactNumber
               address
               isClaimed
+              latitude
+              longitude
               images {
                 url
               }

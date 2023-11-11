@@ -25,7 +25,7 @@ interface TripMenuListProps {
 }
 
 function TripMenuList({ onModalClose, id }: TripMenuListProps) {
-  const { session } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const [deleteTrip] = useMutation(DeleteTripDocument, {
     variables: {
@@ -46,7 +46,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
         const existingTrips = cache.readQuery({
           query: GetTravelerTripsDocument,
           variables: {
-            userId: session ? session.user.id : '',
+            userId: user ? user.id : '',
           },
         });
 
@@ -59,7 +59,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
         cache.writeQuery({
           query: GetTravelerTripsDocument,
           variables: {
-            userId: session ? session.user.id : '',
+            userId: user ? user.id : '',
           },
           data: { travelerTrips: updatedTrips },
         });
@@ -117,8 +117,8 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
       renderItem={({ item }) => (
         <TripMenuItem
           onClick={() => {
-            item.onClick();
             onModalClose();
+            item.onClick();
           }}
           item={item}
         />
