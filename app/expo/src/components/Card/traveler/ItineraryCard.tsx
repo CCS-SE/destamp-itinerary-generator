@@ -12,6 +12,7 @@ import {
   calculateTravelExpense,
   getTravelDistance,
   getTravelDuration,
+  taxisNeeded,
 } from '~/utils/utils';
 import Accommodation from '../../../../assets/images/accommodation-itinerary.svg';
 import Attraction from '../../../../assets/images/attraction-icon.svg';
@@ -175,10 +176,12 @@ export default function ItineraryCard({
         transportationCost={transportationCost!}
         totalCost={
           attractionCost! +
-          transportationCost! +
+          transportationCost! * taxisNeeded(adultCount, childCount) +
           calculateAveragePrice(foodCost) +
           accommodationCost
         }
+        adultCount={adultCount}
+        childCount={childCount}
       />
       <View className="flex-row" style={{ width: screenWidth }}>
         <DashedLine

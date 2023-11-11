@@ -203,3 +203,15 @@ export const areDatesEqual = (date1: Date, date2: Date) => {
 export const getPreferredTime = (preferredTimeValues: [number, number][]) => {
   return preferredTimeValues.map(([start, end]) => `${start}:00-${end}:00`);
 };
+
+export const taxisNeeded = (adultCount: number, childCount: number) => {
+  const personCount = adultCount + childCount;
+  if (personCount < 1) {
+    return 0;
+  } else if (personCount <= 4) {
+    return 1;
+  } else {
+    const taxisNeeded = (personCount - 1) / 4;
+    return Math.floor(taxisNeeded) + 1;
+  }
+};

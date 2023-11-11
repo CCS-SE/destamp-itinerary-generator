@@ -1,6 +1,6 @@
 import { Dimensions, Text, View } from 'react-native';
 
-import { amountFormatter } from '~/utils/utils';
+import { amountFormatter, taxisNeeded } from '~/utils/utils';
 import Accommodation from '../../../../assets/images/accommodation.svg';
 import Attraction from '../../../../assets/images/attraction.svg';
 import Food from '../../../../assets/images/food.svg';
@@ -12,6 +12,8 @@ interface DayExpenseCardProps {
   foodCost: string;
   transportationCost: number;
   totalCost: number;
+  adultCount: number;
+  childCount: number;
 }
 
 interface DayExpenseTextProps {
@@ -24,6 +26,8 @@ export default function DayExpenseCard({
   foodCost,
   transportationCost,
   totalCost,
+  adultCount,
+  childCount,
 }: DayExpenseCardProps) {
   const formatCurrency = (amount: number): string =>
     `₱${amountFormatter(amount)}`;
@@ -56,7 +60,11 @@ export default function DayExpenseCard({
         <Food height={18} width={18} />
         <DayExpenseText value={foodCost} />
         <Transportation height={18} width={18} />
-        <DayExpenseText value={formatCurrency(transportationCost)} />
+        <DayExpenseText
+          value={formatCurrency(
+            transportationCost * taxisNeeded(adultCount, childCount),
+          )}
+        />
       </View>
     </View>
   );

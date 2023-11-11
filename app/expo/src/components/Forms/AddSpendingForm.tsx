@@ -149,6 +149,7 @@ export default function AddSpendingForm({
           return (
             <View>
               <CustomTextInput
+                maxLength={8}
                 testID="amount-input"
                 placeholder="Amount"
                 defaultValue={amount ? amount : ''}

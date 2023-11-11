@@ -33,9 +33,12 @@ export default function TravelGroupCategorySelection({
     count: number,
     setCount: (count: number) => void,
     onChange: (count: number) => void,
+    maxCount: number = 1000,
   ) => {
-    setCount(count + 1);
-    onChange(count + 1);
+    if (count < maxCount) {
+      setCount(count + 1);
+      onChange(count + 1);
+    }
   };
 
   const decrementCount = (
@@ -43,9 +46,8 @@ export default function TravelGroupCategorySelection({
     setCount: (count: number) => void,
     onChange: (count: number) => void,
     minCount: number = 0,
-    familyCount: number = 0,
   ) => {
-    if (count + familyCount > minCount) {
+    if (count > minCount) {
       setCount(count - 1);
       onChange(count - 1);
     }
@@ -100,7 +102,7 @@ export default function TravelGroupCategorySelection({
           label="People"
           count={groupCount}
           onIncrement={() =>
-            incrementCount(groupCount, setGroupCount, onGroupCountChange)
+            incrementCount(groupCount, setGroupCount, onGroupCountChange, 10)
           }
           onDecrement={() =>
             decrementCount(groupCount, setGroupCount, onGroupCountChange, 3)
@@ -115,13 +117,7 @@ export default function TravelGroupCategorySelection({
               incrementCount(adultCount, setAdultCount, onAdultCountChange)
             }
             onDecrement={() =>
-              decrementCount(
-                adultCount,
-                setAdultCount,
-                onAdultCountChange,
-                2,
-                childCount,
-              )
+              decrementCount(adultCount, setAdultCount, onAdultCountChange, 2)
             }
           />
           <Counter
@@ -131,13 +127,7 @@ export default function TravelGroupCategorySelection({
               incrementCount(childCount, setChildCount, onChildCountChange)
             }
             onDecrement={() =>
-              decrementCount(
-                childCount,
-                setChildCount,
-                onChildCountChange,
-                2,
-                adultCount,
-              )
+              decrementCount(childCount, setChildCount, onChildCountChange, 1)
             }
           />
         </View>

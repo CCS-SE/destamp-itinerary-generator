@@ -97,14 +97,7 @@ export default function DestinationCard({
             >
               {title}
             </Text>
-            <View className="mb-1 flex-row">
-              <Text
-                className={`+ ml-2 font-poppins text-sm text-gray-400 ${
-                  time ? 'mr-1' : ''
-                }  `}
-              >
-                {time}
-              </Text>
+            <View className="mb-1 ml-3 flex-row">
               <PriceTag isFree={isFree} price={price} />
             </View>
           </TouchableOpacity>
@@ -138,6 +131,8 @@ export default function DestinationCard({
           amount={
             categoryType == PlaceType.Restaurant
               ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
+              : categoryType == PlaceType.Attraction
+              ? (parseInt(price) * travellerCount).toFixed(2)
               : price
           }
           categoryType={categoryType}
