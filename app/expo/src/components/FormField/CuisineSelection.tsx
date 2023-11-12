@@ -48,7 +48,7 @@ export default function CuisineSelection({
 
 const cuisines = [
   {
-    title: "Local's Best",
+    title: 'Locals Best',
     keyword: 'LocalsBest',
   },
   {
