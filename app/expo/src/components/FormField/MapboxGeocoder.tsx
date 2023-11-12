@@ -13,23 +13,15 @@ import axios from 'axios';
 
 type Coordinate = [number, number];
 
-interface ItemProps {
-  id: number | string;
-  name: string;
+interface MapboxLocation {
   place_name: string;
+  name: string;
   center: Coordinate;
 }
 
 interface GeocoderProps {
   placeholder: string;
-  onChange: (item: ItemProps) => void;
-}
-
-interface MapboxLocation {
-  id: string;
-  place_name: string;
-  name: string;
-  center: Coordinate;
+  onChange: (item: MapboxLocation) => void;
 }
 
 export default function GeocoderSearch({
@@ -37,8 +29,7 @@ export default function GeocoderSearch({
   onChange,
 }: GeocoderProps) {
   const [search, setSearch] = useState('');
-  const [selectedValue, setSelectedValue] = useState<ItemProps>({
-    id: '',
+  const [selectedValue, setSelectedValue] = useState<MapboxLocation>({
     name: '',
     center: [0, 0],
     place_name: '',
@@ -50,13 +41,11 @@ export default function GeocoderSearch({
   const handlOnClearPress = () => {
     setSearch('');
     setSelectedValue({
-      id: '',
       name: '',
       center: [0, 0],
       place_name: '',
     });
     onChange({
-      id: '',
       name: '',
       center: [0, 0],
       place_name: '',
@@ -87,17 +76,15 @@ export default function GeocoderSearch({
     }
   };
 
-  const ItemView = ({ name, id, center, place_name }: ItemProps) => {
+  const ItemView = ({ name, center, place_name }: MapboxLocation) => {
     const handleItemPress = () => {
       setSearch(name);
       setSelectedValue({
-        id: id,
         name: name,
         center: center,
         place_name: place_name,
       });
       onChange({
-        id: id,
         name: name,
         center: center,
         place_name: place_name,
@@ -139,7 +126,6 @@ export default function GeocoderSearch({
         renderItem={({ item }) => (
           <ItemView
             name={item.place_name}
-            id={item.id}
             place_name={item.place_name}
             center={item.center}
           />
