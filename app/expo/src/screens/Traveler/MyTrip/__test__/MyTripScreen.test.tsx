@@ -2,7 +2,7 @@ import React from 'react';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { render, screen, waitFor } from '@testing-library/react-native';
 
-import MyTripScreen from '~/app/(tabs)/index';
+import MyTripScreen from '~/app/(tabs)';
 import {
   EmptyTripsQueryMock,
   ErrorTripsQueryMock,
