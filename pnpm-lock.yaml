@@ -344,7 +344,7 @@ importers:
         specifier: ^1.10.13
         version: 1.10.14(eslint@8.50.0)
       jest:
-        specifier: ^29.6.4
+        specifier: ^29.7.0
         version: 29.7.0(@types/node@20.8.0)(ts-node@10.9.1)
       postcss:
         specifier: ^8.4.26

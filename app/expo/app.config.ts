@@ -60,7 +60,7 @@ const defineConfig = (): ExpoConfig => ({
   },
   extra: {
     eas: {
-      projectId: '3ea5d855-b187-4ff7-be0d-11b983818225',
+      projectId: '74ce95e0-3e47-4274-84a5-42acaf913fdd',
     },
     SUPABASE_URL,
     SUPABASE_ANON_KEY,

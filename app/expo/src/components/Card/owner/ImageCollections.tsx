@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   Image,
-  ImageSourcePropType,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
-const ImageCollections = ({ images }: { images: ImageSourcePropType[] }) => {
+import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+
+interface ImageItem {
+  url: string;
+}
+
+const ImageCollections = ({ images }: { images: ImageItem[] }) => {
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<ImageItem | null>(null);
+
+  const openModal = (image: ImageItem) => {
+    setSelectedImage(image); // Set the selected image
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Photos</Text>
@@ -16,12 +35,22 @@ const ImageCollections = ({ images }: { images: ImageSourcePropType[] }) => {
         <FlatList
           data={images}
           renderItem={({ item }) => (
-            <Image source={item} style={styles.image}></Image>
+            <TouchableOpacity onPress={() => openModal(item)}>
+              <Image source={{ uri: item.url }} style={styles.image} />
+            </TouchableOpacity>
           )}
           keyExtractor={(item, index) => index.toString()}
           horizontal={true}
         />
       </View>
+      {selectedImage && (
+        <BottomHalfModal isVisible={isModalVisible} onClose={closeModal}>
+          <Image
+            source={{ uri: selectedImage.url }}
+            style={styles.modalImage}
+          />
+        </BottomHalfModal>
+      )}
     </View>
   );
 };
@@ -42,6 +71,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     marginHorizontal: 5,
+  },
+  modalImage: {
+    width: '100%', // Adjust the size as needed
+    height: 300,
   },
 });
 
