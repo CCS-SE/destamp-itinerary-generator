@@ -90,7 +90,7 @@ export default function AmountTextInput({
           value={amount}
           onChangeText={handleAmountChange}
           inputMode="numeric"
-          maxLength={5}
+          maxLength={7}
         />
       </View>
       {!!errorMsg && !!amount && (
