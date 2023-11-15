@@ -33,7 +33,6 @@ export interface TripPreferenceData {
   activities: Activities;
   diningStyles: string[];
   cuisines: string[];
-  transportationStyle: string;
 }
 
 export interface ReviewTripData {
