@@ -46,9 +46,8 @@ export default function TravelSizeCategorySelection({
     setCount: (count: number) => void,
     onChange: (count: number) => void,
     minCount: number = 0,
-    familyCount: number = 0,
   ) => {
-    if (count + familyCount > minCount) {
+    if (count > minCount) {
       setCount(count - 1);
       onChange(count - 1);
     }
@@ -116,7 +115,7 @@ export default function TravelSizeCategorySelection({
               travelerCount,
               setTravelerCount,
               onTravelerCountChange,
-              2,
+              3,
             );
           }}
         />
@@ -134,19 +133,12 @@ export default function TravelSizeCategorySelection({
               );
             }}
             onDecrement={() => {
-              decrementCount(
-                adultCount,
-                setAdultCount,
-                onAdultCountChange,
-                2,
-                childCount,
-              );
+              decrementCount(adultCount, setAdultCount, onAdultCountChange, 2);
               decrementCount(
                 travelerCount,
                 setTravelerCount,
                 onTravelerCountChange,
                 2,
-                childCount,
               );
             }}
           />
@@ -155,27 +147,9 @@ export default function TravelSizeCategorySelection({
             count={childCount}
             onIncrement={() => {
               incrementCount(childCount, setChildCount, onChildCountChange);
-              incrementCount(
-                travelerCount,
-                setTravelerCount,
-                onTravelerCountChange,
-              );
             }}
             onDecrement={() => {
-              decrementCount(
-                childCount,
-                setChildCount,
-                onChildCountChange,
-                2,
-                adultCount,
-              );
-              decrementCount(
-                travelerCount,
-                setTravelerCount,
-                onTravelerCountChange,
-                2,
-                adultCount,
-              );
+              decrementCount(childCount, setChildCount, onChildCountChange, 1);
             }}
           />
         </View>
