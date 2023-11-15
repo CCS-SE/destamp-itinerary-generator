@@ -9,6 +9,7 @@ import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import { PlaceType } from '~/graphql/generated';
 import { calculateAveragePrice } from '~/utils/utils';
+import Person from '../../../../assets/images/person.svg';
 
 interface SlideStateProps {
   imgList: string[];
@@ -66,8 +67,8 @@ export default function DestinationCard({
   return (
     <View className="rounded-2x mt-5 w-[360] flex-row ">
       <View
-        className="rounded-2x ml-8 mr-2 h-[200] pr-3"
-        style={{ width: screenWidth / 1.24 }}
+        className="rounded-2x mx-7 mr-2 h-[200] pr-3"
+        style={{ width: screenWidth / 1.26 }}
       >
         <Swiper
           loadMinimal
@@ -92,8 +93,9 @@ export default function DestinationCard({
             activeOpacity={1}
           >
             <Text
-              className="ml-2.5 font-poppins text-base text-gray-500"
+              className="ml-2 font-poppins text-base text-gray-500"
               style={{ width: screenWidth / 1.6 }}
+              numberOfLines={1}
             >
               {title}
             </Text>
@@ -190,13 +192,16 @@ interface PriceTagProps {
 const PriceTag = ({ price, isFree }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
-      <Text
-        className={`px-1.5 font-poppins-medium text-sm ${
-          isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
-        } `}
-      >
-        {isFree ? 'Free' : `₱${price}`}
-      </Text>
+      <View className="flex-row items-center justify-center px-1.5">
+        <Text
+          className={`mx-0.5 mt-0.5 font-poppins-medium text-xs ${
+            isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
+          } `}
+        >
+          {isFree ? 'Free' : `₱${price}`}
+        </Text>
+        {isFree ? null : <Person height={10} width={10} />}
+      </View>
     </View>
   );
 };

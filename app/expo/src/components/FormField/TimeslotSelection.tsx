@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { RangeSlider } from '@react-native-assets/slider';
 
 interface PreferedTimeProps {
@@ -19,7 +19,7 @@ const CustomThumb = ({ value }: CustomThumbProps) => {
 const MIN = 6;
 const MAX = 24;
 
-export default function PreferedTimeSelection({
+export default function TimeslotSelection({
   tripDuration,
   onValueChange,
 }: PreferedTimeProps) {
@@ -56,7 +56,7 @@ export default function PreferedTimeSelection({
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={true} className="h-44">
+    <View>
       {ranges.map((range, index) => (
         <View key={index}>
           <View className="w-[310] flex-row items-center justify-between">
@@ -94,6 +94,6 @@ export default function PreferedTimeSelection({
           </View>
         </View>
       ))}
-    </ScrollView>
+    </View>
   );
 }

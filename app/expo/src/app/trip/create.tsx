@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { useQuery } from '@apollo/client';
 import { Moment } from 'moment';
 
 import StepperButton from '~/components/Button/StepperButton';
@@ -13,75 +13,24 @@ import AutoComplete from '~/components/FormField/Autocomplete';
 import BudgetCategorySelection from '~/components/FormField/BudgetCategorySelection';
 import DateRangePicker from '~/components/FormField/DateRangePicker';
 import GeocoderSearch from '~/components/FormField/MapboxGeocoder';
-import PreferedTimeSelection from '~/components/FormField/PreferedTimeSelection';
-import TravelGroupCategorySelection from '~/components/FormField/TravelGroupCategorySelection';
+import TimeslotSelection from '~/components/FormField/TimeslotSelection';
+import TravelSizeCategorySelection from '~/components/FormField/TravelSizeCategorySelection';
 import Stepper from '~/components/Stepper/Stepper';
-import {
-  ExpenseCategory,
-  GetDestinationsQueryDocument,
-  TravelSize,
-} from '~/graphql/generated';
+import { CreateTripData } from '~/store/types';
+import useFormstore, { initialFormState } from '~/store/useFormStore';
 import { tripDuration } from '~/utils/dates';
-import {
-  confirmationAlert,
-  getAdultCount,
-  getChildCount,
-  getPreferredTime,
-} from '~/utils/utils';
+import { confirmationAlert } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
-type Coordinate = [number, number];
-
-interface SectionProps {
+interface Section {
   title: string;
 }
 
-interface LocationProps {
-  id: number | string;
-  name: string;
-  place_name: string;
-  center: Coordinate;
-}
-
-interface TripDataProps {
-  travelDestination: string;
-  departureLocation: string;
-  travelGroup: TravelSize;
-  startDate: Moment | null;
-  preferredTime: Array<[number, number]>;
-  budgetInclusions: [ExpenseCategory];
-  budget: string;
-  endDate: Moment | null;
-  adultCount: number;
-  childCount: number;
-  groupCount: number;
-}
-
-const initialTripData: TripDataProps = {
-  travelDestination: '',
-  departureLocation: '',
-  travelGroup: TravelSize.Solo,
-  startDate: null,
-  endDate: null,
-  preferredTime: [[10, 18]],
-  budgetInclusions: [ExpenseCategory.Accommodation],
-  budget: '',
-  adultCount: 2,
-  childCount: 1,
-  groupCount: 3,
-};
-
-const initialLocationDate: LocationProps = {
-  id: '',
-  name: '',
-  center: [0, 0],
-  place_name: '',
-};
-
 export default function CreateTripScreen() {
   const router = useRouter();
-  const { section, title } = useLocalSearchParams();
-  const { data } = useQuery(GetDestinationsQueryDocument);
+  const { tripData, setData, reset } = useFormstore();
+  const { section } = useLocalSearchParams();
+  const scrollViewRef = useRef<ScrollView | null>(null);
 
   const [activeSection, setActiveSection] = useState<number>(0);
   const [activeSections, setActiveSections] = useState<number[]>([0]);
@@ -90,41 +39,36 @@ export default function CreateTripScreen() {
   const [tripDurationDays, setTripDurationDays] = useState<number>(1);
   const [budgetError, setBudgetError] = useState('');
 
-  const [tripData, setTripData] = useState<TripDataProps>(initialTripData);
-  const [selectedDepartureLocation, setSelectedDepartureLocation] =
-    useState<LocationProps>(initialLocationDate);
+  const [timeslots, setPreferredTimeValues] = useState<Array<[number, number]>>(
+    [],
+  );
 
-  const [preferredTimeValues, setPreferredTimeValues] = useState<
-    Array<[number, number]>
-  >([]);
-
-  const startDateString = tripData.startDate
-    ? tripData.startDate.format('YYYY-MM-DD')
-    : '';
-  const endDateString = tripData.endDate
-    ? tripData.endDate.format('YYYY-MM-DD')
-    : '';
+  const formatDateToString = (date: Moment | null) => {
+    return date ? date.format('YYYY-MM-DD') : '';
+  };
 
   const handleTripDataChange = (name: string, newValue: unknown) => {
-    setTripData({
-      ...tripData,
-      [name]: newValue,
+    setData({
+      step: 1,
+      data: {
+        ...tripData,
+        [name]: newValue,
+      },
     });
-
-    if (name === 'departureLocation' && newValue) {
-      setSelectedDepartureLocation(newValue as LocationProps);
-    }
   };
 
   const handleDateChange = (
     startDate: Moment | null,
     endDate: Moment | null,
   ) => {
-    setTripData((prevData) => ({
-      ...prevData,
-      startDate: startDate,
-      endDate: endDate,
-    }));
+    setData({
+      step: 1,
+      data: {
+        ...tripData,
+        startDate: startDate,
+        endDate: endDate,
+      },
+    });
 
     if (startDate && endDate) {
       const numberOfDays = endDate.diff(startDate, 'days') + 1;
@@ -143,7 +87,7 @@ export default function CreateTripScreen() {
 
   const handleBackButtonPress = () => {
     const hasChanged =
-      JSON.stringify(tripData) !== JSON.stringify(initialTripData);
+      JSON.stringify(initialFormState.tripData) !== JSON.stringify(tripData);
 
     if (hasChanged) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -153,6 +97,7 @@ export default function CreateTripScreen() {
         'Discard',
         'Cancel',
         () => {
+          reset();
           router.back();
         },
       );
@@ -169,6 +114,7 @@ export default function CreateTripScreen() {
   };
 
   const handleNextStep = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     if (!visitedSteps.includes(activeSection)) {
       // Add the current section to the visited sections
       setVisitedSteps([...visitedSteps, activeSection]);
@@ -189,6 +135,12 @@ export default function CreateTripScreen() {
         setVisitedSteps([...visitedSteps, nextStep]);
       }
     }
+
+    scrollViewRef.current?.scrollTo({
+      x: 0,
+      y: 54 * (activeSection + 1) - activeSection * 10,
+      animated: true,
+    });
   };
 
   const handleSaveTrip = () => {
@@ -200,36 +152,16 @@ export default function CreateTripScreen() {
 
     if (!missingDataSection && budgetError == '') {
       setCompletedSteps([...completedSteps, activeSection]);
-      router.push({
-        pathname: '/trip/review',
-        params: {
-          departingLocation: selectedDepartureLocation.name,
-          travelGroup: tripData.travelGroup,
-          groupCount: tripData.groupCount,
-          adultCount: getAdultCount(
-            tripData.travelGroup,
-            tripData.adultCount,
-            tripData.groupCount,
-          ),
-          childCount: getChildCount(tripData.travelGroup, tripData.childCount),
-          startDate: startDateString,
-          endDate: endDateString,
-          budget: tripData.budget,
-          budgetInclusions: tripData.budgetInclusions,
-          preferredTime: getPreferredTime(preferredTimeValues),
-          title: title ? title : `${tripData?.travelDestination} Trip`,
-          locationName: selectedDepartureLocation.name,
-          locationAddress: selectedDepartureLocation.place_name || '',
-          locationLng: selectedDepartureLocation.center[0] || 0,
-          locationLat: selectedDepartureLocation.center[1] || 0,
-          destinationId: data
-            ? data.destinations.find(
-                (a) => a.name === tripData?.travelDestination,
-              )!.id
-            : '',
+      setData({
+        step: 1,
+        data: {
+          ...tripData,
+          timeslots: timeslots,
         },
       });
+      router.push('/trip/preference/');
     }
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
   const isLastStep = activeSection === Sections.length - 1;
@@ -246,11 +178,7 @@ export default function CreateTripScreen() {
     }
   };
 
-  const renderHeader = (
-    section: SectionProps,
-    index: number,
-    isActive: boolean,
-  ) => {
+  const renderHeader = (section: Section, index: number, isActive: boolean) => {
     const isCompleted = completedSteps.includes(index);
 
     return (
@@ -273,38 +201,32 @@ export default function CreateTripScreen() {
     );
   };
 
-  const destinations = data
-    ? data.destinations.map((destination) => ({
-        id: destination.id.toString(),
-        title: destination.name,
-      }))
-    : [];
-
   const fields = [
     <AutoComplete
       key={1}
       data={destinations}
-      onChange={(value) => handleTripDataChange('travelDestination', value)}
+      onChange={(value) => handleTripDataChange('destination', value)}
     />,
     <GeocoderSearch
       key={2}
-      placeholder="Search Departing Location"
-      onChange={(value) => handleTripDataChange('departureLocation', value)}
+      placeholder="Search Starting Location"
+      onChange={(value) => handleTripDataChange('startingLocation', value)}
     />,
-    <TravelGroupCategorySelection
+    <TravelSizeCategorySelection
       key={3}
-      onTravelGroupChange={(value) =>
-        handleTripDataChange('travelGroup', value)
-      }
+      onTravelGroupChange={(value) => handleTripDataChange('travelSize', value)}
       onGroupCountChange={(value) => handleTripDataChange('groupCount', value)}
       onAdultCountChange={(value) => handleTripDataChange('adultCount', value)}
       onChildCountChange={(value) => handleTripDataChange('childCount', value)}
+      onTravelerCountChange={(value) =>
+        handleTripDataChange('travelerCount', value)
+      }
     />,
     <DateRangePicker
       key={4}
       onDateChange={(sd, ed) => handleDateChange(sd, ed)}
     />,
-    <PreferedTimeSelection
+    <TimeslotSelection
       key={5}
       onValueChange={(values) => setPreferredTimeValues(values)}
       tripDuration={tripDurationDays}
@@ -318,14 +240,11 @@ export default function CreateTripScreen() {
     <AmountTextInput
       key={7}
       budgetInlusions={tripData.budgetInclusions}
-      duration={tripDuration(startDateString, endDateString)}
-      totalTraveler={
-        getAdultCount(
-          tripData.travelGroup,
-          tripData.adultCount,
-          tripData.groupCount,
-        ) + getChildCount(tripData.travelGroup, tripData.childCount)
-      }
+      duration={tripDuration(
+        formatDateToString(tripData.startDate),
+        formatDateToString(tripData.endDate),
+      )}
+      totalTraveler={tripData.travelerCount}
       onChangeText={(value) => handleTripDataChange('budget', value)}
       onBudgetError={(value) => setBudgetError(value)}
     />,
@@ -345,7 +264,8 @@ export default function CreateTripScreen() {
           title: 'Create Trip',
           headerTitleStyle: {
             color: '#504D4D',
-            fontSize: 22,
+            fontSize: 21,
+            fontFamily: 'Poppins',
           },
           headerLeft: () => (
             <TouchableOpacity onPress={handleBackButtonPress}>
@@ -354,7 +274,11 @@ export default function CreateTripScreen() {
           ),
         }}
       />
-      <ScrollView className="flex-1">
+      <ScrollView
+        className="flex-1"
+        ref={scrollViewRef}
+        scrollToOverflowEnabled
+      >
         <View className="p-3.5">
           <Accordion
             activeSections={activeSections}
@@ -382,12 +306,12 @@ export default function CreateTripScreen() {
   );
 }
 
-const stepperProperty: (keyof TripDataProps)[] = [
-  'travelDestination',
-  'departureLocation',
-  'travelGroup',
+const stepperProperty: (keyof CreateTripData)[] = [
+  'destination',
+  'startingLocation',
+  'travelSize',
   'startDate',
-  'preferredTime',
+  'timeslots',
   'budgetInclusions',
   'budget',
 ];
@@ -397,7 +321,7 @@ const Sections = [
     title: 'Where do you want to travel?',
   },
   {
-    title: 'Where are you departing from?',
+    title: 'Where do you want to start your trip?',
   },
   {
     title: 'Whom are you traveling with?',
@@ -413,5 +337,12 @@ const Sections = [
   },
   {
     title: 'How much is your budget?',
+  },
+];
+
+const destinations = [
+  {
+    id: '1',
+    title: 'Iloilo City',
   },
 ];

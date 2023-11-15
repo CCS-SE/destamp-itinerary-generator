@@ -56,11 +56,13 @@
     "expo-web-browser": "~12.3.2",
     "graphql": "^16.8.0",
     "graphql-tag": "^2.0.0",
+    "install": "^0.13.0",
     "jest-expo": "^49.0.0",
     "metro": "~0.76.7",
     "moment": "^2.29.4",
     "native-base": "^3.4.28",
     "nativewind": "^2.0.11",
+    "npm": "^10.2.3",
     "prop-types": "^15.5.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -90,7 +92,8 @@
     "react-native-web": "~0.19.6",
     "react-test-renderer": "^18.2.0",
     "webpack": "^5.88.2",
-    "zod": "^3.22.2"
+    "zod": "^3.22.2",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
