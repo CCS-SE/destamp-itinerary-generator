@@ -1,91 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import OTPTextInput from 'react-native-otp-textinput';
 
+import ContactVerification from '~/components/BusinessOperator/contactVerification';
 import SimpleButton from '~/components/Button/simpleButton';
+import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 
-const PhoneConfirmation = ({ phoneNumber }: { phoneNumber: string }) => {
+const PhoneVerification = () => {
+  const [pendingVerification, setPendingVerification] = useState(false);
+  // const [verifying, setVerifying] = useState(false);
+  // const [code, setCode] = useState('');
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.firstPar}>
-        Identity verification ensures the highest levels of security and helps
-        us to prevent fraud.
-      </Text>
-      <Text style={styles.secondPar}>We will text this phone number:</Text>
-      <View style={styles.box}>
-        <Text style={styles.phoneNumber}>{phoneNumber}</Text>
-      </View>
-      <Text style={styles.thirdPar}>
-        The phone number listed for this business will receive an SMS with a
-        verification code.
-      </Text>
-      <Text style={styles.fourthPar}>
-        To confirm you as a representative of this property, we will send a
-        confirmation code to your phone.
-      </Text>
+    <View>
+      <ContactVerification phoneNumber={'09496651088'} />
       <SimpleButton
         title={'Send OTP'}
-        onPress={function (): void {
-          throw new Error('Function not implemented.');
+        onPress={() => {
+          setPendingVerification(true);
         }}
       />
+      <View>
+        {pendingVerification && (
+          <BottomHalfModal
+            isVisible={pendingVerification}
+            onClose={() => {
+              setPendingVerification(false);
+              // setVerifying(false);
+            }}
+          >
+            <View style={styles.container}>
+              <Text style={styles.title}>Business Operator Verification</Text>
+              <Text>
+                Please enter the 4-digit code that was sent to the phone number
+                provided.
+              </Text>
+              <OTPTextInput
+                tintColor={'#FB2E53'}
+                inputCount={4}
+                // handleTextChange={(code) => setCode(code)}
+              />
+            </View>
+          </BottomHalfModal>
+        )}
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
+    padding: 20,
   },
-  firstPar: {
-    width: 267,
-    fontSize: 15,
-    fontFamily: 'Poppins',
-    alignSelf: 'center',
-    textAlign: 'center',
-    margin: 40,
-    marginBottom: 50,
-  },
-  secondPar: {
-    fontSize: 14,
-    fontFamily: 'Poppins',
-    alignContent: 'flex-start',
-    marginLeft: 38,
-    marginBottom: 5,
-    width: 217,
-  },
-  box: {
-    width: 252,
-    height: 37,
-    borderWidth: 3,
-    borderColor: '#FFC98B',
-    borderRadius: 10,
-    padding: 3,
-    alignSelf: 'center',
-    marginBottom: 40,
-  },
-  phoneNumber: {
-    color: '#DE4D6C',
-    alignSelf: 'center',
-    fontFamily: 'Poppins',
+  title: {
     fontWeight: 'bold',
-  },
-  thirdPar: {
-    fontFamily: 'Poppins',
-    fontSize: 14,
-    fontWeight: 'bold',
-    width: 262,
-    alignSelf: 'center',
-    textAlign: 'center',
-    marginBottom: 50,
-  },
-
-  fourthPar: {
-    width: 236,
-    fontSize: 10,
-    fontFamily: 'Poppins',
-    alignSelf: 'center',
-    textAlign: 'center',
-    marginBottom: 30,
+    paddingBottom: 5,
   },
 });
-export default PhoneConfirmation;
+export default PhoneVerification;

@@ -6,7 +6,7 @@ import SimpleButton from '~/components/Button/simpleButton';
 import AuthenticationStatement from '~/components/Card/owner/authStatement';
 import UserInformation from '~/components/Forms/UserInfoForm';
 
-const PhoneNumberVerification = ({
+const OperatorInformation = ({
   businessName,
   businessAddress,
 }: {
@@ -60,4 +60,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-export default PhoneNumberVerification;
+export default OperatorInformation;
