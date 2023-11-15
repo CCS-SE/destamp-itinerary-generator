@@ -1328,6 +1328,15 @@ export type GetTravelerTripsQuery = {
   }>;
 };
 
+export type GetUserQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+export type GetUserQuery = {
+  __typename?: 'Query';
+  user: { __typename?: 'User'; id: string; userType: UserType };
+};
+
 export const CreateExpenseDocument = {
   kind: 'Document',
   definitions: [
@@ -2154,6 +2163,14 @@ export const GetTravelerItineraryDocument = {
                             },
                             {
                               kind: 'Field',
+                              name: { kind: 'Name', value: 'latitude' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'longitude' },
+                            },
+                            {
+                              kind: 'Field',
                               name: { kind: 'Name', value: 'images' },
                               selectionSet: {
                                 kind: 'SelectionSet',
@@ -2409,3 +2426,55 @@ export const GetTravelerTripsDocument = {
   GetTravelerTripsQuery,
   GetTravelerTripsQueryVariables
 >;
+export const GetUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'userType' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetUserQuery, GetUserQueryVariables>;

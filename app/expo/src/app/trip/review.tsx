@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useMutation, useQuery } from '@apollo/client';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -22,9 +22,9 @@ import {
   GetTravelerInfoDocument,
   GetTravelerTripsDocument,
   MutationCreateTripArgs,
-  TravelSize,
 } from '~/graphql/generated';
-import { amountFormatter, toSentenceCase } from '~/utils/utils';
+import useFormstore from '~/store/useFormStore';
+import { amountFormatter, separateWords, toSentenceCase } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 import Peso from '../../../assets/images/review-budget.svg';
 import Calendar from '../../../assets/images/review-calendar.svg';
@@ -38,50 +38,36 @@ const isIncluded = (
   return budgetInclusion.includes(value) ? true : false;
 };
 
-export default function ReviewInfoScreen() {
+export default function ReviewTripScreen() {
   const router = useRouter();
-  const { session } = useContext(AuthContext);
+  const { preferenceData, tripData, reviewData, setData, reset } =
+    useFormstore();
+  const { user } = useContext(AuthContext);
 
-  const {
-    destinationId,
-    departingLocation,
-    travelGroup,
-    groupCount,
-    adultCount,
-    childCount,
-    startDate,
-    endDate,
-    budget,
-    preferredTime,
-    title,
-    budgetInclusions,
-    locationAddress,
-    locationLat,
-    locationLng,
-  } = useLocalSearchParams();
-
-  const [userEditedTitle, setUserEditedTitle] = useState<string>(
-    title as string,
-  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const inputWidth = Dimensions.get('window').width * 0.87;
 
   const handleTitleChange = (text: string) => {
-    setUserEditedTitle(text);
+    setData({
+      step: 3,
+      data: {
+        title: text,
+      },
+    });
   };
 
   const handleClearTitle = () => {
-    setUserEditedTitle('');
+    setData({
+      step: 3,
+      data: {
+        title: '',
+      },
+    });
   };
 
   const handleBackButtonPress = () => {
-    router.push({
-      pathname: '/trip/create/',
-      params: {
-        title: userEditedTitle,
-      },
-    });
+    router.back();
   };
 
   const dateFormmater = (date: string) => {
@@ -93,7 +79,7 @@ export default function ReviewInfoScreen() {
 
   const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
-      userId: session ? session.user.id : '',
+      userId: user ? user.id : '',
     },
   });
 
@@ -102,83 +88,85 @@ export default function ReviewInfoScreen() {
   const onSubmit = async () => {
     setIsSubmitting(true);
 
-    if (userEditedTitle == '') {
+    if (!reviewData.title) {
       Alert.alert('Empty trip title');
       setIsSubmitting(false);
-    }
-    const CreateTripInput: MutationCreateTripArgs = {
-      data: {
-        budget: parseFloat(budget as string),
-        destinationId: parseInt(destinationId as string),
-        endDate: new Date(endDate as string),
-        isAccommodationIncluded: isIncluded(
-          ExpenseCategory.Accommodation,
-          budgetInclusions as ExpenseCategory[],
-        ),
-        isFoodIncluded: isIncluded(
-          ExpenseCategory.Food,
-          budgetInclusions as ExpenseCategory[],
-        ),
-        isTransportationIncluded: isIncluded(
-          ExpenseCategory.Transportation,
-          budgetInclusions as ExpenseCategory[],
-        ),
-        startDate: new Date(startDate as string),
-        title: userEditedTitle,
-        travelerId: data ? data.traveler.id : 0,
-        travelSize: travelGroup as TravelSize,
-        adultCount:
-          travelGroup === 'GROUP'
-            ? parseInt(groupCount as string)
-            : parseInt(adultCount as string) || 0,
-        childCount:
-          travelGroup === 'FAMILY' ? parseInt(childCount as string) || 0 : 0,
-        preferredTime: preferredTime ? preferredTime.toString().split(',') : [],
-      },
-      locationData: {
-        name: departingLocation as string,
-        address: locationAddress as string,
-        latitude: parseFloat(locationLat as string),
-        longitude: parseFloat(locationLng as string),
-      },
-    };
+    } else {
+      const CreateTripInput: MutationCreateTripArgs = {
+        data: {
+          budget: parseFloat(tripData.budget),
+          destinationId: 1,
+          endDate: new Date(tripData.endDate!.toDate()),
+          isAccommodationIncluded: isIncluded(
+            ExpenseCategory.Accommodation,
+            tripData.budgetInclusions as ExpenseCategory[],
+          ),
+          isFoodIncluded: isIncluded(
+            ExpenseCategory.Food,
+            tripData.budgetInclusions as ExpenseCategory[],
+          ),
+          isTransportationIncluded: isIncluded(
+            ExpenseCategory.Transportation,
+            tripData.budgetInclusions as ExpenseCategory[],
+          ),
+          startDate: new Date(tripData.startDate!.toDate()),
+          title: reviewData.title,
+          travelerId: data ? data.traveler.id : 0,
+          travelSize: tripData.travelSize,
 
-    await createTrip({
-      variables: {
-        data: CreateTripInput.data,
-        locationData: CreateTripInput.locationData,
-      },
-      onCompleted: () => {
-        setIsSubmitting(false);
-        router.push('/(tabs)');
-      },
-      refetchQueries: [
-        {
-          query: GetTravelerTripsDocument,
-          variables: {
-            userId: session ? session.user.id : '',
-          },
+          adultCount: tripData.travelerCount,
+          childCount: tripData.travelerCount,
+          preferredTime: tripData.timeslots
+            ? tripData.timeslots.toString().split(',')
+            : [],
         },
-      ],
-      onError: (err) => {
-        Alert.alert('Error', err.message);
-        console.log('Error', err.message);
-        setIsSubmitting(false);
-      },
-    });
+        locationData: {
+          name: tripData.startingLocation.name,
+          address: tripData.startingLocation.place_name,
+          latitude: tripData.startingLocation.center[0],
+          longitude: tripData.startingLocation.center[1],
+        },
+      };
+
+      await createTrip({
+        variables: {
+          data: CreateTripInput.data,
+          locationData: CreateTripInput.locationData,
+        },
+        onCompleted: () => {
+          setIsSubmitting(false);
+          reset();
+          router.push('/(tabs)');
+        },
+        refetchQueries: [
+          {
+            query: GetTravelerTripsDocument,
+            variables: {
+              userId: user ? user.id : '',
+            },
+          },
+        ],
+        onError: (err) => {
+          Alert.alert('Error', err.message);
+          console.log('Error', err.message);
+          setIsSubmitting(false);
+        },
+      });
+    }
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white p-2" edges={['bottom']}>
-      <ScrollView className="self-center">
+      <ScrollView className="self-center" showsVerticalScrollIndicator={false}>
         <View>
           <Stack.Screen
             options={{
-              title: 'Review Trip',
+              title: ' Review Trip',
               headerBackTitleVisible: false,
               headerTitleStyle: {
                 color: '#504D4D',
-                fontSize: 22,
+                fontSize: 21,
+                fontFamily: 'Poppins',
               },
               headerLeft: () => (
                 <TouchableOpacity onPress={handleBackButtonPress}>
@@ -189,12 +177,12 @@ export default function ReviewInfoScreen() {
           />
           <Text className="font-poppins text-xl text-gray-600">Title</Text>
           <View
-            className="mb-6 h-16 flex-row items-center justify-center rounded-xl "
+            className="mb-2 h-16 flex-row items-center justify-center rounded-xl "
             style={{ width: inputWidth }}
           >
             <TextInput
-              className="h-[46] flex-1 rounded-xl border border-gray-500 p-3.5  font-poppins text-base text-gray-500 "
-              value={userEditedTitle}
+              className="h-[46] flex-1 rounded-xl border border-gray-500 p-3.5  font-poppins text-base text-gray-500"
+              value={reviewData.title}
               onChangeText={(text) => handleTitleChange(text)}
             />
             <TouchableOpacity
@@ -207,45 +195,91 @@ export default function ReviewInfoScreen() {
         </View>
         <View>
           <ReviewCard
-            icon={<Destination height={28} width={28} />}
-            title={departingLocation as string}
+            icon={<Destination height={25} width={25} />}
+            title={tripData.startingLocation.name}
             className="mb-6"
             isEditabble
             section="1"
           />
           <ReviewCard
-            icon={<Calendar height={28} width={28} />}
+            icon={<Calendar height={25} width={25} />}
             title={
-              startDate !== endDate && endDate !== ''
-                ? `${dateFormmater(startDate as string)} - ${dateFormmater(
-                    endDate as string,
-                  )}`
-                : `${dateFormmater(startDate as string)}`
+              tripData.startDate !== tripData.endDate &&
+              tripData.endDate != null
+                ? `${dateFormmater(
+                    tripData.startDate!.toISOString(),
+                  )} - ${dateFormmater(tripData.endDate.toISOString())}`
+                : `${dateFormmater(tripData.startDate!.toISOString())}`
             }
             isEditabble
             section="3"
           />
           <ReviewCard
-            icon={<TravelGroupSize height={28} width={28} />}
-            title={toSentenceCase(travelGroup as string)}
-            travelGroup={travelGroup as string}
-            groupCount={groupCount as string}
-            childCount={childCount as string}
-            adultCount={adultCount as string}
+            icon={<TravelGroupSize height={23} width={23} />}
+            title={toSentenceCase(tripData.travelSize)}
+            travelGroup={tripData.travelSize}
+            groupCount={tripData.travelerCount.toString()}
+            childCount={tripData.travelerCount.toString()}
+            adultCount={tripData.travelerCount.toString()}
             isTravelSize
             isEditabble
             section="2"
           />
           <ReviewCard
-            icon={<Peso height={27} width={27} />}
-            title={amountFormatter(parseInt(budget as string))}
-            budgetInclusion={budgetInclusions as string}
+            icon={<Peso height={20} width={20} />}
+            title={amountFormatter(parseInt(tripData.budget))}
+            budgetInclusion={tripData.budgetInclusions}
             isEditabble
             section="6"
           />
         </View>
+        <View className="mt-7">
+          <Text className="font-poppins text-xl text-gray-600">Preference</Text>
+          <ReviewCard
+            title="Accommodation Type"
+            value={separateWords(preferenceData.accommodationType)}
+            section="0"
+            isPreference
+            isEditabble
+          />
+          <ReviewCard
+            title="Transportation Style"
+            value={preferenceData.transportationStyle}
+            section="5"
+            isPreference
+            isEditabble
+          />
+          <ReviewCard
+            title="Amenities"
+            amenities={preferenceData.amenities}
+            section="1"
+            isEditabble
+            isArray
+          />
+          <ReviewCard
+            title="Activities"
+            activities={preferenceData.activities}
+            section="2"
+            isEditabble
+            isArray
+          />
+          <ReviewCard
+            title="Dining Styles"
+            diningStyles={preferenceData.diningStyles}
+            section="3"
+            isEditabble
+            isArray
+          />
+          <ReviewCard
+            title="Cuisines"
+            cuisines={preferenceData.cuisines}
+            section="4"
+            isEditabble
+            isArray
+          />
+        </View>
       </ScrollView>
-      <View className="bottom-5 self-center">
+      <View className="self-center">
         <TouchableOpacity
           className={`h-14 w-52 items-center justify-center rounded-2xl ${
             isSubmitting ? 'opacity-80' : ''

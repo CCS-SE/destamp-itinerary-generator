@@ -4,8 +4,8 @@ import DashedLine from 'react-native-dashed-line';
 import { useRouter } from 'expo-router';
 
 import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
-import DepartingFromCard from '~/components/Card/traveler/DepartingFromCard';
 import DirectionCard from '~/components/Card/traveler/DirectionCard';
+import StartingLocationCard from '~/components/Card/traveler/StartingLocationCard';
 import { ExpenseCategory, PlaceType } from '~/graphql/generated';
 import {
   calculateAveragePrice,
@@ -215,7 +215,7 @@ export default function ItineraryCard({
                 marginLeft: -16,
               }}
             />
-            <DepartingFromCard locationName={departingLocation!} />
+            <StartingLocationCard locationName={departingLocation!} />
           </View>
           <FlatList
             data={destinations}
@@ -291,8 +291,8 @@ export default function ItineraryCard({
                         itineraryId={itineraryId}
                         icon={
                           <Driving
-                            height={22}
-                            width={22}
+                            height={20}
+                            width={20}
                             style={{ marginLeft: 8 }}
                           />
                         }

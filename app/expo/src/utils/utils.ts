@@ -142,6 +142,10 @@ export const getChildCount = (size: TravelSize, childCount: number) => {
   }
 };
 
+export const separateWords = (str: string) => {
+  return str.replace(/([a-z])([A-Z])/g, '$1 $2');
+};
+
 interface CategoryColor {
   [key: string]: {
     color: string;

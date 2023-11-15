@@ -17,7 +17,7 @@ export default function DayButton({
     <Pressable
       onPress={onPress}
       className={`flex-1 items-center rounded-xl p-1 ${
-        isSelected ? 'w-36 bg-[#FA8E56]' : 'w-24 bg-transparent'
+        isSelected ? 'w-32 bg-[#FA8E56]' : 'w-24 bg-transparent'
       }`}
     >
       <Text
