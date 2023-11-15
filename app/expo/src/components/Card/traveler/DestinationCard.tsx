@@ -26,9 +26,14 @@ interface SlideProps {
   loaded: number | undefined;
 }
 
+interface TimeSlot {
+  start: string;
+  end: string;
+}
+
 interface DestinationCardProps {
   itineraryId: number;
-  time: string;
+  timeSlot: TimeSlot;
   title: string;
   price: string;
   imageList: string[];
@@ -41,7 +46,7 @@ interface DestinationCardProps {
 
 export default function DestinationCard({
   itineraryId,
-  time,
+  timeSlot,
   title,
   price,
   imageList,
@@ -98,6 +103,11 @@ export default function DestinationCard({
               {title}
             </Text>
             <View className="mb-1 ml-3 flex-row">
+              <Text className="mr-1 text-gray-600">
+                {timeSlot.start == timeSlot.end
+                  ? timeSlot.start
+                  : `${timeSlot.start} - ${timeSlot.end}`}
+              </Text>
               <PriceTag isFree={isFree} price={price} />
             </View>
           </TouchableOpacity>
