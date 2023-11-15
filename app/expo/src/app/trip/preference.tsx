@@ -12,7 +12,6 @@ import ActivitiesSelection from '~/components/FormField/ActivitiesSelection';
 import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
 import CuisineSelection from '~/components/FormField/CuisineSelection';
 import DiningStyleSelection from '~/components/FormField/DiningStyleSelection';
-import TransportationStyleSelection from '~/components/FormField/TransportationStyleSelection';
 import Stepper from '~/components/Stepper/Stepper';
 import { TripPreferenceData } from '~/store/types';
 import useFormstore from '~/store/useFormStore';
@@ -255,13 +254,6 @@ export default function TripPreferenceScreen() {
       onOptionChange={(value) => handleTripPreferenceChange('cuisines', value)}
       key={5}
     />,
-    <TransportationStyleSelection
-      initialSelectedOption={preferenceData.transportationStyle}
-      onOptionChange={(value) =>
-        handleTripPreferenceChange('transportationStyle', value)
-      }
-      key={6}
-    />,
   ];
 
   useEffect(() => {
@@ -323,7 +315,6 @@ const stepperProperty: (keyof TripPreferenceData)[] = [
   'activities',
   'diningStyles',
   'cuisines',
-  'transportationStyle',
 ];
 
 const Sections = [
@@ -341,8 +332,5 @@ const Sections = [
   },
   {
     title: 'Choose cuisines you like',
-  },
-  {
-    title: 'Choose transportation style',
   },
 ];
