@@ -88,46 +88,44 @@ export default function ItineraryCard({
   const hour = getStartTime(preferredTime, 0);
   const min = getStartTime(preferredTime, 1);
 
-  function moveAccommodationToFront() {
-    const itemToMove = destinations.find(
-      (item) => item?.type === PlaceType.Accommodation,
-    ) as never;
-    if (destinations.includes(itemToMove)) {
-      destinations = destinations.filter((item) => item !== itemToMove);
+  // function moveAccommodationToFront() {
+  //   const itemToMove = destinations.find(
+  //     (item) => item?.type === PlaceType.Accommodation,
+  //   ) as never;
+  //   if (destinations.includes(itemToMove)) {
+  //     destinations = destinations.filter((item) => item !== itemToMove);
 
-      destinations = [itemToMove as Destination, ...destinations];
-    }
-    return destinations;
-  }
+  //     destinations = [itemToMove as Destination, ...destinations];
+  //   }
+  //   return destinations;
+  // }
 
-  const arrangedDestinations = (): Destination[] => {
-    // moveAccommodationToFront();
-    const restaurants = destinations.filter(
-      (dest) => dest.type === PlaceType.Restaurant,
-    ) as Destination[];
-    const otherDestinations = destinations.filter(
-      (dest) => dest.type !== PlaceType.Restaurant,
-    ) as Destination[];
+  // const arrangedDestinations = (): Destination[] => {
+  //   // moveAccommodationToFront();
+  //   const restaurants = destinations.filter(
+  //     (dest) => dest.type === PlaceType.Restaurant,
+  //   ) as Destination[];
+  //   const otherDestinations = destinations.filter(
+  //     (dest) => dest.type !== PlaceType.Restaurant,
+  //   ) as Destination[];
 
-    const arrangedDestinations: Destination[] = [];
-    let i = 0;
-    let j = 0;
+  //   const arrangedDestinations: Destination[] = [];
+  //   let i = 0;
+  //   let j = 0;
 
-    while (i < otherDestinations.length || j < restaurants.length) {
-      if (i < otherDestinations.length) {
-        arrangedDestinations.push(otherDestinations[i]!);
-        i++;
-      }
-      if (j < restaurants.length) {
-        arrangedDestinations.push(restaurants[j]!);
-        j++;
-      }
-    }
+  //   while (i < otherDestinations.length || j < restaurants.length) {
+  //     if (i < otherDestinations.length) {
+  //       arrangedDestinations.push(otherDestinations[i]!);
+  //       i++;
+  //     }
+  //     if (j < restaurants.length) {
+  //       arrangedDestinations.push(restaurants[j]!);
+  //       j++;
+  //     }
+  //   }
 
-    return arrangedDestinations;
-  };
-
-  // destinations = arrangedDestinations();
+  //   return arrangedDestinations;
+  // };
 
   const visitDurations = destinations.map(
     (destination) => destination.visitDuration,
@@ -135,14 +133,14 @@ export default function ItineraryCard({
   const travelDurationsMins = travelDurations.map((duration) => duration / 60);
 
   function calculateTimeSlots(): TimeSlot[] {
-    let startTime = `${hour}:${min}`;
-    let timeSlots: TimeSlot[] = [];
-    let currentTime = new Date(`1970-01-01T${startTime}:00Z`);
+    const startTime = `${hour}:${min}`;
+    const timeSlots: TimeSlot[] = [];
+    const currentTime = new Date(`1970-01-01T${startTime}:00Z`);
 
     for (let i = 0; i < visitDurations.length; i++) {
-      let start = currentTime.toISOString().substr(11, 5);
+      const start = currentTime.toISOString().substr(11, 5);
       currentTime.setMinutes(currentTime.getMinutes() + visitDurations[i]!);
-      let end = currentTime.toISOString().substr(11, 5);
+      const end = currentTime.toISOString().substr(11, 5);
 
       timeSlots.push({ start, end });
 
