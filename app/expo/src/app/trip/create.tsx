@@ -44,6 +44,10 @@ export default function CreateTripScreen() {
     return date ? date.format('YYYY-MM-DD') : '';
   };
 
+  const isStartingTimeSelected = () => {
+    return tripData.startDate !== null;
+  };
+
   const handleTripDataChange = (name: string, newValue: unknown) => {
     setData({
       step: 1,
@@ -147,6 +151,13 @@ export default function CreateTripScreen() {
     if (!visitedSteps.includes(activeSection)) {
       // Add the current section to the visited sections
       setVisitedSteps([...visitedSteps, activeSection]);
+    }
+
+    if (activeSection === 3) {
+      if (!isStartingTimeSelected()) {
+        alert('Please select date.');
+        return;
+      }
     }
 
     const currentStepIndex = stepperProperty[
