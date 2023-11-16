@@ -56,7 +56,7 @@ interface ItineraryCardProps {
   isTransportationIncluded: boolean;
   travelDistances: number[];
   travelDurations: number[];
-  preferredTime: string[];
+  timeslots: [number, number][];
   destinations: Destination[] | [];
   adultCount: number;
   childCount: number;
@@ -77,7 +77,7 @@ export default function ItineraryCard({
   departingLocation,
   destinations,
   travelDistances,
-  preferredTime,
+  timeslots,
   travelDurations,
   isTransportationIncluded,
   adultCount,
@@ -85,8 +85,9 @@ export default function ItineraryCard({
 }: ItineraryCardProps) {
   const { push } = useRouter();
 
-  const hour = getStartTime(preferredTime, 0);
-  const min = getStartTime(preferredTime, 1);
+  const hour = getStartTime(timeslots, 0);
+  const min = 0;
+  // const min = getStartTime(preferredTime, 1);
 
   // function moveAccommodationToFront() {
   //   const itemToMove = destinations.find(
@@ -320,8 +321,8 @@ export default function ItineraryCard({
   );
 }
 
-const getStartTime = (time: string[], index: number) => {
-  return parseInt(time[0]!.split(':')[index]!);
+const getStartTime = (timeslot: [number, number][], index: number) => {
+  return timeslot[0]![index]!;
 };
 
 function formatTime(timeSlot: TimeSlot): TimeSlot {

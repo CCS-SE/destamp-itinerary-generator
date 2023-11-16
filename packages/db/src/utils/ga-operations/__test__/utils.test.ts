@@ -168,8 +168,8 @@ describe('calculateTravelExpense', () => {
 describe('getTotalDesiredTravelHours', () => {
   it('should get the total desired travel hours', () => {
     const travelHours = getTotalDesiredTravelHours([
-      '10:00-15:00',
-      '9:00-13:00',
+      [10, 15],
+      [9, 13],
     ]);
 
     expect(travelHours).toBe(9);
@@ -178,7 +178,7 @@ describe('getTotalDesiredTravelHours', () => {
 
 describe('getDesiredTravelHour', () => {
   it('should get the desired travel hour', () => {
-    const travelHours = getDesiredTravelHour('10:00-15:00');
+    const travelHours = getDesiredTravelHour([10, 15]);
     expect(travelHours).toBe(5);
   });
 });

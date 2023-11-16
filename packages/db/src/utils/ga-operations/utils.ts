@@ -173,14 +173,16 @@ export const calculateTravelExpenses = (distances: number[]) => {
   );
 };
 
-export const getTotalDesiredTravelHours = (preferredTime: string[]): number => {
-  return preferredTime.reduce((total, range) => {
+export const getTotalDesiredTravelHours = (
+  timeslots: [number, number][],
+): number => {
+  return timeslots.reduce((total, range) => {
     return total + getDesiredTravelHour(range);
   }, 0);
 };
 
-export const getDesiredTravelHour = (time: string) => {
-  const [startTime, endTime] = time.split('-').map((time) => parseInt(time));
+export const getDesiredTravelHour = (timeslot: [number, number]) => {
+  const [startTime, endTime] = timeslot;
   return endTime! - startTime!;
 };
 
@@ -190,10 +192,6 @@ export const getCoordinatesParam = (coordinates: number[][]) => {
 
 export const getRandomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-
-export const randomChoices = (genePool: Place[]) => {
-  return genePool[Math.floor(Math.random() * genePool.length)];
 };
 
 export const getDuplicateIndex = (list: Place[]) => {
