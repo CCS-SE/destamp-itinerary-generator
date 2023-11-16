@@ -69,7 +69,7 @@ export default function TimeslotSelection({
               )} - ${dayDisplay(range[1])}`}</Text>
             </View>
           </View>
-          <View className="my-4 flex-row">
+          <View className="my-1 flex-row">
             <Text className="font-poppins text-base text-gray-600">{`${MIN} AM`}</Text>
             <RangeSlider
               style={{
