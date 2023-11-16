@@ -3,33 +3,41 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  // TouchableOpacity,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
 const EstablishmentCategory = ({
+  type,
   mainCategory,
-  tags, // onPress,
+  tags,
 }: {
+  type: string;
   mainCategory: string;
   tags: string[];
-  // onPress: (params: object) => void;
 }) => {
+  // function onPress(tags: string[]): void {
+  //   throw new Error('Function not implemented.');
+  // }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}> Establishment Category </Text>
-      <Text style={styles.mainCategory}>{mainCategory}</Text>
+      <Text style={styles.mainCategory}>
+        {type} | {mainCategory}
+      </Text>
+
       <Text style={styles.tagsTitle}> Tags: </Text>
       <View style={styles.tagsHolder}>
         <FlatList
           data={tags}
           renderItem={({ item }) => (
-            // <TouchableOpacity
-            //   onPress={() => onPress(tags)}
-            //   style={styles.buttonContainer}
-            // >
-            <Text style={styles.tags}>{item}</Text>
-            // </TouchableOpacity>
+            <TouchableOpacity
+              // onPress={() => onPress([item])}
+              style={styles.buttonContainer}
+            >
+              <Text style={styles.tags}>{item}</Text>
+            </TouchableOpacity>
           )}
           keyExtractor={(item, index) => index.toString()}
           horizontal={true} // Render tags horizontally
@@ -58,7 +66,7 @@ const styles = StyleSheet.create({
   },
   tagsTitle: {
     color: '#F65A82',
-    paddingLeft: 20,
+    paddingLeft: 5,
     marginBottom: 5,
     fontFamily: 'Poppins',
     fontSize: 12,
@@ -68,11 +76,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ECB476',
     borderRadius: 10,
-    width: 270,
-    shadow: {
-      elevation: 4,
-    },
-    marginLeft: 20,
+    width: 300,
+    marginLeft: 5,
     height: 53, //sample height
   },
   buttonContainer: {

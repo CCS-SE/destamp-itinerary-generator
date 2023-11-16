@@ -1,17 +1,17 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import PhoneNumberVerification from '~/screens/BusinessUser/PhoneNumberVerification';
+import OperatorInformation from '../../components/BusinessOperator/operatorInformation';
 
 const VerificationScreen = () => {
   return (
     <View style={styles.container}>
-      <PhoneNumberVerification
+      <OperatorInformation
         businessName={'Teepee'}
         businessAddress={
           'TeePee, Iloilo City, Philippines PGHW+3JV, Jaro, Iloilo City, Iloilo'
         }
-      ></PhoneNumberVerification>
+      ></OperatorInformation>
     </View>
   );
 };

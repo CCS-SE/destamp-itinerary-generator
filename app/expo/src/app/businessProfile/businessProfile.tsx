@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Stack } from 'expo-router';
-import { useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 
 import ContactInformation from '~/components/Card/owner/ContactInfoCard';
 import EstablishmentCategory from '~/components/Card/owner/EstablishmentCategoryCard';
@@ -9,14 +9,62 @@ import ImageCollections from '~/components/Card/owner/ImageCollections';
 import MealPrice from '~/components/Card/owner/MealPrice';
 import ProfileDescription from '~/components/Card/owner/ProfileDescriptionCard';
 import WorkingHours from '~/components/Card/owner/WorkingHoursCard';
-import { GetBusinessDetailsDocument } from '~/graphql/generated';
+import { GetBusinessInformationDocument } from '~/graphql/generated';
 
-const BusinessProfileScreen = () => {
+export const GetBusinessInformationQuery = gql(
+  `query GetBusinessInformation($placeId: String!){
+    place(placeId: $placeId) {
+    name
+    address
+    contactNumber
+    description
+    website
+    type
+    categories {
+      id
+      name
+    }
+    price
+    images {
+      url
+    }
+    openingHours {
+      closeTime
+      day
+      openTime
+
+    }
+    amenities {
+      id
+      name
+    }
+    diningAtmospheres {
+      id
+      name
+    }
+    diningCuisines {
+      id
+      name
+    }
+    diningOfferings {
+      id
+      name
+    }
+    diningOptions {
+      id
+      name
+    }
+    visitDuration
+  }   
+  }`,
+);
+
+const BusinessProfile = () => {
   const [businessIndex] = useState('1'); // Initial index
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [businesses, setBusinesses] = useState<any[]>([]);
 
-  const { loading, error, data } = useQuery(GetBusinessDetailsDocument, {
+  const { loading, error, data } = useQuery(GetBusinessInformationDocument, {
     variables: {
       placeId: 'ChIJafobTxjlrjMRmv5QKj6xO4o', // ${businessIndex} Use the index to fetch business data
     },
@@ -59,17 +107,15 @@ const BusinessProfileScreen = () => {
                   website={business.website}
                 />
                 <EstablishmentCategory
-                  mainCategory={'test'}
-                  tags={[
-                    business.categories.name,
-                    business.diningAtmospheres.name,
-                  ]}
+                  type={business.type}
+                  mainCategory={business.categories[0].name}
+                  tags={business.categories.map(
+                    (category: { name: string }) => category.name,
+                  )}
                   // onPress={handleTagPress}
                 />
-                <WorkingHours
-                  days={'Monday - Sunday'}
-                  hours={['11AM - 12PM']}
-                />
+                <WorkingHours openingHours={business.openingHours} />
+
                 <ImageCollections key="images" images={business.images} />
                 <MealPrice price={business.price} />
               </>
@@ -89,4 +135,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BusinessProfileScreen;
+export default BusinessProfile;
