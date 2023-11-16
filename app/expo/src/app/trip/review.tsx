@@ -22,6 +22,7 @@ import {
   GetTravelerInfoDocument,
   GetTravelerTripsDocument,
   MutationCreateTripArgs,
+  TravelSize,
 } from '~/graphql/generated';
 import useFormstore from '~/store/useFormStore';
 import { amountFormatter, separateWords, toSentenceCase } from '~/utils/utils';
@@ -96,7 +97,7 @@ export default function ReviewTripScreen() {
         data: {
           budget: parseFloat(tripData.budget),
           destinationId: 1,
-          endDate: new Date(tripData.endDate!.toDate()),
+          endDate: new Date(tripData.endDate!.format('YYYY-MM-DD')),
           isAccommodationIncluded: isIncluded(
             ExpenseCategory.Accommodation,
             tripData.budgetInclusions as ExpenseCategory[],
@@ -109,22 +110,23 @@ export default function ReviewTripScreen() {
             ExpenseCategory.Transportation,
             tripData.budgetInclusions as ExpenseCategory[],
           ),
-          startDate: new Date(tripData.startDate!.toDate()),
+          startDate: new Date(tripData.startDate!.format('YYYY-MM-DD')),
           title: reviewData.title,
           travelerId: data ? data.traveler.id : 0,
           travelSize: tripData.travelSize,
-
-          adultCount: tripData.travelerCount,
-          childCount: tripData.travelerCount,
-          preferredTime: tripData.timeslots
-            ? tripData.timeslots.toString().split(',')
-            : [],
+          adultCount:
+            tripData.travelSize === TravelSize.Group
+              ? tripData.groupCount
+              : tripData.adultCount,
+          childCount:
+            tripData.travelSize === TravelSize.Group ? 0 : tripData.childCount,
+          preferredTime: tripData.timeslots,
         },
         locationData: {
-          name: tripData.startingLocation.name,
-          address: tripData.startingLocation.place_name,
-          latitude: tripData.startingLocation.center[0],
-          longitude: tripData.startingLocation.center[1],
+          name: tripData.startingLocation?.name || '',
+          address: tripData.startingLocation?.place_name || '',
+          latitude: tripData.startingLocation?.center[0] || 0,
+          longitude: tripData.startingLocation?.center[1] || 0,
         },
       };
 
@@ -135,8 +137,8 @@ export default function ReviewTripScreen() {
         },
         onCompleted: () => {
           setIsSubmitting(false);
-          reset();
           router.push('/(tabs)');
+          reset();
         },
         refetchQueries: [
           {
@@ -196,7 +198,7 @@ export default function ReviewTripScreen() {
         <View>
           <ReviewCard
             icon={<Destination height={25} width={25} />}
-            title={tripData.startingLocation.name}
+            title={tripData.startingLocation?.name}
             className="mb-6"
             isEditabble
             section="1"
@@ -218,9 +220,9 @@ export default function ReviewTripScreen() {
             icon={<TravelGroupSize height={23} width={23} />}
             title={toSentenceCase(tripData.travelSize)}
             travelGroup={tripData.travelSize}
-            groupCount={tripData.travelerCount.toString()}
-            childCount={tripData.travelerCount.toString()}
-            adultCount={tripData.travelerCount.toString()}
+            groupCount={tripData.groupCount}
+            childCount={tripData.childCount}
+            adultCount={tripData.adultCount}
             isTravelSize
             isEditabble
             section="2"

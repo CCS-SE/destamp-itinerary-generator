@@ -328,7 +328,7 @@ const Sections = [
     title: 'Choose activities you like',
   },
   {
-    title: 'Choose dining style',
+    title: 'Choose dining styles',
   },
   {
     title: 'Choose cuisines you like',
