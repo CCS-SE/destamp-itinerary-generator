@@ -5,6 +5,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import { ExpenseCategory } from '~/graphql/generated';
+import { taxisNeeded } from '~/utils/utils';
 
 interface DirectionCardProps {
   icon: ReactNode;
@@ -33,18 +34,6 @@ export default function DirectionCard({
 }: DirectionCardProps) {
   const [addExpenseModal, setAddExpenseModal] = useState(false);
   const screenWidth = Dimensions.get('window').width;
-
-  const taxisNeeded = () => {
-    const personCount = adultCount + childCount;
-    if (personCount < 1) {
-      return 0;
-    } else if (personCount <= 4) {
-      return 1;
-    } else {
-      const taxisNeeded = (personCount - 1) / 4;
-      return Math.floor(taxisNeeded) + 1;
-    }
-  };
 
   return (
     <View
@@ -80,7 +69,10 @@ export default function DirectionCard({
           closeModal={() => setAddExpenseModal(false)}
           minDate={date}
           maxDate={date}
-          amount={(parseFloat(transportationPrice) * taxisNeeded()).toFixed(2)}
+          amount={(
+            parseFloat(transportationPrice) *
+            taxisNeeded(adultCount, childCount)
+          ).toFixed(2)}
           categoryType={categoryType}
         />
       </BottomHalfModal>
