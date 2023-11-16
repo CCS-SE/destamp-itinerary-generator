@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import SimpleButton from '~/components/Button/simpleButton';
 import AuthenticationStatement from '~/components/Card/owner/authStatement';
 
-const PhoneNumberVerification = ({
+const OperatorInformation = ({
   businessName,
   businessAddress,
 }: {
@@ -54,4 +54,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-export default PhoneNumberVerification;
+export default OperatorInformation;

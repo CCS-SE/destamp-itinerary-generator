@@ -26,11 +26,15 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-const URL = 'https://destamp-cpu.onrender.com';
+// const URL = 'https://destamp-cpu.onrender.com';
+
+const LOCAL_SYSTEM_IP_ADDRESS = '192.168.254.108';
+const PORT = 4000;
 
 const client = new ApolloClient({
   link: createHttpLink({
-    uri: `${URL}/graphql`,
+    // uri: `${URL}/graphql`,
+    uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
     fetch,
   }),
   cache: new InMemoryCache({

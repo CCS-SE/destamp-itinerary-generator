@@ -1,18 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+
+interface ImageItem {
+  url: string;
+}
 
 const BusinessProfileCard = ({
   businessName,
+  businessImages,
   businessAddress,
   onPress,
 }: {
   businessName: string;
+  businessImages: ImageItem[];
   businessAddress: string;
   onPress: () => void;
 }) => {
+  const firstImage = businessImages.length > 0 ? businessImages[0] : null;
+
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>
+        {firstImage && (
+          <Image source={{ uri: firstImage.url }} style={styles.image} />
+        )}
         <View style={styles.content}>
           <Text style={styles.businessName}> {businessName}</Text>
           <Text style={styles.businessAddress}>{businessAddress}</Text>
@@ -30,6 +41,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     margin: 20,
+    flexDirection: 'row',
+  },
+  image: {
+    width: 64,
+    height: 64,
+    borderRadius: 10,
   },
   content: {
     marginLeft: 10,
@@ -43,7 +60,8 @@ const styles = StyleSheet.create({
     width: 200,
     fontSize: 10,
     fontFamily: 'Poppins',
-    marginLeft: 15,
+    marginLeft: 5,
   },
 });
+
 export default BusinessProfileCard;
