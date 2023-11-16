@@ -25,6 +25,7 @@ import {
   TravelSize,
 } from '~/graphql/generated';
 import useFormstore from '~/store/useFormStore';
+import { formatDateToString } from '~/utils/dates';
 import { amountFormatter, separateWords, toSentenceCase } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 import Peso from '../../../assets/images/review-budget.svg';
@@ -97,7 +98,9 @@ export default function ReviewTripScreen() {
         data: {
           budget: parseFloat(tripData.budget),
           destinationId: 1,
-          endDate: new Date(tripData.endDate!.format('YYYY-MM-DD')),
+          endDate: tripData.endDate
+            ? new Date(formatDateToString(tripData.endDate))
+            : null,
           isAccommodationIncluded: isIncluded(
             ExpenseCategory.Accommodation,
             tripData.budgetInclusions as ExpenseCategory[],
@@ -110,7 +113,7 @@ export default function ReviewTripScreen() {
             ExpenseCategory.Transportation,
             tripData.budgetInclusions as ExpenseCategory[],
           ),
-          startDate: new Date(tripData.startDate!.format('YYYY-MM-DD')),
+          startDate: new Date(formatDateToString(tripData.startDate)),
           title: reviewData.title,
           travelerId: data ? data.traveler.id : 0,
           travelSize: tripData.travelSize,

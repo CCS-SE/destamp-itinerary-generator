@@ -19,7 +19,7 @@ import Stepper from '~/components/Stepper/Stepper';
 import { TravelSize } from '~/graphql/generated';
 import { CreateTripData } from '~/store/types';
 import useFormstore, { initialFormState } from '~/store/useFormStore';
-import { tripDuration } from '~/utils/dates';
+import { formatDateToString, tripDuration } from '~/utils/dates';
 import { confirmationAlert } from '~/utils/utils';
 import Back from '../../../assets/images/back-btn.svg';
 
@@ -39,10 +39,6 @@ export default function CreateTripScreen() {
   const [visitedSteps, setVisitedSteps] = useState<number[]>([0]);
   const [tripDurationDays, setTripDurationDays] = useState<number>(1);
   const [budgetError, setBudgetError] = useState('');
-
-  const formatDateToString = (date: Moment | null) => {
-    return date ? date.format('YYYY-MM-DD') : '';
-  };
 
   const isStartingTimeSelected = () => {
     return tripData.startDate !== null;
@@ -165,6 +161,13 @@ export default function CreateTripScreen() {
     ] as keyof typeof tripData;
 
     if (tripData[currentStepIndex]) {
+      if (
+        currentStepIndex === 'startingLocation' &&
+        !tripData.startingLocation?.name
+      ) {
+        return;
+      }
+
       // Mark the current step as completed
       setCompletedSteps([...completedSteps, activeSection]);
 
