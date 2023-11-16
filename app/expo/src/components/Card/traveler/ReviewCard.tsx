@@ -19,9 +19,9 @@ interface ReviewCardProps extends ViewProps {
   icon?: ReactNode;
   title?: string;
   value?: string;
-  groupCount?: string;
-  adultCount?: string;
-  childCount?: string;
+  groupCount?: number;
+  adultCount?: number;
+  childCount?: number;
   travelGroup?: string;
   budgetInclusion?: [ExpenseCategory];
   isPreference?: boolean;
@@ -60,11 +60,9 @@ export default function ReviewCard({
   const inputWidth = Dimensions.get('window').width * 0.88;
 
   const travelerCount = {
-    [TravelSize.Solo]: 1,
-    [TravelSize.Couple]: 2,
-    [TravelSize.Family]:
-      parseInt(adultCount ? adultCount : '0') +
-      parseInt(childCount ? childCount : '0'),
+    [TravelSize.Solo]: adultCount,
+    [TravelSize.Couple]: adultCount,
+    [TravelSize.Family]: (adultCount || 0) + (childCount || 0),
     [TravelSize.Group]: groupCount,
   };
 
