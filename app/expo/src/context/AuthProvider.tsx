@@ -23,14 +23,24 @@ const AuthProvider = (props: Props) => {
       if (session) {
         setSession(session);
         setUser(session?.user);
-        router.push('/(tabs)');
+
+        console.log(session);
+        if (session.user.user_metadata.userType == 'TRAVELER') {
+          router.push('/(tabs)');
+        } else {
+          router.push(`/businessProfile/${session.user.id}`);
+        }
       }
       const { data: authListener } = supabase.auth.onAuthStateChange(
         async (_event, session) => {
           if (session) {
             setSession(session);
             setUser(session?.user);
-            router.push('/(tabs)');
+            if (session.user.user_metadata.userType == 'TRAVELER') {
+              router.push('/(tabs)');
+            } else {
+              router.push(`/businessProfile/${session.user.id}`);
+            }
           } else {
             router.replace('/login');
           }
