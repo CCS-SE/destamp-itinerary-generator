@@ -243,13 +243,6 @@ export default function ReviewTripScreen() {
             isEditabble
           />
           <ReviewCard
-            title="Transportation Style"
-            value={preferenceData.transportationStyle}
-            section="5"
-            isPreference
-            isEditabble
-          />
-          <ReviewCard
             title="Amenities"
             amenities={preferenceData.amenities}
             section="1"
