@@ -27,9 +27,14 @@ interface SlideProps {
   loaded: number | undefined;
 }
 
+interface TimeSlot {
+  start: string;
+  end: string;
+}
+
 interface DestinationCardProps {
   itineraryId: number;
-  time: string;
+  timeSlot: TimeSlot;
   title: string;
   price: string;
   imageList: string[];
@@ -42,7 +47,7 @@ interface DestinationCardProps {
 
 export default function DestinationCard({
   itineraryId,
-  time,
+  timeSlot,
   title,
   price,
   imageList,
@@ -99,13 +104,11 @@ export default function DestinationCard({
             >
               {title}
             </Text>
-            <View className="mb-1 flex-row">
-              <Text
-                className={`+ ml-2 font-poppins text-sm text-gray-400 ${
-                  time ? 'mr-1' : ''
-                }  `}
-              >
-                {time}
+            <View className="mb-1 ml-3 flex-row">
+              <Text className="mr-1 text-gray-600">
+                {timeSlot.start == timeSlot.end
+                  ? timeSlot.start
+                  : `${timeSlot.start} - ${timeSlot.end}`}
               </Text>
               <PriceTag isFree={isFree} price={price} />
             </View>
@@ -140,6 +143,8 @@ export default function DestinationCard({
           amount={
             categoryType == PlaceType.Restaurant
               ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
+              : categoryType == PlaceType.Attraction
+              ? (parseInt(price) * travellerCount).toFixed(2)
               : price
           }
           categoryType={categoryType}

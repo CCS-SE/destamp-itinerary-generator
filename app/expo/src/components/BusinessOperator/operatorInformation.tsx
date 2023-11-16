@@ -4,7 +4,6 @@ import { router } from 'expo-router';
 
 import SimpleButton from '~/components/Button/simpleButton';
 import AuthenticationStatement from '~/components/Card/owner/authStatement';
-import UserInformation from '~/components/Forms/UserInfoForm';
 
 const OperatorInformation = ({
   businessName,
@@ -18,11 +17,6 @@ const OperatorInformation = ({
       <View style={styles.businessInfo}>
         <Text style={styles.businessName}>{businessName}</Text>
         <Text style={styles.businessAddress}>{businessAddress}</Text>
-      </View>
-      <View>
-        <UserInformation userInfo={'First Name'}></UserInformation>
-        <UserInformation userInfo={'Last Name'}></UserInformation>
-        <UserInformation userInfo={'Role at Business'}></UserInformation>
       </View>
       <AuthenticationStatement />
       <SimpleButton
