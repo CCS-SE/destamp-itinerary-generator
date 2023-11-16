@@ -16,6 +16,7 @@ import GeocoderSearch from '~/components/FormField/MapboxGeocoder';
 import TimeslotSelection from '~/components/FormField/TimeslotSelection';
 import TravelSizeCategorySelection from '~/components/FormField/TravelSizeCategorySelection';
 import Stepper from '~/components/Stepper/Stepper';
+import { TravelSize } from '~/graphql/generated';
 import { CreateTripData } from '~/store/types';
 import useFormstore, { initialFormState } from '~/store/useFormStore';
 import { tripDuration } from '~/utils/dates';
@@ -38,10 +39,6 @@ export default function CreateTripScreen() {
   const [visitedSteps, setVisitedSteps] = useState<number[]>([0]);
   const [tripDurationDays, setTripDurationDays] = useState<number>(1);
   const [budgetError, setBudgetError] = useState('');
-
-  const [timeslots, setPreferredTimeValues] = useState<Array<[number, number]>>(
-    [],
-  );
 
   const formatDateToString = (date: Moment | null) => {
     return date ? date.format('YYYY-MM-DD') : '';
@@ -77,6 +74,38 @@ export default function CreateTripScreen() {
       const validNumberOfDays = numberOfDays > 0 ? numberOfDays : 1;
 
       setTripDurationDays(validNumberOfDays); // Update the number of days
+    }
+  };
+
+  const handleTravelSizeChange = (value: TravelSize) => {
+    if (value === TravelSize.Solo) {
+      setData({
+        step: 1,
+        data: {
+          ...tripData,
+          travelSize: value,
+          adultCount: 1,
+          childCount: 0,
+        },
+      });
+    } else if (value === TravelSize.Couple) {
+      setData({
+        step: 1,
+        data: {
+          ...tripData,
+          travelSize: value,
+          adultCount: 2,
+          childCount: 0,
+        },
+      });
+    } else {
+      setData({
+        step: 1,
+        data: {
+          ...tripData,
+          travelSize: value,
+        },
+      });
     }
   };
 
@@ -156,7 +185,6 @@ export default function CreateTripScreen() {
         step: 1,
         data: {
           ...tripData,
-          timeslots: timeslots,
         },
       });
       router.push('/trip/preference/');
@@ -214,13 +242,14 @@ export default function CreateTripScreen() {
     />,
     <TravelSizeCategorySelection
       key={3}
-      onTravelGroupChange={(value) => handleTripDataChange('travelSize', value)}
+      initialTravelSize={tripData.travelSize}
+      initialAdultCount={tripData.adultCount}
+      initialChildCount={tripData.childCount}
+      initialGroupCount={tripData.groupCount}
+      onTravelGroupChange={(value) => handleTravelSizeChange(value)}
       onGroupCountChange={(value) => handleTripDataChange('groupCount', value)}
       onAdultCountChange={(value) => handleTripDataChange('adultCount', value)}
       onChildCountChange={(value) => handleTripDataChange('childCount', value)}
-      onTravelerCountChange={(value) =>
-        handleTripDataChange('travelerCount', value)
-      }
     />,
     <DateRangePicker
       key={4}
@@ -228,7 +257,7 @@ export default function CreateTripScreen() {
     />,
     <TimeslotSelection
       key={5}
-      onValueChange={(values) => setPreferredTimeValues(values)}
+      onValueChange={(values) => handleTripDataChange('timeslots', values)}
       tripDuration={tripDurationDays}
     />,
     <BudgetCategorySelection
@@ -244,7 +273,11 @@ export default function CreateTripScreen() {
         formatDateToString(tripData.startDate),
         formatDateToString(tripData.endDate),
       )}
-      totalTraveler={tripData.travelerCount}
+      totalTraveler={
+        tripData.travelSize === TravelSize.Group
+          ? tripData.groupCount
+          : tripData.adultCount + tripData.childCount
+      }
       onChangeText={(value) => handleTripDataChange('budget', value)}
       onBudgetError={(value) => setBudgetError(value)}
     />,
