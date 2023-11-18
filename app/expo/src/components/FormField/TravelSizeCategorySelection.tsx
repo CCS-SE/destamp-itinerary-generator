@@ -39,6 +39,7 @@ export default function TravelSizeCategorySelection({
   ) => {
     setCount(count + 1);
     onChange(count + 1);
+    setTravelerCount(travelerCount + 1);
   };
 
   const decrementCount = (
@@ -50,6 +51,8 @@ export default function TravelSizeCategorySelection({
     if (count > minCount) {
       setCount(count - 1);
       onChange(count - 1);
+
+      setTravelerCount(travelerCount - 1);
     }
   };
 
@@ -61,10 +64,8 @@ export default function TravelSizeCategorySelection({
   const travelers = {
     SOLO: '1 traveler',
     COUPLE: '2 travelers',
-    GROUP: `${groupCount} ${groupCount > 1 ? 'travelers' : 'traveler'}`,
-    FAMILY: `${adultCount + childCount} ${
-      adultCount + childCount > 1 ? 'travelers' : 'traveler'
-    } `,
+    GROUP: `${travelerCount} ${travelerCount > 1 ? 'travelers' : 'traveler'}`,
+    FAMILY: `${travelerCount} ${travelerCount > 1 ? 'travelers' : 'traveler'} `,
   };
 
   return (
@@ -73,13 +74,19 @@ export default function TravelSizeCategorySelection({
         <TravelGroupCard
           icon={<Solo height={25} width={25} />}
           title="Just me"
-          onPress={() => handleValueChange(TravelSize.Solo)}
+          onPress={() => {
+            handleValueChange(TravelSize.Solo);
+            setTravelerCount(1);
+          }}
           isSelected={selectedValue === TravelSize.Solo}
         />
         <TravelGroupCard
           icon={<Couple height={25} width={25} />}
           title="A partner"
-          onPress={() => handleValueChange(TravelSize.Couple)}
+          onPress={() => {
+            handleValueChange(TravelSize.Couple);
+            setTravelerCount(2);
+          }}
           isSelected={selectedValue === TravelSize.Couple}
         />
       </View>
@@ -87,13 +94,19 @@ export default function TravelSizeCategorySelection({
         <TravelGroupCard
           icon={<Group height={25} width={30} />}
           title="Group"
-          onPress={() => handleValueChange(TravelSize.Group)}
+          onPress={() => {
+            handleValueChange(TravelSize.Group);
+            setTravelerCount(groupCount);
+          }}
           isSelected={selectedValue === TravelSize.Group}
         />
         <TravelGroupCard
           icon={<Family height={25} width={25} />}
           title="Family"
-          onPress={() => handleValueChange(TravelSize.Family)}
+          onPress={() => {
+            handleValueChange(TravelSize.Family);
+            setTravelerCount(adultCount + childCount);
+          }}
           isSelected={selectedValue === TravelSize.Family}
         />
       </View>
@@ -103,20 +116,9 @@ export default function TravelSizeCategorySelection({
           count={groupCount}
           onIncrement={() => {
             incrementCount(groupCount, setGroupCount, onGroupCountChange);
-            incrementCount(
-              travelerCount,
-              setTravelerCount,
-              onTravelerCountChange,
-            );
           }}
           onDecrement={() => {
             decrementCount(groupCount, setGroupCount, onGroupCountChange, 2);
-            decrementCount(
-              travelerCount,
-              setTravelerCount,
-              onTravelerCountChange,
-              3,
-            );
           }}
         />
       ) : selectedValue === TravelSize.Family ? (
@@ -126,20 +128,9 @@ export default function TravelSizeCategorySelection({
             count={adultCount}
             onIncrement={() => {
               incrementCount(adultCount, setAdultCount, onAdultCountChange);
-              incrementCount(
-                travelerCount,
-                setTravelerCount,
-                onTravelerCountChange,
-              );
             }}
             onDecrement={() => {
               decrementCount(adultCount, setAdultCount, onAdultCountChange, 2);
-              decrementCount(
-                travelerCount,
-                setTravelerCount,
-                onTravelerCountChange,
-                2,
-              );
             }}
           />
           <Counter
