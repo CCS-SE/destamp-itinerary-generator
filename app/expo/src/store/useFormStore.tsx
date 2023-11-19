@@ -48,7 +48,9 @@ export const initialFormState = {
       place_name: '',
     },
     timeslots: [[10, 18]] as [number, number][],
-    travelerCount: 0,
+    groupCount: 3,
+    adultCount: 1,
+    childCount: 1,
     travelSize: TravelSize.Solo,
   },
   preferenceData: {

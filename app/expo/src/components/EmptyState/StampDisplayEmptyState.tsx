@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, Text, View } from 'react-native';
 
-import Stamp from '../../../../assets/images/stamp.svg';
+import Stamp from '../../../assets/images/stamp.svg';
 
 export default function StampDisplayEmptyState() {
   const cardWidth = Dimensions.get('window').width * 0.88;

@@ -17,13 +17,15 @@ export interface CreateTripData {
     place_name: string;
     name: string;
     center: [number, number];
-  };
+  } | null;
   travelSize: TravelSize;
   startDate: Moment | null;
   endDate: Moment | null;
   timeslots: [number, number][];
   budgetInclusions: [ExpenseCategory];
-  travelerCount: number;
+  groupCount: number;
+  adultCount: number;
+  childCount: number;
   budget: string;
 }
 

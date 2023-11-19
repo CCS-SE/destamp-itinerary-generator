@@ -14,7 +14,6 @@ interface TravelGroupCategorySelectionProps {
   onGroupCountChange: (value: number) => void;
   onAdultCountChange: (value: number) => void;
   onChildCountChange: (value: number) => void;
-  onTravelerCountChange: (value: number) => void;
 }
 
 export default function TravelSizeCategorySelection({
@@ -22,7 +21,6 @@ export default function TravelSizeCategorySelection({
   onGroupCountChange,
   onAdultCountChange,
   onChildCountChange,
-  onTravelerCountChange,
 }: TravelGroupCategorySelectionProps) {
   const [selectedValue, setSelectedValue] = useState<TravelSize>(
     TravelSize.Solo,

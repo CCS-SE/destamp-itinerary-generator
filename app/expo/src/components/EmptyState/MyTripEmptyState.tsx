@@ -7,7 +7,7 @@ import { useQuery } from '@apollo/client';
 
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerInfoDocument } from '~/graphql/generated';
-import NoTripIcon from '../../../../assets/images/empty-trip.svg';
+import NoTripIcon from '../../../assets/images/empty-trip.svg';
 
 export default function MyTripEmptyState() {
   const onPress = () => {

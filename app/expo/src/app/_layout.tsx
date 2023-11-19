@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
@@ -13,7 +12,6 @@ import {
 import { ClerkProvider } from '@clerk/clerk-expo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {
-  DarkTheme,
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
@@ -26,15 +24,11 @@ export {
   ErrorBoundary,
 } from 'expo-router';
 
-// const URL = 'https://destamp-cpu.onrender.com';
-
-const LOCAL_SYSTEM_IP_ADDRESS = '192.168.254.108';
-const PORT = 4000;
+const URL = 'https://destamp-cpu.onrender.com';
 
 const client = new ApolloClient({
   link: createHttpLink({
-    // uri: `${URL}/graphql`,
-    uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
+    uri: `${URL}/graphql`,
     fetch,
   }),
   cache: new InMemoryCache({
@@ -51,11 +45,6 @@ const client = new ApolloClient({
     },
   }),
 });
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -91,10 +80,9 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DefaultTheme}>
       <AutocompleteDropdownContextProvider>
         <AuthProvider>
           <ClerkProvider
@@ -105,7 +93,6 @@ function RootLayoutNav() {
             <ApolloProvider client={client}>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="businessProfile" options={{ headerShown: false}} />
               </Stack>
             </ApolloProvider>
           </ClerkProvider>

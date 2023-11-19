@@ -193,7 +193,7 @@ export default function ItineraryScreen() {
                     transportationCost={item.transportationCost}
                     departingLocation={data.trip.departingLocation?.name}
                     destinations={item.destinations}
-                    preferredTime={data.trip.preferredTime}
+                    timeslots={data.trip.preferredTime}
                     travelDistances={item.travelDistances}
                     travelDurations={item.travelDurations}
                     isAccommodationIncluded={data.trip.isAccommodationIncluded}
