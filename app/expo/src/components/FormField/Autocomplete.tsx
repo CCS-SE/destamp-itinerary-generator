@@ -31,6 +31,7 @@ export default function AutoComplete({
     <AutocompleteDropdown
       clearOnFocus={false}
       closeOnBlur={true}
+      initialValue={data[0]}
       onSelectItem={handleChange}
       dataSet={data}
       containerStyle={{ width: inputWidth }}

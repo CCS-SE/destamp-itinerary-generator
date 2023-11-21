@@ -16,21 +16,31 @@ interface Props {
 
 const AuthProvider = (props: Props) => {
   const [session, setSession] = useState<Session | null>(null);
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+      if (session && session.user) {
         setSession(session);
         setUser(session?.user);
-        router.push('/(tabs)');
+
+        if (session.user.user_metadata.userType == 'TRAVELER') {
+          router.replace('/(tabs)');
+        } else {
+          router.replace('/businessProfile/businessList');
+        }
       }
       const { data: authListener } = supabase.auth.onAuthStateChange(
-        async (_event, session) => {
-          if (session) {
+        (_event, session) => {
+          if (session && session.user) {
             setSession(session);
             setUser(session?.user);
-            router.push('/(tabs)');
+
+            if (session.user.user_metadata.userType == 'TRAVELER') {
+              router.replace('/(tabs)');
+            } else {
+              router.replace('/businessProfile/businessList');
+            }
           } else {
             router.replace('/login');
           }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Moment } from 'moment';
 
@@ -28,9 +28,11 @@ export default function DateRangePicker({
 
   const daysDifference = endDate ? endDate.diff(startDate, 'days') + 1 : 1;
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View className="top-16 h-[260] flex-row items-center justify-between">
-      <View className="mr-10 h-[380] flex-1">
+    <View className="flex-row items-center justify-between">
+      <View className="mr-10 flex-1" style={{ height: screenWidth / 1.2 }}>
         <CalendarPicker
           minDate={minDate}
           maxRangeDuration={4}

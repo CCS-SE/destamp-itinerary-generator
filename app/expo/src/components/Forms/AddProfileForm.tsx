@@ -32,6 +32,13 @@ export default function AddProfileForm() {
     const { error, data } = await supabase.auth.signUp({
       email: email as string,
       password: password as string,
+      options: {
+        data: {
+          userType: type as UserType,
+          firstName: input.firstName,
+          lastName: input.lastName,
+        },
+      },
     });
 
     if (error) Alert.alert('Sign Up Error', error.message);

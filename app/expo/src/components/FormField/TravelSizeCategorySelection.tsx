@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Text, View } from 'react-native';
 
 import TravelGroupCard from '~/components/Card/traveler/TravelGroupCard';
@@ -9,10 +10,6 @@ import Solo from '../../../assets/images/solo.svg';
 import Counter from '../Counter/Counter';
 
 interface TravelGroupCategorySelectionProps {
-  initialTravelSize: TravelSize;
-  initialGroupCount: number;
-  initialAdultCount: number;
-  initialChildCount: number;
   onTravelGroupChange: (value: TravelSize) => void;
   onGroupCountChange: (value: number) => void;
   onAdultCountChange: (value: number) => void;
@@ -20,42 +17,53 @@ interface TravelGroupCategorySelectionProps {
 }
 
 export default function TravelSizeCategorySelection({
-  initialTravelSize,
-  initialGroupCount,
-  initialAdultCount,
-  initialChildCount,
-  onTravelGroupChange,
+  onTravelGroupChange: onTravelCompanionValueChange,
   onGroupCountChange,
   onAdultCountChange,
   onChildCountChange,
 }: TravelGroupCategorySelectionProps) {
-  const incrementCount = (count: number, onChange: (count: number) => void) => {
+  const [selectedValue, setSelectedValue] = useState<TravelSize>(
+    TravelSize.Solo,
+  );
+  const [childCount, setChildCount] = useState(1);
+  const [adultCount, setAdultCount] = useState(2);
+  const [groupCount, setGroupCount] = useState(3);
+  const [travelerCount, setTravelerCount] = useState(0);
+
+  const incrementCount = (
+    count: number,
+    setCount: (count: number) => void,
+    onChange: (count: number) => void,
+  ) => {
+    setCount(count + 1);
     onChange(count + 1);
+    setTravelerCount(travelerCount + 1);
   };
 
   const decrementCount = (
     count: number,
+    setCount: (count: number) => void,
     onChange: (count: number) => void,
     minCount: number = 0,
   ) => {
     if (count > minCount) {
+      setCount(count - 1);
       onChange(count - 1);
+
+      setTravelerCount(travelerCount - 1);
     }
   };
 
   const handleValueChange = (value: TravelSize) => {
-    onTravelGroupChange(value);
+    setSelectedValue(value);
+    onTravelCompanionValueChange(value);
   };
 
   const travelers = {
-    SOLO: `${initialAdultCount} traveler`,
-    COUPLE: `${initialAdultCount} travelers`,
-    GROUP: `${initialGroupCount} ${
-      initialGroupCount > 1 ? 'travelers' : 'traveler'
-    }`,
-    FAMILY: `${initialAdultCount + initialChildCount} ${
-      initialAdultCount + initialChildCount > 1 ? 'travelers' : 'traveler'
-    } `,
+    SOLO: '1 traveler',
+    COUPLE: '2 travelers',
+    GROUP: `${travelerCount} ${travelerCount > 1 ? 'travelers' : 'traveler'}`,
+    FAMILY: `${travelerCount} ${travelerCount > 1 ? 'travelers' : 'traveler'} `,
   };
 
   return (
@@ -66,69 +74,79 @@ export default function TravelSizeCategorySelection({
           title="Just me"
           onPress={() => {
             handleValueChange(TravelSize.Solo);
+            setTravelerCount(1);
           }}
-          isSelected={initialTravelSize === TravelSize.Solo}
+          isSelected={selectedValue === TravelSize.Solo}
         />
         <TravelGroupCard
           icon={<Couple height={25} width={25} />}
           title="A partner"
-          onPress={() => handleValueChange(TravelSize.Couple)}
-          isSelected={initialTravelSize === TravelSize.Couple}
+          onPress={() => {
+            handleValueChange(TravelSize.Couple);
+            setTravelerCount(2);
+          }}
+          isSelected={selectedValue === TravelSize.Couple}
         />
       </View>
       <View className="flex-row">
         <TravelGroupCard
           icon={<Group height={25} width={30} />}
           title="Group"
-          onPress={() => handleValueChange(TravelSize.Group)}
-          isSelected={initialTravelSize === TravelSize.Group}
+          onPress={() => {
+            handleValueChange(TravelSize.Group);
+            setTravelerCount(groupCount);
+          }}
+          isSelected={selectedValue === TravelSize.Group}
         />
         <TravelGroupCard
           icon={<Family height={25} width={25} />}
           title="Family"
-          onPress={() => handleValueChange(TravelSize.Family)}
-          isSelected={initialTravelSize === TravelSize.Family}
+          onPress={() => {
+            handleValueChange(TravelSize.Family);
+            setTravelerCount(adultCount + childCount);
+          }}
+          isSelected={selectedValue === TravelSize.Family}
         />
       </View>
-      {initialTravelSize === TravelSize.Group ? (
+      {selectedValue === TravelSize.Group ? (
         <Counter
           label="People"
-          count={initialGroupCount}
-          onIncrement={() =>
-            incrementCount(initialGroupCount, onGroupCountChange)
-          }
-          onDecrement={() =>
-            decrementCount(initialGroupCount, onGroupCountChange, 1)
-          }
+          count={groupCount}
+          onIncrement={() => {
+            incrementCount(groupCount, setGroupCount, onGroupCountChange);
+          }}
+          onDecrement={() => {
+            decrementCount(groupCount, setGroupCount, onGroupCountChange, 2);
+          }}
         />
-      ) : initialTravelSize === TravelSize.Family ? (
+      ) : selectedValue === TravelSize.Family ? (
         <View>
           <Counter
             label="Adults"
-            count={initialAdultCount}
-            onIncrement={() =>
-              incrementCount(initialAdultCount, onAdultCountChange)
-            }
-            onDecrement={() =>
-              decrementCount(initialAdultCount, onAdultCountChange, 1)
-            }
+            count={adultCount}
+            onIncrement={() => {
+              incrementCount(adultCount, setAdultCount, onAdultCountChange);
+            }}
+            onDecrement={() => {
+              decrementCount(adultCount, setAdultCount, onAdultCountChange, 2);
+            }}
           />
           <Counter
             label="Children"
-            count={initialChildCount}
-            onIncrement={() =>
-              incrementCount(initialChildCount, onChildCountChange)
-            }
-            onDecrement={() =>
-              decrementCount(initialChildCount, onChildCountChange, 0)
-            }
+            count={childCount}
+            onIncrement={() => {
+              incrementCount(childCount, setChildCount, onChildCountChange);
+            }}
+            onDecrement={() => {
+              decrementCount(childCount, setChildCount, onChildCountChange, 1);
+            }}
           />
         </View>
       ) : (
         <></>
       )}
       <Text className="ml-4 font-poppins text-gray-500">
-        {travelers[initialTravelSize]}
+        {travelers[selectedValue]}
       </Text>
     </View>
   );

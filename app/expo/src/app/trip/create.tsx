@@ -256,10 +256,6 @@ export default function CreateTripScreen() {
     />,
     <TravelSizeCategorySelection
       key={3}
-      initialTravelSize={tripData.travelSize}
-      initialAdultCount={tripData.adultCount}
-      initialChildCount={tripData.childCount}
-      initialGroupCount={tripData.groupCount}
       onTravelGroupChange={(value) => handleTravelSizeChange(value)}
       onGroupCountChange={(value) => handleTripDataChange('groupCount', value)}
       onAdultCountChange={(value) => handleTripDataChange('adultCount', value)}
@@ -321,29 +317,21 @@ export default function CreateTripScreen() {
           ),
         }}
       />
-      <ScrollView
-        className="flex-1"
-        ref={scrollViewRef}
-        scrollToOverflowEnabled
-      >
-        <View className="p-3.5">
-          <Accordion
-            activeSections={activeSections}
-            sections={Sections.filter((_, index) =>
-              visitedSteps.includes(index),
-            )}
-            touchableComponent={TouchableOpacity}
-            expandMultiple={false}
-            renderHeader={renderHeader}
-            renderContent={renderContent}
-            duration={500}
-            onChange={setSections}
-            expandFromBottom={false}
-            containerStyle={{ height: 500 }}
-          />
-        </View>
-      </ScrollView>
-      <View>
+      <View className="flex-1 overflow-hidden p-3.5">
+        <Accordion
+          activeSections={activeSections}
+          sections={Sections.filter((_, index) => visitedSteps.includes(index))}
+          touchableComponent={TouchableOpacity}
+          expandMultiple={false}
+          renderHeader={renderHeader}
+          renderContent={renderContent}
+          duration={500}
+          onChange={setSections}
+          expandFromBottom={false}
+          containerStyle={{ height: 500 }}
+        />
+      </View>
+      <View className="">
         {renderNextButton()}
         <Text className="mt-2 self-center font-poppins-medium text-lg text-gray-400">
           {activeSection !== -1 ? visitedSteps.length : 0} of {Sections.length}
