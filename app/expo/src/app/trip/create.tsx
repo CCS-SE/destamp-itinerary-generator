@@ -256,10 +256,6 @@ export default function CreateTripScreen() {
     />,
     <TravelSizeCategorySelection
       key={3}
-      initialTravelSize={tripData.travelSize}
-      initialAdultCount={tripData.adultCount}
-      initialChildCount={tripData.childCount}
-      initialGroupCount={tripData.groupCount}
       onTravelGroupChange={(value) => handleTravelSizeChange(value)}
       onGroupCountChange={(value) => handleTripDataChange('groupCount', value)}
       onAdultCountChange={(value) => handleTripDataChange('adultCount', value)}

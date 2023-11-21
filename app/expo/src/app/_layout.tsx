@@ -80,7 +80,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-
   return (
     <ThemeProvider value={DefaultTheme}>
       <AutocompleteDropdownContextProvider>
@@ -92,6 +91,7 @@ function RootLayoutNav() {
           >
             <ApolloProvider client={client}>
               <Stack>
+                <Stack.Screen name="businessProfile/businessList" options={{ title: "My Business"}} />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
             </ApolloProvider>
