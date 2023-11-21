@@ -11,10 +11,7 @@ import {
 } from '@apollo/client';
 import { ClerkProvider } from '@clerk/clerk-expo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { fetch } from 'cross-fetch';
 
 import { AuthProvider } from '~/context/AuthProvider';
@@ -91,8 +88,11 @@ function RootLayoutNav() {
           >
             <ApolloProvider client={client}>
               <Stack>
-                <Stack.Screen name='businessProfile/businessList' options={{ title: 'My Business'}} />
-                <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="businessProfile/businessList"
+                  options={{ title: 'My Business' }}
+                />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
             </ApolloProvider>
           </ClerkProvider>
