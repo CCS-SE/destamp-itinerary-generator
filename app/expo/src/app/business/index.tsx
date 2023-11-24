@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { supabase } from 'config/initSupabase';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
