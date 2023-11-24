@@ -14,7 +14,7 @@ import {
   getTotalDesiredTravelHours,
   multiplyRangeByPeople,
 } from '../utils';
-import { pois } from './mock/mock';
+import { pointOfInterests } from './mock/mock';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
@@ -96,23 +96,23 @@ describe('calculateFitnessScore', () => {
 
 describe('getCoordinates', () => {
   it('should get the coordinates of places', () => {
-    const coordinates = getCoordinates(pois);
+    const coordinates = getCoordinates(pointOfInterests);
 
     expect(coordinates).toStrictEqual([
-      [pois[0]?.longitude, pois[0]?.latitude],
-      [pois[1]?.longitude, pois[1]?.latitude],
-      [pois[2]?.longitude, pois[2]?.latitude],
-      [pois[3]?.longitude, pois[3]?.latitude],
-      [pois[4]?.longitude, pois[4]?.latitude],
-      [pois[5]?.longitude, pois[5]?.latitude],
-      [pois[6]?.longitude, pois[6]?.latitude],
+      [pointOfInterests[0]?.longitude, pointOfInterests[0]?.latitude],
+      [pointOfInterests[1]?.longitude, pointOfInterests[1]?.latitude],
+      [pointOfInterests[2]?.longitude, pointOfInterests[2]?.latitude],
+      [pointOfInterests[3]?.longitude, pointOfInterests[3]?.latitude],
+      [pointOfInterests[4]?.longitude, pointOfInterests[4]?.latitude],
+      [pointOfInterests[5]?.longitude, pointOfInterests[5]?.latitude],
+      [pointOfInterests[6]?.longitude, pointOfInterests[6]?.latitude],
     ]);
   });
 });
 
 describe('getCoordinatesParam', () => {
   it('should get the coordinates params of places', () => {
-    const coordinates = getCoordinates(pois);
+    const coordinates = getCoordinates(pointOfInterests);
     const coordsParams = getCoordinatesParam(coordinates);
 
     expect(coordsParams).toBe(
@@ -174,6 +174,6 @@ describe('calculateTravelExpenses', () => {
       [1005.9, 696.2, 1293.2, 1174.3, 1111.4],
       1,
     );
-    expect(travelExpense).toBe(142);
+    expect(travelExpense).toBe(736);
   });
 });

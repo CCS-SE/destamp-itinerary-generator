@@ -1,4 +1,4 @@
-import { POI } from '.';
+import { PointOfInterest } from '.';
 import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { getBudgetAllocation } from './budgetAllocation';
 
@@ -108,7 +108,7 @@ export const calculateDurationScore = (
   return durationScore;
 };
 
-export const getCoordinates = (pois: POI[]): [number, number][] => {
+export const getCoordinates = (pois: PointOfInterest[]): [number, number][] => {
   return pois.map((place) => {
     if (place.latitude && place.longitude) {
       return [place.longitude, place.latitude];
