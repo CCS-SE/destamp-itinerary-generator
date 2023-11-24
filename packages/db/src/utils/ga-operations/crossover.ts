@@ -1,13 +1,11 @@
-import { PlaceType } from '@prisma/client';
-
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { PointOfInterest } from '.';
+import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { tripDuration } from '../utils';
 import { getBudgetAllocation } from './budgetAllocation';
 import { Chromosome } from './chromosome';
 import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-type Place = NexusGenObjects['Place'];
 
 export const crossover = (
   chromosome1: Chromosome,
@@ -40,8 +38,11 @@ export const crossover = (
   return { chrom1, chrom2 };
 };
 
-export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
-  const { budget, adultCount, childCount } = tripInput;
+export const crossoverEval = (
+  spots: PointOfInterest[],
+  tripInput: CreateTripInput,
+) => {
+  const { budget, travelerCount } = tripInput;
 
   const duration = tripDuration(
     new Date(tripInput.startDate),
@@ -54,14 +55,13 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
   const foodThreshold = budget * rate.FOOD;
 
   const totalDesiredTravelHours = getTotalDesiredTravelHours(
-    tripInput.preferredTime,
+    tripInput.timeSlots,
   );
 
   const estimatedTranspoDuration = tripInput.isTransportationIncluded
     ? duration * (totalDesiredTravelHours * rate.TRANSPORT)
     : 0;
 
-  const totalTravelers = (adultCount || 0) + (childCount || 0);
   const durationThreshold =
     duration * totalDesiredTravelHours - estimatedTranspoDuration;
 
@@ -75,14 +75,14 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
     attraction: 0,
   };
 
-  const chromosome: Place[] = [];
+  const chromosome: PointOfInterest[] = [];
 
   for (const spot of spots) {
     if (totalDuration >= durationThreshold) {
       return chromosome;
     } else {
-      if (spot.type === PlaceType.ATTRACTION) {
-        const attractionCost = parseFloat(spot.price) * totalTravelers;
+      if (spot.isAttraction) {
+        const attractionCost = parseFloat(spot.price) * travelerCount;
         const spotDuration = spot.visitDuration / 60;
 
         if (
@@ -95,9 +95,9 @@ export const crossoverEval = (spots: Place[], tripInput: CreateTripInput) => {
         }
       }
 
-      if (spot.type === PlaceType.RESTAURANT) {
+      if (spot.restaurant) {
         const averagePrice = calculateAveragePrice(spot.price);
-        const foodCost = averagePrice * totalTravelers;
+        const foodCost = averagePrice * travelerCount;
         const spotDuration = spot.visitDuration / 60;
 
         if (

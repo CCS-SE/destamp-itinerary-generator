@@ -1,8 +1,8 @@
 import { NexusGenFieldTypes } from '../../../../graphql/generated/nexus';
 
-type POI = NexusGenFieldTypes['Poi'];
+type PointOfInterest = NexusGenFieldTypes['Poi'];
 
-export const pois: POI[] = [
+export const pointOfInterests: PointOfInterest[] = [
   {
     address: '1245 Jereos St, La Paz, Iloilo City, Iloilo, Philippines',
     isAttraction: true,
@@ -29,7 +29,8 @@ export const pois: POI[] = [
     name: 'La Paz Park',
     price: '0',
     visitDuration: 45,
-    isClaimed: false,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
   {
     address: 'PH33+2GX, Mandurriao, Iloilo City, Iloilo, Philippines',
@@ -61,7 +62,8 @@ export const pois: POI[] = [
     name: 'Iloilo Esplanade 1 Extension & Skateboard Park',
     price: '0',
     visitDuration: 45,
-    isClaimed: false,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
   {
     address: 'Rizal St, Iloilo City Proper, Iloilo City, Iloilo, Philippines',
@@ -80,12 +82,13 @@ export const pois: POI[] = [
     description: '',
     id: 'clnc1w3n600h1tf50kxu2essy',
     images: [],
-    isClaimed: false,
     latitude: 10.6921669,
     longitude: 122.5703695,
     name: 'Reddoorz @ City Corporate Inn Iloilo',
     price: '770',
     visitDuration: 1440,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
   {
     address:
@@ -100,12 +103,13 @@ export const pois: POI[] = [
     description: '',
     id: 'clnc1xgj000ostf50puiglyx5',
     images: [],
-    isClaimed: false,
     latitude: 10.7183491,
     longitude: 122.539675,
     name: 'Plated Restaurant',
     price: '400-600',
     visitDuration: 90,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
   {
     address: 'Jollibee, Mandurriao, Iloilo City, Iloilo, Philippines',
@@ -120,13 +124,13 @@ export const pois: POI[] = [
     description: '',
     id: 'clnc1xiix00p4tf503kunvx2a',
     images: [],
-    isClaimed: false,
     latitude: 10.7170505,
     longitude: 122.5478876,
     name: 'Lorenzos',
     price: '200-400',
-
     visitDuration: 90,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
   {
     address:
@@ -141,13 +145,14 @@ export const pois: POI[] = [
     description: '',
     images: [],
     id: 'clnc2219p016ktf505m2qazzi',
-    isClaimed: true,
     latitude: 10.7014032,
     longitude: 122.568212,
 
     name: 'Floyds Famous Bbq',
     price: '200-400',
     visitDuration: 90,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
   {
     address:
@@ -162,11 +167,12 @@ export const pois: POI[] = [
     description: '',
     images: [],
     id: 'clnc22267016qtf5019nhr2c7',
-    isClaimed: false,
     latitude: 10.7025543,
     longitude: 122.5508008,
     name: 'PUNOT',
     price: '400-600',
     visitDuration: 90,
+    createdAt: new Date('2023-10-29'),
+    updatedAt: new Date('2023-10-29'),
   },
 ];

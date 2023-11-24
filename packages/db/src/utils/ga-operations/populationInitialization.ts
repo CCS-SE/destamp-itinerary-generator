@@ -1,4 +1,5 @@
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { PointOfInterest } from '.';
+import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { tripDuration } from '../utils';
 import { getBudgetAllocation } from './budgetAllocation';
 import { Chromosome } from './chromosome';
@@ -6,16 +7,15 @@ import { Chromosome as Chrom } from './types';
 import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-type Place = NexusGenObjects['Place'];
 
 const POPULATION_SIZE = 10;
 
 export function generatePopulation(
   input: CreateTripInput,
-  restaurants: Place[],
-  attractions: Place[],
+  restaurants: PointOfInterest[],
+  attractions: PointOfInterest[],
 ) {
-  const { budget, adultCount, childCount, preferredTime } = input;
+  const { budget, travelerCount } = input;
 
   const rate = getBudgetAllocation(input)!;
 
@@ -29,8 +29,7 @@ export function generatePopulation(
 
   const MAX_ITERATIONS = 24; // max number of iterations
 
-  const totalDesiredHours = getTotalDesiredTravelHours(preferredTime);
-  const totalTravelers = (adultCount || 0) + (childCount || 0);
+  const totalDesiredHours = getTotalDesiredTravelHours(input.timeSlots);
 
   const estimatedTranspoDuration = input.isTransportationIncluded
     ? duration * (totalDesiredHours * rate.TRANSPORT)
@@ -45,7 +44,7 @@ export function generatePopulation(
     let totalFoodCost = 0;
     let totalAttractionCost = 0;
 
-    const chromosome: Place[] = []; // list of destinations within budget and timeframe
+    const chromosome: PointOfInterest[] = []; // list of destinations within budget and timeframe
 
     const restaurantIndexes: number[] = [];
     const attractionIndexes: number[] = [];
@@ -70,7 +69,7 @@ export function generatePopulation(
         const restaurant = restaurants[restaurantIndex]!;
 
         const averagePrice = calculateAveragePrice(restaurant.price);
-        const foodCost = averagePrice * totalTravelers;
+        const foodCost = averagePrice * travelerCount;
         const placeDuration = restaurant.visitDuration / 60;
 
         totalFoodCost += foodCost;
@@ -81,7 +80,7 @@ export function generatePopulation(
 
       if (!attractionIndexes.includes(attractionIndex)) {
         const attraction = attractions[attractionIndex]!;
-        const attractionCost = parseFloat(attraction.price) * totalTravelers;
+        const attractionCost = parseFloat(attraction.price) * travelerCount;
         const placeDuration = attraction.visitDuration / 60;
 
         totalAttractionCost += attractionCost;
@@ -98,12 +97,10 @@ export function generatePopulation(
         break;
       }
     }
-    console.log(chromosome.length);
+
     newPopulation.push({
       chrom: new Chromosome(chromosome),
       fitnessScore: 0,
-      totalCost: 0,
-      totalDuration: 0,
       travelDuration: 0,
       travelExpenses: 0,
       travelDistances: [],
