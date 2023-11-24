@@ -6,7 +6,9 @@ const CreateUserInput = inputObjectType({
     t.string('id');
     t.string('email');
     t.string('password');
-    t.field('userType', { type: 'UserType' });
+    t.string('firstName');
+    t.string('lastName');
+    t.field('type', { type: 'UserType' });
   },
 });
 
