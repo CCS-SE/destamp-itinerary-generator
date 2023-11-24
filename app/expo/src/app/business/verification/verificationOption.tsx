@@ -13,8 +13,8 @@ const VerificationOption = () => {
         description={
           'To confirm your identity, the phone number listed for this business will receive a text with verification code.'
         }
-        icon={[require('../../../assets/images/textMessageIcon.png')]}
-        onPress={() => router.push('/verificationScreen/1')}
+        icon={[require('../../../../assets/images/SMS.svg')]}
+        onPress={() => router.push('/business/verfication/1')}
       />
       <VerificationOptionCard
         title={
@@ -23,7 +23,7 @@ const VerificationOption = () => {
         description={
           'To confirm your identity, submit a copy of your business permit or any valid proof of ownership. This process may take approximately 1-2 days to complete.'
         }
-        icon={[require('../../../assets/images/Documents.png')]}
+        icon={[require('../../../../assets/images/documents.svg')]}
         onPress={() => {}}
       />
     </View>

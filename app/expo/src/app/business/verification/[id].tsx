@@ -1,7 +1,6 @@
-import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import OperatorInformation from '../../components/BusinessOperator/operatorInformation';
+import OperatorInformation from '~/components/BusinessOperator/operatorInformation';
 
 const VerificationScreen = () => {
   return (

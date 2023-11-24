@@ -1,24 +1,16 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-const ContactInformation = ({
-  contactNumber,
-  website,
-}: {
-  contactNumber: string;
-  website: string;
-}) => {
+const ContactInformation = ({ contactNumber }: { contactNumber: string }) => {
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View style={styles.contactInfoBox}>
+    <View style={[styles.contactInfoBox, { width: screenWidth * 0.85 }]}>
       <Text style={styles.title}> Contact Details </Text>
-      <View style={styles.container}>
+      <View>
         <View style={styles.row}>
           <Text style={styles.infoCategory}> Phone Number: </Text>
           <Text style={styles.infoInput}>{contactNumber} </Text>
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.infoCategory}> Website: </Text>
-          <Text style={styles.infoInputWebsite}>{website}</Text>
         </View>
       </View>
     </View>
@@ -26,12 +18,7 @@ const ContactInformation = ({
 };
 const styles = StyleSheet.create({
   contactInfoBox: {
-    marginTop: 25,
-  },
-  container: {
-    width: 322,
-    paddingLeft: 20,
-    marginBottom: 10,
+    marginTop: 15,
   },
   row: {
     flexDirection: 'row',
@@ -40,28 +27,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'Poppins',
     color: '#FC8040',
-    margin: 5,
   },
   infoCategory: {
     fontSize: 12,
     fontFamily: 'Poppins',
     color: '#DE4D6C',
-    marginLeft: 10,
     marginBottom: 3,
+    marginLeft: 2,
   },
   infoInput: {
     fontSize: 12,
     fontFamily: 'Poppins',
-    color: '#EB4335',
+    color: '#DE4D6C',
     marginLeft: 13,
-    width: 200,
-  },
-  infoInputWebsite: {
-    fontSize: 12,
-    fontFamily: 'Poppins',
-    color: '#EB4335',
-    marginLeft: 50,
-    width: 190,
   },
 });
 

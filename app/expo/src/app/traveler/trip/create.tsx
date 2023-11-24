@@ -19,9 +19,12 @@ import Stepper from '~/components/Stepper/Stepper';
 import { TravelSize } from '~/graphql/generated';
 import { CreateTripData } from '~/store/types';
 import useFormstore, { initialFormState } from '~/store/useFormStore';
-import { formatDateToString, tripDuration } from '~/utils/dates';
-import { confirmationAlert } from '~/utils/utils';
-import Back from '../../../assets/images/back-btn.svg';
+import {
+  confirmationAlert,
+  formatDateToString,
+  tripDuration,
+} from '~/utils/utils';
+import Back from '../../../../assets/images/back-btn.svg';
 
 interface Section {
   title: string;
@@ -201,7 +204,7 @@ export default function CreateTripScreen() {
           ...tripData,
         },
       });
-      router.push('/trip/preference/');
+      router.push('/traveler/trip/preference');
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
@@ -256,7 +259,11 @@ export default function CreateTripScreen() {
     />,
     <TravelSizeCategorySelection
       key={3}
-      onTravelGroupChange={(value) => handleTravelSizeChange(value)}
+      initialTravelSize={tripData.travelSize}
+      initialAdultCount={tripData.adultCount}
+      initialChildCount={tripData.childCount}
+      initialGroupCount={tripData.groupCount}
+      onTravelSizeChange={(value) => handleTravelSizeChange(value)}
       onGroupCountChange={(value) => handleTripDataChange('groupCount', value)}
       onAdultCountChange={(value) => handleTripDataChange('adultCount', value)}
       onChildCountChange={(value) => handleTripDataChange('childCount', value)}
@@ -331,7 +338,7 @@ export default function CreateTripScreen() {
           containerStyle={{ height: 500 }}
         />
       </View>
-      <View className="">
+      <View>
         {renderNextButton()}
         <Text className="mt-2 self-center font-poppins-medium text-lg text-gray-400">
           {activeSection !== -1 ? visitedSteps.length : 0} of {Sections.length}

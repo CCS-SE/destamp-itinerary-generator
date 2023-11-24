@@ -6,8 +6,12 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import { getTripDateFormat, tripDuration } from '~/utils/dates';
-import { amountFormatter, toSentenceCase } from '~/utils/utils';
+import {
+  amountFormatter,
+  getTripDateFormat,
+  toSentenceCase,
+  tripDuration,
+} from '~/utils/utils';
 import TripMenuList from '../../Menu/TripMenu/TripMenuList';
 import BottomHalfModal from '../../Modal/BottomHalfModal';
 
@@ -47,7 +51,7 @@ function TripCard({
 
   return (
     <View className="m-3" testID="trip-card">
-      <Link href={`/itinerary/${id}`}>
+      <Link href={`/traveler/trip/itinerary/${id}`}>
         <View
           className=" rounded-2xl bg-gray-50 shadow-md"
           style={{ width: cardWidth }}

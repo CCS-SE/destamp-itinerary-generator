@@ -15,7 +15,7 @@ import DiningStyleSelection from '~/components/FormField/DiningStyleSelection';
 import Stepper from '~/components/Stepper/Stepper';
 import { TripPreferenceData } from '~/store/types';
 import useFormstore from '~/store/useFormStore';
-import Back from '../../../assets/images/back-btn.svg';
+import Back from '../../../../assets/images/back-btn.svg';
 
 interface SectionProps {
   title: string;
@@ -181,7 +181,7 @@ export default function TripPreferenceScreen() {
           activities: getSelectedActivities(),
         },
       });
-      router.push('/trip/review/');
+      router.push('/traveler/trip/review');
     }
   };
 

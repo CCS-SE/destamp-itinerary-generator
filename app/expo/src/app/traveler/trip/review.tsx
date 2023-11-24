@@ -25,13 +25,17 @@ import {
   TravelSize,
 } from '~/graphql/generated';
 import useFormstore from '~/store/useFormStore';
-import { formatDateToString } from '~/utils/dates';
-import { amountFormatter, separateWords, toSentenceCase } from '~/utils/utils';
-import Back from '../../../assets/images/back-btn.svg';
-import Peso from '../../../assets/images/review-budget.svg';
-import Calendar from '../../../assets/images/review-calendar.svg';
-import Destination from '../../../assets/images/review-destination.svg';
-import TravelGroupSize from '../../../assets/images/review-travel-size.svg';
+import {
+  amountFormatter,
+  formatDateToString,
+  separateWords,
+  toSentenceCase,
+} from '~/utils/utils';
+import Back from '../../../../assets/images/back-btn.svg';
+import Peso from '../../../../assets/images/review-budget.svg';
+import Calendar from '../../../../assets/images/review-calendar.svg';
+import Destination from '../../../../assets/images/review-destination.svg';
+import TravelGroupSize from '../../../../assets/images/review-travel-size.svg';
 
 const isIncluded = (
   value: ExpenseCategory,
@@ -100,7 +104,7 @@ export default function ReviewTripScreen() {
           destinationId: 1,
           endDate: tripData.endDate
             ? new Date(formatDateToString(tripData.endDate))
-            : null,
+            : new Date(formatDateToString(tripData.startDate)),
           isAccommodationIncluded: isIncluded(
             ExpenseCategory.Accommodation,
             tripData.budgetInclusions as ExpenseCategory[],
@@ -122,7 +126,7 @@ export default function ReviewTripScreen() {
               ? tripData.groupCount
               : tripData.adultCount,
           childCount:
-            tripData.travelSize === TravelSize.Group ? 0 : tripData.childCount,
+            tripData.travelSize === TravelSize.Family ? tripData.childCount : 0,
           preferredTime: tripData.timeslots,
         },
         locationData: {

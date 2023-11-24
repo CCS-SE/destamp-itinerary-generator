@@ -7,9 +7,9 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import { GetTravelerItineraryDocument, PlaceType } from '~/graphql/generated';
-import Back from '../../../assets/images/back-icon.svg';
-import RestaurantMark from '../../../assets/images/marker-restau.svg';
-import Mark from '../../../assets/images/marker.svg';
+import Back from '../../../../../assets/images/back-icon.svg';
+import RestaurantMark from '../../../../../assets/images/marker-restau.svg';
+import Mark from '../../../../../assets/images/marker.svg';
 
 export default function MapScreen() {
   const { id, selectedDay } = useLocalSearchParams();

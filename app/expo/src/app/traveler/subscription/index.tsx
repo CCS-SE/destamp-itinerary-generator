@@ -6,11 +6,11 @@ import { router, Stack } from 'expo-router';
 
 import GradientButton from '~/components/Button/GradientButton';
 import SubscriptionPriceCard from '~/components/Card/traveler/SubscriptionPriceCard';
-import Back from '../../../assets/images/back-btn.svg';
-import Route from '../../../assets/images/optimized-route.svg';
-import Personalized from '../../../assets/images/personalized.svg';
-import Regenerate from '../../../assets/images/regenerate.svg';
-import UnliTrip from '../../../assets/images/unli-trip.svg';
+import Back from '../../../../assets/images/back-btn.svg';
+import Route from '../../../../assets/images/optimized-route.svg';
+import Personalized from '../../../../assets/images/personalized.svg';
+import Regenerate from '../../../../assets/images/regenerate.svg';
+import UnliTrip from '../../../../assets/images/unli-trip.svg';
 
 export default function Subscription() {
   const [selectedOption, setSelectedOption] = useState('monthly');

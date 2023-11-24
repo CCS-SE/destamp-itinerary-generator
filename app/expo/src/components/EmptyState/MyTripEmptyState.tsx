@@ -12,7 +12,7 @@ import NoTripIcon from '../../../assets/images/empty-trip.svg';
 export default function MyTripEmptyState() {
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    router.push('/trip/create/');
+    router.push('/traveler/trip/create');
   };
   const { user } = useContext(AuthContext);
   const { data } = useQuery(GetTravelerInfoDocument, {

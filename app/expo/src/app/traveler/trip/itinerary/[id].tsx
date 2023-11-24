@@ -8,11 +8,11 @@ import DayButton from '~/components/Button/DayButton';
 import ItineraryCard from '~/components/Card/traveler/ItineraryCard';
 import ItineraryScreenSkeleton from '~/components/Skeleton/ItineraryScreenSkeleton';
 import { GetTravelerItineraryDocument } from '~/graphql/generated';
-import { tripDuration } from '~/utils/dates';
-import Back from '../../../assets/images/back-icon.svg';
-import Expense from '../../../assets/images/expense-icon.svg';
-import Map from '../../../assets/images/map-icon.svg';
-import Point from '../../../assets/images/point.svg';
+import { tripDuration } from '~/utils/utils';
+import Back from '../../../../../assets/images/back-icon.svg';
+import Expense from '../../../../../assets/images/expense-icon.svg';
+import Map from '../../../../../assets/images/map-icon.svg';
+import Point from '../../../../../assets/images/point.svg';
 
 export default function ItineraryScreen() {
   const { id } = useLocalSearchParams();
@@ -103,7 +103,7 @@ export default function ItineraryScreen() {
               style={{ marginRight: 12 }}
               onPress={() =>
                 router.push({
-                  pathname: '/map/',
+                  pathname: '/traveler/trip/map',
                   params: {
                     id: id as string,
                     selectedDay: selectedDay,
@@ -114,7 +114,7 @@ export default function ItineraryScreen() {
             <Expense
               height={45}
               width={45}
-              onPress={() => router.push(`/expense/${id}`)}
+              onPress={() => router.push(`/traveler/trip/expense/${id}`)}
             />
           </View>
         </View>

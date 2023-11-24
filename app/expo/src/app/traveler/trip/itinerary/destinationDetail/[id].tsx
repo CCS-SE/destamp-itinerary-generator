@@ -8,7 +8,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
-import Back from '../../../../assets/images/back-icon.svg';
+import Back from '../../../../../../assets/images/back-icon.svg';
 
 interface ImageProps {
   url: string;

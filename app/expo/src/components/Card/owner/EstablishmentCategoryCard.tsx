@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   FlatList,
   StyleSheet,
   Text,
@@ -13,33 +14,31 @@ const EstablishmentCategory = ({
   tags,
 }: {
   type: string;
-  mainCategory: string;
+  mainCategory?: string;
   tags: string[];
 }) => {
-  // function onPress(tags: string[]): void {
-  //   throw new Error('Function not implemented.');
-  // }
+  const screenWidth = Dimensions.get('window').width;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: screenWidth * 0.85 }]}>
       <Text style={styles.title}> Establishment Category </Text>
       <Text style={styles.mainCategory}>
         {type} | {mainCategory}
       </Text>
 
       <Text style={styles.tagsTitle}> Tags: </Text>
-      <View style={styles.tagsHolder}>
+      <View style={[styles.tagsHolder, { width: screenWidth * 0.85 }]}>
         <FlatList
           data={tags}
           renderItem={({ item }) => (
             <TouchableOpacity
-              // onPress={() => onPress([item])}
               style={styles.buttonContainer}
+              activeOpacity={0.9}
             >
               <Text style={styles.tags}>{item}</Text>
             </TouchableOpacity>
           )}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_, index) => index.toString()}
           horizontal={true} // Render tags horizontally
         />
       </View>
@@ -49,7 +48,6 @@ const EstablishmentCategory = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 10,
     marginTop: 13,
   },
   title: {
@@ -60,32 +58,29 @@ const styles = StyleSheet.create({
   },
   mainCategory: {
     fontFamily: 'Poppins',
-    marginLeft: 8,
     fontSize: 12,
     marginBottom: 5,
+    marginLeft: 4,
   },
   tagsTitle: {
-    color: '#F65A82',
-    paddingLeft: 5,
+    color: '#DE4D6C',
     marginBottom: 5,
     fontFamily: 'Poppins',
     fontSize: 12,
   },
   tagsHolder: {
-    padding: 5,
+    padding: 10,
     borderWidth: 1,
     borderColor: '#ECB476',
     borderRadius: 10,
-    width: 300,
-    marginLeft: 5,
-    height: 53, //sample height
+    height: 'auto', //sample height
   },
   buttonContainer: {
     backgroundColor: '#9CADCE73',
     borderRadius: 15,
     alignSelf: 'flex-start',
     marginRight: 5,
-    padding: 1,
+    padding: 1.5,
   },
 
   tags: {
