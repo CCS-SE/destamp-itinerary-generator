@@ -2,6 +2,12 @@
 ### Do not make changes to this file directly
 
 
+type Accommodation {
+  amenities: [Amenity!]!
+  id: Int!
+  poiId: String!
+}
+
 type Amenity {
   id: Int!
   name: String!
@@ -12,79 +18,58 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
-type BusinessOwner {
-  firstName: String!
-  id: Int!
-  lastName: String!
-  listings: [Place!]!
-  role: BusinessRole!
-}
-
-enum BusinessRole {
-  MANAGER
-  OWNER
-}
-
 type Category {
   id: Int!
-  name: String!
-}
-
-input CreateDepartingLocationInput {
-  address: String!
-  latitude: Float!
-  longitude: Float!
   name: String!
 }
 
 input CreateExpenseInput {
   amount: Float!
   category: ExpenseCategory!
-  date: DateTime!
-  itineraryId: Int!
+  dateSpent: DateTime!
   note: String
 }
 
-input CreateTravelerInput {
-  firstName: String!
-  lastName: String!
-}
-
 input CreateTripInput {
-  adultCount: Int
   budget: Float!
-  childCount: Int
-  destinationId: Int!
   endDate: DateTime!
   isAccommodationIncluded: Boolean!
   isFoodIncluded: Boolean!
   isTransportationIncluded: Boolean!
-  preferredTime: [JSON!]!
   startDate: DateTime!
+  startingLocation: JSON!
+  timeSlots: JSON!
   title: String!
   travelSize: TravelSize!
-  travelerId: Int!
+  travelerCount: Int!
 }
 
 input CreateUserInput {
   email: String!
+  firstName: String!
   id: String!
+  lastName: String!
   password: String!
-  userType: UserType!
+  type: UserType!
 }
 
 type DailyItinerary {
   accommodationCost: Float!
   attractionCost: Float!
-  createdAt: DateTime!
+  dailyItineraryPois: [DailyItineraryPoi!]!
   dayIndex: Int!
-  destinations: [Place!]!
   foodCost: String!
   id: Int!
   transportationCost: Float!
-  travelDistances: JSON!
-  travelDurations: JSON!
-  updatedAt: DateTime!
+}
+
+type DailyItineraryPoi {
+  dailyItineraryId: Int!
+  distance: Float!
+  duration: Float!
+  id: Int!
+  order: Int!
+  poi: Poi!
 }
 
 """
@@ -92,50 +77,12 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
-type DepartingLocation {
-  address: String!
-  id: Int!
-  latitude: Float!
-  longitude: Float!
-  name: String!
-}
-
-type Destination {
-  createdAt: DateTime!
-  id: Int!
-  image: Image
-  name: String!
-  updatedAt: DateTime!
-}
-
-type DiningAtmosphere {
-  id: Int!
-  name: String!
-}
-
-type DiningCuisine {
-  id: Int!
-  name: String!
-}
-
-type DiningOffering {
-  id: Int!
-  name: String!
-}
-
-type DiningOption {
-  id: Int!
-  name: String!
-}
-
 type Expense {
   amount: Float!
   category: ExpenseCategory!
-  createdAt: DateTime!
-  date: DateTime!
+  dateSpent: DateTime!
   id: Int!
-  note: String
-  updatedAt: DateTime!
+  note: String!
 }
 
 enum ExpenseCategory {
@@ -149,22 +96,7 @@ enum ExpenseCategory {
 }
 
 type Image {
-  createdAt: DateTime!
-  id: ID!
-  name: String
-  size: Int
-  updatedAt: DateTime!
-  url: String!
-}
-
-type Itinerary {
-  createdAt: DateTime!
-  dailyItineraries: [DailyItinerary!]!
-  expenses: [Expense!]!
-  id: Int!
-  totalCost: Float!
-  totalDuration: Float!
-  updatedAt: DateTime!
+  id: String!
   url: String!
 }
 
@@ -174,64 +106,65 @@ The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Mutation {
-  createExpense(data: CreateExpenseInput!): Expense!
-  createTrip(data: CreateTripInput!, locationData: CreateDepartingLocationInput!): Trip!
-  createUser(travelerInput: CreateTravelerInput!, userInput: CreateUserInput!): User!
+  createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
+  createTrip(data: CreateTripInput!, userId: String!): Trip!
+  createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
   deleteTrip(id: Int!): Trip!
   updateExpense(data: UpdateExpenseInput!, id: Int!): Expense!
 }
 
-type OpeningHour {
+type OperatingHour {
   closeTime: DateTime
   day: Int!
   id: Int!
   openTime: DateTime
 }
 
-type Place {
+type Poi {
+  accommodation: Accommodation
   address: String!
-  amenities: [Amenity!]!
-  businessOwnerId: Int
   categories: [Category!]!
-  contactNumber: String
-  createdAt: DateTime!
-  description: String
-  diningAtmospheres: [DiningAtmosphere!]!
-  diningCuisines: [DiningCuisine!]!
-  diningOfferings: [DiningOffering!]!
-  diningOptions: [DiningOption!]!
+  contactNumber: String!
+  description: String!
   id: String!
-  images: [Image!]!
-  isClaimed: Boolean!
+  images: [PoiImage!]!
+  isAttraction: Boolean!
   latitude: Float!
   longitude: Float!
   name: String!
-  openingHours: [OpeningHour!]!
+  operatingHours: [OperatingHour!]!
   price: String!
-  type: PlaceType!
-  updatedAt: DateTime!
-  url: String
+  restaurant: Restaurant
+  userId: String
   visitDuration: Float!
-  website: String
 }
 
-enum PlaceType {
-  ACCOMMODATION
-  ATTRACTION
-  RESTAURANT
+type PoiImage {
+  id: Int!
+  image: Image!
+  imageId: String!
+  poiId: String!
 }
 
 type Query {
-  destinations: [Destination!]!
-  getTransaction(itineraryId: Int!): [Expense!]!
-  itinerary(tripId: Int!): Itinerary!
-  place(placeId: String!): Place!
-  places: [Place!]!
-  traveler(userId: String!): Traveler!
-  travelerTrips(userId: String!): [Trip!]!
+  poi(poiId: String!): Poi!
+  pois(userId: String!): [Poi!]!
   trip(id: Int!): Trip!
+  trips(userId: String!): [Trip!]!
   user(id: String!): User!
+}
+
+type Restaurant {
+  atmospheres: [String!]!
+  id: Int!
+  poiId: String!
+}
+
+type Stamp {
+  dateCollected: DateTime!
+  id: Int!
+  title: String!
 }
 
 enum TravelSize {
@@ -241,47 +174,39 @@ enum TravelSize {
   SOLO
 }
 
-type Traveler {
-  contactNumber: String
-  firstName: String
-  id: Int!
-  lastName: String
-  trips: [Trip!]!
-}
-
 type Trip {
-  adultCount: Int
   budget: Float!
-  childCount: Int
-  createdAt: DateTime!
-  departingLocation: DepartingLocation
-  destination: Destination
+  dailyItineraries: [DailyItinerary!]!
   endDate: DateTime!
+  expenses: [Expense!]!
   id: Int!
   isAccommodationIncluded: Boolean!
   isFoodIncluded: Boolean!
   isTransportationIncluded: Boolean!
-  itinerary: Itinerary
-  preferredTime: JSON!
   startDate: DateTime!
+  startingLocation: JSON!
+  timeSlots: JSON!
   title: String!
   travelSize: TravelSize!
-  updatedAt: DateTime!
+  travelerCount: Int!
 }
 
 input UpdateExpenseInput {
   amount: Float
   category: ExpenseCategory
-  date: DateTime
+  dateSpent: DateTime
   note: String
 }
 
 type User {
   email: String!
+  firstName: String!
   id: String!
+  lastName: String!
   password: String!
-  traveler: Traveler
-  userType: UserType!
+  pois: [Poi!]!
+  trips: [Trip!]!
+  type: UserType!
 }
 
 enum UserType {

@@ -44,13 +44,11 @@ export default function AddProfileForm() {
     if (error) Alert.alert('Sign Up Error', error.message);
     else if (data && data.user) {
       const createUserInput: MutationCreateUserArgs = {
-        userInput: {
+        input: {
           id: data!.user.id,
-          userType: type as UserType,
+          type: type as UserType,
           email: email as string,
           password: password as string,
-        },
-        travelerInput: {
           firstName: input.firstName,
           lastName: input.lastName,
         },
@@ -58,8 +56,7 @@ export default function AddProfileForm() {
 
       await createUser({
         variables: {
-          userInput: createUserInput.userInput,
-          travelerInput: createUserInput.travelerInput,
+          input: createUserInput.input,
         },
         onError: (err) => {
           Alert.alert('Error', err.message);

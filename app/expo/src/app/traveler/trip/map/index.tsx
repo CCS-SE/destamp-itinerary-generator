@@ -1,14 +1,20 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, Dimensions, Platform, Text, View } from 'react-native';
+import {
+  Animated,
+  Dimensions,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
-import { GetTravelerItineraryDocument, PlaceType } from '~/graphql/generated';
+import { GetTripItineraryDocument } from '~/graphql/generated';
 import Back from '../../../../../assets/images/back-icon.svg';
-import RestaurantMark from '../../../../../assets/images/marker-restau.svg';
 import Mark from '../../../../../assets/images/marker.svg';
 
 export default function MapScreen() {
@@ -26,7 +32,7 @@ export default function MapScreen() {
     return router.back();
   };
 
-  const { data } = useQuery(GetTravelerItineraryDocument, {
+  const { data } = useQuery(GetTripItineraryDocument, {
     variables: {
       tripId: parseInt(id as string),
     },
@@ -38,9 +44,9 @@ export default function MapScreen() {
     let mapIndex = 0;
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3);
-      const destinations =
-        data!.itinerary.dailyItineraries[parseInt(selectedDay as string)]!
-          .destinations;
+      const destinations = data!.trip.dailyItineraries[
+        parseInt(selectedDay as string)
+      ]!.dailyItineraryPois.map((item) => item.poi);
       if (index >= destinations.length) {
         index = destinations.length - 1;
       }
@@ -66,9 +72,9 @@ export default function MapScreen() {
     });
   });
 
-  const interpolations = data!.itinerary.dailyItineraries[
+  const interpolations = data!.trip.dailyItineraries[
     parseInt(selectedDay as string)
-  ]!.destinations.map((_, index) => {
+  ]!.dailyItineraryPois.map((item) => item.poi).map((_, index) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
@@ -98,9 +104,9 @@ export default function MapScreen() {
         className="h-screen w-screen"
         provider={PROVIDER_GOOGLE}
         onMapReady={() => {
-          const destinations =
-            data?.itinerary.dailyItineraries[parseInt(selectedDay as string)]!
-              .destinations;
+          const destinations = data?.trip.dailyItineraries[
+            parseInt(selectedDay as string)
+          ]!.dailyItineraryPois.map((item) => item.poi);
           const firstDestination = destinations![0];
 
           if (destinations![0] && mapRef.current) {
@@ -117,41 +123,39 @@ export default function MapScreen() {
         }}
       >
         {data &&
-          data.itinerary.dailyItineraries[
+          data.trip.dailyItineraries[
             parseInt(selectedDay as string)
-          ]?.destinations.map((destination, i) => {
-            const scaleStyle = {
-              transform: [
-                {
-                  scale: interpolations[i]!.scale,
-                },
-              ],
-            };
+          ]?.dailyItineraryPois
+            .map((item) => item.poi)
+            .map((poi, i) => {
+              const scaleStyle = {
+                transform: [
+                  {
+                    scale: interpolations[i]!.scale,
+                  },
+                ],
+              };
 
-            return (
-              <Marker
-                key={i}
-                identifier={destination.id}
-                coordinate={{
-                  latitude: destination.latitude,
-                  longitude: destination.longitude,
-                }}
-                pinColor="#F65A82"
-              >
-                <Animated.View className="h-32 w-32 items-center justify-center">
-                  <Animated.View
-                    style={[{ width: 40, height: 40 }, scaleStyle]}
-                  >
-                    {destination.type === PlaceType.Restaurant ? (
-                      <RestaurantMark height={40} width={40} />
-                    ) : (
+              return (
+                <Marker
+                  key={i}
+                  identifier={poi.id}
+                  coordinate={{
+                    latitude: poi.latitude,
+                    longitude: poi.longitude,
+                  }}
+                  pinColor="#F65A82"
+                >
+                  <Animated.View className="h-32 w-32 items-center justify-center">
+                    <Animated.View
+                      style={[{ width: 40, height: 40 }, scaleStyle]}
+                    >
                       <Mark height={40} width={40} />
-                    )}
+                    </Animated.View>
                   </Animated.View>
-                </Animated.View>
-              </Marker>
-            );
-          })}
+                </Marker>
+              );
+            })}
       </MapView>
       <Animated.ScrollView
         className="absolute bottom-16 left-0 right-0 py-3"
@@ -186,35 +190,46 @@ export default function MapScreen() {
         )}
       >
         {data &&
-          data.itinerary.dailyItineraries[
+          data.trip.dailyItineraries[
             parseInt(selectedDay as string)
-          ]?.destinations.map((item, index) => (
-            <View
-              key={index}
-              className="mx-4 overflow-hidden rounded-3xl bg-white"
-              style={{ width: CARD_WIDTH - 10, height: CARD_HEIGHT }}
-            >
-              <View className="flex-1 px-7 py-1.5">
-                <Text
-                  numberOfLines={1}
-                  className="font-poppins text-base text-gray-600"
+          ]?.dailyItineraryPois
+            .map((item) => item.poi)
+            .map((poi, index) => (
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  router.push({
+                    pathname: `/itinerary/destinationDetail/${poi.id}`,
+                  });
+                }}
+              >
+                <View
+                  key={index}
+                  className="mx-4 overflow-hidden rounded-3xl bg-white"
+                  style={{ width: CARD_WIDTH - 10, height: CARD_HEIGHT }}
                 >
-                  {item.name}
-                </Text>
-                <View className="flex-row ">
-                  <Image
-                    source={{ uri: item.images[0]?.url }}
-                    className="mt-2 h-16 w-28 rounded-md"
-                  />
+                  <View className="flex-1 px-7 py-1.5">
+                    <Text
+                      numberOfLines={1}
+                      className="font-poppins text-base text-gray-600"
+                    >
+                      {poi.name}
+                    </Text>
+                    <View className="flex-row ">
+                      <Image
+                        source={{ uri: poi.images[0]?.image.url }}
+                        className="mt-2 h-16 w-28 rounded-md"
+                      />
+                    </View>
+                    <View className="w-12 self-end rounded-md bg-blue-200 p-0.5 text-center">
+                      <Text className="text-center font-poppins-medium text-xs text-blue-600">
+                        Day {parseInt(selectedDay as string) + 1}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-                <View className="w-12 self-end rounded-md bg-blue-200 p-0.5 text-center">
-                  <Text className="text-center font-poppins-medium text-xs text-blue-600">
-                    Day {parseInt(selectedDay as string) + 1}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          ))}
+              </TouchableOpacity>
+            ))}
       </Animated.ScrollView>
     </View>
   );

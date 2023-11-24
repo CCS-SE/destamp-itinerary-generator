@@ -49,43 +49,17 @@ export default function Subscription() {
         directionalLockEnabled
         automaticallyAdjustContentInsets={false}
       >
-        <View className="mx-3">
-          <UnliTrip height={250} width={250} />
-          <Text className="mt-2 font-poppins-medium text-base text-gray-500">
-            Endless trip creation
-          </Text>
-          <Text className="w-64 font-poppins-medium text-sm text-gray-400">
-            Create endless adventure with our unlimited trip generation.
-          </Text>
-        </View>
-        <View className="mx-3">
-          <Regenerate height={250} width={250} />
-          <Text className="mt-2 font-poppins-medium text-base text-gray-500">
-            Revive your adventure
-          </Text>
-          <Text className="w-64 font-poppins-medium text-sm text-gray-400">
-            Refresh your itinerary with our regeneration feature.
-          </Text>
-        </View>
-        <View className="mx-3">
-          <Personalized height={250} width={250} />
-          <Text className="mt-2 font-poppins-medium text-base text-gray-500">
-            Tailored journey
-          </Text>
-          <Text className="w-64 font-poppins-medium text-sm text-gray-400">
-            Experience tailored travel itinerary to suit your interests and
-            preferences.
-          </Text>
-        </View>
-        <View className="mx-3">
-          <Route height={250} width={250} />
-          <Text className="mt-2 font-poppins-medium text-base text-gray-500">
-            Mapped routes between location
-          </Text>
-          <Text className="w-64 font-poppins-medium text-sm text-gray-400">
-            See a full map view with an optimal route between each destinations.
-          </Text>
-        </View>
+        {subscriptionItems.map((item, index) => (
+          <View className="mx-3" key={index}>
+            {item.icon}
+            <Text className="mt-2 font-poppins-medium text-base text-gray-500">
+              {item.title}
+            </Text>
+            <Text className="w-64 font-poppins-medium text-sm text-gray-400">
+              {item.description}
+            </Text>
+          </View>
+        ))}
       </ScrollView>
       <View className="mb-12">
         <SubscriptionPriceCard
@@ -109,3 +83,28 @@ export default function Subscription() {
     </View>
   );
 }
+
+const subscriptionItems = [
+  {
+    icon: <UnliTrip height={250} width={250} />,
+    title: 'Endless trip creation',
+    description: 'Create endless adventure with our unlimited trip generation.',
+  },
+  {
+    icon: <Regenerate height={250} width={250} />,
+    title: 'Revive your adventure',
+    description: 'Refresh your itinerary with our regeneration feature.',
+  },
+  {
+    icon: <Personalized height={250} width={250} />,
+    title: 'Tailored journey',
+    description:
+      'Experience tailored travel itinerary to suit your interests and preferences.',
+  },
+  {
+    icon: <Route height={250} width={250} />,
+    title: 'Mapped routes between location',
+    description:
+      'See a full map view with an optimal route between each destinations.',
+  },
+];

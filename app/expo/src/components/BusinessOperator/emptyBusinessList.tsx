@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import GradientButton from '~/components/Button/GradientButton';
 
-const EmpltyBusinessList = () => {
+const EmptyBusinessList = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.pagedisplay}> You dont have any listing yet.</Text>
@@ -34,4 +34,4 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {},
 });
-export default EmpltyBusinessList;
+export default EmptyBusinessList;

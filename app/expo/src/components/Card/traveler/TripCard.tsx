@@ -17,7 +17,7 @@ import BottomHalfModal from '../../Modal/BottomHalfModal';
 
 interface TripCardProps {
   id: number;
-  imgSrc: string;
+  imgSrc?: string;
   destination: string;
   startDate: Date;
   endDate: Date;
@@ -28,7 +28,6 @@ interface TripCardProps {
 
 function TripCard({
   id,
-  imgSrc,
   destination,
   startDate,
   endDate,
@@ -58,7 +57,9 @@ function TripCard({
         >
           <Image
             testID="trip-destination-img"
-            source={imgSrc}
+            source={
+              'https://gttp.imgix.net/223596/x/0/top-23-iloilo-tourist-spots-home-to-gigantes-islands-amp-old-churches-6.jpg?auto=compress%2Cformat&ch=Width%2CDPR&dpr=1&ixlib=php-3.3.0&w=883'
+            }
             className="h-52 rounded-2xl"
             placeholder={blurhash}
             transition={1_500}

@@ -1,7 +1,7 @@
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { POI } from '.';
+import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { getBudgetAllocation } from './budgetAllocation';
 
-type Place = NexusGenObjects['Place'];
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
 export const multiplyRangeByPeople = (
@@ -108,8 +108,8 @@ export const calculateDurationScore = (
   return durationScore;
 };
 
-export const getCoordinates = (places: Place[]): [number, number][] => {
-  return places.map((place) => {
+export const getCoordinates = (pois: POI[]): [number, number][] => {
+  return pois.map((place) => {
     if (place.latitude && place.longitude) {
       return [place.longitude, place.latitude];
     } else {
@@ -128,21 +128,6 @@ export const calculateFitnessScore = (
   return 1 / (costScore * COST_RATE + durationScore * DURATION_RATE);
 };
 
-export const calculateTotalCost = (
-  placesTotalCost: number,
-  totalTravelers: number,
-  travelExpeses: number,
-) => {
-  return placesTotalCost * totalTravelers + travelExpeses;
-};
-
-export const calculateTotalDuration = (
-  placesTotalDuration: number,
-  travelDuration: number,
-) => {
-  return placesTotalDuration + travelDuration / 60;
-};
-
 export const calculateTravelDuration = (travelDuration: number) => {
   return travelDuration / 3600; // convert sec to hrs
 };
@@ -156,19 +141,35 @@ export const getMatrixAvg = (matrix: number[][]): number => {
   return sum / totalElements; // Calculate the average of the matrix
 };
 
-export const calculateTravelExpense = (distance: number) => {
-  const travelDistanceInKilometers = distance / 1000;
+export const calculateTravelExpense = (
+  distance: number,
+  duration: number,
+  travelerCount: number,
+) => {
+  const travelDistanceInKilometers = Math.floor(distance / 1_000);
   const flagDown = 40;
   const additionalCostPerKm = 13.5;
+  const durationMinutes = Math.floor(duration / 60);
+  const additionalCostPerMin = 2;
 
-  return Math.round(
-    flagDown + travelDistanceInKilometers * additionalCostPerKm,
-  );
+  return travelDistanceInKilometers > 1
+    ? Math.round(
+        flagDown +
+          travelDistanceInKilometers * additionalCostPerKm +
+          durationMinutes * additionalCostPerMin,
+      ) * taxisNeeded(travelerCount)
+    : 0;
 };
 
-export const calculateTravelExpenses = (distances: number[]) => {
+export const calculateTravelExpenses = (
+  distances: number[],
+  durations: number[],
+  travelerCount: number,
+) => {
   return distances.reduce(
-    (totalExpense, distance) => totalExpense + calculateTravelExpense(distance),
+    (totalExpense, distance, index) =>
+      totalExpense +
+      calculateTravelExpense(distance, durations[index]!, travelerCount),
     0,
   );
 };
@@ -194,16 +195,13 @@ export const getRandomInt = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const getDuplicateIndex = (list: Place[]) => {
-  const unique: Place[] = [];
-  const duplicateIndex = [];
-
-  for (let i = 0; i < list.length; i++) {
-    if (!unique.includes(list[i]!)) {
-      unique.push(list[i]!);
-    } else if (unique.includes(list[i]!)) {
-      duplicateIndex.push(i);
-    }
+export const taxisNeeded = (travelerCount: number) => {
+  if (travelerCount < 1) {
+    return 0;
+  } else if (travelerCount <= 4) {
+    return 1;
+  } else {
+    const taxisNeeded = (travelerCount - 1) / 4;
+    return Math.floor(taxisNeeded) + 1;
   }
-  return duplicateIndex;
 };

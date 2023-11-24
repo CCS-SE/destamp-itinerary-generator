@@ -4,8 +4,6 @@ import {
   calculateCostScore,
   calculateDurationScore,
   calculateFitnessScore,
-  calculateTotalCost,
-  calculateTotalDuration,
   calculateTravelDuration,
   calculateTravelExpense,
   calculateTravelExpenses,
@@ -16,7 +14,7 @@ import {
   getTotalDesiredTravelHours,
   multiplyRangeByPeople,
 } from '../utils';
-import { places } from './mock/mock';
+import { pois } from './mock/mock';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
@@ -46,11 +44,12 @@ describe('calculateCostScore', () => {
       isTransportationIncluded: true,
       startDate: new Date('2023-08-10'),
       title: 'Iloilo City Trip',
-      preferredTime: ['10:00-13:00', '14:00-16:00'],
-      adultCount: 2,
-      childCount: 0,
-      destinationId: 1,
-      travelerId: 1,
+      timeSlots: [
+        [10, 13],
+        [14, 16],
+      ],
+      travelerCount: 2,
+      startingLocation: {},
       travelSize: 'COUPLE',
     };
     const costScore = calculateCostScore(tripInput, 0, 750, 450, 2, 2, 345);
@@ -77,11 +76,12 @@ describe('calculateFitnessScore', () => {
       isTransportationIncluded: true,
       startDate: new Date('2023-08-10'),
       title: 'Iloilo City Trip',
-      preferredTime: ['10:00-13:00', '14:00-16:00'],
-      adultCount: 2,
-      childCount: 0,
-      destinationId: 1,
-      travelerId: 1,
+      timeSlots: [
+        [10, 13],
+        [14, 16],
+      ],
+      travelerCount: 2,
+      startingLocation: {},
       travelSize: 'COUPLE',
     };
 
@@ -96,44 +96,28 @@ describe('calculateFitnessScore', () => {
 
 describe('getCoordinates', () => {
   it('should get the coordinates of places', () => {
-    const coordinates = getCoordinates(places);
+    const coordinates = getCoordinates(pois);
 
     expect(coordinates).toStrictEqual([
-      [places[0]?.longitude, places[0]?.latitude],
-      [places[1]?.longitude, places[1]?.latitude],
-      [places[2]?.longitude, places[2]?.latitude],
-      [places[3]?.longitude, places[3]?.latitude],
-      [places[4]?.longitude, places[4]?.latitude],
-      [places[5]?.longitude, places[5]?.latitude],
-      [places[6]?.longitude, places[6]?.latitude],
+      [pois[0]?.longitude, pois[0]?.latitude],
+      [pois[1]?.longitude, pois[1]?.latitude],
+      [pois[2]?.longitude, pois[2]?.latitude],
+      [pois[3]?.longitude, pois[3]?.latitude],
+      [pois[4]?.longitude, pois[4]?.latitude],
+      [pois[5]?.longitude, pois[5]?.latitude],
+      [pois[6]?.longitude, pois[6]?.latitude],
     ]);
   });
 });
 
 describe('getCoordinatesParam', () => {
   it('should get the coordinates params of places', () => {
-    const coordinates = getCoordinates(places);
+    const coordinates = getCoordinates(pois);
     const coordsParams = getCoordinatesParam(coordinates);
 
     expect(coordsParams).toBe(
       '122.5706695,10.711599;122.5538653,10.7026051;122.5703695,10.6921669;122.539675,10.7183491;122.5478876,10.7170505;122.568212,10.7014032;122.5508008,10.7025543',
     );
-  });
-});
-
-describe('calculateTotalCost', () => {
-  it('should get the total cost of trip', () => {
-    const totalCost = calculateTotalCost(890, 2, 95);
-
-    expect(totalCost).toBe(1875);
-  });
-});
-
-describe('calculateTotalDuration', () => {
-  it('should get the total duration of trip in mins', () => {
-    const totalDuration = calculateTotalDuration(375, 5_400);
-
-    expect(totalDuration).toBe(465);
   });
 });
 
@@ -159,9 +143,9 @@ describe('getAvg', () => {
 
 describe('calculateTravelExpense', () => {
   it('should get the estimated travel expenses', () => {
-    const travelExpense = calculateTravelExpense(5_000);
+    const travelExpense = calculateTravelExpense(5_000, 360, 2);
 
-    expect(travelExpense).toBe(108);
+    expect(travelExpense).toBe(120);
   });
 });
 
@@ -185,9 +169,11 @@ describe('getDesiredTravelHour', () => {
 
 describe('calculateTravelExpenses', () => {
   it('should calculate expenses of travel distances', () => {
-    const travelExpense = calculateTravelExpenses([
-      896.4, 4686.5, 8725.6, 7080,
-    ]);
-    expect(travelExpense).toBe(449);
+    const travelExpense = calculateTravelExpenses(
+      [5852.8, 3294.5, 7557.1, 6947.1, 6854.9],
+      [1005.9, 696.2, 1293.2, 1174.3, 1111.4],
+      1,
+    );
+    expect(travelExpense).toBe(142);
   });
 });

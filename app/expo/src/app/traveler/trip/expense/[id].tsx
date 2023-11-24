@@ -18,8 +18,7 @@ import ExpenseScreenSkeleton from '~/components/Skeleton/ExpenseScreenSkeleton';
 import {
   DeleteExpenseDocument,
   ExpenseCategory,
-  GetTransactionsDocument,
-  GetTravelerItineraryDocument,
+  GetTripExpensesDocument,
 } from '~/graphql/generated';
 import {
   areDatesEqual,
@@ -31,6 +30,7 @@ import Back from '../../../../../assets/images/back-btn.svg';
 
 const ExpensePage = () => {
   const { id } = useLocalSearchParams();
+
   const [dateFilter, setDateFilter] = useState<Date | string>('All');
   const [addModal, setAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
@@ -51,15 +51,9 @@ const ExpensePage = () => {
     setAddModal(true);
   };
 
-  const itinerary = useQuery(GetTravelerItineraryDocument, {
+  const { loading, error, data } = useQuery(GetTripExpensesDocument, {
     variables: {
       tripId: parseInt(id as string),
-    },
-  });
-
-  const { loading, error, data } = useQuery(GetTransactionsDocument, {
-    variables: {
-      itineraryId: itinerary.data!.itinerary.id,
     },
   });
 
@@ -69,13 +63,13 @@ const ExpensePage = () => {
     setDeleting(true);
     await deleteExpense({
       variables: {
-        deleteExpenseId: expenseID,
+        expenseId: expenseID,
       },
       refetchQueries: [
         {
-          query: GetTransactionsDocument,
+          query: GetTripExpensesDocument,
           variables: {
-            itineraryId: itinerary.data?.itinerary.id,
+            tripId: parseInt(id as string),
           },
         },
       ],
@@ -113,14 +107,14 @@ const ExpensePage = () => {
     });
   };
 
-  const totalSpending = data?.getTransaction.reduce(
+  const totalSpending = data?.trip.expenses.reduce(
     (accumulator, current) => accumulator + current.amount,
     0,
   );
 
   const dropdownData = getDatesBetween(
-    new Date(itinerary.data?.trip.startDate),
-    new Date(itinerary.data?.trip.endDate),
+    new Date(data?.trip.startDate),
+    new Date(data?.trip.endDate),
   );
 
   const dateFilteredExpenses: {
@@ -128,16 +122,16 @@ const ExpensePage = () => {
     id: number;
     amount: number;
     category: ExpenseCategory;
-    date: Date;
+    dateSpent: Date;
   }[] = data
-    ? data.getTransaction.filter((item) =>
-        areDatesEqual(new Date(item.date), new Date(dateFilter)),
+    ? data.trip.expenses.filter((item) =>
+        areDatesEqual(new Date(item.dateSpent), new Date(dateFilter)),
       )
     : [];
 
   const pieChartData = data
     ? getPieChartData(
-        dateFilter === 'All' ? data.getTransaction : dateFilteredExpenses,
+        dateFilter === 'All' ? data.trip.expenses : dateFilteredExpenses,
       )
     : [];
 
@@ -166,30 +160,26 @@ const ExpensePage = () => {
           <ColoredContainer
             title="BALANCE"
             content={`₱${
-              itinerary.data && totalSpending
-                ? (itinerary.data.trip.budget - totalSpending).toFixed(2)
-                : itinerary.data
-                ? itinerary.data.trip.budget.toFixed(2)
+              data && totalSpending
+                ? (data.trip.budget - totalSpending).toFixed(2)
+                : data
+                ? data.trip.budget.toFixed(2)
                 : 0
             }`}
             backgroundColor={
-              itinerary.data &&
-              totalSpending &&
-              itinerary.data.trip.budget - totalSpending < 0
+              data && totalSpending && data.trip.budget - totalSpending < 0
                 ? '#FF0000' // Red
                 : '#C6F3C7'
             }
             textColor={
-              itinerary.data &&
-              totalSpending &&
-              itinerary.data.trip.budget - totalSpending < 0
+              data && totalSpending && data.trip.budget - totalSpending < 0
                 ? '#FFFFFF' // White
                 : '#13B510'
             }
           />
         </View>
       </View>
-      {data?.getTransaction.length == 0 ? (
+      {data?.trip.expenses.length == 0 ? (
         <View className="my-64 items-center justify-center">
           <Text className="font-poppins text-2xl text-[#6A6969]">
             No expenses yet
@@ -246,14 +236,14 @@ const ExpensePage = () => {
                 scrollEnabled={true}
                 data={
                   dateFilter === 'All'
-                    ? data!.getTransaction
+                    ? data!.trip.expenses
                     : dateFilteredExpenses
                 }
                 renderItem={({ item }) => (
                   <TransactionsListItem
-                    itineraryId={itinerary.data!.itinerary.id}
+                    tripId={data!.trip.id}
                     id={item.id}
-                    date={item.date}
+                    date={item.dateSpent}
                     note={item.note}
                     category={item.category}
                     amount={parseFloat(item.amount.toFixed(2))}
@@ -267,7 +257,7 @@ const ExpensePage = () => {
                       onPressEdit(
                         data.item.id,
                         data.item.amount,
-                        data.item.date,
+                        data.item.dateSpent,
                         data.item.note || '',
                         data.item.category,
                       );
@@ -291,9 +281,9 @@ const ExpensePage = () => {
       <BottomHalfModal isVisible={addModal} onClose={() => setAddModal(false)}>
         <AddSpendingForm
           closeModal={() => setAddModal(false)}
-          itineraryId={itinerary.data!.itinerary.id}
-          minDate={itinerary.data!.trip.startDate as Date}
-          maxDate={itinerary.data!.trip.endDate as Date}
+          tripId={parseInt(id as string)}
+          minDate={data!.trip.startDate as Date}
+          maxDate={data!.trip.endDate as Date}
         />
       </BottomHalfModal>
       <BottomHalfModal
@@ -307,9 +297,9 @@ const ExpensePage = () => {
           category={expenseData.category as ExpenseCategory}
           date={expenseData.date}
           note={expenseData.note || ''}
-          itineraryId={itinerary.data!.itinerary.id}
-          minDate={itinerary.data!.trip.startDate as Date}
-          maxDate={itinerary.data!.trip.endDate as Date}
+          tripId={parseInt(id as string)}
+          minDate={data!.trip.startDate as Date}
+          maxDate={data!.trip.endDate as Date}
         />
       </BottomHalfModal>
     </View>

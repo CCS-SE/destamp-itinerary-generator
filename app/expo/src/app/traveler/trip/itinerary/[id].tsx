@@ -1,13 +1,13 @@
 import { useRef, useState } from 'react';
 import { Dimensions, FlatList, ScrollView, Text, View } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import DayButton from '~/components/Button/DayButton';
 import ItineraryCard from '~/components/Card/traveler/ItineraryCard';
 import ItineraryScreenSkeleton from '~/components/Skeleton/ItineraryScreenSkeleton';
-import { GetTravelerItineraryDocument } from '~/graphql/generated';
+import { GetTripItineraryDocument } from '~/graphql/generated';
 import { tripDuration } from '~/utils/utils';
 import Back from '../../../../../assets/images/back-icon.svg';
 import Expense from '../../../../../assets/images/expense-icon.svg';
@@ -30,7 +30,7 @@ export default function ItineraryScreen() {
     return router.back();
   };
 
-  const { loading, error, data } = useQuery(GetTravelerItineraryDocument, {
+  const { loading, error, data } = useQuery(GetTripItineraryDocument, {
     variables: {
       tripId: parseInt(id as string),
     },
@@ -76,9 +76,11 @@ export default function ItineraryScreen() {
   const fitAllMarkers = () => {
     const latLang =
       data &&
-      data.itinerary.dailyItineraries[selectedDay]?.destinations.map((item) => {
-        return { latitude: item.latitude, longitude: item.longitude };
-      });
+      data.trip.dailyItineraries[selectedDay]?.dailyItineraryPois.map(
+        (item) => {
+          return { latitude: item.poi.latitude, longitude: item.poi.longitude };
+        },
+      );
 
     if (mapRef) {
       mapRef.current?.fitToCoordinates(latLang, {
@@ -121,6 +123,7 @@ export default function ItineraryScreen() {
         <MapView
           className="h-[280] w-screen"
           ref={mapRef}
+          provider={PROVIDER_GOOGLE}
           initialRegion={{
             latitude: 10.7201501,
             longitude: 122.5621063,
@@ -130,16 +133,16 @@ export default function ItineraryScreen() {
           onMapReady={fitAllMarkers}
         >
           {data &&
-            data.itinerary.dailyItineraries[selectedDay]?.destinations.map(
-              (destination, i) => (
+            data.trip.dailyItineraries[selectedDay]?.dailyItineraryPois.map(
+              (item, i) => (
                 <Marker
                   key={i}
-                  identifier={destination.id}
+                  identifier={item.poi.id}
                   coordinate={{
-                    latitude: destination.latitude,
-                    longitude: destination.longitude,
+                    latitude: item.poi.latitude,
+                    longitude: item.poi.longitude,
                   }}
-                  title={destination.name}
+                  title={item.poi.name}
                   pinColor="#F65A82"
                 >
                   <View style={[{ width: 40, height: 40 }]}>
@@ -174,7 +177,7 @@ export default function ItineraryScreen() {
             </View>
             {data && (
               <FlatList
-                data={data.itinerary.dailyItineraries.filter(
+                data={data.trip.dailyItineraries.filter(
                   (itinerary) => itinerary.dayIndex === selectedDay,
                 )}
                 renderItem={({ item }) => (
@@ -185,23 +188,16 @@ export default function ItineraryScreen() {
                         new Date(data.trip.endDate),
                       )[item.dayIndex]!
                     }
-                    itineraryId={data.itinerary.id}
+                    tripId={parseInt(id as string)}
                     key={item.dayIndex}
-                    attractionCost={item.attractionCost}
-                    foodCost={item.foodCost}
-                    accommodationCost={item.accommodationCost}
-                    transportationCost={item.transportationCost}
-                    departingLocation={data.trip.departingLocation?.name}
-                    destinations={item.destinations}
-                    timeslots={data.trip.preferredTime}
-                    travelDistances={item.travelDistances}
-                    travelDurations={item.travelDurations}
+                    dailyItinerary={item}
+                    startingLocation={data.trip.startingLocation.name}
+                    timeslots={data.trip.timeSlots}
                     isAccommodationIncluded={data.trip.isAccommodationIncluded}
                     isTransportationIncluded={
                       data.trip.isTransportationIncluded
                     }
-                    adultCount={data.trip.adultCount || 0}
-                    childCount={data.trip.childCount || 0}
+                    travelerCount={data.trip.travelerCount}
                   />
                 )}
                 scrollEnabled={false}
