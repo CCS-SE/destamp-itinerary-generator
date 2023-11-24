@@ -32,7 +32,7 @@ input CreateExpenseInput {
 
 input CreateTripInput {
   budget: Float!
-  endDate: DateTime!
+  endDate: DateTime
   isAccommodationIncluded: Boolean!
   isFoodIncluded: Boolean!
   isTransportationIncluded: Boolean!
@@ -56,11 +56,13 @@ input CreateUserInput {
 type DailyItinerary {
   accommodationCost: Float!
   attractionCost: Float!
+  createdAt: DateTime!
   dailyItineraryPois: [DailyItineraryPoi!]!
   dayIndex: Int!
   foodCost: String!
   id: Int!
   transportationCost: Float!
+  updatedAt: DateTime!
 }
 
 type DailyItineraryPoi {
@@ -80,9 +82,11 @@ scalar DateTime
 type Expense {
   amount: Float!
   category: ExpenseCategory!
+  createdAt: DateTime!
   dateSpent: DateTime!
   id: Int!
   note: String!
+  updatedAt: DateTime!
 }
 
 enum ExpenseCategory {
@@ -96,7 +100,9 @@ enum ExpenseCategory {
 }
 
 type Image {
+  createdAt: DateTime!
   id: String!
+  updatedAt: DateTime!
   url: String!
 }
 
@@ -126,6 +132,7 @@ type Poi {
   address: String!
   categories: [Category!]!
   contactNumber: String!
+  createdAt: DateTime!
   description: String!
   id: String!
   images: [PoiImage!]!
@@ -136,6 +143,7 @@ type Poi {
   operatingHours: [OperatingHour!]!
   price: String!
   restaurant: Restaurant
+  updatedAt: DateTime!
   userId: String
   visitDuration: Float!
 }
@@ -162,9 +170,11 @@ type Restaurant {
 }
 
 type Stamp {
+  createdAt: DateTime!
   dateCollected: DateTime!
   id: Int!
   title: String!
+  updatedAt: DateTime!
 }
 
 enum TravelSize {
@@ -176,6 +186,7 @@ enum TravelSize {
 
 type Trip {
   budget: Float!
+  createdAt: DateTime!
   dailyItineraries: [DailyItinerary!]!
   endDate: DateTime!
   expenses: [Expense!]!
@@ -189,6 +200,7 @@ type Trip {
   title: String!
   travelSize: TravelSize!
   travelerCount: Int!
+  updatedAt: DateTime!
 }
 
 input UpdateExpenseInput {
@@ -199,6 +211,7 @@ input UpdateExpenseInput {
 }
 
 type User {
+  createdAt: DateTime!
   email: String!
   firstName: String!
   id: String!
@@ -207,6 +220,7 @@ type User {
   pois: [Poi!]!
   trips: [Trip!]!
   type: UserType!
+  updatedAt: DateTime!
 }
 
 enum UserType {
