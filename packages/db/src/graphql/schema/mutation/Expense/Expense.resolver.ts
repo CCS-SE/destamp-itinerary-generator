@@ -6,14 +6,22 @@ import { NexusGenInputs } from '../../../generated/nexus';
 type CreateExpenseInput = NexusGenInputs['CreateExpenseInput'];
 type UpdateExpenseInput = NexusGenInputs['UpdateExpenseInput'];
 
-export const createExpense = (args: CreateExpenseInput, ctx: Context) => {
-  return ctx.prisma.expense.create({
+export const createExpense = async (
+  tripId: number,
+  input: CreateExpenseInput,
+  ctx: Context,
+) => {
+  return await ctx.prisma.expense.create({
     data: {
-      amount: args.amount as number,
-      category: args.category as ExpenseCategory,
-      date: args.date as Date,
-      itineraryId: args.itineraryId as number,
-      note: args.note as string,
+      amount: input.amount as number,
+      category: input.category as ExpenseCategory,
+      dateSpent: input.dateSpent as Date,
+      note: input.note as string,
+      trip: {
+        connect: {
+          id: tripId,
+        },
+      },
     },
   });
 };
@@ -38,7 +46,7 @@ export const updateExpense = async (
     data: {
       amount: input.amount as number,
       category: input.category as ExpenseCategory,
-      date: input.date as Date,
+      dateSpent: input.dateSpent as Date,
       note: input.note as string,
     },
   });

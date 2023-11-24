@@ -1,10 +1,6 @@
 import { intArg, mutationField, nonNull } from 'nexus';
 
 import {
-  CreateExpenseInput,
-  UpdateExpenseInput,
-} from '../../input/Expense.input';
-import {
   createExpense,
   deleteExpense,
   updateExpense,
@@ -13,9 +9,10 @@ import {
 export const CreateExpense = mutationField('createExpense', {
   type: 'Expense',
   args: {
-    data: nonNull(CreateExpenseInput),
+    tripId: nonNull(intArg()),
+    data: nonNull('CreateExpenseInput'),
   },
-  resolve: (_, args, ctx) => createExpense(args.data, ctx),
+  resolve: (_, args, ctx) => createExpense(args.tripId, args.data, ctx),
 });
 
 export const DeleteExpense = mutationField('deleteExpense', {
@@ -30,7 +27,7 @@ export const UpdateExpense = mutationField('updateExpense', {
   type: 'Expense',
   args: {
     id: nonNull(intArg()),
-    data: nonNull(UpdateExpenseInput),
+    data: nonNull('UpdateExpenseInput'),
   },
   resolve: (_, args, ctx) => updateExpense(args.id, args.data, ctx),
 });

@@ -4,37 +4,23 @@ import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
 type CreateUserInput = NexusGenInputs['CreateUserInput'];
-type CreateTravelerInput = NexusGenInputs['CreateTravelerInput'];
 
-export const createUser = async (
-  userInput: CreateUserInput,
-  travelerInput: CreateTravelerInput,
-  ctx: Context,
-) => {
+export const createUser = async (input: CreateUserInput, ctx: Context) => {
   // encrypt user’s password
   const saltRounds = 10;
   const hashedPassword = (await bcrypt.hash(
-    userInput.password,
+    input.password,
     saltRounds,
   )) as string;
 
   return await ctx.prisma.user.create({
     data: {
-      id: userInput.id,
-      email: userInput.email,
+      id: input.id,
+      email: input.email,
       password: hashedPassword,
-      userType: userInput.userType,
-      traveler: {
-        connectOrCreate: {
-          create: {
-            firstName: travelerInput.firstName as string,
-            lastName: travelerInput.lastName as string,
-          },
-          where: {
-            userId: userInput.id,
-          },
-        },
-      },
+      firstName: input.firstName,
+      lastName: input.lastName,
+      type: input.type,
     },
   });
 };
