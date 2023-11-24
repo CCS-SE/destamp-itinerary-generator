@@ -198,7 +198,7 @@ export default function ReviewTripScreen() {
           <ReviewCard
             icon={<Calendar height={25} width={25} />}
             title={
-              !tripData.startDate?.isSame(tripData.endDate)
+              tripData.endDate && !tripData.startDate?.isSame(tripData.endDate)
                 ? `${dateFormmater(
                     tripData.startDate!.toISOString(),
                   )} - ${dateFormmater(tripData.endDate!.toISOString())}`

@@ -25,7 +25,6 @@ export default function DayExpenseCard({
   foodCost,
   transportationCost,
   totalCost,
-  travelerCount,
 }: DayExpenseCardProps) {
   const formatCurrency = (amount: number): string =>
     `₱${amountFormatter(amount)}`;
