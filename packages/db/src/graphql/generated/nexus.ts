@@ -64,60 +64,46 @@ declare global {
 }
 
 export interface NexusGenInputs {
-  CreateDepartingLocationInput: {
-    // input type
-    address: string; // String!
-    latitude: number; // Float!
-    longitude: number; // Float!
-    name: string; // String!
-  };
   CreateExpenseInput: {
     // input type
     amount: number; // Float!
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
-    date: NexusGenScalars['DateTime']; // DateTime!
-    itineraryId: number; // Int!
+    dateSpent: NexusGenScalars['DateTime']; // DateTime!
     note?: string | null; // String
-  };
-  CreateTravelerInput: {
-    // input type
-    firstName: string; // String!
-    lastName: string; // String!
   };
   CreateTripInput: {
     // input type
-    adultCount?: number | null; // Int
     budget: number; // Float!
-    childCount?: number | null; // Int
-    destinationId: number; // Int!
-    endDate: NexusGenScalars['DateTime']; // DateTime!
+    endDate?: NexusGenScalars['DateTime'] | null; // DateTime
     isAccommodationIncluded: boolean; // Boolean!
     isFoodIncluded: boolean; // Boolean!
     isTransportationIncluded: boolean; // Boolean!
-    preferredTime: NexusGenScalars['JSON'][]; // [JSON!]!
     startDate: NexusGenScalars['DateTime']; // DateTime!
+    startingLocation: NexusGenScalars['JSON']; // JSON!
+    timeSlots: NexusGenScalars['JSON']; // JSON!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
-    travelerId: number; // Int!
+    travelerCount: number; // Int!
   };
   CreateUserInput: {
     // input type
     email: string; // String!
+    firstName: string; // String!
     id: string; // String!
+    lastName: string; // String!
     password: string; // String!
-    userType: NexusGenEnums['UserType']; // UserType!
+    type: NexusGenEnums['UserType']; // UserType!
   };
   UpdateExpenseInput: {
     // input type
     amount?: number | null; // Float
     category?: NexusGenEnums['ExpenseCategory'] | null; // ExpenseCategory
-    date?: NexusGenScalars['DateTime'] | null; // DateTime
+    dateSpent?: NexusGenScalars['DateTime'] | null; // DateTime
     note?: string | null; // String
   };
 }
 
 export interface NexusGenEnums {
-  BusinessRole: 'MANAGER' | 'OWNER';
   ExpenseCategory:
     | 'ACCOMMODATION'
     | 'ACTIVITY'
@@ -126,7 +112,6 @@ export interface NexusGenEnums {
     | 'SHOPPING'
     | 'SIGHTSEEING'
     | 'TRANSPORTATION';
-  PlaceType: 'ACCOMMODATION' | 'ATTRACTION' | 'RESTAURANT';
   TravelSize: 'COUPLE' | 'FAMILY' | 'GROUP' | 'SOLO';
   UserType: 'BUSINESS_OPERATOR' | 'TRAVELER';
 }
@@ -143,17 +128,15 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Accommodation: {
+    // root type
+    id: number; // Int!
+    poiId: string; // String!
+  };
   Amenity: {
     // root type
     id: number; // Int!
     name: string; // String!
-  };
-  BusinessOwner: {
-    // root type
-    firstName: string; // String!
-    id: number; // Int!
-    lastName: string; // String!
-    role: NexusGenEnums['BusinessRole']; // BusinessRole!
   };
   Category: {
     // root type
@@ -169,131 +152,105 @@ export interface NexusGenObjects {
     foodCost: string; // String!
     id: number; // Int!
     transportationCost: number; // Float!
-    travelDistances: NexusGenScalars['JSON']; // JSON!
-    travelDurations: NexusGenScalars['JSON']; // JSON!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
-  DepartingLocation: {
+  DailyItineraryPoi: {
     // root type
-    address: string; // String!
+    dailyItineraryId: number; // Int!
+    distance: number; // Float!
+    duration: number; // Float!
     id: number; // Int!
-    latitude: number; // Float!
-    longitude: number; // Float!
-    name: string; // String!
-  };
-  Destination: {
-    // root type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: number; // Int!
-    name: string; // String!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  };
-  DiningAtmosphere: {
-    // root type
-    id: number; // Int!
-    name: string; // String!
-  };
-  DiningCuisine: {
-    // root type
-    id: number; // Int!
-    name: string; // String!
-  };
-  DiningOffering: {
-    // root type
-    id: number; // Int!
-    name: string; // String!
-  };
-  DiningOption: {
-    // root type
-    id: number; // Int!
-    name: string; // String!
+    order: number; // Int!
   };
   Expense: {
     // root type
     amount: number; // Float!
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    date: NexusGenScalars['DateTime']; // DateTime!
+    dateSpent: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
-    note?: string | null; // String
+    note: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   Image: {
     // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
-    name?: string | null; // String
-    size?: number | null; // Int
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    url: string; // String!
-  };
-  Itinerary: {
-    // root type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: number; // Int!
-    totalCost: number; // Float!
-    totalDuration: number; // Float!
+    id: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
   };
   Mutation: {};
-  OpeningHour: {
+  OperatingHour: {
     // root type
     closeTime?: NexusGenScalars['DateTime'] | null; // DateTime
     day: number; // Int!
     id: number; // Int!
     openTime?: NexusGenScalars['DateTime'] | null; // DateTime
   };
-  Place: {
+  Poi: {
     // root type
     address: string; // String!
-    businessOwnerId?: number | null; // Int
-    contactNumber?: string | null; // String
+    contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description?: string | null; // String
+    description: string; // String!
     id: string; // String!
-    isClaimed: boolean; // Boolean!
+    isAttraction: boolean; // Boolean!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
     price: string; // String!
-    type: NexusGenEnums['PlaceType']; // PlaceType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    url?: string | null; // String
+    userId?: string | null; // String
     visitDuration: number; // Float!
-    website?: string | null; // String
+  };
+  PoiImage: {
+    // root type
+    id: number; // Int!
+    imageId: string; // String!
+    poiId: string; // String!
   };
   Query: {};
-  Traveler: {
+  Restaurant: {
     // root type
-    contactNumber?: string | null; // String
-    firstName?: string | null; // String
+    atmospheres: string[]; // [String!]!
     id: number; // Int!
-    lastName?: string | null; // String
+    poiId: string; // String!
+  };
+  Stamp: {
+    // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dateCollected: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    title: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   Trip: {
     // root type
-    adultCount?: number | null; // Int
     budget: number; // Float!
-    childCount?: number | null; // Int
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     endDate: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     isAccommodationIncluded: boolean; // Boolean!
     isFoodIncluded: boolean; // Boolean!
     isTransportationIncluded: boolean; // Boolean!
-    preferredTime: NexusGenScalars['JSON']; // JSON!
     startDate: NexusGenScalars['DateTime']; // DateTime!
+    startingLocation: NexusGenScalars['JSON']; // JSON!
+    timeSlots: NexusGenScalars['JSON']; // JSON!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
+    travelerCount: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   User: {
     // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string; // String!
+    firstName: string; // String!
     id: string; // String!
+    lastName: string; // String!
     password: string; // String!
-    userType: NexusGenEnums['UserType']; // UserType!
+    type: NexusGenEnums['UserType']; // UserType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
 }
 
@@ -308,18 +265,16 @@ export type NexusGenAllTypes = NexusGenRootTypes &
   NexusGenEnums;
 
 export interface NexusGenFieldTypes {
+  Accommodation: {
+    // field return type
+    amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
+    id: number; // Int!
+    poiId: string; // String!
+  };
   Amenity: {
     // field return type
     id: number; // Int!
     name: string; // String!
-  };
-  BusinessOwner: {
-    // field return type
-    firstName: string; // String!
-    id: number; // Int!
-    lastName: string; // String!
-    listings: NexusGenRootTypes['Place'][]; // [Place!]!
-    role: NexusGenEnums['BusinessRole']; // BusinessRole!
   };
   Category: {
     // field return type
@@ -331,78 +286,36 @@ export interface NexusGenFieldTypes {
     accommodationCost: number; // Float!
     attractionCost: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dailyItineraryPois: NexusGenRootTypes['DailyItineraryPoi'][]; // [DailyItineraryPoi!]!
     dayIndex: number; // Int!
-    destinations: NexusGenRootTypes['Place'][]; // [Place!]!
     foodCost: string; // String!
     id: number; // Int!
     transportationCost: number; // Float!
-    travelDistances: NexusGenScalars['JSON']; // JSON!
-    travelDurations: NexusGenScalars['JSON']; // JSON!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
-  DepartingLocation: {
+  DailyItineraryPoi: {
     // field return type
-    address: string; // String!
+    dailyItineraryId: number; // Int!
+    distance: number; // Float!
+    duration: number; // Float!
     id: number; // Int!
-    latitude: number; // Float!
-    longitude: number; // Float!
-    name: string; // String!
-  };
-  Destination: {
-    // field return type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: number; // Int!
-    image: NexusGenRootTypes['Image'] | null; // Image
-    name: string; // String!
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-  };
-  DiningAtmosphere: {
-    // field return type
-    id: number; // Int!
-    name: string; // String!
-  };
-  DiningCuisine: {
-    // field return type
-    id: number; // Int!
-    name: string; // String!
-  };
-  DiningOffering: {
-    // field return type
-    id: number; // Int!
-    name: string; // String!
-  };
-  DiningOption: {
-    // field return type
-    id: number; // Int!
-    name: string; // String!
+    order: number; // Int!
+    poi: NexusGenRootTypes['Poi']; // Poi!
   };
   Expense: {
     // field return type
     amount: number; // Float!
     category: NexusGenEnums['ExpenseCategory']; // ExpenseCategory!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    date: NexusGenScalars['DateTime']; // DateTime!
+    dateSpent: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
-    note: string | null; // String
+    note: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   Image: {
     // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    id: string; // ID!
-    name: string | null; // String
-    size: number | null; // Int
-    updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    url: string; // String!
-  };
-  Itinerary: {
-    // field return type
-    createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dailyItineraries: NexusGenRootTypes['DailyItinerary'][]; // [DailyItinerary!]!
-    expenses: NexusGenRootTypes['Expense'][]; // [Expense!]!
-    id: number; // Int!
-    totalCost: number; // Float!
-    totalDuration: number; // Float!
+    id: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
     url: string; // String!
   };
@@ -415,103 +328,108 @@ export interface NexusGenFieldTypes {
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
-  OpeningHour: {
+  OperatingHour: {
     // field return type
     closeTime: NexusGenScalars['DateTime'] | null; // DateTime
     day: number; // Int!
     id: number; // Int!
     openTime: NexusGenScalars['DateTime'] | null; // DateTime
   };
-  Place: {
+  Poi: {
     // field return type
+    accommodation: NexusGenRootTypes['Accommodation'] | null; // Accommodation
     address: string; // String!
-    amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
-    businessOwnerId: number | null; // Int
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
-    contactNumber: string | null; // String
+    contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description: string | null; // String
-    diningAtmospheres: NexusGenRootTypes['DiningAtmosphere'][]; // [DiningAtmosphere!]!
-    diningCuisines: NexusGenRootTypes['DiningCuisine'][]; // [DiningCuisine!]!
-    diningOfferings: NexusGenRootTypes['DiningOffering'][]; // [DiningOffering!]!
-    diningOptions: NexusGenRootTypes['DiningOption'][]; // [DiningOption!]!
+    description: string; // String!
     id: string; // String!
-    images: NexusGenRootTypes['Image'][]; // [Image!]!
-    isClaimed: boolean; // Boolean!
+    images: NexusGenRootTypes['PoiImage'][]; // [PoiImage!]!
+    isAttraction: boolean; // Boolean!
     latitude: number; // Float!
     longitude: number; // Float!
     name: string; // String!
-    openingHours: NexusGenRootTypes['OpeningHour'][]; // [OpeningHour!]!
+    operatingHours: NexusGenRootTypes['OperatingHour'][]; // [OperatingHour!]!
     price: string; // String!
-    type: NexusGenEnums['PlaceType']; // PlaceType!
+    restaurant: NexusGenRootTypes['Restaurant'] | null; // Restaurant
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    url: string | null; // String
+    userId: string | null; // String
     visitDuration: number; // Float!
-    website: string | null; // String
+  };
+  PoiImage: {
+    // field return type
+    id: number; // Int!
+    image: NexusGenRootTypes['Image']; // Image!
+    imageId: string; // String!
+    poiId: string; // String!
   };
   Query: {
     // field return type
-    destinations: NexusGenRootTypes['Destination'][]; // [Destination!]!
-    getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
-    itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
-    place: NexusGenRootTypes['Place']; // Place!
-    places: NexusGenRootTypes['Place'][]; // [Place!]!
-    traveler: NexusGenRootTypes['Traveler']; // Traveler!
-    travelerTrips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+    poi: NexusGenRootTypes['Poi']; // Poi!
+    pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
+    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     user: NexusGenRootTypes['User']; // User!
   };
-  Traveler: {
+  Restaurant: {
     // field return type
-    contactNumber: string | null; // String
-    firstName: string | null; // String
+    atmospheres: string[]; // [String!]!
     id: number; // Int!
-    lastName: string | null; // String
-    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+    poiId: string; // String!
+  };
+  Stamp: {
+    // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    dateCollected: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    title: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   Trip: {
     // field return type
-    adultCount: number | null; // Int
     budget: number; // Float!
-    childCount: number | null; // Int
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    departingLocation: NexusGenRootTypes['DepartingLocation'] | null; // DepartingLocation
-    destination: NexusGenRootTypes['Destination'] | null; // Destination
+    dailyItineraries: NexusGenRootTypes['DailyItinerary'][]; // [DailyItinerary!]!
     endDate: NexusGenScalars['DateTime']; // DateTime!
+    expenses: NexusGenRootTypes['Expense'][]; // [Expense!]!
     id: number; // Int!
     isAccommodationIncluded: boolean; // Boolean!
     isFoodIncluded: boolean; // Boolean!
     isTransportationIncluded: boolean; // Boolean!
-    itinerary: NexusGenRootTypes['Itinerary'] | null; // Itinerary
-    preferredTime: NexusGenScalars['JSON']; // JSON!
     startDate: NexusGenScalars['DateTime']; // DateTime!
+    startingLocation: NexusGenScalars['JSON']; // JSON!
+    timeSlots: NexusGenScalars['JSON']; // JSON!
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
+    travelerCount: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   User: {
     // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string; // String!
+    firstName: string; // String!
     id: string; // String!
+    lastName: string; // String!
     password: string; // String!
-    traveler: NexusGenRootTypes['Traveler'] | null; // Traveler
-    userType: NexusGenEnums['UserType']; // UserType!
+    pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+    type: NexusGenEnums['UserType']; // UserType!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
 }
 
 export interface NexusGenFieldTypeNames {
+  Accommodation: {
+    // field return type name
+    amenities: 'Amenity';
+    id: 'Int';
+    poiId: 'String';
+  };
   Amenity: {
     // field return type name
     id: 'Int';
     name: 'String';
-  };
-  BusinessOwner: {
-    // field return type name
-    firstName: 'String';
-    id: 'Int';
-    lastName: 'String';
-    listings: 'Place';
-    role: 'BusinessRole';
   };
   Category: {
     // field return type name
@@ -523,57 +441,28 @@ export interface NexusGenFieldTypeNames {
     accommodationCost: 'Float';
     attractionCost: 'Float';
     createdAt: 'DateTime';
+    dailyItineraryPois: 'DailyItineraryPoi';
     dayIndex: 'Int';
-    destinations: 'Place';
     foodCost: 'String';
     id: 'Int';
     transportationCost: 'Float';
-    travelDistances: 'JSON';
-    travelDurations: 'JSON';
     updatedAt: 'DateTime';
   };
-  DepartingLocation: {
+  DailyItineraryPoi: {
     // field return type name
-    address: 'String';
+    dailyItineraryId: 'Int';
+    distance: 'Float';
+    duration: 'Float';
     id: 'Int';
-    latitude: 'Float';
-    longitude: 'Float';
-    name: 'String';
-  };
-  Destination: {
-    // field return type name
-    createdAt: 'DateTime';
-    id: 'Int';
-    image: 'Image';
-    name: 'String';
-    updatedAt: 'DateTime';
-  };
-  DiningAtmosphere: {
-    // field return type name
-    id: 'Int';
-    name: 'String';
-  };
-  DiningCuisine: {
-    // field return type name
-    id: 'Int';
-    name: 'String';
-  };
-  DiningOffering: {
-    // field return type name
-    id: 'Int';
-    name: 'String';
-  };
-  DiningOption: {
-    // field return type name
-    id: 'Int';
-    name: 'String';
+    order: 'Int';
+    poi: 'Poi';
   };
   Expense: {
     // field return type name
     amount: 'Float';
     category: 'ExpenseCategory';
     createdAt: 'DateTime';
-    date: 'DateTime';
+    dateSpent: 'DateTime';
     id: 'Int';
     note: 'String';
     updatedAt: 'DateTime';
@@ -581,20 +470,7 @@ export interface NexusGenFieldTypeNames {
   Image: {
     // field return type name
     createdAt: 'DateTime';
-    id: 'ID';
-    name: 'String';
-    size: 'Int';
-    updatedAt: 'DateTime';
-    url: 'String';
-  };
-  Itinerary: {
-    // field return type name
-    createdAt: 'DateTime';
-    dailyItineraries: 'DailyItinerary';
-    expenses: 'Expense';
-    id: 'Int';
-    totalCost: 'Float';
-    totalDuration: 'Float';
+    id: 'String';
     updatedAt: 'DateTime';
     url: 'String';
   };
@@ -607,87 +483,94 @@ export interface NexusGenFieldTypeNames {
     deleteTrip: 'Trip';
     updateExpense: 'Expense';
   };
-  OpeningHour: {
+  OperatingHour: {
     // field return type name
     closeTime: 'DateTime';
     day: 'Int';
     id: 'Int';
     openTime: 'DateTime';
   };
-  Place: {
+  Poi: {
     // field return type name
+    accommodation: 'Accommodation';
     address: 'String';
-    amenities: 'Amenity';
-    businessOwnerId: 'Int';
     categories: 'Category';
     contactNumber: 'String';
     createdAt: 'DateTime';
     description: 'String';
-    diningAtmospheres: 'DiningAtmosphere';
-    diningCuisines: 'DiningCuisine';
-    diningOfferings: 'DiningOffering';
-    diningOptions: 'DiningOption';
     id: 'String';
-    images: 'Image';
-    isClaimed: 'Boolean';
+    images: 'PoiImage';
+    isAttraction: 'Boolean';
     latitude: 'Float';
     longitude: 'Float';
     name: 'String';
-    openingHours: 'OpeningHour';
+    operatingHours: 'OperatingHour';
     price: 'String';
-    type: 'PlaceType';
+    restaurant: 'Restaurant';
     updatedAt: 'DateTime';
-    url: 'String';
+    userId: 'String';
     visitDuration: 'Float';
-    website: 'String';
+  };
+  PoiImage: {
+    // field return type name
+    id: 'Int';
+    image: 'Image';
+    imageId: 'String';
+    poiId: 'String';
   };
   Query: {
     // field return type name
-    destinations: 'Destination';
-    getTransaction: 'Expense';
-    itinerary: 'Itinerary';
-    place: 'Place';
-    places: 'Place';
-    traveler: 'Traveler';
-    travelerTrips: 'Trip';
+    poi: 'Poi';
+    pois: 'Poi';
     trip: 'Trip';
+    trips: 'Trip';
     user: 'User';
   };
-  Traveler: {
+  Restaurant: {
     // field return type name
-    contactNumber: 'String';
-    firstName: 'String';
+    atmospheres: 'String';
     id: 'Int';
-    lastName: 'String';
-    trips: 'Trip';
+    poiId: 'String';
+  };
+  Stamp: {
+    // field return type name
+    createdAt: 'DateTime';
+    dateCollected: 'DateTime';
+    id: 'Int';
+    title: 'String';
+    updatedAt: 'DateTime';
   };
   Trip: {
     // field return type name
-    adultCount: 'Int';
     budget: 'Float';
-    childCount: 'Int';
     createdAt: 'DateTime';
-    departingLocation: 'DepartingLocation';
-    destination: 'Destination';
+    dailyItineraries: 'DailyItinerary';
     endDate: 'DateTime';
+    expenses: 'Expense';
     id: 'Int';
     isAccommodationIncluded: 'Boolean';
     isFoodIncluded: 'Boolean';
     isTransportationIncluded: 'Boolean';
-    itinerary: 'Itinerary';
-    preferredTime: 'JSON';
     startDate: 'DateTime';
+    startingLocation: 'JSON';
+    timeSlots: 'JSON';
     title: 'String';
     travelSize: 'TravelSize';
+    travelerCount: 'Int';
     updatedAt: 'DateTime';
   };
   User: {
     // field return type name
+    createdAt: 'DateTime';
     email: 'String';
+    firstName: 'String';
     id: 'String';
+    lastName: 'String';
     password: 'String';
-    traveler: 'Traveler';
-    userType: 'UserType';
+    pois: 'Poi';
+    trips: 'Trip';
+    type: 'UserType';
+    updatedAt: 'DateTime';
   };
 }
 
@@ -696,16 +579,16 @@ export interface NexusGenArgTypes {
     createExpense: {
       // args
       data: NexusGenInputs['CreateExpenseInput']; // CreateExpenseInput!
+      tripId: number; // Int!
     };
     createTrip: {
       // args
       data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
-      locationData: NexusGenInputs['CreateDepartingLocationInput']; // CreateDepartingLocationInput!
+      userId: string; // String!
     };
     createUser: {
       // args
-      travelerInput: NexusGenInputs['CreateTravelerInput']; // CreateTravelerInput!
-      userInput: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+      input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
     };
     deleteExpense: {
       // args
@@ -722,29 +605,21 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
-    getTransaction: {
+    poi: {
       // args
-      itineraryId: number; // Int!
+      poiId: string; // String!
     };
-    itinerary: {
-      // args
-      tripId: number; // Int!
-    };
-    place: {
-      // args
-      placeId: string; // String!
-    };
-    traveler: {
-      // args
-      userId: string; // String!
-    };
-    travelerTrips: {
+    pois: {
       // args
       userId: string; // String!
     };
     trip: {
       // args
       id: number; // Int!
+    };
+    trips: {
+      // args
+      userId: string; // String!
     };
     user: {
       // args
