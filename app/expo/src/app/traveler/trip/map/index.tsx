@@ -196,6 +196,7 @@ export default function MapScreen() {
             .map((item) => item.poi)
             .map((poi, index) => (
               <TouchableOpacity
+                key={index}
                 activeOpacity={0.9}
                 onPress={() => {
                   router.push({
@@ -204,7 +205,6 @@ export default function MapScreen() {
                 }}
               >
                 <View
-                  key={index}
                   className="mx-4 overflow-hidden rounded-3xl bg-white"
                   style={{ width: CARD_WIDTH - 10, height: CARD_HEIGHT }}
                 >

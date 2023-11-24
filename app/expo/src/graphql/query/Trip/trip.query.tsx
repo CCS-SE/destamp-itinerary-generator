@@ -1,23 +1,113 @@
 import { gql } from '@apollo/client';
 
-export const GetTravelerTripsQuery = gql(
-  `query GetTravelerTrips($userId: String!) {
-        travelerTrips(userId: $userId) {
+export const GetTripsQuery = gql(
+  `query GetTrips($userId: String!) {
+    trips(userId: $userId) {
+      id
+      budget
+      endDate
+      startDate
+      title
+      travelerCount
+      travelSize
+    }
+  }
+  `,
+);
+
+export const GetTripExpensesQuery = gql(
+  `query GetTripExpenses($tripId: Int!) {
+    trip(id: $tripId) {
+      id
+      budget
+      startDate
+      endDate
+      expenses {
+        id
+        amount
+        category
+        note
+        dateSpent
+      }
+    }
+  }
+  `,
+);
+
+export const GetTripItineraryQuery = gql(
+  `query GetTripItinerary($tripId: Int!) {
+    trip(id: $tripId) {
+      budget
+      startDate
+      endDate
+      isAccommodationIncluded
+      isTransportationIncluded
+      travelerCount
+      startingLocation
+      timeSlots
+      dailyItineraries {
+        id
+        accommodationCost
+        attractionCost
+        transportationCost
+        foodCost
+        dayIndex
+        dailyItineraryPois {
           id
-          title
-          budget
-          destination {
+          order
+          distance
+          duration
+          poi {
+            id
             name
-            image {
-              url
+            price
+            visitDuration          
+            longitude
+            latitude
+            isAttraction
+            restaurant { 
+              id
+            }
+            accommodation {
+              id
+            }
+            images {
+              image {
+                url
+              }
             }
           }
-          travelSize
-          startDate
-          endDate
-          adultCount
-          childCount
         }
       }
+    }
+  }
+  `,
+);
+
+export const GetDailyItineraryPoiDetailsQuery = gql(
+  `query GetDailyItineraryPoiDetails($poiId: String!) {
+    poi(poiId: $poiId) {
+      id
+      name
+      price
+      visitDuration
+      description
+      address
+      contactNumber
+      categories {
+        name
+      }
+      images {
+        image {
+          url
+        }
+      }
+      operatingHours {
+        day
+        openTime
+        closeTime
+      }
+    }
+  }
   `,
 );
