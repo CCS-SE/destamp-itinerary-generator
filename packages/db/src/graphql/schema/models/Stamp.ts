@@ -1,13 +1,14 @@
 import { objectType } from 'nexus';
 
-const Image = objectType({
-  name: 'Image',
+const Stamp = objectType({
+  name: 'Stamp',
   definition(t) {
-    t.string('id');
-    t.string('url');
+    t.int('id');
+    t.string('title');
+    t.field('dateCollected', { type: 'DateTime' });
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
   },
 });
 
-export default Image;
+export default Stamp;

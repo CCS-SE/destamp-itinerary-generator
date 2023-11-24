@@ -1,7 +1,7 @@
 import { objectType } from 'nexus';
 
-const OpeningHour = objectType({
-  name: 'OpeningHour',
+const OperatingHour = objectType({
+  name: 'OperatingHour',
   definition(t) {
     t.int('id');
     t.int('day');
@@ -10,4 +10,4 @@ const OpeningHour = objectType({
   },
 });
 
-export default OpeningHour;
+export default OperatingHour;
