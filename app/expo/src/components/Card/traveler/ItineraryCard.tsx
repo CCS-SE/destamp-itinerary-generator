@@ -94,9 +94,6 @@ export default function ItineraryCard({
 
   const hour = getStartTime(timeslots, 0);
   const min = 0;
-  // const min = getStartTime(preferredTime, 1);
-
-  const accommodation = dailyItinerary.dailyItineraryPois[0]?.poi;
 
   // function moveAccommodationToFront() {
   //   const itemToMove = destinations.find(

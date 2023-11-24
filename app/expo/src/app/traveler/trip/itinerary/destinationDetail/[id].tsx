@@ -16,12 +16,6 @@ interface Category {
   name: string;
 }
 
-interface OpeningHour {
-  openTime?: string;
-  closeTime?: string;
-  day: number;
-}
-
 interface SlideStateProps {
   imgList: string[];
   loadQueue: number[];
