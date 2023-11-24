@@ -20,7 +20,7 @@ const DailyItinerary = objectType({
               id: id,
             },
           })
-          .dailyItineraryPois()
+          .daily_itinerary_pois()
           .then((items) => items.sort((a, b) => a.order - b.order));
       },
     });

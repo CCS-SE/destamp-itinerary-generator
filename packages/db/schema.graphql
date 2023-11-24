@@ -133,7 +133,7 @@ type Poi {
   categories: [Category!]!
   contactNumber: String!
   createdAt: DateTime!
-  description: String!
+  description: String
   id: String!
   images: [PoiImage!]!
   isAttraction: Boolean!

@@ -7,7 +7,8 @@ const PointOfInterest = objectType({
     t.nullable.string('userId');
     t.string('name');
     t.string('address');
-    t.string('description');
+    t.nullable.string('description');
+    t.nullable.string('description');
     t.string('price');
     t.string('contactNumber');
     t.float('latitude');
@@ -49,7 +50,7 @@ const PointOfInterest = objectType({
               id: id,
             },
           })
-          .images();
+          .poiImages();
       },
     });
     t.nullable.field('restaurant', {

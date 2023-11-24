@@ -68,7 +68,7 @@ const createAttractions = async () => {
         latitude: attraction.location.lat,
         longitude: attraction.location.lng,
         isAttraction: true,
-        images: {
+        poiImages: {
           create: attraction.imageUrls.map((url) => {
             return {
               image: {
@@ -119,7 +119,7 @@ const createAttractions = async () => {
       include: {
         accommodation: true,
         categories: true,
-        images: true,
+        poiImages: true,
         operatingHours: true,
         restaurant: true,
       },
@@ -155,7 +155,7 @@ const createAccommodations = async () => {
                 create: { name: cat },
               })),
             },
-            images: {
+            poiImages: {
               create: accommodation.imageUrls.map((url) => {
                 return {
                   image: {
@@ -202,7 +202,7 @@ const createRestaurants = async () => {
                 create: { name: cat },
               })),
             },
-            images: {
+            poiImages: {
               create: restaurant.imageUrls.map((url) => {
                 return {
                   image: {

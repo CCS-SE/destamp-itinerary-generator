@@ -93,7 +93,7 @@ export const createTrip = async (
         isTransportationIncluded: isTransportationIncluded,
         startingLocation: input.startingLocation,
         timeSlots: input.timeSlots,
-        dailyItineraries: {
+        daily_itineraries: {
           create: dailyPlans.map((dailyPlan, index) => ({
             dayIndex: index,
             accommodationCost: dailyPlan.chrom.accommodationCost(),
