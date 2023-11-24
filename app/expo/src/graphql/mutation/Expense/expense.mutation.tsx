@@ -1,28 +1,25 @@
 import { gql } from '@apollo/client';
 
 export const createExpense = gql(
-  `mutation CreateExpense($data: CreateExpenseInput!) {
-        createExpense(data: $data) {
-          amount,
-          category,
-          date,
-          note,
-        }
-      }`,
+  `mutation CreateExpense($tripId: Int!, $data: CreateExpenseInput!) {
+    createExpense(tripId: $tripId, data: $data) {
+      id
+    }
+  }`,
 );
 
 export const UpdateExpense = gql(
-  `mutation UpdateExpense($updateExpenseId: Int!, $data: UpdateExpenseInput!) {
-        updateExpense(id: $updateExpenseId, data: $data) {
-          id
-        }
-      }`,
+  `mutation UpdateExpense($expenseId: Int!, $data: UpdateExpenseInput!) {
+    updateExpense(id: $expenseId, data: $data) {
+      id
+    }
+  }`,
 );
 
 export const DeleteExpense = gql(
-  `mutation DeleteExpense($deleteExpenseId: Int!) {
-        deleteExpense(id: $deleteExpenseId) {
-          id
-        }
-      }`,
+  `mutation DeleteExpense($expenseId: Int!) {
+    deleteExpense(id: $expenseId) {
+      id
+    }
+  }`,
 );
