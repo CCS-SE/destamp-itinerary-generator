@@ -17,18 +17,12 @@ importers:
       chalk:
         specifier: ^4.1.2
         version: 4.1.2
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
       turbo:
         specifier: ^1.10.14
         version: 1.10.14
       typescript:
         specifier: ^5.2.2
         version: 5.2.2
-      zustand:
-        specifier: ^4.4.6
-        version: 4.4.6(@types/react@18.2.24)(react@18.2.0)
     devDependencies:
       eslint:
         specifier: ^8.50.0
@@ -225,6 +219,9 @@ importers:
       react-native-maps:
         specifier: ^1.7.1
         version: 1.7.1(react-native-web@0.19.9)(react-native@0.72.5)(react@18.2.0)
+      react-native-maps-directions:
+        specifier: ^1.9.0
+        version: 1.9.0(react-native-maps@1.7.1)(react-native@0.72.5)(react@18.2.0)
       react-native-modal:
         specifier: ^13.0.1
         version: 13.0.1(react-native@0.72.5)(react@18.2.0)
@@ -261,6 +258,9 @@ importers:
       react-test-renderer:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      uglify-es:
+        specifier: 3.2.2
+        version: 3.2.2
       webpack:
         specifier: ^5.88.2
         version: 5.88.2
@@ -7853,8 +7853,8 @@ packages:
     engines: {node: '>=16'}
     dev: true
 
-  /commander@2.13.0:
-    resolution: {integrity: sha512-MVuS359B+YzaWqjCL/c+22gfryv+mCBPHAv3zyVI2GN8EY6IRP8VwtasXn8jyyhvvq84R4ImN1OKRtcbIasjYA==}
+  /commander@2.12.2:
+    resolution: {integrity: sha512-BFnaq5ZOGcDN7FlrtBT4xxkgIToalIIxwjxLWVJ8bGTpe1LroqMiqQXdA7ygc7CRvaYS+9zfPGFnJqFSayx+AA==}
 
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -12281,7 +12281,7 @@ packages:
     resolution: {integrity: sha512-6l8/bEvtVaTSuhG1FqS0+Mc8lZ3Bl4RI8SeRIifVLC21eeSDp4CEBUWSGjpFyUDfi6R5dXzYaFnSgMNyfxADiQ==}
     engines: {node: '>=16'}
     dependencies:
-      uglify-es: 3.3.9
+      uglify-es: 3.2.2
 
   /metro-react-native-babel-preset@0.76.8(@babel/core@7.23.0):
     resolution: {integrity: sha512-Ptza08GgqzxEdK8apYsjTx2S8WDUlS2ilBlu9DR1CUcHmg4g3kOkFylZroogVAUKtpYQNYwAvdsjmrSdDNtiAg==}
@@ -14092,6 +14092,20 @@ packages:
     dependencies:
       react: 18.2.0
       react-native: 0.72.5(@babel/core@7.23.0)(@babel/preset-env@7.22.20)(react@18.2.0)
+    dev: false
+
+  /react-native-maps-directions@1.9.0(react-native-maps@1.7.1)(react-native@0.72.5)(react@18.2.0):
+    resolution: {integrity: sha512-68SrMOUg4WQ5PmpS9sNOTZaYtdyVYJnnjQOOhABrgiKnb5BXCZRU2gDoS11gYf23hjUBjq8JXzgfn37WcINLwA==}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+      react-native-maps: '>=1.0.0'
+    dependencies:
+      lodash.isequal: 4.5.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-native: 0.72.5(@babel/core@7.23.0)(@babel/preset-env@7.22.20)(react@18.2.0)
+      react-native-maps: 1.7.1(react-native-web@0.19.9)(react-native@0.72.5)(react@18.2.0)
     dev: false
 
   /react-native-maps@1.7.1(react-native-web@0.19.9)(react-native@0.72.5)(react@18.2.0):
@@ -16003,13 +16017,13 @@ packages:
   /ua-parser-js@1.0.36:
     resolution: {integrity: sha512-znuyCIXzl8ciS3+y3fHJI/2OhQIXbXw9MWC/o3qwyR+RGppjZHrM27CGFSKCJXi2Kctiz537iOu2KnXs1lMQhw==}
 
-  /uglify-es@3.3.9:
-    resolution: {integrity: sha512-r+MU0rfv4L/0eeW3xZrd16t4NZfK8Ld4SWVglYBb7ez5uXFWHuVRs6xCTrf1yirs9a4j4Y27nn7SRfO6v67XsQ==}
+  /uglify-es@3.2.2:
+    resolution: {integrity: sha512-l+s5VLzFwGJfS+fbqaGf/Dfwo1MF13jLOF2ekL0PytzqEqQ6cVppvHf4jquqFok+35USMpKjqkYxy6pQyUcuug==}
     engines: {node: '>=0.8.0'}
     deprecated: support for ECMAScript is superseded by `uglify-js` as of v3.13.0
     hasBin: true
     dependencies:
-      commander: 2.13.0
+      commander: 2.12.2
       source-map: 0.6.1
 
   /unbox-primitive@1.0.2:
