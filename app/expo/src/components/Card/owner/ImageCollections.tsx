@@ -12,6 +12,7 @@ import {
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 
 interface ImageItem {
+  id: string;
   url: string;
 }
 

@@ -43,7 +43,7 @@ export const getPieChartData = (
     __typename?: 'Expense' | undefined;
     amount: number;
     category: ExpenseCategory;
-    date: Date;
+    dateSpent: Date;
   }[],
 ) => {
   return data
@@ -53,7 +53,7 @@ export const getPieChartData = (
           __typename?: 'Expense' | undefined;
           amount: number;
           category: ExpenseCategory;
-          date: Date;
+          dateSpent: Date;
         }[],
         current,
       ) => {
@@ -105,18 +105,24 @@ export const getTravelDuration = (duration: number) => {
 export const getTravelDistance = (distance: number) =>
   (distance / 1000).toFixed(1);
 
-export const calculateTravelExpense = (distance: number, duration: number) => {
-  const travelDistanceInKilometers = Math.floor(distance / 1000);
+export const calculateTravelExpense = (
+  distance: number,
+  duration: number,
+  travelerCount: number,
+) => {
+  const travelDistanceInKilometers = Math.floor(distance / 1_000);
   const flagDown = 40;
   const additionalCostPerKm = 13.5;
   const durationMinutes = Math.floor(duration / 60);
   const additionalCostPerMin = 2;
 
-  return Math.round(
-    flagDown +
-      travelDistanceInKilometers * additionalCostPerKm +
-      durationMinutes * additionalCostPerMin,
-  );
+  return travelDistanceInKilometers > 1
+    ? Math.round(
+        flagDown +
+          travelDistanceInKilometers * additionalCostPerKm +
+          durationMinutes * additionalCostPerMin,
+      ) * taxisNeeded(travelerCount)
+    : 0;
 };
 
 export const separateWords = (str: string) => {
@@ -186,14 +192,13 @@ export const getPreferredTime = (preferredTimeValues: [number, number][]) => {
   return preferredTimeValues.map(([start, end]) => `${start}:00-${end}:00`);
 };
 
-export const taxisNeeded = (adultCount: number, childCount: number) => {
-  const personCount = adultCount + childCount;
-  if (personCount < 1) {
+export const taxisNeeded = (travelerCount: number) => {
+  if (travelerCount < 1) {
     return 0;
-  } else if (personCount <= 4) {
+  } else if (travelerCount <= 4) {
     return 1;
   } else {
-    const taxisNeeded = (personCount - 1) / 4;
+    const taxisNeeded = (travelerCount - 1) / 4;
     return Math.floor(taxisNeeded) + 1;
   }
 };

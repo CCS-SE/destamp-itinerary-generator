@@ -7,7 +7,7 @@ import { Model } from 'react-model';
 
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
-import { PlaceType } from '~/graphql/generated';
+import { ExpenseCategory } from '~/graphql/generated';
 import { calculateAveragePrice } from '~/utils/utils';
 import Person from '../../../../assets/images/person.svg';
 
@@ -33,36 +33,39 @@ interface TimeSlot {
 }
 
 interface DestinationCardProps {
-  itineraryId: number;
-  timeSlot: TimeSlot;
+  tripId: number;
+  timeSlot?: TimeSlot;
   title: string;
   price: string;
+  isAttraction: boolean;
+  accommodation?: {
+    id: number;
+  } | null;
   imageList: string[];
   date: Date;
-  categoryType: PlaceType;
+  categoryType: ExpenseCategory;
   onPress: () => void;
-  adultCount: number;
-  childCount: number;
+  travelerCount: number;
 }
 
 export default function DestinationCard({
-  itineraryId,
+  tripId,
   timeSlot,
   title,
   price,
   imageList,
   date,
+  accommodation,
+  isAttraction,
   onPress,
   categoryType,
-  adultCount,
-  childCount,
+  travelerCount,
 }: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
   const [addExpenseModal, setAddExpenseModal] = useState(false);
 
   const isFree = price === '0';
-  const travellerCount = adultCount + childCount;
 
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
@@ -104,13 +107,17 @@ export default function DestinationCard({
             >
               {title}
             </Text>
-            <View className="mb-1 ml-3 flex-row">
-              <Text className="mr-1 text-gray-600">
-                {timeSlot.start == timeSlot.end
-                  ? timeSlot.start
-                  : `${timeSlot.start} - ${timeSlot.end}`}
+            <View className="mb-1 ml-2 flex-row">
+              <Text className="mr-1 font-poppins text-[14.5px] text-gray-400">
+                {timeSlot?.start == timeSlot?.end
+                  ? timeSlot?.start
+                  : `${timeSlot?.start} - ${timeSlot?.end}`}
               </Text>
-              <PriceTag isFree={isFree} price={price} />
+              <PriceTag
+                isFree={isFree}
+                price={price}
+                isAccommodation={accommodation !== null}
+              />
             </View>
           </TouchableOpacity>
 
@@ -135,17 +142,17 @@ export default function DestinationCard({
         onClose={() => setAddExpenseModal(false)}
       >
         <AddSpendingForm
-          itineraryId={itineraryId}
+          tripId={tripId}
           closeModal={() => setAddExpenseModal(false)}
           minDate={date}
           maxDate={date}
           noteString={title}
           amount={
-            categoryType == PlaceType.Restaurant
-              ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
-              : categoryType == PlaceType.Attraction
-              ? (parseInt(price) * travellerCount).toFixed(2)
-              : price
+            isAttraction
+              ? (parseInt(price) * travelerCount).toFixed(2)
+              : accommodation
+              ? price
+              : (calculateAveragePrice(price) * travelerCount).toFixed(2)
           }
           categoryType={categoryType}
         />
@@ -192,9 +199,10 @@ const createSlideSchema = (imageList: string[]) =>
 interface PriceTagProps {
   price: string;
   isFree: boolean;
+  isAccommodation: boolean;
 }
 
-const PriceTag = ({ price, isFree }: PriceTagProps) => {
+const PriceTag = ({ price, isFree, isAccommodation }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
       <View className="flex-row items-center justify-center px-1.5">
@@ -205,7 +213,11 @@ const PriceTag = ({ price, isFree }: PriceTagProps) => {
         >
           {isFree ? 'Free' : `₱${price}`}
         </Text>
-        {isFree ? null : <Person height={10} width={10} />}
+        {!isFree ? (
+          isAccommodation ? null : (
+            <Person height={10} width={10} />
+          )
+        ) : null}
       </View>
     </View>
   );

@@ -5,13 +5,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
+import { useQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
+import { GetDailyItineraryPoiDetailsDocument } from '~/graphql/generated';
 import Back from '../../../../../../assets/images/back-icon.svg';
 
-interface ImageProps {
-  url: string;
+interface Category {
+  name: string;
 }
 
 interface OpeningHour {
@@ -51,17 +53,23 @@ const days: Record<DayValue, Day> = {
 };
 
 export default function DestinationDetailScreen() {
-  const { name, address, contactNumber, openingHours, images } =
-    useLocalSearchParams();
+  const { id } = useLocalSearchParams();
 
-  const parsedImages: ImageProps[] = JSON.parse(images as string);
-  const imageList = parsedImages.map((img) => img.url);
+  const { error, loading, data } = useQuery(
+    GetDailyItineraryPoiDetailsDocument,
+    {
+      variables: {
+        poiId: id as string,
+      },
+    },
+  );
 
-  const openingHoursArray: OpeningHour[] = JSON.parse(openingHours as string);
+  const imageList = data ? data?.poi.images.map((item) => item.image.url) : [];
 
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
-
   const [state, actions] = useStore();
+
+  const screenWidth = Dimensions.get('window').width;
 
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
@@ -76,7 +84,30 @@ export default function DestinationDetailScreen() {
     return `${hour}:${min != 0 ? min : `${min}0`}`;
   };
 
-  const screenWidth = Dimensions.get('window').width;
+  const displayCategories = (items: Category[]) => {
+    return (
+      <View className="mt-2 flex-row flex-wrap px-2">
+        {items.map((item, i) => (
+          <View
+            className="mx-1 my-0.5 flex-row rounded-lg bg-pink-100 p-1"
+            key={i}
+          >
+            <Text className="font-poppins-medium text-[10px] text-pink-600 ">
+              {item.name}
+            </Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
+
+  if (error) {
+    return <Text>{error.message}</Text>;
+  }
+
+  if (loading && !data) {
+    return <View className="flex-1 items-center"></View>;
+  }
 
   return (
     <>
@@ -105,92 +136,102 @@ export default function DestinationDetailScreen() {
       </View>
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView className="-mt-10 flex-1" edges={['left', 'right']}>
-        <ScrollView className="flex-1 rounded-tl-3xl rounded-tr-3xl bg-white p-4">
-          <View
-            className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
-            style={{ width: screenWidth / 1.13 }}
-          >
-            <Text className="mx-3 font-poppins-medium text-lg text-gray-700">
-              {name}
-            </Text>
-            {address ? (
-              <Text className="text-small mx-3 mt-2.5 font-poppins text-gray-500">
-                {address}
+        {data && (
+          <ScrollView className="flex-1 rounded-tl-3xl rounded-tr-3xl bg-white p-4">
+            <View
+              className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
+              style={{ width: screenWidth / 1.13 }}
+            >
+              <Text className="mx-3 font-poppins-medium text-lg text-gray-700">
+                {data.poi.name}
               </Text>
-            ) : (
-              <></>
-            )}
-          </View>
-          <View
-            className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
-            style={{ width: screenWidth / 1.13 }}
-          >
-            {contactNumber ? (
-              <View className="flex-row items-center">
-                <Ionicons
-                  name="call-outline"
-                  size={20}
-                  color="gray"
-                  style={{ marginLeft: 7 }}
-                />
-                {Platform.OS === 'ios' ? (
-                  <TextInput
-                    className="mx-2 font-poppins text-base text-gray-500"
-                    value={contactNumber as string}
-                    editable={false}
-                    multiline
+              {data.poi.address ? (
+                <Text className="text-small mx-3 mt-2.5 font-poppins text-gray-500">
+                  {data.poi.address}
+                </Text>
+              ) : (
+                <></>
+              )}
+              {data.poi.description ? (
+                <Text className="text-small mx-3 mt-6 font-poppins text-gray-500">
+                  {data.poi.description}
+                </Text>
+              ) : (
+                <></>
+              )}
+              {displayCategories(data.poi.categories)}
+            </View>
+            <View
+              className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
+              style={{ width: screenWidth / 1.13 }}
+            >
+              {data.poi.contactNumber ? (
+                <View className="flex-row items-center">
+                  <Ionicons
+                    name="call-outline"
+                    size={20}
+                    color="gray"
+                    style={{ marginLeft: 7 }}
                   />
-                ) : (
-                  <Text
-                    className="mx-2 font-poppins text-base text-gray-500"
-                    selectable
-                  >
-                    {contactNumber}
-                  </Text>
-                )}
+                  {Platform.OS === 'ios' ? (
+                    <TextInput
+                      className="mx-2 font-poppins text-base text-gray-500"
+                      value={data.poi.contactNumber}
+                      editable={false}
+                      multiline
+                    />
+                  ) : (
+                    <Text
+                      className="mx-2 font-poppins text-base text-gray-500"
+                      selectable
+                    >
+                      {data.poi.contactNumber}
+                    </Text>
+                  )}
+                </View>
+              ) : (
+                <Text className="mx-3 font-poppins text-base text-gray-500">
+                  No contacts provided.
+                </Text>
+              )}
+            </View>
+            {data.poi.operatingHours.length !== 0 ? (
+              <View
+                className="mt-3 h-auto self-center rounded-2xl bg-gray-100 p-2"
+                style={{ width: screenWidth / 1.13 }}
+              >
+                {data.poi.operatingHours &&
+                  data.poi.operatingHours.map((oh, index) => (
+                    <View key={index} className="mx-3 flex-row">
+                      <Text className='"mx-3 font-poppins-medium text-base text-gray-500'>
+                        {days[oh.day as DayValue]}
+                      </Text>
+
+                      {oh.openTime !== null ? (
+                        <Text className="pl-2 font-poppins text-base text-gray-500">
+                          {oh.openTime ? getTime(oh.openTime) : ''} -{' '}
+                          {oh.closeTime ? getTime(oh.closeTime) : ''}
+                        </Text>
+                      ) : (
+                        <Text className="pl-2 font-poppins text-base text-gray-500">
+                          Closed
+                        </Text>
+                      )}
+                    </View>
+                  ))}
               </View>
             ) : (
-              <Text className="mx-3 font-poppins text-base text-gray-500">
-                No contacts provided.
-              </Text>
+              <View
+                className="mt-3 h-auto self-center rounded-2xl bg-gray-100 p-2"
+                style={{ width: screenWidth / 1.13 }}
+              >
+                <Text className="mx-3 font-poppins text-base text-gray-500">
+                  No opening hours provided.
+                </Text>
+              </View>
             )}
-          </View>
-          {openingHoursArray.length !== 0 ? (
-            <View
-              className="mt-3 h-auto self-center rounded-2xl bg-gray-100 p-2"
-              style={{ width: screenWidth / 1.13 }}
-            >
-              {openingHoursArray &&
-                openingHoursArray.map((oh, index) => (
-                  <View key={index} className="mx-3 flex-row">
-                    <Text className='"mx-3 font-poppins-medium text-base text-gray-500'>
-                      {days[oh.day as DayValue]}
-                    </Text>
-
-                    {oh.openTime !== null ? (
-                      <Text className="pl-2 font-poppins text-base text-gray-500">
-                        {oh.openTime ? getTime(oh.openTime) : ''} -{' '}
-                        {oh.closeTime ? getTime(oh.closeTime) : ''}
-                      </Text>
-                    ) : (
-                      <Text className="pl-2 font-poppins text-base text-gray-500">
-                        Closed
-                      </Text>
-                    )}
-                  </View>
-                ))}
-            </View>
-          ) : (
-            <View
-              className="mt-3 h-auto self-center rounded-2xl bg-gray-100 p-2"
-              style={{ width: screenWidth / 1.13 }}
-            >
-              <Text className="mx-3 font-poppins text-base text-gray-500">
-                No opening hours provided.
-              </Text>
-            </View>
-          )}
-        </ScrollView>
+          </ScrollView>
+        )}
       </SafeAreaView>
     </>
   );

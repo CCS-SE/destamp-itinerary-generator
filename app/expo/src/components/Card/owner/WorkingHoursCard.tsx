@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 const formatOpeningHours = (
   openingHours: {
+    day: number;
     openTime?: string | number | Date;
     closeTime?: string | number | Date;
   }[],
@@ -41,6 +42,7 @@ const WorkingHours = ({
   openingHours,
 }: {
   openingHours: {
+    day: number;
     openTime?: string | number | Date;
     closeTime?: string | number | Date;
   }[];

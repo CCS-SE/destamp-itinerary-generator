@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import ReviewCard from '~/components/Card/traveler/ReviewCard';
@@ -19,8 +19,7 @@ import { AuthContext } from '~/context/AuthProvider';
 import {
   CreateTripDocument,
   ExpenseCategory,
-  GetTravelerInfoDocument,
-  GetTravelerTripsDocument,
+  GetTripsDocument,
   MutationCreateTripArgs,
   TravelSize,
 } from '~/graphql/generated';
@@ -83,12 +82,6 @@ export default function ReviewTripScreen() {
     });
   };
 
-  const { data } = useQuery(GetTravelerInfoDocument, {
-    variables: {
-      userId: user ? user.id : '',
-    },
-  });
-
   const [createTrip] = useMutation(CreateTripDocument);
 
   const onSubmit = async () => {
@@ -99,48 +92,40 @@ export default function ReviewTripScreen() {
       setIsSubmitting(false);
     } else {
       const CreateTripInput: MutationCreateTripArgs = {
+        userId: user?.id || '',
         data: {
           budget: parseFloat(tripData.budget),
-          destinationId: 1,
           endDate: tripData.endDate
             ? new Date(formatDateToString(tripData.endDate))
             : new Date(formatDateToString(tripData.startDate)),
           isAccommodationIncluded: isIncluded(
             ExpenseCategory.Accommodation,
-            tripData.budgetInclusions as ExpenseCategory[],
+            tripData.budgetInclusions,
           ),
           isFoodIncluded: isIncluded(
             ExpenseCategory.Food,
-            tripData.budgetInclusions as ExpenseCategory[],
+            tripData.budgetInclusions,
           ),
           isTransportationIncluded: isIncluded(
             ExpenseCategory.Transportation,
-            tripData.budgetInclusions as ExpenseCategory[],
+            tripData.budgetInclusions,
           ),
           startDate: new Date(formatDateToString(tripData.startDate)),
           title: reviewData.title,
-          travelerId: data ? data.traveler.id : 0,
           travelSize: tripData.travelSize,
-          adultCount:
+          travelerCount:
             tripData.travelSize === TravelSize.Group
               ? tripData.groupCount
-              : tripData.adultCount,
-          childCount:
-            tripData.travelSize === TravelSize.Family ? tripData.childCount : 0,
-          preferredTime: tripData.timeslots,
-        },
-        locationData: {
-          name: tripData.startingLocation?.name || '',
-          address: tripData.startingLocation?.place_name || '',
-          latitude: tripData.startingLocation?.center[0] || 0,
-          longitude: tripData.startingLocation?.center[1] || 0,
+              : tripData.adultCount + tripData.childCount,
+          timeSlots: tripData.timeslots,
+          startingLocation: tripData.startingLocation,
         },
       };
 
       await createTrip({
         variables: {
+          userId: user?.id || '',
           data: CreateTripInput.data,
-          locationData: CreateTripInput.locationData,
         },
         onCompleted: () => {
           setIsSubmitting(false);
@@ -149,14 +134,14 @@ export default function ReviewTripScreen() {
         },
         refetchQueries: [
           {
-            query: GetTravelerTripsDocument,
+            query: GetTripsDocument,
             variables: {
               userId: user ? user.id : '',
             },
           },
         ],
         onError: (err) => {
-          Alert.alert('Error', err.message);
+          // Alert.alert('Error', err.message);
           console.log('Error', err.message);
           setIsSubmitting(false);
         },
@@ -213,11 +198,10 @@ export default function ReviewTripScreen() {
           <ReviewCard
             icon={<Calendar height={25} width={25} />}
             title={
-              tripData.startDate !== tripData.endDate &&
-              tripData.endDate != null
+              !tripData.startDate?.isSame(tripData.endDate)
                 ? `${dateFormmater(
                     tripData.startDate!.toISOString(),
-                  )} - ${dateFormmater(tripData.endDate.toISOString())}`
+                  )} - ${dateFormmater(tripData.endDate!.toISOString())}`
                 : `${dateFormmater(tripData.startDate!.toISOString())}`
             }
             isEditabble

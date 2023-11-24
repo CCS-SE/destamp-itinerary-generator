@@ -18,7 +18,6 @@ const EstablishmentCategory = ({
   tags: string[];
 }) => {
   const screenWidth = Dimensions.get('window').width;
-
   return (
     <View style={[styles.container, { width: screenWidth * 0.85 }]}>
       <Text style={styles.title}> Establishment Category </Text>

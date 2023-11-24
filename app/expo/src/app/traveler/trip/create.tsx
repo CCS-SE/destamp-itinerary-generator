@@ -43,7 +43,7 @@ export default function CreateTripScreen() {
   const [tripDurationDays, setTripDurationDays] = useState<number>(1);
   const [budgetError, setBudgetError] = useState('');
 
-  const isStartingTimeSelected = () => {
+  const isStartingDateSelected = () => {
     return tripData.startDate !== null;
   };
 
@@ -153,7 +153,7 @@ export default function CreateTripScreen() {
     }
 
     if (activeSection === 3) {
-      if (!isStartingTimeSelected()) {
+      if (!isStartingDateSelected()) {
         alert('Please select date.');
         return;
       }

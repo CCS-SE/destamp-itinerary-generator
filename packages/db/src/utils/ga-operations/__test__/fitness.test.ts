@@ -19,20 +19,18 @@ describe('durationScore', () => {
     isTransportationIncluded: true,
     startDate: new Date('2023-08-10'),
     title: 'Iloilo City Trip',
-    preferredTime: [
+    timeSlots: [
       [10, 15],
       [13, 17],
     ],
-    adultCount: 2,
-    childCount: 0,
-    destinationId: 1,
-    travelerId: 1,
+    travelerCount: 2,
+    startingLocation: {},
     travelSize: 'COUPLE',
   };
 
   it('checks behaviour of duration score if its under time', () => {
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.preferredTime);
+    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
 
     const totalDuration = 400;
     const travelDuration = 1_000;
@@ -50,7 +48,7 @@ describe('durationScore', () => {
 
   it('checks behaviour of duration score if its closer to desired travel hour', () => {
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.preferredTime);
+    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
 
     const totalDuration = 900;
     const travelDuration = 1_000;
@@ -68,7 +66,7 @@ describe('durationScore', () => {
 
   it('checks behaviour of duration score if it over time', () => {
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.preferredTime);
+    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
 
     const totalDuration = 850;
     const travelDuration = 16_000;
@@ -94,23 +92,30 @@ describe('costScore', () => {
     isTransportationIncluded: true,
     startDate: new Date('2023-08-10'),
     title: 'Iloilo City Trip',
-    preferredTime: ['10:00-15:00', '13:00-17:00'],
-    adultCount: 2,
-    childCount: 0,
-    destinationId: 1,
-    travelerId: 1,
+    timeSlots: [
+      [10, 15],
+      [13, 17],
+    ],
+    travelerCount: 2,
+    startingLocation: {},
     travelSize: 'COUPLE',
   };
 
   it('checks behaviour of cost score if budget was underutilized', () => {
     const totalDistance = 10_000; // 10 km
+    const totalDuration = 3_600;
+    const travelers = 2;
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
 
     const accommodationCost = 0;
     const foodCost = 299;
     const attractionCost = 100;
     const totalTravelers = 2;
-    const travelExpenses = calculateTravelExpense(totalDistance);
+    const travelExpenses = calculateTravelExpense(
+      totalDistance,
+      totalDuration,
+      travelers,
+    );
 
     const costScore = calculateCostScore(
       tripInput,
@@ -122,19 +127,25 @@ describe('costScore', () => {
       travelExpenses,
     );
 
-    expect(costScore).toBe(0.1228);
+    expect(costScore).toBe(0.1108);
     // expects a higher score if budget was not maximized
   });
 
   it('checks behaviour of cost score if total cost is close to budget', () => {
     const totalDistance = 10_000; // 10 km
+    const totalDuration = 3_600;
+    const travelers = 2;
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
 
     const accommodationCost = 0;
     const foodCost = 500;
     const attractionCost = 250;
     const totalTravelers = 2;
-    const travelExpenses = calculateTravelExpense(totalDistance);
+    const travelExpenses = calculateTravelExpense(
+      totalDistance,
+      totalDuration,
+      travelers,
+    );
 
     const costScore = calculateCostScore(
       tripInput,
@@ -145,19 +156,25 @@ describe('costScore', () => {
       duration,
       travelExpenses,
     );
-    expect(costScore).toBe(0.0325);
+    expect(costScore).toBe(0.0205);
     // expects a lesser score if total cost is closer to budget
   });
 
   it('checks behaviour of cost score if total cost exceeds budget', () => {
     const totalDistance = 12_000; // 10 km
+    const totalDuration = 3_600;
+    const travelers = 2;
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
 
     const accommodationCost = 0;
     const foodCost = 950;
     const attractionCost = 400;
     const totalTravelers = 2;
-    const travelExpenses = calculateTravelExpense(totalDistance);
+    const travelExpenses = calculateTravelExpense(
+      totalDistance,
+      totalDuration,
+      travelers,
+    );
 
     const costScore = calculateCostScore(
       tripInput,
@@ -168,7 +185,7 @@ describe('costScore', () => {
       duration,
       travelExpenses,
     );
-    expect(costScore).toBe(0.1752);
+    expect(costScore).toBe(0.1872);
     // expects a higher score if total cost exceeds budget
   });
 });
@@ -183,20 +200,19 @@ describe('evaluateFitness', () => {
       isTransportationIncluded: true,
       startDate: new Date('2023-08-10'),
       title: 'Iloilo City Trip',
-      preferredTime: [
+      timeSlots: [
         [10, 15],
         [13, 17],
       ],
-      adultCount: 2,
-      childCount: 0,
-      destinationId: 1,
-      travelerId: 1,
+      travelerCount: 2,
+      startingLocation: {},
       travelSize: 'COUPLE',
     };
 
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.preferredTime);
+    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
     const totalDistance = 10_000; // 10 km
+    const travelers = 2;
     const totalDuration = 800; // total duration of chromosome (mins)
     const travelDuration = 3_600; // total travel duration of the trip (sec)
 
@@ -204,7 +220,11 @@ describe('evaluateFitness', () => {
     const foodCost = 700;
     const attractionCost = 400;
     const totalTravelers = 2;
-    const travelExpenses = calculateTravelExpense(totalDistance);
+    const travelExpenses = calculateTravelExpense(
+      totalDistance,
+      totalDuration,
+      travelers,
+    );
 
     const durationScore = calculateDurationScore(
       totalDuration,
@@ -224,7 +244,7 @@ describe('evaluateFitness', () => {
     );
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
-    expect(fitnessScore).toBe(0.8559811684142951);
+    expect(fitnessScore).toBe(0.8546497218115156);
     // expects a higher value if budget and time duration is within user's constraints
   });
 
@@ -237,28 +257,31 @@ describe('evaluateFitness', () => {
       isTransportationIncluded: true,
       startDate: new Date('2023-08-10'),
       title: 'Iloilo City Trip',
-      preferredTime: [
+      timeSlots: [
         [10, 15],
         [13, 17],
       ],
-      adultCount: 2,
-      childCount: 0,
-      destinationId: 1,
-      travelerId: 1,
+      travelerCount: 2,
+      startingLocation: {},
       travelSize: 'COUPLE',
     };
 
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.preferredTime);
+    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
     const totalDistance = 10_000; // 10 km
     const totalDuration = 1000; // total duration of chromosome (mins)
+    const travelers = 2;
     const travelDuration = 9500;
 
     const accommodationCost = 0;
     const foodCost = 700;
     const attractionCost = 400;
     const totalTravelers = 2;
-    const travelExpenses = calculateTravelExpense(totalDistance);
+    const travelExpenses = calculateTravelExpense(
+      totalDistance,
+      totalDuration,
+      travelers,
+    );
 
     const durationScore = calculateDurationScore(
       totalDuration,
@@ -279,7 +302,7 @@ describe('evaluateFitness', () => {
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(0.3887395121319123);
+    expect(fitnessScore).toBe(0.38840130140329393);
     // expects a lesser value if time duration exceeds user's constraints
   });
 
@@ -292,29 +315,32 @@ describe('evaluateFitness', () => {
       isTransportationIncluded: true,
       startDate: new Date('2023-08-10'),
       title: 'Iloilo City Trip',
-      preferredTime: [
+      timeSlots: [
         [10, 15],
         [13, 17],
       ],
-      adultCount: 2,
-      childCount: 0,
-      destinationId: 1,
-      travelerId: 1,
+      travelerCount: 2,
+      startingLocation: {},
       travelSize: 'COUPLE',
     };
 
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.preferredTime);
+    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
 
     const totalDistance = 10_000; // 10 km
     const totalDuration = 800;
     const travelDuration = 3_600;
+    const travelers = 2;
 
     const accommodationCost = 0;
     const foodCost = 1000;
     const attractionCost = 900;
     const totalTravelers = 2;
-    const travelExpenses = calculateTravelExpense(totalDistance);
+    const travelExpenses = calculateTravelExpense(
+      totalDistance,
+      totalDuration,
+      travelers,
+    );
 
     const durationScore = calculateDurationScore(
       totalDuration,
@@ -335,7 +361,7 @@ describe('evaluateFitness', () => {
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(0.7483629560336764);
+    expect(fitnessScore).toBe(0.7473450566861226);
     // expects a lesser value if budget exceeds users constraints
   });
 });

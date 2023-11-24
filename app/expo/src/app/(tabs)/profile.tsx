@@ -8,12 +8,12 @@ import ProfileIcon from '~/components/Icon/ProfileIcon';
 import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
 import ProfileScreenSkeleton from '~/components/Skeleton/ProfileScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetTravelerInfoDocument } from '~/graphql/generated';
+import { GetUserInfoDocument } from '~/graphql/generated';
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
 
-  const { data, loading } = useQuery(GetTravelerInfoDocument, {
+  const { data, loading } = useQuery(GetUserInfoDocument, {
     variables: {
       userId: user ? user.id : '',
     },
@@ -33,11 +33,11 @@ export default function Profile() {
           style={{ width: width }}
         >
           <ProfileIcon
-            firstName={data?.traveler.firstName}
-            lastName={data?.traveler.lastName}
+            firstName={data?.user.firstName}
+            lastName={data?.user.lastName}
           />
           <View className="mx-5">
-            <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.traveler.firstName}`}</Text>
+            <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.user.firstName}`}</Text>
             <Text className="font-poppins text-xs text-gray-500">
               {data?.user.email}
             </Text>

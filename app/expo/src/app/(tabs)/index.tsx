@@ -8,12 +8,12 @@ import TripCard from '~/components/Card/traveler/TripCard';
 import MyTripEmptyState from '~/components/EmptyState/MyTripEmptyState';
 import TripScreenSkeleton from '~/components/Skeleton/TripScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetTravelerTripsDocument } from '~/graphql/generated';
+import { GetTripsDocument } from '~/graphql/generated';
 
 export default function MyTrip() {
   const { user } = useContext(AuthContext);
 
-  const { loading, error, data } = useQuery(GetTravelerTripsDocument, {
+  const { loading, error, data } = useQuery(GetTripsDocument, {
     variables: {
       userId: user ? user.id : '',
     },
@@ -35,7 +35,7 @@ export default function MyTrip() {
       </View>
     );
 
-  if (data?.travelerTrips.length === 0) {
+  if (!loading && data?.trips.length === 0) {
     return <MyTripEmptyState />;
   }
 
@@ -44,17 +44,16 @@ export default function MyTrip() {
       {data && (
         <FlatList
           testID="my-trip-list"
-          data={data.travelerTrips}
+          data={data.trips}
           renderItem={({ item }) => (
             <TripCard
               id={item.id}
-              imgSrc={item.destination!.image!.url}
               destination={item!.title}
               startDate={item.startDate}
               endDate={item.endDate}
               budget={item.budget}
               travelSize={item.travelSize}
-              totalTravellers={item.adultCount! + item.childCount!}
+              totalTravellers={item.travelerCount}
             />
           )}
           showsVerticalScrollIndicator={false}
