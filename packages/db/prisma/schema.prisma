@@ -1,5 +1,5 @@
 datasource db {
-  url      = env("DATABASE_URL")
+  url      = env("NEW_DATABASE_URL")
   provider = "postgresql"
 }
 
@@ -8,211 +8,172 @@ generator client {
 }
 
 model User {
-  id       String    @id
-  email    String    @unique
-  password String
-  userType UserType  @map("user_type")
-  traveler Traveler?
+  id        String   @id
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  firstName String   @map("first_name") @db.VarChar(255)
+  lastName  String   @map("last_name") @db.VarChar(255)
+  type      UserType @default(TRAVELER)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  trips  Trip[]
+  stamps Stamp[]
+  pois   PointOfInterest[]
 
   @@map("users")
 }
 
-model Traveler {
-  id            Int     @id @default(autoincrement())
-  firstName     String? @map("first_name")
-  lastName      String? @map("last_name")
-  contactNumber String? @map("contact_number")
-  user          User?   @relation(fields: [userId], references: [id])
-  userId        String? @unique
-  trips         Trip[]
-
-  @@map("travelers")
-}
-
 model Trip {
-  id                       Int                @id @default(autoincrement())
-  destination              Destination?       @relation(fields: [destinationId], references: [id])
-  destinationId            Int?
-  departingLocation        DepartingLocation? @relation(fields: [departingLocationId], references: [id])
-  departingLocationId      Int?               @unique
-  traveler                 Traveler?          @relation(fields: [travelerId], references: [id])
-  travelerId               Int?
-  itinerary                Itinerary?
-  title                    String
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  title                    String     @db.VarChar(255)
   budget                   Float
-  travelSize               TravelSize         @map("travel_size")
-  adultCount               Int?               @map("adult_count")
-  childCount               Int?               @map("child_count")
-  startDate                DateTime           @map("start_date")
-  endDate                  DateTime           @map("end_date")
-  isAccommodationIncluded  Boolean            @default(false)
-  isFoodIncluded           Boolean            @default(false)
-  isTransportationIncluded Boolean            @default(false)
-  preferredTime            Json[]             @map("preferred_time")
+  startingLocation         Json       @map("starting_location")
+  travelSize               TravelSize @default(SOLO) @map("travel_size")
+  travelerCount            Int        @map("traveler_count")
+  startDate                DateTime   @map("start_date")
+  endDate                  DateTime?  @map("end_date")
+  isAccommodationIncluded  Boolean    @default(false) @map("is_accommodation_included")
+  isFoodIncluded           Boolean    @default(false) @map("is_food_included")
+  isTransportationIncluded Boolean    @default(false) @map("is_transportation_included")
+  timeSlots                Json       @map("time_slots")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  expenses         Expense[]
+  daily_itineraries DailyItinerary[]
 
   @@map("trips")
 }
 
-model DepartingLocation {
-  id        Int    @id @default(autoincrement())
-  name      String
-  address   String
-  latitude  Float
-  longitude Float
-  trip      Trip?
+model PointOfInterest {
+  id     String  @id @default(cuid())
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
 
-  @@map("departing_locations")
-}
-
-model Destination {
-  id    Int    @id @default(autoincrement())
-  name  String
-  image Image?
-  trips Trip[]
+  name          String  @db.VarChar(255)
+  description   String?
+  address       String  @db.VarChar(255)
+  price         String  @db.VarChar(255)
+  contactNumber String  @map("contact_number") @db.VarChar(255)
+  latitude      Float
+  longitude     Float
+  visitDuration Float   @map("visit_duration")
+  isAttraction  Boolean @default(true) @map("is_attraction")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("destinations")
+  categories         Category[]
+  operating_hours     OperatingHour[]
+  poi_images             PoiImage[]
+  daily_itinerary_pois DailyItineraryPoi[]
+  accommodation      Accommodation?
+  restaurant         Restaurant?
+
+  @@map("point_of_interests")
 }
 
-model Place {
-  id                String             @id @default(cuid())
-  businessOwner     BusinessOwner?     @relation(fields: [businessOwnerId], references: [id])
-  businessOwnerId   Int?
-  name              String
-  description       String?
-  type              PlaceType
-  address           String
-  price             String
-  contactNumber     String?            @map("contact_number")
-  latitude          Float
-  longitude         Float
-  visitDuration     Float              @map("visit_duration")
-  url               String?
-  website           String?
-  isClaimed         Boolean            @map("is_claimed")
-  categories        Category[]
-  openingHours      OpeningHour[]
-  images            Image[]
-  diningAtmospheres DiningAtmosphere[]
-  diningOptions     DiningOption[]
-  diningOfferings   DiningOffering[]
-  diningCuisines    DiningCuisine[]
-  amenities         Amenity[]
-  dailyItineraries  DailyItinerary[]
+model Restaurant {
+  id    Int             @id @default(autoincrement())
+  poi   PointOfInterest @relation(fields: [poiId], references: [id])
+  poiId String          @unique @map("poi_id")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  atmospheres String[] @db.VarChar(255)
 
-  @@map("places")
+  @@map("restaurants")
 }
 
-model DiningAtmosphere {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  places Place[]
+model Accommodation {
+  id    Int             @id @default(autoincrement())
+  poi   PointOfInterest @relation(fields: [poiId], references: [id])
+  poiId String          @unique @map("poi_id")
 
-  @@map("dining_atmospheres")
-}
+  amenities Amenity[]
 
-model DiningOffering {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  places Place[]
-
-  @@map("dining_offerings")
-}
-
-model DiningOption {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  places Place[]
-
-  @@map("dining_options")
-}
-
-model DiningCuisine {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  places Place[]
-
-  @@map("dining_cuisines")
+  @@map("accommodations")
 }
 
 model Amenity {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  places Place[]
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
+
+  accommodations Accommodation[]
 
   @@map("amenities")
 }
 
 model Category {
-  id     Int     @id @default(autoincrement())
-  name   String  @unique
-  places Place[]
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(255)
+
+  pois PointOfInterest[]
 
   @@map("categories")
 }
 
-model OpeningHour {
-  id        Int       @id @default(autoincrement())
-  place     Place?    @relation(fields: [placeId], references: [id])
-  placeId   String?
+model OperatingHour {
+  id    Int             @id @default(autoincrement())
+  poi   PointOfInterest @relation(fields: [poiId], references: [id])
+  poiId String          @map("poi_id")
+
   day       Int
   openTime  DateTime? @map("open_time")
   closeTime DateTime? @map("close_time")
 
-  @@map("opening_hours")
-}
-
-model Itinerary {
-  id               Int              @id @default(autoincrement())
-  url              String
-  totalCost        Float            @map("total_cost")
-  totalDuration    Float            @map("total_duration")
-  trip             Trip?            @relation(fields: [tripId], references: [id])
-  tripId           Int?             @unique
-  dailyItineraries DailyItinerary[]
-  expenses         Expense[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("itineraries")
+  @@map("operating_hours")
 }
 
 model DailyItinerary {
-  id                 Int        @id @default(autoincrement())
-  itinerary          Itinerary? @relation(fields: [itineraryId], references: [id])
-  itineraryId        Int?
-  accommodationCost  Float      @map("accommodation_cost")
-  attractionCost     Float      @map("attraction_cost")
-  foodCost           String     @map("food_cost")
-  dayIndex           Int        @map("day_index")
-  transportationCost Float      @map("transportation_cost")
-  destinations       Place[]
-  travelDistances    Json       @map("travel_distances")
-  travelDurations    Json       @map("travel_durations")
+  id     Int  @id @default(autoincrement())
+  trip   Trip @relation(fields: [tripId], references: [id])
+  tripId Int  @map("trip_id")
+
+  accommodationCost  Float  @map("accommodation_cost")
+  attractionCost     Float  @map("attraction_cost")
+  foodCost           String @map("food_cost") @db.VarChar(255)
+  dayIndex           Int    @map("day_index")
+  transportationCost Float  @map("transportation_cost")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  daily_itinerary_pois DailyItineraryPoi[]
 
   @@map("daily_itineraries")
 }
 
+model DailyItineraryPoi {
+  id               Int             @id @default(autoincrement())
+  poi              PointOfInterest @relation(fields: [poiId], references: [id])
+  dailyItinerary   DailyItinerary  @relation(fields: [dailyItineraryId], references: [id])
+  poiId            String          @map("poi_id")
+  dailyItineraryId Int             @map("daily_itinerary_id")
+
+  order    Int
+  duration Float
+  distance Float
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("daily_itinerary_pois")
+}
+
 model Expense {
-  id          Int             @id @default(autoincrement())
-  itinerary   Itinerary?      @relation(fields: [itineraryId], references: [id])
-  itineraryId Int?
-  amount      Float
-  date        DateTime
-  category    ExpenseCategory
-  note        String?
+  id     Int  @id @default(autoincrement())
+  trip   Trip @relation(fields: [tripId], references: [id])
+  tripId Int  @map("trip_id")
+
+  amount    Float
+  dateSpent DateTime        @map("date_spent")
+  category  ExpenseCategory @default(ACCOMMODATION)
+  note      String          @default("") @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -221,34 +182,42 @@ model Expense {
 }
 
 model Image {
-  id            String       @id @default(cuid())
-  place         Place?       @relation(fields: [placeId], references: [id])
-  placeId       String?
-  destination   Destination? @relation(fields: [destinationId], references: [id])
-  destinationId Int?         @unique
-  name          String?
-  url           String
-  size          Int?
+  id  String @id @default(cuid())
+  url String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  stamp    Stamp?
+  poi_image PoiImage?
+
   @@map("images")
 }
 
-model BusinessOwner {
-  id        Int               @id @default(autoincrement())
-  firstName String            @map("first_name")
-  lastName  String            @map("last_name")
-  role      BusinessOwnerRole
-  listings  Place[]
+model PoiImage {
+  id      Int             @id @default(autoincrement())
+  poi     PointOfInterest @relation(fields: [poiId], references: [id])
+  poiId   String          @map("poi_id")
+  image   Image           @relation(fields: [imageId], references: [id])
+  imageId String          @unique @map("image_id")
 
-  @@map("business_owners")
+  @@map("poi_images")
 }
 
-enum BusinessOwnerRole {
-  OWNER
-  MANAGER
+model Stamp {
+  id      Int    @id @default(autoincrement())
+  image   Image  @relation(fields: [imageId], references: [id])
+  imageId String @unique @map("image_id")
+
+  title         String   @db.VarChar(255)
+  dateCollected DateTime @map("date_collected")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  users User[]
+
+  @@map("stamps")
 }
 
 enum UserType {
@@ -256,14 +225,6 @@ enum UserType {
   BUSINESS_OPERATOR
 
   @@map("user_type")
-}
-
-enum PlaceType {
-  ACCOMMODATION
-  RESTAURANT
-  ATTRACTION
-
-  @@map("place_type")
 }
 
 enum TravelSize {
@@ -283,4 +244,6 @@ enum ExpenseCategory {
   SHOPPING
   ACTIVITY
   OTHER
+
+  @@map("expense_category")
 }

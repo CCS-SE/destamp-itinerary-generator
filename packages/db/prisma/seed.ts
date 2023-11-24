@@ -55,53 +55,37 @@ const clearDb = async () => {
   });
 };
 
-const createDestination = async () => {
-  await db.destination.create({
-    data: {
-      name: 'Iloilo City',
-      image: {
-        create: {
-          url: 'https://www.allproperties.com.ph/wp-content/uploads/2022/01/House-and-Lot-for-sale-in-Iloilo-Photo-Credit-Scholarris20-scaled-1.jpg',
-          name: 'iloilo-city',
-        },
-      },
-    },
-  });
-};
-
 const createAttractions = async () => {
   for (const attraction of attractions) {
-    await db.place.create({
+    await db.pointOfInterest.create({
       data: {
-        id: attraction.placeId,
         address: attraction.address,
         name: attraction.title,
-        type: 'ATTRACTION',
         visitDuration: attraction.visitDuration,
-        contactNumber: attraction.phone,
-        description: attraction.description,
+        contactNumber: attraction.phone || '',
+        description: attraction.description || '',
         price: attraction.price.toString(),
         latitude: attraction.location.lat,
         longitude: attraction.location.lng,
-        isClaimed: false,
+        isAttraction: true,
         images: {
-          createMany: {
-            data: attraction.imageUrls.map((url) => {
-              return {
-                url: url,
-              };
-            }),
-          },
+          create: attraction.imageUrls.map((url) => {
+            return {
+              image: {
+                create: {
+                  url: url,
+                },
+              },
+            };
+          }),
         },
-        url: attraction.url,
-        website: attraction.website,
         categories: {
           connectOrCreate: attraction.categories.map((cat) => ({
             where: { name: cat },
             create: { name: cat },
           })),
         },
-        openingHours: {
+        operatingHours: {
           createMany: {
             data: (attraction.openingHours || []).map((openingHour) => {
               const [openingTime, closingTime] = openingHour.hours
@@ -132,6 +116,13 @@ const createAttractions = async () => {
           },
         },
       },
+      include: {
+        accommodation: true,
+        categories: true,
+        images: true,
+        operatingHours: true,
+        restaurant: true,
+      },
     });
   }
 };
@@ -141,37 +132,46 @@ const createAccommodations = async () => {
     const dollarRate = 55;
     const priceNumeric = parseFloat(accommodation.price!.replace('$', ''));
 
-    await db.place.create({
+    await db.accommodation.create({
       data: {
-        address: accommodation.address,
-        latitude: accommodation.latitude,
-        longitude: accommodation.longitude,
-        name: accommodation.title,
-        price: (priceNumeric * dollarRate).toString(),
-        type: 'ACCOMMODATION',
-        isClaimed: accommodation.isClaimed,
-        categories: {
-          connectOrCreate: accommodation.categories.map((cat) => ({
-            where: { name: cat },
-            create: { name: cat },
-          })),
-        },
-        images: {
-          createMany: {
-            data: accommodation.imageUrls.map((url) => {
-              return {
-                url: url,
-              };
-            }),
-          },
-        },
         amenities: {
           connectOrCreate: accommodation.amenities.map((amenity) => ({
             where: { name: amenity },
             create: { name: amenity },
           })),
         },
-        visitDuration: 24 * 60,
+        poi: {
+          create: {
+            address: accommodation.address,
+            latitude: accommodation.latitude,
+            longitude: accommodation.longitude,
+            name: accommodation.title,
+            price: (priceNumeric * dollarRate).toString(),
+            contactNumber: accommodation.contctNumber || '',
+            isAttraction: false,
+            categories: {
+              connectOrCreate: accommodation.categories.map((cat) => ({
+                where: { name: cat },
+                create: { name: cat },
+              })),
+            },
+            images: {
+              create: accommodation.imageUrls.map((url) => {
+                return {
+                  image: {
+                    create: {
+                      url: url,
+                    },
+                  },
+                };
+              }),
+            },
+            visitDuration: 24 * 60,
+          },
+        },
+      },
+      include: {
+        amenities: true,
       },
     });
   }
@@ -179,63 +179,70 @@ const createAccommodations = async () => {
 
 const createRestaurants = async () => {
   for (const restaurant of restaurants) {
-    await db.place.create({
+    await db.restaurant.create({
       data: {
-        address: restaurant.address,
-        isClaimed: restaurant.isClaimed,
-        latitude: restaurant.latitude,
-        longitude: restaurant.longitude,
-        name: restaurant.title,
-        price: restaurant.price,
-        type: 'RESTAURANT',
-        visitDuration: 90,
-        amenities: {
-          connectOrCreate: restaurant.amenities.map((amenity) => ({
-            where: {
-              name: amenity,
-            },
-            create: {
-              name: amenity,
-            },
-          })),
+        atmospheres: {
+          set: restaurant.diningAtmospheres,
         },
-        diningAtmospheres: {
-          connectOrCreate: restaurant.diningAtmospheres.map((atmosphere) => ({
-            where: {
-              name: atmosphere,
+        poi: {
+          create: {
+            address: restaurant.address,
+            latitude: restaurant.latitude,
+            longitude: restaurant.longitude,
+            name: restaurant.title,
+            price: restaurant.price,
+            visitDuration: restaurant.visitDuration || 90,
+            contactNumber: restaurant.contctNumber || '',
+            description: restaurant.description || '',
+            isAttraction: false,
+
+            categories: {
+              connectOrCreate: restaurant.categories.map((cat) => ({
+                where: { name: cat },
+                create: { name: cat },
+              })),
             },
-            create: {
-              name: atmosphere,
+            images: {
+              create: restaurant.imageUrls.map((url) => {
+                return {
+                  image: {
+                    create: {
+                      url: url,
+                    },
+                  },
+                };
+              }),
             },
-          })),
-        },
-        diningOfferings: {
-          connectOrCreate: restaurant.diningOfferings.map((offering) => ({
-            where: {
-              name: offering,
+            operatingHours: {
+              createMany: {
+                data: (restaurant.openingHours || []).map((openingHour) => {
+                  const [openingTime, closingTime] = openingHour.hours
+                    .split(' to ')
+                    .map(convertTo24HourFormat);
+
+                  const isClosed =
+                    openingHour.hours.trim().toLowerCase() === 'closed';
+
+                  return isClosed
+                    ? {
+                        day: days[openingHour.day as Day],
+                        closeTime: null,
+                        openTime: null,
+                      }
+                    : {
+                        day: days[openingHour.day as Day],
+                        closeTime: set(new Date(), {
+                          hours: closingTime?.hour,
+                          minutes: closingTime?.minute,
+                        }),
+                        openTime: set(new Date(), {
+                          hours: openingTime?.hour,
+                          minutes: openingTime?.minute,
+                        }),
+                      };
+                }),
+              },
             },
-            create: {
-              name: offering,
-            },
-          })),
-        },
-        diningOptions: {
-          connectOrCreate: restaurant.diningOptions.map((option) => ({
-            where: {
-              name: option,
-            },
-            create: {
-              name: option,
-            },
-          })),
-        },
-        images: {
-          createMany: {
-            data: restaurant.imageUrls.map((url) => {
-              return {
-                url: url,
-              };
-            }),
           },
         },
       },
@@ -244,8 +251,7 @@ const createRestaurants = async () => {
 };
 
 clearDb()
-  .then(() => createDestination())
-  .then(() => createAttractions())
   .then(() => createAccommodations())
   .then(() => createRestaurants())
+  .then(() => createAttractions())
   .catch((err) => console.log(err));
