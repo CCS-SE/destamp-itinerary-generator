@@ -21,7 +21,7 @@ const OperatorInformation = ({
       <AuthenticationStatement />
       <SimpleButton
         title={'Continue'}
-        onPress={() => router.push('/verificationScreen/phoneVerification')}
+        onPress={() => router.push('/business/verification/phoneVerification')}
       ></SimpleButton>
     </View>
   );

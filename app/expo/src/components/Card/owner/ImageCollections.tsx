@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -18,6 +19,8 @@ const ImageCollections = ({ images }: { images: ImageItem[] }) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<ImageItem | null>(null);
 
+  const screenWidth = Dimensions.get('window').width;
+
   const openModal = (image: ImageItem) => {
     setSelectedImage(image); // Set the selected image
     setModalVisible(true);
@@ -29,13 +32,16 @@ const ImageCollections = ({ images }: { images: ImageItem[] }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: screenWidth * 0.85 }]}>
       <Text style={styles.title}>Photos</Text>
       <View>
         <FlatList
           data={images}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => openModal(item)}>
+            <TouchableOpacity
+              onPress={() => openModal(item)}
+              activeOpacity={0.8}
+            >
               <Image source={{ uri: item.url }} style={styles.image} />
             </TouchableOpacity>
           )}
@@ -57,8 +63,6 @@ const ImageCollections = ({ images }: { images: ImageItem[] }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 20,
-    marginBottom: 10,
     marginTop: 20,
   },
   title: {
