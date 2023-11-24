@@ -34,7 +34,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
   });
 
   const handleViewItineraryDetials = () => {
-    router.push(`/itinerary/${id}`);
+    router.push(`/traveler/trip/itinerary/${id}`);
   };
 
   const handleDeleteTrip = async () => {

@@ -164,7 +164,7 @@ export default function ItineraryCard({
     images: Image[],
   ) => {
     push({
-      pathname: `/itinerary/destinationDetail/${id}`,
+      pathname: `/traveler/trip/itinerary/destinationDetail/${id}`,
       params: {
         name: name,
         address: address,

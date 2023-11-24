@@ -20,7 +20,7 @@ export default function MyTrip() {
   });
 
   const handleCreateTrip = () => {
-    router.push('/trip/create');
+    router.push('/traveler/trip/create');
   };
 
   if (error)

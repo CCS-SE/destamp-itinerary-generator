@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
+import { Moment } from 'moment';
 
-import { ExpenseCategory, TravelSize } from '~/graphql/generated';
+import { ExpenseCategory } from '~/graphql/generated';
 
 export function amountFormatter(amount: number) {
   return new Intl.NumberFormat().format(Math.floor(amount));
@@ -118,30 +119,6 @@ export const calculateTravelExpense = (distance: number, duration: number) => {
   );
 };
 
-export const getAdultCount = (
-  size: TravelSize,
-  adultCount: number,
-  groupCount: number,
-) => {
-  if (size === TravelSize.Solo) {
-    return 1;
-  } else if (size === TravelSize.Couple) {
-    return 2;
-  } else if (size === TravelSize.Group) {
-    return groupCount;
-  } else {
-    return adultCount;
-  }
-};
-
-export const getChildCount = (size: TravelSize, childCount: number) => {
-  if (size === TravelSize.Family) {
-    return childCount;
-  } else {
-    return 0;
-  }
-};
-
 export const separateWords = (str: string) => {
   return str.replace(/([a-z])([A-Z])/g, '$1 $2');
 };
@@ -151,6 +128,7 @@ interface CategoryColor {
     color: string;
   };
 }
+
 const category: CategoryColor = {
   ACCOMMODATION: {
     color: '#C79BFF',
@@ -218,4 +196,28 @@ export const taxisNeeded = (adultCount: number, childCount: number) => {
     const taxisNeeded = (personCount - 1) / 4;
     return Math.floor(taxisNeeded) + 1;
   }
+};
+
+export function getTripDateFormat(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+export function tripDuration(
+  startDate: Date | null | string,
+  endDate: Date | null | string,
+) {
+  return Math.floor(
+    (new Date(endDate ? endDate : '').getTime() -
+      new Date(startDate ? startDate : '').getTime()) /
+      (24 * 60 * 60 * 1000) +
+      1,
+  );
+}
+
+export const formatDateToString = (date: Moment | null) => {
+  return date ? date.format('YYYY-MM-DD') : '';
 };

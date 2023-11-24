@@ -27,7 +27,7 @@ import {
   getDatesBetween,
   getPieChartData,
 } from '~/utils/utils';
-import Back from '../../../assets/images/back-btn.svg';
+import Back from '../../../../../assets/images/back-btn.svg';
 
 const ExpensePage = () => {
   const { id } = useLocalSearchParams();
