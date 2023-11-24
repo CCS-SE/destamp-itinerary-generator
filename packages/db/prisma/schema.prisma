@@ -46,7 +46,7 @@ model Trip {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   expenses         Expense[]
-  daily_itineraries DailyItinerary[]
+  dailyItineraries DailyItinerary[]
 
   @@map("trips")
 }
@@ -70,9 +70,9 @@ model PointOfInterest {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   categories         Category[]
-  operating_hours     OperatingHour[]
-  poi_images             PoiImage[]
-  daily_itinerary_pois DailyItineraryPoi[]
+  operatingHours     OperatingHour[]
+  poiImages          PoiImage[]
+  dailyItineraryPois DailyItineraryPoi[]
   accommodation      Accommodation?
   restaurant         Restaurant?
 
@@ -143,7 +143,7 @@ model DailyItinerary {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  daily_itinerary_pois DailyItineraryPoi[]
+  dailyItineraryPois DailyItineraryPoi[]
 
   @@map("daily_itineraries")
 }
@@ -189,7 +189,7 @@ model Image {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   stamp    Stamp?
-  poi_image PoiImage?
+  poiImage PoiImage?
 
   @@map("images")
 }

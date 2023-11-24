@@ -192,7 +192,7 @@ export interface NexusGenObjects {
     address: string; // String!
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description: string; // String!
+    description?: string | null; // String
     id: string; // String!
     isAttraction: boolean; // Boolean!
     latitude: number; // Float!
@@ -342,7 +342,7 @@ export interface NexusGenFieldTypes {
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    description: string; // String!
+    description: string | null; // String
     id: string; // String!
     images: NexusGenRootTypes['PoiImage'][]; // [PoiImage!]!
     isAttraction: boolean; // Boolean!

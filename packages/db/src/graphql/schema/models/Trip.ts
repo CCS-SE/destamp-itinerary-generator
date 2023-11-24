@@ -40,7 +40,7 @@ const Trip = objectType({
               id: id,
             },
           })
-          .dailyItineraries()
+          .daily_itineraries()
           .then((item) => item.sort((a, b) => a.dayIndex - b.dayIndex));
       },
     });

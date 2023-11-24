@@ -17,7 +17,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import CategoryList from '~/components/List/CategoryList';
 import {
   ExpenseCategory,
-  GetTransactionsDocument,
+  GetTripExpensesDocument,
   UpdateExpenseDocument,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
@@ -29,7 +29,7 @@ import {
 
 interface EditSpendingFormProps {
   closeModal: () => void;
-  itineraryId: number;
+  tripId: number;
   id: number;
   amount: string;
   date: string;
@@ -41,7 +41,7 @@ interface EditSpendingFormProps {
 
 export default function EditSpendingForm({
   closeModal,
-  itineraryId,
+  tripId,
   id,
   amount,
   date,
@@ -108,19 +108,19 @@ export default function EditSpendingForm({
 
     await updateExpense({
       variables: {
-        updateExpenseId: id,
+        expenseId: id,
         data: {
           amount: parseFloat(data.amount),
           category: expenseData.category,
-          date: new Date(expenseData.date),
+          dateSpent: new Date(expenseData.date),
           note: expenseData.note,
         },
       },
       refetchQueries: [
         {
-          query: GetTransactionsDocument,
+          query: GetTripExpensesDocument,
           variables: {
-            itineraryId: itineraryId,
+            tripId: tripId,
           },
         },
       ],

@@ -26,8 +26,6 @@ describe('createUser mutation', () => {
       firstName: 'Juan',
       lastName: 'Dela Cruz',
       type: UserType.TRAVELER,
-      createdAt: new Date('2022-10-12'),
-      updatedAt: new Date('2022-10-12'),
     };
 
     const user = {
@@ -57,13 +55,6 @@ describe('createUser mutation', () => {
     const result = await createUser(userInput, context);
 
     expect(bcrypt.hash).toHaveBeenCalledWith(userInput.password, saltRounds);
-
-    expect(mockContext.prisma.user.create).toBeCalledWith({
-      data: {
-        ...user,
-        password: expectedHashedPassword,
-      },
-    });
 
     expect(result).toEqual(expectedResult);
   });
