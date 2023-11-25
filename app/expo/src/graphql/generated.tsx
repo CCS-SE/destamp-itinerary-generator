@@ -68,7 +68,7 @@ export type CreateExpenseInput = {
 
 export type CreateTripInput = {
   budget: Scalars['Float']['input'];
-  endDate: Scalars['DateTime']['input'];
+  endDate?: InputMaybe<Scalars['DateTime']['input']>;
   isAccommodationIncluded: Scalars['Boolean']['input'];
   isFoodIncluded: Scalars['Boolean']['input'];
   isTransportationIncluded: Scalars['Boolean']['input'];
@@ -93,11 +93,13 @@ export type DailyItinerary = {
   __typename?: 'DailyItinerary';
   accommodationCost: Scalars['Float']['output'];
   attractionCost: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
   dailyItineraryPois: Array<DailyItineraryPoi>;
   dayIndex: Scalars['Int']['output'];
   foodCost: Scalars['String']['output'];
   id: Scalars['Int']['output'];
   transportationCost: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type DailyItineraryPoi = {
@@ -114,9 +116,11 @@ export type Expense = {
   __typename?: 'Expense';
   amount: Scalars['Float']['output'];
   category: ExpenseCategory;
+  createdAt: Scalars['DateTime']['output'];
   dateSpent: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
   note: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export enum ExpenseCategory {
@@ -131,7 +135,9 @@ export enum ExpenseCategory {
 
 export type Image = {
   __typename?: 'Image';
+  createdAt: Scalars['DateTime']['output'];
   id: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
   url: Scalars['String']['output'];
 };
 
@@ -186,7 +192,8 @@ export type Poi = {
   address: Scalars['String']['output'];
   categories: Array<Category>;
   contactNumber: Scalars['String']['output'];
-  description: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   images: Array<PoiImage>;
   isAttraction: Scalars['Boolean']['output'];
@@ -196,6 +203,7 @@ export type Poi = {
   operatingHours: Array<OperatingHour>;
   price: Scalars['String']['output'];
   restaurant?: Maybe<Restaurant>;
+  updatedAt: Scalars['DateTime']['output'];
   userId?: Maybe<Scalars['String']['output']>;
   visitDuration: Scalars['Float']['output'];
 };
@@ -246,9 +254,11 @@ export type Restaurant = {
 
 export type Stamp = {
   __typename?: 'Stamp';
+  createdAt: Scalars['DateTime']['output'];
   dateCollected: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
   title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export enum TravelSize {
@@ -261,6 +271,7 @@ export enum TravelSize {
 export type Trip = {
   __typename?: 'Trip';
   budget: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
   dailyItineraries: Array<DailyItinerary>;
   endDate: Scalars['DateTime']['output'];
   expenses: Array<Expense>;
@@ -274,6 +285,7 @@ export type Trip = {
   title: Scalars['String']['output'];
   travelSize: TravelSize;
   travelerCount: Scalars['Int']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export type UpdateExpenseInput = {
@@ -285,6 +297,7 @@ export type UpdateExpenseInput = {
 
 export type User = {
   __typename?: 'User';
+  createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['String']['output'];
@@ -293,6 +306,7 @@ export type User = {
   pois: Array<Poi>;
   trips: Array<Trip>;
   type: UserType;
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export enum UserType {
@@ -521,6 +535,7 @@ export type DailyItineraryResolvers<
     ContextType
   >;
   attractionCost?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dailyItineraryPois?: Resolver<
     Array<ResolversTypes['DailyItineraryPoi']>,
     ParentType,
@@ -534,6 +549,7 @@ export type DailyItineraryResolvers<
     ParentType,
     ContextType
   >;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -567,9 +583,11 @@ export type ExpenseResolvers<
     ParentType,
     ContextType
   >;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dateSpent?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   note?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -578,7 +596,9 @@ export type ImageResolvers<
   ParentType extends
     ResolversParentTypes['Image'] = ResolversParentTypes['Image'],
 > = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -667,7 +687,12 @@ export type PoiResolvers<
     ContextType
   >;
   contactNumber?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  description?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes['PoiImage']>, ParentType, ContextType>;
   isAttraction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -685,6 +710,7 @@ export type PoiResolvers<
     ParentType,
     ContextType
   >;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   visitDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -759,9 +785,11 @@ export type StampResolvers<
   ParentType extends
     ResolversParentTypes['Stamp'] = ResolversParentTypes['Stamp'],
 > = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dateCollected?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -771,6 +799,7 @@ export type TripResolvers<
     ResolversParentTypes['Trip'] = ResolversParentTypes['Trip'],
 > = {
   budget?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   dailyItineraries?: Resolver<
     Array<ResolversTypes['DailyItinerary']>,
     ParentType,
@@ -800,6 +829,7 @@ export type TripResolvers<
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   travelSize?: Resolver<ResolversTypes['TravelSize'], ParentType, ContextType>;
   travelerCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -808,6 +838,7 @@ export type UserResolvers<
   ParentType extends
     ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -816,6 +847,7 @@ export type UserResolvers<
   pois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
   trips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -904,19 +936,16 @@ export type GetBusinessesQueryVariables = Exact<{
 
 export type GetBusinessesQuery = {
   __typename?: 'Query';
-  user: {
-    __typename?: 'User';
-    pois: Array<{
-      __typename?: 'Poi';
-      id: string;
-      name: string;
-      address: string;
-      images: Array<{
-        __typename?: 'PoiImage';
-        image: { __typename?: 'Image'; id: string; url: string };
-      }>;
+  pois: Array<{
+    __typename?: 'Poi';
+    id: string;
+    name: string;
+    address: string;
+    images: Array<{
+      __typename?: 'PoiImage';
+      image: { __typename?: 'Image'; id: string; url: string };
     }>;
-  };
+  }>;
 };
 
 export type GetBusinessDetailsQueryVariables = Exact<{
@@ -931,7 +960,7 @@ export type GetBusinessDetailsQuery = {
     name: string;
     address: string;
     contactNumber: string;
-    description: string;
+    description?: string | null;
     price: string;
     visitDuration: number;
     accommodation?: {
@@ -945,10 +974,6 @@ export type GetBusinessDetailsQuery = {
       atmospheres: Array<string>;
     } | null;
     categories: Array<{ __typename?: 'Category'; name: string }>;
-    images: Array<{
-      __typename?: 'PoiImage';
-      image: { __typename?: 'Image'; id: string; url: string };
-    }>;
     operatingHours: Array<{
       __typename?: 'OperatingHour';
       id: number;
@@ -1063,14 +1088,10 @@ export type GetDailyItineraryPoiDetailsQuery = {
     name: string;
     price: string;
     visitDuration: number;
-    description: string;
+    description?: string | null;
     address: string;
     contactNumber: string;
     categories: Array<{ __typename?: 'Category'; name: string }>;
-    images: Array<{
-      __typename?: 'PoiImage';
-      image: { __typename?: 'Image'; url: string };
-    }>;
     operatingHours: Array<{
       __typename?: 'OperatingHour';
       day: number;
@@ -1483,11 +1504,11 @@ export const GetBusinessesDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'user' },
+            name: { kind: 'Name', value: 'pois' },
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
+                name: { kind: 'Name', value: 'userId' },
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'userId' },
@@ -1497,40 +1518,28 @@ export const GetBusinessesDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'pois' },
+                  name: { kind: 'Name', value: 'images' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'images' },
+                        name: { kind: 'Name', value: 'image' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                ],
-                              },
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
                             },
                           ],
                         },
@@ -1645,32 +1654,6 @@ export const GetBusinessDetailsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'images' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },
@@ -2128,28 +2111,6 @@ export const GetDailyItineraryPoiDetailsDocument = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'images' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
-                            },
-                          ],
-                        },
-                      },
                     ],
                   },
                 },

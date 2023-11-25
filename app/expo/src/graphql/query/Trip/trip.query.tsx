@@ -97,11 +97,6 @@ export const GetDailyItineraryPoiDetailsQuery = gql(
       categories {
         name
       }
-      images {
-        image {
-          url
-        }
-      }
       operatingHours {
         day
         openTime
