@@ -1,6 +1,6 @@
 import { Dimensions, Text, View } from 'react-native';
 
-import { amountFormatter } from '~/utils/utils';
+import { amountFormatter, taxisNeeded } from '~/utils/utils';
 import Accommodation from '../../../../assets/images/accommodation.svg';
 import Attraction from '../../../../assets/images/attraction.svg';
 import Food from '../../../../assets/images/food.svg';
@@ -12,6 +12,8 @@ interface DayExpenseCardProps {
   foodCost: string;
   transportationCost: number;
   totalCost: number;
+  adultCount: number;
+  childCount: number;
 }
 
 interface DayExpenseTextProps {
@@ -24,6 +26,8 @@ export default function DayExpenseCard({
   foodCost,
   transportationCost,
   totalCost,
+  adultCount,
+  childCount,
 }: DayExpenseCardProps) {
   const formatCurrency = (amount: number): string =>
     `₱${amountFormatter(amount)}`;
@@ -32,14 +36,14 @@ export default function DayExpenseCard({
 
   return (
     <View
-      className="mt-5 h-[75] rounded-2xl bg-pink-100 p-2"
-      style={{ width: screenWidth / 1.13 }}
+      className="ml-2 mt-5 h-[70] rounded-2xl bg-pink-100 p-2"
+      style={{ width: screenWidth / 1.15 }}
     >
       <View className="flex-row ">
         <Text className="m-1 font-poppins text-base text-gray-500">
           Day Expenses
         </Text>
-        <View className="absolute left-[230] flex-row items-center ">
+        <View className="absolute left-[190] flex-row items-center ">
           <Text className="m-1 font-poppins-medium text-base text-[#F65A82]">
             Total:
           </Text>
@@ -56,7 +60,11 @@ export default function DayExpenseCard({
         <Food height={18} width={18} />
         <DayExpenseText value={foodCost} />
         <Transportation height={18} width={18} />
-        <DayExpenseText value={formatCurrency(transportationCost)} />
+        <DayExpenseText
+          value={formatCurrency(
+            transportationCost * taxisNeeded(adultCount, childCount),
+          )}
+        />
       </View>
     </View>
   );
@@ -64,8 +72,6 @@ export default function DayExpenseCard({
 
 const DayExpenseText = ({ value }: DayExpenseTextProps) => {
   return (
-    <Text className=" mx-1.5 font-poppins text-base text-gray-500 ">
-      {value}
-    </Text>
+    <Text className=" mx-1.5 font-poppins text-sm text-gray-500 ">{value}</Text>
   );
 };

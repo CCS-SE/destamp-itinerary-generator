@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontSize: 13,
     fontWeight: 'bold',
-    marginLeft: 20,
+    // marginLeft: 20,
   },
   form: {
     borderWidth: 1,

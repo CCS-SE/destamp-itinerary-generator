@@ -5,8 +5,8 @@ const MealPrice = ({ price }: { price: number }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Average meal price per person</Text>
-      <View>
-        <Text style={styles.mealPrice}>{price} PHP</Text>
+      <View style={styles.mealPriceBorder}>
+        <Text>{price} PHP</Text>
       </View>
     </View>
   );
@@ -23,18 +23,15 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     color: '#FC8040',
   },
-  mealPrice: {
+  mealPriceBorder: {
     padding: 10,
     borderWidth: 1,
     borderColor: '#ECB476',
     borderRadius: 10,
     width: 200,
-    shadow: {
-      elevation: 4,
-    },
-    marginLeft: 20,
-    backgroundColor: 'White',
-    fontFamily: 'Poppins',
+    marginLeft: 10,
+    backgroundColor: 'white',
+    elevation: 4,
   },
 });
 

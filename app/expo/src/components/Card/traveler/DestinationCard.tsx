@@ -8,6 +8,8 @@ import { Model } from 'react-model';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import { PlaceType } from '~/graphql/generated';
+import { calculateAveragePrice } from '~/utils/utils';
+import Person from '../../../../assets/images/person.svg';
 
 interface SlideStateProps {
   imgList: string[];
@@ -25,32 +27,42 @@ interface SlideProps {
   loaded: number | undefined;
 }
 
+interface TimeSlot {
+  start: string;
+  end: string;
+}
+
 interface DestinationCardProps {
   itineraryId: number;
-  time: string;
+  timeSlot: TimeSlot;
   title: string;
   price: string;
   imageList: string[];
   date: Date;
   categoryType: PlaceType;
   onPress: () => void;
+  adultCount: number;
+  childCount: number;
 }
 
 export default function DestinationCard({
   itineraryId,
-  time,
+  timeSlot,
   title,
   price,
   imageList,
   date,
   onPress,
   categoryType,
+  adultCount,
+  childCount,
 }: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
   const [addExpenseModal, setAddExpenseModal] = useState(false);
 
   const isFree = price === '0';
+  const travellerCount = adultCount + childCount;
 
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
@@ -60,8 +72,8 @@ export default function DestinationCard({
   return (
     <View className="rounded-2x mt-5 w-[360] flex-row ">
       <View
-        className="rounded-2x ml-8 mr-2 h-[200] pr-3"
-        style={{ width: screenWidth / 1.25 }}
+        className="rounded-2x mx-7 mr-2 h-[200] pr-3"
+        style={{ width: screenWidth / 1.26 }}
       >
         <Swiper
           loadMinimal
@@ -86,18 +98,17 @@ export default function DestinationCard({
             activeOpacity={1}
           >
             <Text
-              className="ml-2.5 font-poppins text-base text-gray-500"
+              className="ml-2 font-poppins text-base text-gray-500"
               style={{ width: screenWidth / 1.6 }}
+              numberOfLines={1}
             >
               {title}
             </Text>
-            <View className="mb-1 flex-row">
-              <Text
-                className={`+ ml-2 font-poppins text-sm text-gray-400 ${
-                  time ? 'mr-1' : ''
-                }  `}
-              >
-                {time}
+            <View className="mb-1 ml-3 flex-row">
+              <Text className="mr-1 text-gray-600">
+                {timeSlot.start == timeSlot.end
+                  ? timeSlot.start
+                  : `${timeSlot.start} - ${timeSlot.end}`}
               </Text>
               <PriceTag isFree={isFree} price={price} />
             </View>
@@ -108,11 +119,11 @@ export default function DestinationCard({
               className="justify-end"
               onPress={() => setAddExpenseModal(true)}
             >
-              <View className="mr-3 justify-end">
+              <View className="mb-0.5 mr-3 justify-end">
                 <MaterialCommunityIcons
                   name="cash-plus"
-                  size={24}
-                  color="gray"
+                  size={25}
+                  color="#989FB0"
                 />
               </View>
             </TouchableOpacity>
@@ -129,7 +140,13 @@ export default function DestinationCard({
           minDate={date}
           maxDate={date}
           noteString={title}
-          amount={price}
+          amount={
+            categoryType == PlaceType.Restaurant
+              ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
+              : categoryType == PlaceType.Attraction
+              ? (parseInt(price) * travellerCount).toFixed(2)
+              : price
+          }
           categoryType={categoryType}
         />
       </BottomHalfModal>
@@ -180,13 +197,16 @@ interface PriceTagProps {
 const PriceTag = ({ price, isFree }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
-      <Text
-        className={`px-1 font-poppins text-sm ${
-          isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
-        } `}
-      >
-        {isFree ? 'Free' : `₱${price}`}
-      </Text>
+      <View className="flex-row items-center justify-center px-1.5">
+        <Text
+          className={`mx-0.5 mt-0.5 font-poppins-medium text-xs ${
+            isFree ? 'text-[#12CC30]' : 'text-[#F65A82]'
+          } `}
+        >
+          {isFree ? 'Free' : `₱${price}`}
+        </Text>
+        {isFree ? null : <Person height={10} width={10} />}
+      </View>
     </View>
   );
 };

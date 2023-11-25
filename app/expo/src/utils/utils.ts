@@ -104,13 +104,17 @@ export const getTravelDuration = (duration: number) => {
 export const getTravelDistance = (distance: number) =>
   (distance / 1000).toFixed(1);
 
-export const calculateTravelExpense = (distance: number) => {
-  const travelDistanceInKilometers = distance / 1000;
+export const calculateTravelExpense = (distance: number, duration: number) => {
+  const travelDistanceInKilometers = Math.floor(distance / 1000);
   const flagDown = 40;
   const additionalCostPerKm = 13.5;
+  const durationMinutes = Math.floor(duration / 60);
+  const additionalCostPerMin = 2;
 
   return Math.round(
-    flagDown + travelDistanceInKilometers * additionalCostPerKm,
+    flagDown +
+      travelDistanceInKilometers * additionalCostPerKm +
+      durationMinutes * additionalCostPerMin,
   );
 };
 
@@ -136,6 +140,10 @@ export const getChildCount = (size: TravelSize, childCount: number) => {
   } else {
     return 0;
   }
+};
+
+export const separateWords = (str: string) => {
+  return str.replace(/([a-z])([A-Z])/g, '$1 $2');
 };
 
 interface CategoryColor {
@@ -198,4 +206,16 @@ export const areDatesEqual = (date1: Date, date2: Date) => {
 
 export const getPreferredTime = (preferredTimeValues: [number, number][]) => {
   return preferredTimeValues.map(([start, end]) => `${start}:00-${end}:00`);
+};
+
+export const taxisNeeded = (adultCount: number, childCount: number) => {
+  const personCount = adultCount + childCount;
+  if (personCount < 1) {
+    return 0;
+  } else if (personCount <= 4) {
+    return 1;
+  } else {
+    const taxisNeeded = (personCount - 1) / 4;
+    return Math.floor(taxisNeeded) + 1;
+  }
 };

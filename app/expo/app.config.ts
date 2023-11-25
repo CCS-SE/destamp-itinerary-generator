@@ -7,6 +7,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 const MAPBOX_API_KEY = process.env.MAPBOX_API_KEY;
 const CLERK_PUBLISHABLE_KEY = process.env.CLERK_PUBLISHABLE_KEY;
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 if (typeof SUPABASE_URL !== 'string' || typeof SUPABASE_ANON_KEY !== 'string') {
   throw new Error('Missing Supabase URL or anonymous key');
@@ -18,6 +19,10 @@ if (typeof CLERK_PUBLISHABLE_KEY !== 'string') {
 
 if (typeof MAPBOX_API_KEY !== 'string') {
   throw new Error('Missing Mapbox API key');
+}
+
+if (typeof GOOGLE_MAPS_API_KEY !== 'string') {
+  throw new Error('Missing Google Maps API key');
 }
 
 const defineConfig = (): ExpoConfig => ({
@@ -47,15 +52,21 @@ const defineConfig = (): ExpoConfig => ({
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
+    config: {
+      googleMaps: {
+        apiKey: GOOGLE_MAPS_API_KEY,
+      },
+    },
   },
   extra: {
     eas: {
-      projectId: '3ea5d855-b187-4ff7-be0d-11b983818225',
+      projectId: '670318c1-345f-496c-be3c-bb320255cafa',
     },
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     MAPBOX_API_KEY,
     CLERK_PUBLISHABLE_KEY,
+    GOOGLE_API_KEY: GOOGLE_MAPS_API_KEY,
   },
   experiments: {
     tsconfigPaths: true,

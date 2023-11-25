@@ -6,12 +6,19 @@ interface StepperButtonProps {
   disabled?: boolean;
 }
 
-export default function StepperButton({ onPress, label }: StepperButtonProps) {
+export default function StepperButton({
+  onPress,
+  label,
+  disabled = false,
+}: StepperButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       activeOpacity={0.9}
-      className="mt-2 h-12 w-44 items-center justify-center self-center rounded-xl bg-[#FC8040] p-2.5"
+      disabled={disabled}
+      className={`mt-2 h-12 w-44 items-center justify-center self-center rounded-xl bg-[#FC8040] p-2.5 ${
+        disabled ? 'opacity-50' : ''
+      }`}
     >
       <Text className="font-poppins-medium text-lg text-white">{label}</Text>
     </TouchableOpacity>

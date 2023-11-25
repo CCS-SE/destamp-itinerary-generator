@@ -8,6 +8,7 @@ export const tripCardData = {
   startDate: new Date(2023, 5, 9),
   travelSize: TravelSize.Group,
   imgSrc: 'https://loremflickr.com/640/480?lock=407702771597312',
+  totalTravellers: 10,
 };
 
 const id = 123;

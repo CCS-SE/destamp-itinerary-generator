@@ -5,22 +5,22 @@ import { useQuery } from '@apollo/client';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import TripCard from '~/components/Card/traveler/TripCard';
+import MyTripEmptyState from '~/components/EmptyState/MyTripEmptyState';
 import TripScreenSkeleton from '~/components/Skeleton/TripScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerTripsDocument } from '~/graphql/generated';
-import MyTripEmptyState from '~/screens/Traveler/MyTrip/EmptyState';
 
-export default function MyTripScreen() {
-  const { session } = useContext(AuthContext);
+export default function MyTrip() {
+  const { user } = useContext(AuthContext);
 
   const { loading, error, data } = useQuery(GetTravelerTripsDocument, {
     variables: {
-      userId: session ? session.user.id : '',
+      userId: user ? user.id : '',
     },
   });
 
   const handleCreateTrip = () => {
-    router.push('/trip/create/');
+    router.push('/trip/create');
   };
 
   if (error)
@@ -54,6 +54,7 @@ export default function MyTripScreen() {
               endDate={item.endDate}
               budget={item.budget}
               travelSize={item.travelSize}
+              totalTravellers={item.adultCount! + item.childCount!}
             />
           )}
           showsVerticalScrollIndicator={false}

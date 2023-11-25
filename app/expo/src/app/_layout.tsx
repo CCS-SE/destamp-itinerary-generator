@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
@@ -12,11 +11,7 @@ import {
 } from '@apollo/client';
 import { ClerkProvider } from '@clerk/clerk-expo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native';
+import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { fetch } from 'cross-fetch';
 
 import { AuthProvider } from '~/context/AuthProvider';
@@ -47,11 +42,6 @@ const client = new ApolloClient({
     },
   }),
 });
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -87,10 +77,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={DefaultTheme}>
       <AutocompleteDropdownContextProvider>
         <AuthProvider>
           <ClerkProvider
@@ -100,6 +88,10 @@ function RootLayoutNav() {
           >
             <ApolloProvider client={client}>
               <Stack>
+                <Stack.Screen
+                  name="businessProfile/businessList"
+                  options={{ title: 'My Business' }}
+                />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
             </ApolloProvider>

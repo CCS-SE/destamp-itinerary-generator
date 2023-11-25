@@ -3,19 +3,19 @@ import { Dimensions, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@apollo/client';
 
+import StampDisplayEmptyState from '~/components/EmptyState/StampDisplayEmptyState';
 import ProfileIcon from '~/components/Icon/ProfileIcon';
 import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
 import ProfileScreenSkeleton from '~/components/Skeleton/ProfileScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetTravelerInfoDocument } from '~/graphql/generated';
-import StampDisplayEmptyState from '~/screens/Traveler/Profile/StampDisplayEmptyState';
 
-export default function ProfileScreen() {
-  const { session } = useContext(AuthContext);
+export default function Profile() {
+  const { user } = useContext(AuthContext);
 
   const { data, loading } = useQuery(GetTravelerInfoDocument, {
     variables: {
-      userId: session ? session.user.id : '',
+      userId: user ? user.id : '',
     },
   });
 

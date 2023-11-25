@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
-import { Platform, Text, TextInput, View } from 'react-native';
+import { Dimensions, Platform, Text, TextInput, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
 import { Image } from 'expo-image';
@@ -75,10 +76,12 @@ export default function DestinationDetailScreen() {
     return `${hour}:${min != 0 ? min : `${min}0`}`;
   };
 
+  const screenWidth = Dimensions.get('window').width;
+
   return (
     <>
       <View>
-        <View className="relative -top-4 h-[450]">
+        <View className="relative -top-4 h-[420]">
           <View className="absolute left-0 top-20 z-10 mx-4 flex-row justify-between">
             <Back height={43} width={43} onPress={handleBack} />
           </View>
@@ -101,10 +104,13 @@ export default function DestinationDetailScreen() {
         </View>
       </View>
       <Stack.Screen options={{ headerShown: false }} />
-      <SafeAreaView className="-mt-9 flex-1" edges={['left', 'right']}>
-        <View className="flex-1 items-center rounded-tl-3xl rounded-tr-3xl bg-white p-4">
-          <View className="mt-3 w-[365] rounded-2xl bg-gray-100 p-2">
-            <Text className="mx-3 font-poppins-medium text-base text-gray-500">
+      <SafeAreaView className="-mt-10 flex-1" edges={['left', 'right']}>
+        <ScrollView className="flex-1 rounded-tl-3xl rounded-tr-3xl bg-white p-4">
+          <View
+            className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
+            style={{ width: screenWidth / 1.13 }}
+          >
+            <Text className="mx-3 font-poppins-medium text-lg text-gray-700">
               {name}
             </Text>
             {address ? (
@@ -115,7 +121,10 @@ export default function DestinationDetailScreen() {
               <></>
             )}
           </View>
-          <View className="mt-3 w-[365] rounded-2xl bg-gray-100 p-2">
+          <View
+            className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
+            style={{ width: screenWidth / 1.13 }}
+          >
             {contactNumber ? (
               <View className="flex-row items-center">
                 <Ionicons
@@ -147,7 +156,10 @@ export default function DestinationDetailScreen() {
             )}
           </View>
           {openingHoursArray.length !== 0 ? (
-            <View className="mt-3 h-auto w-[365] rounded-2xl bg-gray-100 p-2">
+            <View
+              className="mt-3 h-auto self-center rounded-2xl bg-gray-100 p-2"
+              style={{ width: screenWidth / 1.13 }}
+            >
               {openingHoursArray &&
                 openingHoursArray.map((oh, index) => (
                   <View key={index} className="mx-3 flex-row">
@@ -169,13 +181,16 @@ export default function DestinationDetailScreen() {
                 ))}
             </View>
           ) : (
-            <View className="mt-3 h-auto w-[365] rounded-2xl bg-gray-100 p-2">
+            <View
+              className="mt-3 h-auto self-center rounded-2xl bg-gray-100 p-2"
+              style={{ width: screenWidth / 1.13 }}
+            >
               <Text className="mx-3 font-poppins text-base text-gray-500">
                 No opening hours provided.
               </Text>
             </View>
           )}
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </>
   );

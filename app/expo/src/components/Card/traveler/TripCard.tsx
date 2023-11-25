@@ -19,6 +19,7 @@ interface TripCardProps {
   endDate: Date;
   budget: number;
   travelSize: string;
+  totalTravellers: number;
 }
 
 function TripCard({
@@ -29,6 +30,7 @@ function TripCard({
   endDate,
   budget,
   travelSize,
+  totalTravellers,
 }: TripCardProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -107,7 +109,7 @@ function TripCard({
                 testID="trip-travel-size"
                 className="pl-1 text-center font-poppins text-base  text-gray-500"
               >
-                {toSentenceCase(travelSize)}
+                {`${toSentenceCase(travelSize)} (${totalTravellers}) `}
               </Text>
               <Text className="pl-2 text-center font-poppins text-base  text-gray-500">
                 •

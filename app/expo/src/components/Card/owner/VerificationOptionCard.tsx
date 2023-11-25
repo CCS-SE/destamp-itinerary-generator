@@ -48,12 +48,12 @@ const styles = StyleSheet.create({
   container: {
     width: 301,
     height: 170,
-    backgroundColor: '#FAFAFA66',
+    backgroundColor: 'white',
     borderRadius: 10,
-    borderWidth: 1,
     padding: 10,
     margin: 20,
     justifyContent: 'center',
+    elevation: 4,
   },
   content: {
     alignContent: 'center',

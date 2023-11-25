@@ -1,10 +1,10 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { Session } from '@supabase/supabase-js';
+import { Session, User } from '@supabase/supabase-js';
 import { supabase } from 'config/initSupabase';
 
 type ContextProps = {
-  user: null | boolean;
+  user: null | User;
   session: Session | null;
 };
 
@@ -16,18 +16,31 @@ interface Props {
 
 const AuthProvider = (props: Props) => {
   const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) {
-        router.push('/(tabs)/');
+      if (session && session.user) {
+        setSession(session);
+        setUser(session?.user);
+
+        if (session.user.user_metadata.userType == 'TRAVELER') {
+          router.replace('/(tabs)');
+        } else {
+          router.replace('/businessProfile/businessList');
+        }
       }
       const { data: authListener } = supabase.auth.onAuthStateChange(
-        async (_event, session) => {
-          setSession(session);
-          if (session) {
-            router.push('/(tabs)/');
+        (_event, session) => {
+          if (session && session.user) {
+            setSession(session);
+            setUser(session?.user);
+
+            if (session.user.user_metadata.userType == 'TRAVELER') {
+              router.replace('/(tabs)');
+            } else {
+              router.replace('/businessProfile/businessList');
+            }
           } else {
             router.replace('/login');
           }
@@ -43,6 +56,7 @@ const AuthProvider = (props: Props) => {
     <AuthContext.Provider
       value={{
         session,
+        user,
       }}
     >
       {props.children}

@@ -5,6 +5,7 @@ import {
   Pressable,
   Text,
   TextInput,
+  ToastAndroid,
   View,
 } from 'react-native';
 import { useMutation } from '@apollo/client';
@@ -129,8 +130,8 @@ export default function AddSpendingForm({
       },
     });
     closeModal();
-
-    setTimeout(() => setIsSubmitting(false), 1000);
+    setTimeout(() => setIsSubmitting(false), 500);
+    ToastAndroid.show('Expense added.', ToastAndroid.SHORT);
   };
 
   return (
@@ -148,6 +149,7 @@ export default function AddSpendingForm({
           return (
             <View>
               <CustomTextInput
+                maxLength={8}
                 testID="amount-input"
                 placeholder="Amount"
                 defaultValue={amount ? amount : ''}

@@ -4,14 +4,15 @@ import DashedLine from 'react-native-dashed-line';
 import { useRouter } from 'expo-router';
 
 import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
-import DepartingFromCard from '~/components/Card/traveler/DepartingFromCard';
 import DirectionCard from '~/components/Card/traveler/DirectionCard';
+import StartingLocationCard from '~/components/Card/traveler/StartingLocationCard';
 import { ExpenseCategory, PlaceType } from '~/graphql/generated';
 import {
   calculateAveragePrice,
   calculateTravelExpense,
   getTravelDistance,
   getTravelDuration,
+  taxisNeeded,
 } from '~/utils/utils';
 import Accommodation from '../../../../assets/images/accommodation-itinerary.svg';
 import Attraction from '../../../../assets/images/attraction-icon.svg';
@@ -55,8 +56,15 @@ interface ItineraryCardProps {
   isTransportationIncluded: boolean;
   travelDistances: number[];
   travelDurations: number[];
-  preferredTime: string[];
+  timeslots: [number, number][];
   destinations: Destination[] | [];
+  adultCount: number;
+  childCount: number;
+}
+
+interface TimeSlot {
+  start: string;
+  end: string;
 }
 
 export default function ItineraryCard({
@@ -69,34 +77,83 @@ export default function ItineraryCard({
   departingLocation,
   destinations,
   travelDistances,
-  preferredTime,
+  timeslots,
   travelDurations,
   isTransportationIncluded,
+  adultCount,
+  childCount,
 }: ItineraryCardProps) {
   const { push } = useRouter();
 
-  const hour = getStartTime(preferredTime, 0);
-  const min = getStartTime(preferredTime, 1);
-  const displayTime = (index: number) => {
-    const firstPlaceTime = destinations[0]?.visitDuration || 0; // Ensure it's a number
+  const hour = getStartTime(timeslots, 0);
+  const min = 0;
+  // const min = getStartTime(preferredTime, 1);
 
-    let startHour;
-    let starMin;
-    let endHour: number = 0;
-    let endMin: number = 0;
+  // function moveAccommodationToFront() {
+  //   const itemToMove = destinations.find(
+  //     (item) => item?.type === PlaceType.Accommodation,
+  //   ) as never;
+  //   if (destinations.includes(itemToMove)) {
+  //     destinations = destinations.filter((item) => item !== itemToMove);
 
-    if (index === 0) {
-      startHour = hour;
-      starMin = min;
-      endHour += Math.floor(firstPlaceTime / 60);
-      endMin += firstPlaceTime % 60;
+  //     destinations = [itemToMove as Destination, ...destinations];
+  //   }
+  //   return destinations;
+  // }
 
-      return `${formatTime(startHour!, starMin!)} - ${formatTime(
-        endHour,
-        endMin,
-      )}`;
+  // const arrangedDestinations = (): Destination[] => {
+  //   // moveAccommodationToFront();
+  //   const restaurants = destinations.filter(
+  //     (dest) => dest.type === PlaceType.Restaurant,
+  //   ) as Destination[];
+  //   const otherDestinations = destinations.filter(
+  //     (dest) => dest.type !== PlaceType.Restaurant,
+  //   ) as Destination[];
+
+  //   const arrangedDestinations: Destination[] = [];
+  //   let i = 0;
+  //   let j = 0;
+
+  //   while (i < otherDestinations.length || j < restaurants.length) {
+  //     if (i < otherDestinations.length) {
+  //       arrangedDestinations.push(otherDestinations[i]!);
+  //       i++;
+  //     }
+  //     if (j < restaurants.length) {
+  //       arrangedDestinations.push(restaurants[j]!);
+  //       j++;
+  //     }
+  //   }
+
+  //   return arrangedDestinations;
+  // };
+
+  const visitDurations = destinations.map(
+    (destination) => destination.visitDuration,
+  );
+  const travelDurationsMins = travelDurations.map((duration) => duration / 60);
+
+  function calculateTimeSlots(): TimeSlot[] {
+    const startTime = `${hour}:${min}`;
+    const timeSlots: TimeSlot[] = [];
+    const currentTime = new Date(`1970-01-01T${startTime}:00Z`);
+
+    for (let i = 0; i < visitDurations.length; i++) {
+      const start = currentTime.toISOString().substr(11, 5);
+      currentTime.setMinutes(currentTime.getMinutes() + visitDurations[i]!);
+      const end = currentTime.toISOString().substr(11, 5);
+
+      timeSlots.push({ start, end });
+
+      if (travelDurationsMins[i]) {
+        currentTime.setMinutes(
+          currentTime.getMinutes() + travelDurationsMins[i]!,
+        );
+      }
     }
-  };
+
+    return timeSlots;
+  }
 
   const handleViewDestinationDetail = (
     id: string,
@@ -129,10 +186,12 @@ export default function ItineraryCard({
         transportationCost={transportationCost!}
         totalCost={
           attractionCost! +
-          transportationCost! +
+          transportationCost! * taxisNeeded(adultCount, childCount) +
           calculateAveragePrice(foodCost) +
           accommodationCost
         }
+        adultCount={adultCount}
+        childCount={childCount}
       />
       <View className="flex-row" style={{ width: screenWidth }}>
         <DashedLine
@@ -155,7 +214,7 @@ export default function ItineraryCard({
                 marginLeft: -16,
               }}
             />
-            <DepartingFromCard locationName={departingLocation!} />
+            <StartingLocationCard locationName={departingLocation!} />
           </View>
           <FlatList
             data={destinations}
@@ -198,7 +257,11 @@ export default function ItineraryCard({
                       date={date}
                       categoryType={item.type}
                       itineraryId={itineraryId}
-                      time={displayTime(index)!}
+                      timeSlot={
+                        formatTime(
+                          calculateTimeSlots()[index] as TimeSlot,
+                        ) as TimeSlot
+                      }
                       title={item.name}
                       price={item.price}
                       imageList={item.images.map((image) => image.url)}
@@ -212,6 +275,8 @@ export default function ItineraryCard({
                           item.images,
                         )
                       }
+                      adultCount={adultCount}
+                      childCount={childCount}
                     />
                   </View>
 
@@ -225,8 +290,8 @@ export default function ItineraryCard({
                         itineraryId={itineraryId}
                         icon={
                           <Driving
-                            height={22}
-                            width={22}
+                            height={20}
+                            width={20}
                             style={{ marginLeft: 8 }}
                           />
                         }
@@ -239,7 +304,10 @@ export default function ItineraryCard({
                         isTransportationIncluded={isTransportationIncluded}
                         transportationPrice={`${calculateTravelExpense(
                           travelDistances[index]!,
+                          travelDurations[index]!,
                         )}`}
+                        adultCount={adultCount}
+                        childCount={childCount}
                       />
                     </View>
                   )}
@@ -253,14 +321,26 @@ export default function ItineraryCard({
   );
 }
 
-const getStartTime = (time: string[], index: number) => {
-  return parseInt(time[0]!.split(':')[index]!);
+const getStartTime = (timeslot: [number, number][], index: number) => {
+  return timeslot[0]![index]!;
 };
 
-const formatTime = (hour: number, min: number) => {
-  const ampm = hour >= 12 ? 'PM' : 'AM';
-  const formattedHour = hour % 12 || 12; // Convert 0 to 12 for noon/midnight
-  const formattedMinute = min < 10 ? `0${min}` : min; // Add leading zero for single-digit minutes
+function formatTime(timeSlot: TimeSlot): TimeSlot {
+  const splitStart = timeSlot.start.split(':');
+  const splitEnd = timeSlot.end.split(':');
+  const startHour = splitStart[0] as string;
+  const endHour = splitEnd[0] as string;
+  const startMin = splitStart[1] as string;
+  const endMin = splitEnd[1] as string;
 
-  return `${formattedHour}:${formattedMinute} ${ampm}`;
-};
+  const newStartTime =
+    parseInt(startHour) <= 12
+      ? timeSlot.start + ' AM'
+      : parseInt(startHour) - 12 + ':' + startMin + ' PM';
+  const newEndTime =
+    parseInt(endHour) <= 12
+      ? timeSlot.end + ' AM'
+      : parseInt(endHour) - 12 + ':' + endMin + ' PM';
+
+  return { start: newStartTime, end: newEndTime };
+}

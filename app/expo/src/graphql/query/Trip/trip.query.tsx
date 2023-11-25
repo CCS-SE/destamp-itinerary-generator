@@ -15,6 +15,8 @@ export const GetTravelerTripsQuery = gql(
           travelSize
           startDate
           endDate
+          adultCount
+          childCount
         }
       }
   `,
