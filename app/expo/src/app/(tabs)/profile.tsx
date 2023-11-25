@@ -32,15 +32,19 @@ export default function Profile() {
           className="mx-5 flex-row items-center rounded-2xl bg-gray-100 p-4"
           style={{ width: width }}
         >
-          <ProfileIcon
-            firstName={data?.user.firstName}
-            lastName={data?.user.lastName}
-          />
+          {data && (
+            <ProfileIcon
+              firstName={data.user.firstName}
+              lastName={data.user.lastName}
+            />
+          )}
           <View className="mx-5">
             <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.user.firstName}`}</Text>
-            <Text className="font-poppins text-xs text-gray-500">
-              {data?.user.email}
-            </Text>
+            {data && (
+              <Text className="font-poppins text-xs text-gray-500">
+                {data.user.email}
+              </Text>
+            )}
           </View>
         </View>
       </SafeAreaView>
