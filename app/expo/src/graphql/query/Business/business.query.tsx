@@ -2,20 +2,18 @@ import { gql } from '@apollo/client';
 
 export const GetBusinessesQuery = gql(
   `query GetBusinesses($userId: String!) {
-    user(id: $userId) {
-      pois {
-        id
-        name
-        address
-        images {
-          image {
-            id
-            url
-          }
+    pois(userId: $userId) {
+      id
+      name
+      address
+      images {
+        image {
+          id
+          url
         }
       }
     }
-  }  
+  }
   `,
 );
 
@@ -41,12 +39,6 @@ export const GetBusinessDetailsQuery = gql(
       }
       categories {
         name
-      }
-      images {
-        image {
-          id
-          url
-        }
       }
       operatingHours {
         id

@@ -8,7 +8,6 @@ const PointOfInterest = objectType({
     t.string('name');
     t.string('address');
     t.nullable.string('description');
-    t.nullable.string('description');
     t.string('price');
     t.string('contactNumber');
     t.float('latitude');
@@ -38,7 +37,8 @@ const PointOfInterest = objectType({
               id: id,
             },
           })
-          .operatingHours();
+          .operatingHours()
+          .then((item) => item.sort((a, b) => a.day - b.day));
       },
     });
     t.list.field('images', {
