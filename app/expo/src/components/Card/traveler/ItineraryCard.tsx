@@ -164,9 +164,13 @@ export default function ItineraryCard({
     return timeSlots;
   }
 
-  const handleViewDestinationDetail = (id: string) => {
+  const handleViewDestinationDetail = (id: string, imageList: string[]) => {
     push({
       pathname: `/traveler/trip/itinerary/destinationDetail/${id}`,
+      params: {
+        id: id,
+        imageList: JSON.stringify(imageList),
+      },
     });
   };
 
@@ -271,7 +275,12 @@ export default function ItineraryCard({
                       title={item.poi.name}
                       price={item.poi.price}
                       imageList={item.poi.images.map((item) => item.image.url)}
-                      onPress={() => handleViewDestinationDetail(item.poi.id)}
+                      onPress={() =>
+                        handleViewDestinationDetail(
+                          item.poi.id,
+                          item.poi.images.map((item) => item.image.url),
+                        )
+                      }
                       travelerCount={travelerCount}
                     />
                   </View>

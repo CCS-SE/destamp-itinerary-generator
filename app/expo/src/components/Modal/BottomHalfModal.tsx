@@ -23,13 +23,13 @@ function BottomHalfModal({
       animationOutTiming={600}
       backdropTransitionInTiming={700}
       backdropTransitionOutTiming={700}
-      className="-mx-0 "
+      className="-mx-0"
     >
-      <View className="absolute -bottom-5 h-auto w-full rounded-t-3xl bg-white">
+      <View className="absolute -bottom-5 h-auto w-full rounded-t-3xl bg-white px-3 py-5">
         <View
           testID="modal-menus"
           style={{ alignSelf: 'center' }}
-          className=" mt-2.5 h-2 w-12 rounded-2xl bg-slate-300"
+          className="-mt-2 h-2 w-12 rounded-2xl bg-slate-300"
         />
         {children}
       </View>
