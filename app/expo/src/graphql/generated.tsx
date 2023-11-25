@@ -290,6 +290,7 @@ export enum PlaceType {
 
 export type Query = {
   __typename?: 'Query';
+  categories: Array<Category>;
   destinations: Array<Destination>;
   getTransaction: Array<Expense>;
   itinerary: Itinerary;
@@ -915,6 +916,11 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  categories?: Resolver<
+    Array<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
+  >;
   destinations?: Resolver<
     Array<ResolversTypes['Destination']>,
     ParentType,
@@ -1134,6 +1140,13 @@ export type GetBusinessInformationQuery = {
       name: string;
     }>;
   };
+};
+
+export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCategoriesQuery = {
+  __typename?: 'Query';
+  categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
 };
 
 export type CreateExpenseMutationVariables = Exact<{
@@ -1615,6 +1628,35 @@ export const GetBusinessInformationDocument = {
 } as unknown as DocumentNode<
   GetBusinessInformationQuery,
   GetBusinessInformationQueryVariables
+>;
+export const GetAllCategoriesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAllCategories' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'categories' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetAllCategoriesQuery,
+  GetAllCategoriesQueryVariables
 >;
 export const CreateExpenseDocument = {
   kind: 'Document',

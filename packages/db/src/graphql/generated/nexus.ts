@@ -451,6 +451,7 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    categories: NexusGenRootTypes['Category'][]; // [Category!]!
     destinations: NexusGenRootTypes['Destination'][]; // [Destination!]!
     getTransaction: NexusGenRootTypes['Expense'][]; // [Expense!]!
     itinerary: NexusGenRootTypes['Itinerary']; // Itinerary!
@@ -643,6 +644,7 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    categories: 'Category';
     destinations: 'Destination';
     getTransaction: 'Expense';
     itinerary: 'Itinerary';
