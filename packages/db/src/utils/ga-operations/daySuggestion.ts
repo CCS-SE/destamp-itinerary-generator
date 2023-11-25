@@ -1,6 +1,5 @@
-import { PlaceType } from '@prisma/client';
-
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import { PointOfInterest } from '.';
+import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { fetchMapboxMatrix } from '../../service/mapboxService';
 import { tripDuration } from '../utils';
 import { getBudgetAllocation } from './budgetAllocation';
@@ -16,14 +15,13 @@ import {
 } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-type Place = NexusGenObjects['Place'];
 
 export const getDaySuggestions = (
   chromosome: Chrom,
   tripInput: CreateTripInput,
-  accommodations: Place[],
+  accommodations: PointOfInterest[],
 ) => {
-  const { budget, preferredTime } = tripInput;
+  const { budget } = tripInput;
   const genes = chromosome.chrom.genes;
   const dailyPlans: Chrom[] = [];
 
@@ -34,7 +32,9 @@ export const getDaySuggestions = (
 
   const budgetRate = getBudgetAllocation(tripInput)!;
 
-  const desiredTime = preferredTime.map((time) => getDesiredTravelHour(time));
+  const desiredTime = tripInput.timeSlots.map((time: [number, number]) =>
+    getDesiredTravelHour(time),
+  );
   const accommodationThreshold = budget * budgetRate.ACCOMMODATION;
   const transportRate = tripInput.isTransportationIncluded
     ? budgetRate.TRANSPORT
@@ -46,7 +46,7 @@ export const getDaySuggestions = (
 
   let currentDayIndex = 0;
   let currentDayDuration = 0;
-  let currentPlans: Place[] = [];
+  let currentPlans: PointOfInterest[] = [];
 
   for (const gene of genes) {
     const geneDuration = gene.visitDuration / 60;
@@ -67,11 +67,11 @@ export const getDaySuggestions = (
       currentDayDuration < totalDailyTravelHour - travelHour &&
       dailyPlans.length < duration
     ) {
-      if (gene.type === PlaceType.RESTAURANT) {
+      if (gene.restaurant) {
         currentPlans.push(gene);
         currentDayDuration += geneDuration;
       }
-      if (gene.type === PlaceType.ATTRACTION) {
+      if (gene.isAttraction) {
         currentPlans.push(gene);
         currentDayDuration += geneDuration;
       }
@@ -105,7 +105,7 @@ export const getDaySuggestions = (
   if (tripInput.isAccommodationIncluded) {
     if (accommodation) {
       dailyPlans.map((plan) => {
-        plan.chrom.genes.push(accommodation);
+        plan.chrom.genes.unshift(accommodation);
       });
     } else {
       // if no accommodation within suggested price, find a place with a nearest price
@@ -115,14 +115,17 @@ export const getDaySuggestions = (
       );
 
       dailyPlans.map((plan) => {
-        plan.chrom.genes.push(placeWithNearestPrice);
+        plan.chrom.genes.unshift(placeWithNearestPrice);
       });
     }
   }
   return dailyPlans;
 };
 
-const createDailyPlan = (chromosome: Chrom, currentPlans: Place[]) => {
+const createDailyPlan = (
+  chromosome: Chrom,
+  currentPlans: PointOfInterest[],
+) => {
   return {
     ...chromosome,
     chrom: new Chromosome(currentPlans),
@@ -133,7 +136,10 @@ const createDailyPlan = (chromosome: Chrom, currentPlans: Place[]) => {
   };
 };
 
-const findPlaceWithNearestPrice = (places: Place[], targetPrice: number) => {
+const findPlaceWithNearestPrice = (
+  places: PointOfInterest[],
+  targetPrice: number,
+) => {
   return places.reduce((nearestPlace, currentPlace) => {
     const nearestDiff = Math.abs(parseFloat(nearestPlace.price) - targetPrice);
     const currentDiff = Math.abs(parseFloat(currentPlace.price) - targetPrice);
@@ -178,11 +184,16 @@ export const getDailyPlans = async (
     }
 
     const validDistances = travelDistances.slice(0, -1);
+    const validDurations = travelDurations.slice(0, -1);
 
     dailyPlan.push({
       ...plan,
       travelExpenses: tripInput.isTransportationIncluded
-        ? calculateTravelExpenses(validDistances)
+        ? calculateTravelExpenses(
+            validDistances,
+            validDurations,
+            tripInput.travelerCount,
+          )
         : 0,
       travelDurations: travelDurations,
       travelDistances: travelDistances,

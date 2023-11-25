@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 const formatOpeningHours = (
   openingHours: {
-    openTime: string | number | Date;
-    closeTime: string | number | Date;
+    day: number;
+    openTime?: string | number | Date;
+    closeTime?: string | number | Date;
   }[],
 ) => {
   const days = [
@@ -41,14 +42,16 @@ const WorkingHours = ({
   openingHours,
 }: {
   openingHours: {
-    openTime: string | number | Date;
-    closeTime: string | number | Date;
+    day: number;
+    openTime?: string | number | Date;
+    closeTime?: string | number | Date;
   }[];
 }) => {
   const formattedOpeningHours = formatOpeningHours(openingHours);
+  const screenWidth = Dimensions.get('window').width;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: screenWidth * 0.85 }]}>
       <Text style={styles.title}>Working Hours</Text>
       {formattedOpeningHours.map((workingHours, index) => (
         <Text key={index} style={styles.workinghours}>
@@ -61,17 +64,14 @@ const WorkingHours = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 10,
     marginTop: 20,
   },
   title: {
-    margin: 2,
     fontSize: 18,
     fontFamily: 'Poppins',
     color: '#FC8040',
   },
   workinghours: {
-    marginLeft: 15,
     fontSize: 12,
     fontFamily: 'Poppins',
   },

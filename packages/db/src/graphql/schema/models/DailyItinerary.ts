@@ -1,4 +1,4 @@
-import { list, objectType } from 'nexus';
+import { objectType } from 'nexus';
 
 const DailyItinerary = objectType({
   name: 'DailyItinerary',
@@ -9,22 +9,21 @@ const DailyItinerary = objectType({
     t.float('attractionCost');
     t.float('transportationCost');
     t.int('dayIndex');
-    t.field('destinations', {
-      type: list('Place'),
+    t.field('createdAt', { type: 'DateTime' });
+    t.field('updatedAt', { type: 'DateTime' });
+    t.list.field('dailyItineraryPois', {
+      type: 'DailyItineraryPoi',
       resolve: ({ id }, _, ctx) => {
         return ctx.prisma.dailyItinerary
           .findUniqueOrThrow({
             where: {
-              id: id as number,
+              id: id,
             },
           })
-          .destinations();
+          .daily_itinerary_pois()
+          .then((items) => items.sort((a, b) => a.order - b.order));
       },
     });
-    t.field('travelDistances', { type: 'JSON' });
-    t.field('travelDurations', { type: 'JSON' });
-    t.field('createdAt', { type: 'DateTime' });
-    t.field('updatedAt', { type: 'DateTime' });
   },
 });
 

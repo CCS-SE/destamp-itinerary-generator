@@ -6,60 +6,73 @@ import { useRouter } from 'expo-router';
 import DayExpenseCard from '~/components/Card/traveler/DayExpenseCard';
 import DirectionCard from '~/components/Card/traveler/DirectionCard';
 import StartingLocationCard from '~/components/Card/traveler/StartingLocationCard';
-import { ExpenseCategory, PlaceType } from '~/graphql/generated';
+import { ExpenseCategory } from '~/graphql/generated';
 import {
   calculateAveragePrice,
   calculateTravelExpense,
   getTravelDistance,
   getTravelDuration,
-  taxisNeeded,
 } from '~/utils/utils';
-import Accommodation from '../../../../assets/images/accommodation-itinerary.svg';
 import Attraction from '../../../../assets/images/attraction-icon.svg';
 import Driving from '../../../../assets/images/driving.svg';
 import Location from '../../../../assets/images/location-icon.svg';
 import Restaurant from '../../../../assets/images/restaurant-icon.svg';
 import DestinationCard from './DestinationCard';
 
-interface Image {
+export interface Image {
   url: string;
 }
 
-interface OpeningHour {
+export interface Category {
+  name: string;
+}
+
+export interface OperatingHour {
   openTime?: string;
   closeTime?: string;
   day: number;
 }
 
-interface Destination {
+export interface Poi {
   id: string;
-  type: PlaceType;
   visitDuration: number;
-  contactNumber?: string | null;
-  address: string;
-  isClaimed: boolean;
-  openingHours: OpeningHour[];
+  longitude: number;
+  latitude: number;
+  isAttraction: boolean;
+  restaurant?: {
+    id: number;
+  } | null;
+  accommodation?: {
+    id: number;
+  } | null;
   name: string;
   price: string;
-  images: Image[];
+  images: {
+    image: Image;
+  }[];
 }
 
 interface ItineraryCardProps {
   date: Date;
-  itineraryId: number;
-  attractionCost: number;
-  foodCost: string;
-  transportationCost: number;
-  accommodationCost: number;
-  departingLocation: string | undefined;
+  tripId: number;
   isAccommodationIncluded: boolean;
   isTransportationIncluded: boolean;
-  travelDistances: number[];
-  travelDurations: number[];
+  startingLocation: string;
   timeslots: [number, number][];
-  destinations: Destination[] | [];
-  adultCount: number;
-  childCount: number;
+  travelerCount: number;
+  dailyItinerary: {
+    dayIndex: number;
+    attractionCost: number;
+    foodCost: string;
+    transportationCost: number;
+    accommodationCost: number;
+    dailyItineraryPois: {
+      order: number;
+      distance: number;
+      duration: number;
+      poi: Poi;
+    }[];
+  };
 }
 
 interface TimeSlot {
@@ -69,25 +82,18 @@ interface TimeSlot {
 
 export default function ItineraryCard({
   date,
-  itineraryId,
-  attractionCost,
-  foodCost,
-  transportationCost,
-  accommodationCost,
-  departingLocation,
-  destinations,
-  travelDistances,
+  tripId,
+  dailyItinerary,
+  isAccommodationIncluded,
+  startingLocation,
   timeslots,
-  travelDurations,
   isTransportationIncluded,
-  adultCount,
-  childCount,
+  travelerCount,
 }: ItineraryCardProps) {
   const { push } = useRouter();
 
   const hour = getStartTime(timeslots, 0);
   const min = 0;
-  // const min = getStartTime(preferredTime, 1);
 
   // function moveAccommodationToFront() {
   //   const itemToMove = destinations.find(
@@ -128,10 +134,13 @@ export default function ItineraryCard({
   //   return arrangedDestinations;
   // };
 
-  const visitDurations = destinations.map(
-    (destination) => destination.visitDuration,
+  const visitDurations = dailyItinerary.dailyItineraryPois.map(
+    (item) => item.poi.visitDuration,
   );
-  const travelDurationsMins = travelDurations.map((duration) => duration / 60);
+
+  const poiVisitDurations = dailyItinerary.dailyItineraryPois.map(
+    (item) => item.duration / 60,
+  );
 
   function calculateTimeSlots(): TimeSlot[] {
     const startTime = `${hour}:${min}`;
@@ -145,9 +154,9 @@ export default function ItineraryCard({
 
       timeSlots.push({ start, end });
 
-      if (travelDurationsMins[i]) {
+      if (poiVisitDurations[i]) {
         currentTime.setMinutes(
-          currentTime.getMinutes() + travelDurationsMins[i]!,
+          currentTime.getMinutes() + poiVisitDurations[i]!,
         );
       }
     }
@@ -155,23 +164,9 @@ export default function ItineraryCard({
     return timeSlots;
   }
 
-  const handleViewDestinationDetail = (
-    id: string,
-    name: string,
-    address: string,
-    contactNumber: string,
-    openingHours: OpeningHour[],
-    images: Image[],
-  ) => {
+  const handleViewDestinationDetail = (id: string) => {
     push({
-      pathname: `/itinerary/destinationDetail/${id}`,
-      params: {
-        name: name,
-        address: address,
-        contactNumber: contactNumber,
-        openingHours: JSON.stringify(openingHours),
-        images: JSON.stringify(images),
-      },
+      pathname: `/traveler/trip/itinerary/destinationDetail/${id}`,
     });
   };
 
@@ -180,49 +175,52 @@ export default function ItineraryCard({
   return (
     <View>
       <DayExpenseCard
-        accommodationCost={accommodationCost}
-        attractionCost={attractionCost!}
-        foodCost={foodCost!}
-        transportationCost={transportationCost!}
+        accommodationCost={dailyItinerary.accommodationCost}
+        attractionCost={dailyItinerary.attractionCost}
+        foodCost={dailyItinerary.foodCost}
+        transportationCost={dailyItinerary.transportationCost}
         totalCost={
-          attractionCost! +
-          transportationCost! * taxisNeeded(adultCount, childCount) +
-          calculateAveragePrice(foodCost) +
-          accommodationCost
+          dailyItinerary.accommodationCost +
+          dailyItinerary.transportationCost +
+          calculateAveragePrice(dailyItinerary.foodCost) +
+          dailyItinerary.accommodationCost
         }
-        adultCount={adultCount}
-        childCount={childCount}
+        travelerCount={travelerCount}
       />
       <View className="flex-row" style={{ width: screenWidth }}>
         <DashedLine
           dashLength={4}
           dashThickness={2}
           dashGap={5}
-          dashColor="#FA8E56"
+          dashColor="#F65A82"
           dashStyle={{ borderRadius: 8 }}
           axis="vertical"
           style={{ marginLeft: 14, marginTop: 37 }}
         />
         <View>
-          <View className="flex-row">
-            <Location
-              height={30}
-              width={30}
-              style={{
-                position: 'absolute',
-                marginTop: 20,
-                marginLeft: -16,
-              }}
-            />
-            <StartingLocationCard locationName={departingLocation!} />
-          </View>
+          {!isAccommodationIncluded ? (
+            <View className="flex-row">
+              <Location
+                height={30}
+                width={30}
+                style={{
+                  position: 'absolute',
+                  marginTop: 20,
+                  marginLeft: -16,
+                }}
+              />
+              <StartingLocationCard locationName={startingLocation} />
+            </View>
+          ) : (
+            <></>
+          )}
           <FlatList
-            data={destinations}
+            data={dailyItinerary.dailyItineraryPois}
             renderItem={({ item, index }) => {
               return (
                 <View>
                   <View className="flex-row">
-                    {item.type === PlaceType.Attraction ? (
+                    {item.poi.isAttraction ? (
                       <Attraction
                         height={30}
                         width={30}
@@ -232,7 +230,7 @@ export default function ItineraryCard({
                           marginLeft: -16,
                         }}
                       />
-                    ) : item.type === PlaceType.Restaurant ? (
+                    ) : item.poi.restaurant ? (
                       <Restaurant
                         height={30}
                         width={30}
@@ -243,7 +241,7 @@ export default function ItineraryCard({
                         }}
                       />
                     ) : (
-                      <Accommodation
+                      <Location
                         height={30}
                         width={30}
                         style={{
@@ -255,39 +253,36 @@ export default function ItineraryCard({
                     )}
                     <DestinationCard
                       date={date}
-                      categoryType={item.type}
-                      itineraryId={itineraryId}
+                      accommodation={item.poi.accommodation}
+                      isAttraction={item.poi.isAttraction}
+                      categoryType={
+                        item.poi.isAttraction
+                          ? ExpenseCategory.Sightseeing
+                          : item.poi.restaurant
+                          ? ExpenseCategory.Food
+                          : ExpenseCategory.Accommodation
+                      }
+                      tripId={tripId}
                       timeSlot={
                         formatTime(
                           calculateTimeSlots()[index] as TimeSlot,
                         ) as TimeSlot
                       }
-                      title={item.name}
-                      price={item.price}
-                      imageList={item.images.map((image) => image.url)}
-                      onPress={() =>
-                        handleViewDestinationDetail(
-                          item.id,
-                          item.name,
-                          item.address,
-                          item.contactNumber ?? '',
-                          item.openingHours,
-                          item.images,
-                        )
-                      }
-                      adultCount={adultCount}
-                      childCount={childCount}
+                      title={item.poi.name}
+                      price={item.poi.price}
+                      imageList={item.poi.images.map((item) => item.image.url)}
+                      onPress={() => handleViewDestinationDetail(item.poi.id)}
+                      travelerCount={travelerCount}
                     />
                   </View>
-
-                  {index === travelDurations.length - 1 ? (
+                  {index === poiVisitDurations.length - 1 ? (
                     <></>
                   ) : (
                     <View className="mt-5 flex-row">
                       <DirectionCard
                         date={date}
                         categoryType={ExpenseCategory.Transportation}
-                        itineraryId={itineraryId}
+                        tripId={tripId}
                         icon={
                           <Driving
                             height={20}
@@ -295,19 +290,14 @@ export default function ItineraryCard({
                             style={{ marginLeft: 8 }}
                           />
                         }
-                        duration={`${getTravelDuration(
-                          travelDurations[index]!,
-                        )}`}
-                        distance={`${getTravelDistance(
-                          travelDistances[index]!,
-                        )} km`}
+                        duration={`${getTravelDuration(item.duration)}`}
+                        distance={`${getTravelDistance(item.distance)} km`}
                         isTransportationIncluded={isTransportationIncluded}
                         transportationPrice={`${calculateTravelExpense(
-                          travelDistances[index]!,
-                          travelDurations[index]!,
+                          item.distance,
+                          item.duration,
+                          travelerCount,
                         )}`}
-                        adultCount={adultCount}
-                        childCount={childCount}
                       />
                     </View>
                   )}

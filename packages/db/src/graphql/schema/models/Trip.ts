@@ -1,4 +1,4 @@
-import { nullable, objectType } from 'nexus';
+import { objectType } from 'nexus';
 
 import { TravelSize } from '../enum';
 
@@ -8,41 +8,42 @@ const Trip = objectType({
     t.int('id');
     t.string('title');
     t.float('budget');
-    t.nullable.field('destination', {
-      type: nullable('Destination'),
-      resolve: (parent, _, ctx) => {
-        return ctx.prisma.trip
-          .findUnique({ where: { id: parent.id } })
-          .destination();
-      },
-    });
-    t.nullable.field('departingLocation', {
-      type: nullable('DepartingLocation'),
-      resolve: (parent, _, ctx) => {
-        return ctx.prisma.trip
-          .findUnique({ where: { id: parent.id } })
-          .departingLocation();
-      },
-    });
-    t.nullable.field('itinerary', {
-      type: nullable('Itinerary'),
-      resolve: (parent, _, ctx) => {
-        return ctx.prisma.trip
-          .findUnique({ where: { id: parent.id } })
-          .itinerary();
-      },
-    });
     t.field('travelSize', { type: TravelSize });
-    t.nullable.int('adultCount');
-    t.nullable.int('childCount');
+    t.int('travelerCount');
     t.boolean('isAccommodationIncluded');
     t.boolean('isFoodIncluded');
     t.boolean('isTransportationIncluded');
-    t.field('preferredTime', { type: 'JSON' });
+    t.field('startingLocation', { type: 'JSON' });
+    t.field('timeSlots', { type: 'JSON' });
     t.field('startDate', { type: 'DateTime' });
     t.field('endDate', { type: 'DateTime' });
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
+    t.list.field('expenses', {
+      type: 'Expense',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.trip
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .expenses();
+      },
+    });
+    t.list.field('dailyItineraries', {
+      type: 'DailyItinerary',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.trip
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .daily_itineraries()
+          .then((item) => item.sort((a, b) => a.dayIndex - b.dayIndex));
+      },
+    });
   },
 });
 

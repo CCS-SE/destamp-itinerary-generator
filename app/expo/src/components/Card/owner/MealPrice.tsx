@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-const MealPrice = ({ price }: { price: number }) => {
+const MealPrice = ({ price }: { price: string }) => {
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: screenWidth * 0.85 }]}>
       <Text style={styles.title}>Average meal price per person</Text>
       <View style={styles.mealPriceBorder}>
         <Text>{price} PHP</Text>
@@ -14,14 +16,13 @@ const MealPrice = ({ price }: { price: number }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingLeft: 10,
-    marginTop: 10,
+    marginTop: 15,
   },
   title: {
-    margin: 10,
     fontSize: 18,
     fontFamily: 'Poppins',
     color: '#FC8040',
+    marginBottom: 10,
   },
   mealPriceBorder: {
     padding: 10,
@@ -29,7 +30,6 @@ const styles = StyleSheet.create({
     borderColor: '#ECB476',
     borderRadius: 10,
     width: 200,
-    marginLeft: 10,
     backgroundColor: 'white',
     elevation: 4,
   },

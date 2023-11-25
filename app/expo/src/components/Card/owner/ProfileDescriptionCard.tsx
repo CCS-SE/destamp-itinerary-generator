@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
 const ProfileDescription = ({
   businessName,
@@ -10,8 +10,10 @@ const ProfileDescription = ({
   businessAddress: string;
   description: string;
 }) => {
+  const screenWidth = Dimensions.get('window').width;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: screenWidth * 0.85 }]}>
       <View>
         <Text style={styles.businessName}>{businessName}</Text>
       </View>
@@ -30,29 +32,25 @@ const ProfileDescription = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: 322,
     backgroundColor: '#FDE4C8',
-    borderRadius: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 25,
-    paddingRight: 25,
+    borderRadius: 18,
+    padding: 18,
     marginTop: 25,
   },
   description: {
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: 'Poppins',
     color: 'black',
   },
   businessName: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: 'Poppins',
     color: 'black',
     fontWeight: 'bold',
   },
   businessAddress: {
     fontFamily: 'Poppins',
-    fontSize: 11,
+    fontSize: 12,
   },
 });
 

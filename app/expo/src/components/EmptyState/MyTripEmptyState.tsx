@@ -6,20 +6,21 @@ import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import { AuthContext } from '~/context/AuthProvider';
-import { GetTravelerInfoDocument } from '~/graphql/generated';
+import { GetUserInfoDocument } from '~/graphql/generated';
 import NoTripIcon from '../../../assets/images/empty-trip.svg';
 
 export default function MyTripEmptyState() {
-  const onPress = () => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    router.push('/trip/create/');
-  };
   const { user } = useContext(AuthContext);
-  const { data } = useQuery(GetTravelerInfoDocument, {
+  const { data } = useQuery(GetUserInfoDocument, {
     variables: {
       userId: user ? user.id : '',
     },
   });
+
+  const onPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push('/traveler/trip/create/');
+  };
 
   return (
     <View testID="my-trip-empty-state" className="flex-1 items-center bg-white">
@@ -27,9 +28,11 @@ export default function MyTripEmptyState() {
         <NoTripIcon height={300} width={500} />
       </View>
       <View className="text-center">
-        <Text className="font-poppins text-xl font-normal text-slate-700">
-          Welcome, {data?.traveler.firstName}!
-        </Text>
+        {data && (
+          <Text className="font-poppins text-xl font-normal text-slate-700">
+            Welcome, {data.user.firstName}!
+          </Text>
+        )}
       </View>
       <Text
         testID="empty-state-title"

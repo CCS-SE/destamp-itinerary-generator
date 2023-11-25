@@ -45,8 +45,6 @@ export const selectNextGeneration = (
     nextGeneration.push({
       chrom: new Chromosome(chrom1),
       fitnessScore: 0,
-      totalCost: 0,
-      totalDuration: 0,
       travelDuration: 0,
       travelExpenses: 0,
       travelDistances: [],
@@ -55,8 +53,6 @@ export const selectNextGeneration = (
     nextGeneration.push({
       chrom: new Chromosome(chrom2),
       fitnessScore: 0,
-      totalCost: 0,
-      totalDuration: 0,
       travelDuration: 0,
       travelExpenses: 0,
       travelDistances: [],

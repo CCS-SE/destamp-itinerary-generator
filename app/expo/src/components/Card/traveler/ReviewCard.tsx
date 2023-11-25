@@ -69,14 +69,14 @@ export default function ReviewCard({
   const handleEditHandler = (section: string) => {
     if (isPreference || isArray) {
       router.push({
-        pathname: '/trip/preference',
+        pathname: '/traveler/trip/preference',
         params: {
           section: section,
         },
       });
     } else {
       router.push({
-        pathname: '/trip/create',
+        pathname: '/traveler/trip/create',
         params: {
           section: section,
         },

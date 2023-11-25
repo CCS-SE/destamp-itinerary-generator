@@ -43,6 +43,3 @@ yarn-error.log*
 
 # turbo
 .turbo
-
-# Custom ignore
-app/expo/src/app/_layout.tsx

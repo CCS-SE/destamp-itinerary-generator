@@ -5,7 +5,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 import { ExpenseCategory } from '~/graphql/generated';
-import { taxisNeeded } from '~/utils/utils';
 
 interface DirectionCardProps {
   icon: ReactNode;
@@ -13,11 +12,9 @@ interface DirectionCardProps {
   distance: string;
   transportationPrice: string;
   isTransportationIncluded: boolean;
-  itineraryId: number;
+  tripId: number;
   date: Date;
   categoryType: ExpenseCategory;
-  adultCount: number;
-  childCount: number;
 }
 
 export default function DirectionCard({
@@ -26,11 +23,9 @@ export default function DirectionCard({
   distance,
   transportationPrice,
   isTransportationIncluded,
-  itineraryId,
+  tripId,
   date,
   categoryType,
-  adultCount,
-  childCount,
 }: DirectionCardProps) {
   const [addExpenseModal, setAddExpenseModal] = useState(false);
   const screenWidth = Dimensions.get('window').width;
@@ -47,15 +42,19 @@ export default function DirectionCard({
         </Text>
         {isTransportationIncluded ? (
           <View className="mr-3 rounded-md bg-orange-100 px-2">
-            <Text className="font-poppins text-sm text-orange-600">
-              {`₱${transportationPrice}`}
-            </Text>
+            {transportationPrice !== '0' ? (
+              <Text className="font-poppins text-sm text-orange-600">
+                {`₱${transportationPrice}`}
+              </Text>
+            ) : (
+              <></>
+            )}
           </View>
         ) : (
           <></>
         )}
       </View>
-      {isTransportationIncluded && (
+      {isTransportationIncluded && parseFloat(distance) > 1 && (
         <TouchableOpacity onPress={() => setAddExpenseModal(true)}>
           <MaterialCommunityIcons name="cash-plus" size={24} color="#989FB0" />
         </TouchableOpacity>
@@ -65,14 +64,11 @@ export default function DirectionCard({
         onClose={() => setAddExpenseModal(false)}
       >
         <AddSpendingForm
-          itineraryId={itineraryId}
+          tripId={tripId}
           closeModal={() => setAddExpenseModal(false)}
           minDate={date}
           maxDate={date}
-          amount={(
-            parseFloat(transportationPrice) *
-            taxisNeeded(adultCount, childCount)
-          ).toFixed(2)}
+          amount={parseFloat(transportationPrice).toFixed(2)}
           categoryType={categoryType}
         />
       </BottomHalfModal>

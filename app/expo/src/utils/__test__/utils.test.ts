@@ -1,4 +1,4 @@
-import { getTripDateFormat, tripDuration } from '../dates';
+import { getTripDateFormat, tripDuration } from '../utils';
 
 describe('getTripDateFormat', () => {
   it('should format date', () => {
