@@ -1,57 +1,86 @@
 import React from 'react';
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+import { separateWords } from '~/utils/utils';
 
 const ProfileDescription = ({
   businessName,
+  businessCategories,
   businessAddress,
-  description,
+  businessContactNumber,
+  businessDescription,
 }: {
   businessName: string;
+  businessCategories: string[];
   businessAddress: string;
-  description: string;
+  businessContactNumber: string;
+  businessDescription: string;
 }) => {
   const screenWidth = Dimensions.get('window').width;
 
-  return (
-    <View style={[styles.container, { width: screenWidth * 0.85 }]}>
-      <View>
-        <Text style={styles.businessName}>{businessName}</Text>
+  const displayCategories = (items: string[]) => {
+    return (
+      <View className="mt-1 flex-row flex-wrap">
+        {items.map((item, i) => (
+          <View
+            className="my-0.5 mr-1.5 flex-row rounded-lg border border-pink-300 px-1.5"
+            key={i}
+          >
+            <Text className="font-poppins-medium text-[12px] text-pink-600 ">
+              {separateWords(item)}
+            </Text>
+          </View>
+        ))}
       </View>
-      <View>
-        <Text style={styles.businessAddress}>
+    );
+  };
+
+  return (
+    <View style={[{ width: screenWidth * 0.9 }]}>
+      <Text
+        className="mt-4 font-poppins-medium text-xl text-gray-800"
+        numberOfLines={3}
+      >
+        {businessName}
+      </Text>
+      <View>{displayCategories(businessCategories)}</View>
+      <View className="mt-4 flex-row items-center">
+        <Ionicons
+          name="md-location-outline"
+          size={16}
+          color="#676464"
+          style={{ marginLeft: -3, alignSelf: 'baseline' }}
+        />
+        <Text
+          className="ml-1 font-poppins text-sm text-gray-500"
+          numberOfLines={3}
+        >
           {businessAddress}
-          {'\n'}
         </Text>
       </View>
-      <View>
-        <Text style={styles.description}>{description}</Text>
-      </View>
+      {businessContactNumber ? (
+        <View className=" flex-row items-center">
+          <Ionicons name="ios-call-outline" size={15} color="#676464" />
+          <Text className="ml-1 font-poppins text-base text-gray-500">
+            {businessContactNumber}
+          </Text>
+        </View>
+      ) : (
+        <></>
+      )}
+      {businessDescription ? (
+        <Text
+          className="mt-4 font-poppins text-sm text-gray-500"
+          numberOfLines={5}
+        >
+          {businessDescription}
+        </Text>
+      ) : (
+        <></>
+      )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FDE4C8',
-    borderRadius: 18,
-    padding: 18,
-    marginTop: 25,
-  },
-  description: {
-    fontSize: 12,
-    fontFamily: 'Poppins',
-    color: 'black',
-  },
-  businessName: {
-    fontSize: 16,
-    fontFamily: 'Poppins',
-    color: 'black',
-    fontWeight: 'bold',
-  },
-  businessAddress: {
-    fontFamily: 'Poppins',
-    fontSize: 12,
-  },
-});
 
 export default ProfileDescription;

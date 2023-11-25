@@ -1,30 +1,52 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Stack } from 'expo-router';
+import React, { useCallback, useState } from 'react';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import Swiper from 'react-native-swiper';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
+import { Model } from 'react-model';
 
-import ContactInformation from '~/components/Card/owner/ContactInfoCard';
-import EstablishmentCategory from '~/components/Card/owner/EstablishmentCategoryCard';
-import ImageCollections from '~/components/Card/owner/ImageCollections';
-import MealPrice from '~/components/Card/owner/MealPrice';
+import OperatingHourCard from '~/components/Card/owner/OperatingHoursCard';
 import ProfileDescription from '~/components/Card/owner/ProfileDescriptionCard';
-import WorkingHours from '~/components/Card/owner/WorkingHoursCard';
-import { GetBusinessInformationDocument } from '~/graphql/generated';
+import BusinessDetailScreenSkeleton from '~/components/Skeleton/BusinessDetailSkeleton';
+import {
+  createSlideSchema,
+  ImageSlider,
+} from '~/components/Slider/ImageSlider';
+import { GetBusinessDetailsDocument } from '~/graphql/generated';
 
 const BusinessProfile = () => {
-  const { loading, error, data } = useQuery(GetBusinessInformationDocument, {
+  const { id, imageList } = useLocalSearchParams();
+
+  const cardWidth = Dimensions.get('window').width * 0.9;
+
+  const { loading, error, data } = useQuery(GetBusinessDetailsDocument, {
     variables: {
-      placeId: 'ChIJafobTxjlrjMRmv5QKj6xO4o', // ${businessIndex} Use the index to fetch business data
+      poiId: id as string,
     },
   });
+
+  const [{ useStore }] = useState(() =>
+    Model(createSlideSchema(JSON.parse(imageList as string))),
+  );
+  const [state, actions] = useStore();
+
+  const loadHandle = useCallback((i: number) => {
+    actions.loaded(i);
+  }, []);
 
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
 
-  if (loading) {
-    // create loading skeleton here
-    return <Text>Loading...</Text>;
+  if (loading && !data) {
+    return (
+      <View
+        className="flex-1 items-center bg-white"
+        testID="business-detail-loading"
+      >
+        <BusinessDetailScreenSkeleton />
+      </View>
+    );
   }
 
   return (
@@ -34,7 +56,7 @@ const BusinessProfile = () => {
           title: 'Business Profile',
           headerBackTitleVisible: false,
           headerTitleStyle: {
-            fontSize: 23,
+            fontSize: 22,
             fontFamily: 'Poppins',
           },
         }}
@@ -42,24 +64,95 @@ const BusinessProfile = () => {
       <ScrollView>
         {data && (
           <View className="items-center">
-            <ProfileDescription
-              businessName={data.place.name}
-              businessAddress={data.place.address}
-              description={data.place.description || ''}
-            />
-            <ContactInformation
-              contactNumber={data.place.contactNumber || ''}
-            />
-            <EstablishmentCategory
-              type={data.place.type}
-              mainCategory={data.place.categories[0]?.name}
-              tags={data.place.categories.map(
-                (category: { name: string }) => category.name,
+            <View className="h-80">
+              <Swiper
+                loadMinimal
+                loadMinimalSize={2}
+                loop={true}
+                activeDotColor="white"
+              >
+                {state.imgList.map((item, i) => (
+                  <ImageSlider
+                    loadHandle={loadHandle}
+                    uri={item}
+                    i={i}
+                    key={i}
+                    loaded={state.loadQueue[i]}
+                  />
+                ))}
+              </Swiper>
+              {data.poi.price !== '0' ? (
+                <View className="absolute bottom-3 right-2 w-auto items-center rounded-xl bg-pink-100 px-3.5 py-1.5 shadow-md">
+                  <Text className="font-poppins-semibold text-lg text-[#DE4D6C] ">
+                    ₱{data.poi.price}
+                  </Text>
+                </View>
+              ) : (
+                <></>
               )}
+            </View>
+            <ProfileDescription
+              businessName={data.poi.name}
+              businessCategories={data.poi.categories.map((item) => item.name)}
+              businessAddress={data.poi.address}
+              businessContactNumber={data.poi.contactNumber}
+              businessDescription={data.poi.description || ''}
             />
-            <WorkingHours openingHours={data.place.openingHours} />
-            <ImageCollections key="images" images={data.place.images} />
-            <MealPrice price={data.place.price} />
+            {!data.poi.accommodation ? (
+              <OperatingHourCard operatingHours={data.poi.operatingHours} />
+            ) : (
+              <></>
+            )}
+            {data.poi.restaurant ? (
+              <View
+                className="flex columns-2 "
+                style={{
+                  width: cardWidth,
+                }}
+              >
+                <Text className="mb-2 mt-3 text-lg text-gray-600">
+                  Amenities
+                </Text>
+                <View className="flex flex-row flex-wrap">
+                  {data.poi.restaurant.atmospheres.map((atmosphere) => (
+                    <Text
+                      className="font-poppins text-gray-600"
+                      key={atmosphere}
+                      style={{ width: '50%' }}
+                    >
+                      • {atmosphere}
+                    </Text>
+                  ))}
+                </View>
+              </View>
+            ) : (
+              <></>
+            )}
+            {data.poi.accommodation ? (
+              <View
+                className="flex columns-2 "
+                style={{
+                  width: cardWidth,
+                }}
+              >
+                <Text className="mb-2 mt-3 text-lg text-gray-600">
+                  Amenities
+                </Text>
+                <View className="flex flex-row flex-wrap">
+                  {data.poi.accommodation.amenities.map((amenity) => (
+                    <Text
+                      className="font-poppins text-gray-600"
+                      key={amenity.name}
+                      style={{ width: '50%' }}
+                    >
+                      • {amenity.name}
+                    </Text>
+                  ))}
+                </View>
+              </View>
+            ) : (
+              <></>
+            )}
           </View>
         )}
       </ScrollView>
