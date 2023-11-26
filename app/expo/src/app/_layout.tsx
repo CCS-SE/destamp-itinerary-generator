@@ -32,7 +32,7 @@ const client = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          travelerTrips: {
+          trips: {
             merge(_, incoming) {
               return incoming;
             },
@@ -89,8 +89,15 @@ function RootLayoutNav() {
             <ApolloProvider client={client}>
               <Stack>
                 <Stack.Screen
-                  name="businessProfile/businessList"
-                  options={{ title: 'My Business' }}
+                  name="business/index"
+                  options={{
+                    title: 'My Business',
+                    headerTitleStyle: {
+                      fontSize: 25,
+                      fontFamily: 'Poppins',
+                    },
+                    headerBackVisible: false,
+                  }}
                 />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
