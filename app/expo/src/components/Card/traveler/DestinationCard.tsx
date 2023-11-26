@@ -1,31 +1,18 @@
 import { useCallback, useState } from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { Image } from 'expo-image';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import {
+  createSlideSchema,
+  ImageSlider,
+} from '~/components/Slider/ImageSlider';
 import { ExpenseCategory } from '~/graphql/generated';
 import { calculateAveragePrice } from '~/utils/utils';
 import Person from '../../../../assets/images/person.svg';
-
-interface SlideStateProps {
-  imgList: string[];
-  loadQueue: number[];
-}
-
-interface SlideActionsProps {
-  loaded: number;
-}
-
-interface SlideProps {
-  uri: string;
-  loadHandle: (i: number) => void;
-  i: number;
-  loaded: number | undefined;
-}
 
 interface TimeSlot {
   start: string;
@@ -73,9 +60,9 @@ export default function DestinationCard({
 
   const screenWidth = Dimensions.get('window').width;
   return (
-    <View className="rounded-2x mt-5 w-[360] flex-row ">
+    <View className="mt-5 w-[360] flex-row rounded-2xl ">
       <View
-        className="rounded-2x mx-7 mr-2 h-[200] pr-3"
+        className="mx-7 mr-2 h-[200] rounded-2xl pr-3"
         style={{ width: screenWidth / 1.26 }}
       >
         <Swiper
@@ -85,7 +72,7 @@ export default function DestinationCard({
           activeDotColor="#FC8040"
         >
           {state.imgList.map((item, i) => (
-            <Slide
+            <ImageSlider
               loadHandle={loadHandle}
               uri={item}
               i={i}
@@ -160,41 +147,6 @@ export default function DestinationCard({
     </View>
   );
 }
-
-const Slide = ({ uri, loadHandle, i }: SlideProps) => {
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
-  return (
-    <View className="flex-1 justify-center rounded-2xl bg-transparent">
-      <Image
-        className="flex-1 rounded-2xl bg-transparent"
-        onLoad={() => {
-          loadHandle(i);
-        }}
-        source={{ uri: uri }}
-        contentFit="cover"
-        placeholder={blurhash}
-        transition={1_800}
-      />
-    </View>
-  );
-};
-
-const createSlideSchema = (imageList: string[]) =>
-  ({
-    state: {
-      imgList: imageList || [],
-      loadQueue: new Array(imageList.length).fill(0),
-    },
-    actions: {
-      loaded: (index) => {
-        return (state) => {
-          state.loadQueue[index] = 1;
-        };
-      },
-    },
-  }) as ModelType<SlideStateProps, SlideActionsProps>;
 
 interface PriceTagProps {
   price: string;

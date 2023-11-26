@@ -9,6 +9,7 @@ import { useQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
+import DestinationDetailSkeleton from '~/components/Skeleton/DestinationDetailSkeleton';
 import { GetDailyItineraryPoiDetailsDocument } from '~/graphql/generated';
 import Back from '../../../../../../assets/images/back-icon.svg';
 
@@ -47,7 +48,7 @@ const days: Record<DayValue, Day> = {
 };
 
 export default function DestinationDetailScreen() {
-  const { id } = useLocalSearchParams();
+  const { id, imageList } = useLocalSearchParams();
 
   const { error, loading, data } = useQuery(
     GetDailyItineraryPoiDetailsDocument,
@@ -58,9 +59,9 @@ export default function DestinationDetailScreen() {
     },
   );
 
-  const imageList = data ? data?.poi.images.map((item) => item.image.url) : [];
-
-  const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
+  const [{ useStore }] = useState(() =>
+    Model(createSlideSchema(JSON.parse(imageList as string))),
+  );
   const [state, actions] = useStore();
 
   const screenWidth = Dimensions.get('window').width;
@@ -100,7 +101,11 @@ export default function DestinationDetailScreen() {
   }
 
   if (loading && !data) {
-    return <View className="flex-1 items-center"></View>;
+    return (
+      <View className="flex-1 items-center">
+        <DestinationDetailSkeleton />
+      </View>
+    );
   }
 
   return (
@@ -117,7 +122,7 @@ export default function DestinationDetailScreen() {
             activeDotColor="white"
           >
             {state.imgList.map((item, i) => (
-              <Slide
+              <ImageSlider
                 loadHandle={loadHandle}
                 uri={item}
                 i={i}
@@ -231,7 +236,7 @@ export default function DestinationDetailScreen() {
   );
 }
 
-const Slide = ({ uri, loadHandle, i }: SlideProps) => {
+export const ImageSlider = ({ uri, loadHandle, i }: SlideProps) => {
   const blurhash =
     '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
@@ -251,7 +256,7 @@ const Slide = ({ uri, loadHandle, i }: SlideProps) => {
   );
 };
 
-const createSlideSchema = (imageList: string[]) =>
+export const createSlideSchema = (imageList: string[]) =>
   ({
     state: {
       imgList: imageList || [],

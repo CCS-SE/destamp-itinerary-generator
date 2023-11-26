@@ -5,7 +5,7 @@ import { useMutation } from '@apollo/client';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
-import { DeleteTripDocument, GetUserTripsDocument } from '~/graphql/generated';
+import { DeleteTripDocument, GetTripsDocument } from '~/graphql/generated';
 import { confirmationAlert } from '~/utils/utils';
 import TripMenuItem from './TripMenuItem';
 
@@ -38,7 +38,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
     await deleteTrip({
       refetchQueries: [
         {
-          query: GetUserTripsDocument,
+          query: GetTripsDocument,
           variables: {
             userId: user ? user.id : '',
           },
