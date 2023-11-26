@@ -1,18 +1,15 @@
 import React, { useState } from 'react';
-import {
-  FlatList,
-  Modal,
-  Switch,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { gql, useQuery } from '@apollo/client';
 
 import Questions from '~/components/BusinessOperator/Question';
-import CustomButtom from '~/components/Button/CustomButtom';
+import BasicButton from '~/components/Button/BasicButton';
+import CustomButton from '~/components/Button/CustomButtom';
+import Tag from '~/components/Container/Tag';
+import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import CreateBusinessHeader from '.';
 
 interface Category {
   id: string;
@@ -61,82 +58,157 @@ const EstablishmentType = () => {
 
   return (
     <View style={{ alignItems: 'center' }}>
+      <CreateBusinessHeader />
       <SafeAreaView>
         <Questions question={'What type of place is this?'} />
-        <CustomButtom
+        <CustomButton
           content={'Accommodation'}
           height={50}
           width={300}
+          buttonColor={'white'}
+          buttonBorderColor={'transparent'}
           onClickColor={'#EB4586'}
+          hasShadow={true}
+          textSize={15}
+          textColor="black"
+          onPressTextColor="white"
+          onPress={() => {
+            console.log('Not yet implemented');
+          }}
         />
-        <CustomButtom
+        <CustomButton
           content={'Attraction'}
           height={50}
           width={300}
+          buttonColor={'white'}
+          buttonBorderColor={'transparent'}
           onClickColor={'#EB4586'}
+          hasShadow={true}
+          textSize={15}
+          textColor="black"
+          onPressTextColor="white"
+          onPress={() => {
+            console.log('Not yet implemented');
+          }}
         />
-        <CustomButtom
+        <CustomButton
           content={'Restaurant'}
           height={50}
           width={300}
+          buttonColor={'white'}
+          buttonBorderColor={'transparent'}
           onClickColor={'#EB4586'}
+          hasShadow={true}
+          textSize={15}
+          textColor="black"
+          onPressTextColor="white"
+          onPress={() => {
+            console.log('Not yet implemented');
+          }}
+        />
+        <Questions question={'Select Category'} />
+
+        <CustomButton
+          content={'Select Category'}
+          height={30}
+          width={160}
+          buttonColor={'#FFBD59'}
+          buttonBorderColor={'transparent'}
+          onClickColor={'#FFBD59'}
+          hasShadow={true}
+          textSize={15}
+          textColor={'white'}
+          onPressTextColor={'white'}
+          onPress={toggleModal}
         />
 
-        <Questions question={'Select Category'} />
-        <TouchableWithoutFeedback onPress={toggleModal}>
-          <View
-            style={{
-              height: 300,
-              width: 300,
-              borderWidth: 1,
-              borderColor: '#5A5A5A',
-              borderRadius: 10,
-              padding: 10,
-              margin: 10,
-            }}
-          >
-            {selectedCategories.map((category) => (
+        <View
+          style={{
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            margin: 5,
+          }}
+        >
+          {selectedCategories.map((category) => (
+            <Tag
+              key={category.id}
+              content={category.name}
+              tagColor={'#EB4586'}
+              textSize={13}
+              fontColor="white"
+              closeButton={() => {
+                const updatedCategories = selectedCategories.filter(
+                  (cat) => cat.id !== category.id,
+                );
+                setSelectedCategories(updatedCategories);
+              }}
+            />
+          ))}
+        </View>
+        <BottomHalfModal isVisible={isModalVisible} onClose={handleModalClose}>
+          <FlatList
+            data={data?.categories || []}
+            numColumns={3}
+            contentContainerStyle={{ paddingVertical: 10 }}
+            renderItem={({ item }) => (
               <View
-                key={category.id}
                 style={{
+                  width: 100,
+                  flex: 1,
                   flexDirection: 'row',
                   alignItems: 'center',
-                  margin: 5,
+                  margin: 3,
                 }}
               >
-                <Text>{category.name}</Text>
-              </View>
-            ))}
-            <Text>Press to select category</Text>
-          </View>
-        </TouchableWithoutFeedback>
-
-        <Modal visible={isModalVisible} animationType="slide">
-          <View>
-            <FlatList
-              data={data?.categories || []}
-              renderItem={({ item }) => (
-                <View
+                <TouchableOpacity
+                  onPress={() => handleCategoryToggle(item)}
                   style={{
-                    flexDirection: 'row',
+                    width: 24,
+                    height: 24,
+                    borderRadius: 12,
+                    borderWidth: 2,
+                    borderColor: selectedCategories.some(
+                      (cat) => cat.id === item.id,
+                    )
+                      ? '#EB4586' // Selected color
+                      : '#5A5A5A', // Unselected color
+                    marginRight: 10,
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    margin: 5,
                   }}
                 >
-                  <Switch
-                    value={selectedCategories.some((cat) => cat.id === item.id)}
-                    onValueChange={() => handleCategoryToggle(item)}
-                  />
-                  <Text>{item.name}</Text>
-                </View>
-              )}
-              keyExtractor={(item) => item.id.toString()}
-            />
-            <TouchableOpacity onPress={handleModalClose}>
-              <Text>Close Modal</Text>
-            </TouchableOpacity>
-          </View>
-        </Modal>
+                  {selectedCategories.some((cat) => cat.id === item.id) && (
+                    <View
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 8,
+                        backgroundColor: '#EB4586',
+                      }}
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins',
+                    width: 70,
+                    fontSize: 10,
+                  }}
+                >
+                  {item.name}
+                </Text>
+              </View>
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </BottomHalfModal>
+        <BasicButton
+          title={'Next'}
+          onPress={() => {
+            router.push('/businessProfile/create/openingHours');
+          }}
+        />
       </SafeAreaView>
     </View>
   );

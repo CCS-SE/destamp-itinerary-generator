@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { SwipeListView } from 'react-native-swipe-list-view';
+import { router } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import BusinessHourSelector from '~/components/BusinessOperator/BusinessHourSelector';
 import Questions from '~/components/BusinessOperator/Question';
 import TimePicker from '~/components/BusinessOperator/TimeDurationPicker';
 import BasicButton from '~/components/Button/BasicButton';
+import CreateBusinessHeader from '.';
 
 const BusinessOpeningHours = () => {
   const [businessHours, setBusinessHours] = useState([{ key: 1 }]);
@@ -25,33 +27,11 @@ const BusinessOpeningHours = () => {
     setBusinessHours(updatedBusinessHours);
   };
 
-  const renderBusinessHour = () => (
-    <View style={{ backgroundColor: 'white', height: 160, marginBottom: 10 }}>
+  const renderBusinessHour = (item: { key: number }) => (
+    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <BusinessHourSelector />
-    </View>
-  );
-
-  const renderHiddenItem = ({ item }: { item: { key: number } }) => (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-        marginBottom: 10,
-      }}
-    >
-      <TouchableOpacity
-        style={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 75,
-          height: '100%',
-          backgroundColor: 'red',
-        }}
-        onPress={() => deleteBusinessHour(item.key)}
-      >
-        <Text style={{ color: '#FFF' }}>Delete</Text>
+      <TouchableOpacity onPress={() => deleteBusinessHour(item.key)}>
+        <MaterialIcons name="delete" size={24} color="gray" />
       </TouchableOpacity>
     </View>
   );
@@ -61,23 +41,42 @@ const BusinessOpeningHours = () => {
       style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between' }}
     >
       <SafeAreaView>
-        <Questions question={'Opening Hours'} />
-        <SwipeListView
-          data={businessHours}
-          keyExtractor={(item) => item.key.toString()}
-          renderItem={renderBusinessHour}
-          renderHiddenItem={renderHiddenItem}
-          rightOpenValue={-75}
-        />
-        <BasicButton title={'Add Business Hour'} onPress={addBusinessHour} />
-        <Questions question={'Recommended Visit Duration'} />
-        <TimePicker />
-        <BasicButton
-          title={'Next'}
-          onPress={() => {
-            // Handle the "Next" button press
-          }}
-        />
+        <CreateBusinessHeader />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Questions question={'Opening Hours'} />
+          <TouchableOpacity onPress={addBusinessHour}>
+            <Text>
+              {' '}
+              <MaterialIcons
+                name="add-circle-outline"
+                size={24}
+                color="orange"
+              />
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {businessHours.map((item) => (
+          <View
+            key={item.key}
+            style={{
+              backgroundColor: 'transparent',
+              height: 140,
+              marginBottom: 5,
+            }}
+          >
+            {renderBusinessHour(item)}
+          </View>
+        ))}
+        <View style={{ marginTop: 20 }}>
+          <Questions question={'Recommended Visit Duration'} />
+          <TimePicker />
+          <BasicButton
+            title={'Next'}
+            onPress={() => {
+              router.push('/businessProfile/create/priceRange');
+            }}
+          />
+        </View>
       </SafeAreaView>
     </View>
   );

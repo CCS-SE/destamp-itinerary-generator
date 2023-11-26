@@ -1,14 +1,23 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 import CustomContainer from '~/components/Container/CustomContainer';
+import CreateBusinessHeader from '.';
 
 const BusinessBasicInformation = () => {
+  // const [businessName, setBusinessName] = useState('');
+  // const [description, setDescription] = useState('');
+  // const [phoneNumber, setPhoneNumber] = useState('');
+  // const [province, setProvince] = useState('');
+  // const [city, setCity] = useState('');
+  // const [streetAddress, setStreetAddress] = useState('');
   return (
     <View style={{ alignItems: 'center' }}>
+      <CreateBusinessHeader />
       <SafeAreaView>
         <Question question={'About'} />
         <CustomContainer
@@ -32,8 +41,8 @@ const BusinessBasicInformation = () => {
 
         <BasicButton
           title={'Next'}
-          onPress={function (): void {
-            throw new Error('Function not implemented.');
+          onPress={() => {
+            router.push('/businessProfile/create/establishmentType');
           }}
         />
       </SafeAreaView>
