@@ -5,26 +5,12 @@ const CustomButton = ({
   content,
   height,
   width,
-  buttonColor,
-  buttonBorderColor,
   onClickColor,
-  textSize,
-  textColor,
-  onPressTextColor,
-  hasShadow,
-  onPress,
 }: {
   content: string;
   height: number;
   width: number;
-  buttonColor: string;
-  buttonBorderColor: string;
   onClickColor: string;
-  textSize: number;
-  textColor: string;
-  onPressTextColor: string;
-  hasShadow?: boolean;
-  onPress: () => void;
 }) => {
   const [isClicked, setIsClicked] = useState(false);
 
@@ -32,45 +18,27 @@ const CustomButton = ({
     setIsClicked(!isClicked);
   };
 
-  const shadowStyle = hasShadow
-    ? {
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-      }
-    : {};
-
   return (
-    <TouchableOpacity
-      onPress={() => {
-        onPress();
-        handlePress();
-      }}
-    >
+    <TouchableOpacity onPress={handlePress}>
       <View
         style={{
           borderWidth: 1,
           borderRadius: 10,
+          padding: 10,
           margin: 10,
-          justifyContent: 'center',
-          borderColor: isClicked ? onClickColor : buttonBorderColor,
-          backgroundColor: isClicked ? onClickColor : buttonColor, // Change background color on click
+          alignContent: 'center',
+          borderColor: isClicked ? onClickColor : '#5A5A5A',
+          backgroundColor: isClicked ? onClickColor : '#FFFFFF', // Change background color on click
           height,
           width,
-          ...shadowStyle,
         }}
       >
         <Text
           style={{
             textAlign: 'center',
             fontFamily: 'Poppins',
-            fontSize: textSize,
-            color: isClicked ? onPressTextColor : textColor, // Change font color on click
+            fontSize: 15,
+            color: isClicked ? '#FFFFFF' : '#000000', // Change font color on click
           }}
         >
           {content}
