@@ -20,7 +20,14 @@ const User = objectType({
               id: id,
             },
           })
-          .trips();
+          .trips()
+          .then((items) =>
+            items.sort(
+              (a, b) =>
+                new Date(a.startDate).getTime() -
+                new Date(b.startDate).getTime(),
+            ),
+          );
       },
     });
     t.list.field('pois', {
