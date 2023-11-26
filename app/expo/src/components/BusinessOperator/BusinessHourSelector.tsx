@@ -56,93 +56,106 @@ const BusinessHourSelector = () => {
   ];
 
   return (
-    <View>
+    <View style={{ margin: 15 }}>
       <ModalSelector
         data={daysOfWeek}
         initValue={startDay || 'Select Day'}
         onChange={handleStartDayChange}
         style={{ borderColor: 'pink' }}
       />
-
-      <TouchableWithoutFeedback
-        onPress={() => setShowStartPicker(!showStartPicker)}
-      >
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: 'black',
-            borderRadius: 10,
-            padding: 10,
-            marginTop: 10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
+      <View style={{ flexDirection: 'row' }}>
+        <TouchableWithoutFeedback
+          onPress={() => setShowStartPicker(!showStartPicker)}
         >
-          <Text style={{ fontFamily: 'Poppins', fontSize: 15 }}>
-            {' '}
-            <MaterialCommunityIcons
-              name="clock-edit-outline"
-              size={24}
-              color="black"
-            />{' '}
-            OPENING HOUR:
-          </Text>
-          <Text style={{ fontFamily: 'Poppins', fontSize: 15, color: 'green' }}>
-            {formatTime(startHour)}
-          </Text>
-        </View>
-      </TouchableWithoutFeedback>
+          <View style={{ padding: 10 }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
+              OPENING HOUR:
+            </Text>
+            <View
+              style={{
+                borderWidth: 1,
+                borderColor: 'black',
+                borderRadius: 10,
+                padding: 7,
+                justifyContent: 'space-between',
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  fontSize: 15,
+                  color: 'green',
+                }}
+              >
+                {' '}
+                <MaterialCommunityIcons
+                  name="clock-edit-outline"
+                  size={24}
+                  color="black"
+                />
+                {' \t'}
+                {formatTime(startHour)}
+              </Text>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
 
-      {showStartPicker && (
-        <View>
-          <DateTimePicker
-            mode="time"
-            value={startHour}
-            onChange={handleStartChange}
-          />
-        </View>
-      )}
+        {showStartPicker && (
+          <View>
+            <DateTimePicker
+              mode="time"
+              value={startHour}
+              onChange={handleStartChange}
+            />
+          </View>
+        )}
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableWithoutFeedback
+            onPress={() => setShowEndPicker(!showEndPicker)}
+          >
+            <View style={{ padding: 10 }}>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
+                CLOSING HOUR:
+              </Text>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'black',
+                  borderRadius: 10,
+                  padding: 7,
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: 'Poppins',
+                    fontSize: 15,
+                    color: 'green',
+                  }}
+                >
+                  {' '}
+                  <MaterialCommunityIcons
+                    name="clock-edit-outline"
+                    size={24}
+                    color="black"
+                  />
+                  {' \t'}
+                  {formatTime(endHour)}
+                </Text>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
 
-      <TouchableWithoutFeedback
-        onPress={() => setShowEndPicker(!showEndPicker)}
-      >
-        <View
-          style={{
-            borderWidth: 1,
-            borderColor: 'black',
-            borderRadius: 10,
-            padding: 10,
-            marginTop: 10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Text style={{ fontFamily: 'Poppins', fontSize: 15 }}>
-            {' '}
-            <MaterialCommunityIcons
-              name="clock-edit-outline"
-              size={24}
-              color="black"
-            />{' '}
-            CLOSING HOUR: {'\t \t '}
-          </Text>
-          <Text style={{ fontFamily: 'Poppins', fontSize: 15, color: 'green' }}>
-            {formatTime(startHour)}
-          </Text>
+          {showEndPicker && (
+            <View>
+              <DateTimePicker
+                mode="time"
+                value={endHour}
+                onChange={handleEndChange}
+              />
+            </View>
+          )}
         </View>
-      </TouchableWithoutFeedback>
-
-      {showEndPicker && (
-        <View>
-          <DateTimePicker
-            mode="time"
-            value={endHour}
-            onChange={handleEndChange}
-          />
-        </View>
-      )}
+      </View>
     </View>
   );
 };
