@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
+import { blurhash } from '~/app/constant/constant';
 import {
   amountFormatter,
   getTripDateFormat,
@@ -42,9 +43,6 @@ function TripCard({
   };
 
   const cardWidth = Dimensions.get('window').width * 0.9;
-
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
 
   const daysDifference = tripDuration(startDate, endDate);
 

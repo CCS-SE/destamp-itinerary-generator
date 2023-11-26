@@ -5,6 +5,7 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 
+import { blurhash } from '~/app/constant/constant';
 import BusinessMenuList from '~/components/Menu/BusinessMenu/BusinessMenuList';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 
@@ -37,10 +38,7 @@ function BusinessCard({
     });
   };
 
-  const cardWidth = Dimensions.get('window').width * 0.85;
-
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
+  const cardWidth = Dimensions.get('window').width * 0.88;
 
   return (
     <View className="mt-9" testID="business-card">
@@ -101,7 +99,6 @@ function BusinessCard({
           </View>
         </View>
       </TouchableOpacity>
-      {/* <Link href={`/business/profile/${businessId}`}> */}
     </View>
   );
 }

@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 import { Model } from 'react-model';
 
@@ -13,6 +14,7 @@ import {
   ImageSlider,
 } from '~/components/Slider/ImageSlider';
 import { GetBusinessDetailsDocument } from '~/graphql/generated';
+import Back from '../../../../assets/images/back-icon.svg';
 
 const BusinessProfile = () => {
   const { id, imageList } = useLocalSearchParams();
@@ -34,6 +36,8 @@ const BusinessProfile = () => {
     actions.loaded(i);
   }, []);
 
+  const handleBack = () => router.back();
+
   if (error) {
     return <Text>Error: {error.message}</Text>;
   }
@@ -53,18 +57,27 @@ const BusinessProfile = () => {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: 'Business Profile',
-          headerBackTitleVisible: false,
-          headerTitleStyle: {
-            fontSize: 22,
-            fontFamily: 'Poppins',
-          },
+          headerShown: false,
         }}
       />
       <ScrollView>
         {data && (
           <View className="items-center">
             <View className="h-80">
+              <View
+                className="absolute left-0 top-10 z-10 mx-4 flex-row items-center justify-between"
+                style={{ width: cardWidth }}
+              >
+                <Back height={43} width={43} onPress={handleBack} />
+                <TouchableOpacity
+                  className="-mr-3 rounded-xl  bg-gray-300"
+                  activeOpacity={0.9}
+                >
+                  <Text className="px-5 py-1.5 font-poppins-medium text-base text-slate-700">
+                    Edit
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <Swiper
                 loadMinimal
                 loadMinimalSize={2}
@@ -111,7 +124,7 @@ const BusinessProfile = () => {
                 }}
               >
                 <Text className="mb-2 mt-3 text-lg text-gray-600">
-                  Amenities
+                  Dining Atmosphere
                 </Text>
                 <View className="flex flex-row flex-wrap">
                   {data.poi.restaurant.atmospheres.map((atmosphere) => (

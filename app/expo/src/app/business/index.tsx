@@ -5,6 +5,7 @@ import { supabase } from 'config/initSupabase';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import BusinessCard from '~/components/Card/owner/BusinessCard';
+import MyBusinessEmptyState from '~/components/EmptyState/MyBusinessEmptyState';
 import BusinessScreenSkeleton from '~/components/Skeleton/BusinessListSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
 import { GetBusinessesDocument } from '~/graphql/generated';
@@ -39,11 +40,7 @@ const BusinessListScreen = () => {
   }
 
   if (!loading && data && data.pois.length <= 0) {
-    return (
-      <Text className="font-poppins text-base text-gray-500">
-        Discover and claim your business. Take control of your business profile.
-      </Text>
-    );
+    return <MyBusinessEmptyState />;
   }
 
   return (

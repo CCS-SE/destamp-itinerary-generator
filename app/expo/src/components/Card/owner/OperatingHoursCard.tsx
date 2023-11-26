@@ -1,50 +1,37 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-type Day =
-  | 'Sunday'
-  | 'Monday'
-  | 'Tuesday'
-  | 'Wednesday'
-  | 'Thursday'
-  | 'Friday'
-  | 'Saturday';
-
-type DayValue = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-
-const days: Record<DayValue, Day> = {
-  0: 'Sunday',
-  1: 'Monday',
-  2: 'Tuesday',
-  3: 'Wednesday',
-  4: 'Thursday',
-  5: 'Friday',
-  6: 'Saturday',
-};
+import { days, DayValue } from '~/app/constant/constant';
 
 const formatOperatingHours = (
   operatingours: {
     day: number;
     openTime?: string | number | Date;
     closeTime?: string | number | Date;
+    isClosed: boolean;
+    is24Hours: boolean;
   }[],
 ) => {
   return operatingours.map((hours, index) => {
     const dayName = days[index as DayValue];
 
+    const { isClosed, is24Hours } = hours;
+
     if (hours.openTime && hours.closeTime) {
       const openTime = new Date(hours.openTime).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
       });
       const closeTime = new Date(hours.closeTime).toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: false,
       });
 
       return { dayName, openTime, closeTime };
     } else {
-      return { dayName };
+      return { dayName, isClosed, is24Hours };
     }
   });
 };
@@ -56,6 +43,8 @@ const OperatingHourCard = ({
     day: number;
     openTime?: string | number | Date;
     closeTime?: string | number | Date;
+    isClosed: boolean;
+    is24Hours: boolean;
   }[];
 }) => {
   const formattedOperatingHours = formatOperatingHours(operatingHours);
@@ -72,24 +61,52 @@ const OperatingHourCard = ({
             <Text className="w-24 font-poppins-semibold text-base text-orange-500">
               {operatingHour.dayName}
             </Text>
-            <Text className="ml-2 font-poppins-semibold text-base text-orange-500">
-              {operatingHour.openTime || 'Closed'}
-            </Text>
-            <Text className="ml-3 font-poppins-semibold text-base text-orange-500">
-              {operatingHour.closeTime ? `-   ${operatingHour.closeTime}` : ''}
-            </Text>
+            {operatingHour.isClosed ? (
+              <Text className="font-poppins-semibold text-base text-orange-500">
+                Closed
+              </Text>
+            ) : operatingHour.is24Hours ? (
+              <Text className="font-poppins-semibold text-base text-orange-500">
+                Open 24 hours
+              </Text>
+            ) : (
+              <>
+                <Text className="ml-2 font-poppins-semibold text-base text-orange-500">
+                  {operatingHour.openTime || 'Closed'}
+                </Text>
+                <Text className="ml-3 font-poppins-semibold text-base text-orange-500">
+                  {operatingHour.closeTime
+                    ? `-   ${operatingHour.closeTime}`
+                    : ''}
+                </Text>
+              </>
+            )}
           </View>
         ) : (
           <View className="flex-row" key={index}>
-            <Text className="w-24 font-poppins text-sm text-gray-600">
+            <Text className="w-24 font-poppins text-sm text-gray-500">
               {operatingHour.dayName}
             </Text>
-            <Text className="ml-2 font-poppins text-sm text-gray-700">
-              {operatingHour.openTime || 'Closed'}
-            </Text>
-            <Text className="ml-3 font-poppins text-sm text-gray-700">
-              {operatingHour.closeTime ? `-   ${operatingHour.closeTime}` : ''}
-            </Text>
+            {operatingHour.isClosed ? (
+              <Text className=" font-poppins text-sm text-gray-500">
+                Closed
+              </Text>
+            ) : operatingHour.is24Hours ? (
+              <Text className="font-poppins text-sm text-gray-500">
+                Open 24 hours
+              </Text>
+            ) : (
+              <>
+                <Text className="ml-2 font-poppins text-sm text-gray-700">
+                  {operatingHour.openTime || 'Closed'}
+                </Text>
+                <Text className="ml-3 font-poppins text-sm text-gray-700">
+                  {operatingHour.closeTime
+                    ? `-   ${operatingHour.closeTime}`
+                    : ''}
+                </Text>
+              </>
+            )}
           </View>
         );
       })}

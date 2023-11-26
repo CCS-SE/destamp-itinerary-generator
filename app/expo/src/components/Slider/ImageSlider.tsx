@@ -1,6 +1,8 @@
 import { View } from 'react-native';
 import { Image } from 'expo-image';
 
+import { blurhash } from '~/app/constant/constant';
+
 interface SlideStateProps {
   imgList: string[];
   loadQueue: number[];
@@ -18,9 +20,6 @@ interface SlideProps {
 }
 
 export const ImageSlider = ({ uri, loadHandle, i }: SlideProps) => {
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
   return (
     <View className="flex-1 justify-center rounded-2xl bg-transparent">
       <Image

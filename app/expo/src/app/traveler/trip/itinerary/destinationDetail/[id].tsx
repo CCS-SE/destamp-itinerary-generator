@@ -3,49 +3,23 @@ import { Dimensions, Platform, Text, TextInput, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Swiper from 'react-native-swiper';
-import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
+import { days, DayValue } from '~/app/constant/constant';
 import DestinationDetailSkeleton from '~/components/Skeleton/DestinationDetailSkeleton';
+import {
+  createSlideSchema,
+  ImageSlider,
+} from '~/components/Slider/ImageSlider';
 import { GetDailyItineraryPoiDetailsDocument } from '~/graphql/generated';
 import Back from '../../../../../../assets/images/back-icon.svg';
 
 interface Category {
   name: string;
 }
-
-interface SlideStateProps {
-  imgList: string[];
-  loadQueue: number[];
-}
-
-interface SlideActionsProps {
-  loaded: number;
-}
-
-interface SlideProps {
-  uri: string;
-  loadHandle: (i: number) => void;
-  i: number;
-  loaded: number | undefined;
-}
-
-type Day = 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat';
-
-type DayValue = 0 | 1 | 2 | 3 | 4 | 5 | 6;
-
-const days: Record<DayValue, Day> = {
-  0: 'Sun',
-  1: 'Mon',
-  2: 'Tue',
-  3: 'Wed',
-  4: 'Thu',
-  5: 'Fri',
-  6: 'Sat',
-};
 
 export default function DestinationDetailScreen() {
   const { id, imageList } = useLocalSearchParams();
@@ -202,18 +176,33 @@ export default function DestinationDetailScreen() {
                 {data.poi.operatingHours &&
                   data.poi.operatingHours.map((oh, index) => (
                     <View key={index} className="mx-3 flex-row">
-                      <Text className='"mx-3 font-poppins-medium text-base text-gray-500'>
+                      <Text
+                        className={`mx-3 w-14 font-poppins-medium ${
+                          oh.day === new Date().getDay()
+                            ? 'text-[18px] text-orange-500'
+                            : ' text-base text-gray-500'
+                        }`}
+                      >
                         {days[oh.day as DayValue]}
                       </Text>
-
-                      {oh.openTime !== null ? (
-                        <Text className="pl-2 font-poppins text-base text-gray-500">
-                          {oh.openTime ? getTime(oh.openTime) : ''} -{' '}
-                          {oh.closeTime ? getTime(oh.closeTime) : ''}
-                        </Text>
-                      ) : (
+                      {oh.isClosed ? (
                         <Text className="pl-2 font-poppins text-base text-gray-500">
                           Closed
+                        </Text>
+                      ) : oh.is24Hours ? (
+                        <Text className="pl-2 font-poppins text-base text-gray-500">
+                          Open 24 hours
+                        </Text>
+                      ) : (
+                        <Text
+                          className={`pl-2  ${
+                            oh.day === new Date().getDay()
+                              ? 'font-poppins-medium text-[18px] text-orange-500'
+                              : 'font-poppins text-base text-gray-500'
+                          }  `}
+                        >
+                          {oh.openTime ? getTime(oh.openTime) : ''} -{' '}
+                          {oh.closeTime ? getTime(oh.closeTime) : ''}
                         </Text>
                       )}
                     </View>
@@ -235,38 +224,3 @@ export default function DestinationDetailScreen() {
     </>
   );
 }
-
-export const ImageSlider = ({ uri, loadHandle, i }: SlideProps) => {
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
-  return (
-    <View className="flex-1 justify-center bg-transparent">
-      <Image
-        className="flex-1 bg-transparent"
-        onLoad={() => {
-          loadHandle(i);
-        }}
-        source={{ uri: uri }}
-        contentFit="cover"
-        placeholder={blurhash}
-        transition={1_000}
-      />
-    </View>
-  );
-};
-
-export const createSlideSchema = (imageList: string[]) =>
-  ({
-    state: {
-      imgList: imageList || [],
-      loadQueue: new Array(imageList.length).fill(0),
-    },
-    actions: {
-      loaded: (index) => {
-        return (state) => {
-          state.loadQueue[index] = 1;
-        };
-      },
-    },
-  }) as ModelType<SlideStateProps, SlideActionsProps>;

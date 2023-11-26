@@ -4,7 +4,7 @@ import { Dimensions, View } from 'react-native';
 import Skeleton from './Skeleton';
 
 const BusinessScreenSkeleton = () => {
-  const cardWidth = Dimensions.get('window').width * 0.85;
+  const cardWidth = Dimensions.get('window').width * 0.88;
 
   return (
     <View className="mb-32 mt-5 flex-1">
