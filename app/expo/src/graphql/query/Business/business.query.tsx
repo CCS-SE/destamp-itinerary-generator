@@ -45,6 +45,8 @@ export const GetBusinessDetailsQuery = gql(
         day
         closeTime
         openTime
+        isClosed
+        is24Hours
       }
     }
   }  

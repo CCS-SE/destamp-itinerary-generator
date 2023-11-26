@@ -101,6 +101,8 @@ export const GetDailyItineraryPoiDetailsQuery = gql(
         day
         openTime
         closeTime
+        isClosed
+        is24Hours
       }
     }
   }

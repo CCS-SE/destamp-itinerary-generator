@@ -125,6 +125,8 @@ model OperatingHour {
   day       Int
   openTime  DateTime? @map("open_time")
   closeTime DateTime? @map("close_time")
+  isClosed  Boolean   @default(false) @map("is_closed")
+  is24Hours Boolean   @default(false) @map("is_24_hours")
 
   @@map("operating_hours")
 }

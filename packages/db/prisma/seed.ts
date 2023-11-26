@@ -28,11 +28,6 @@ const days: Record<Day, DayValue> = {
 };
 
 const convertTo24HourFormat = (timeString: string) => {
-  if (timeString.toLowerCase() === 'open 24 hours') {
-    // Handle "Open 24 hours" case
-    return { hour: 0, minute: 0 }; // 24-hour format for midnight
-  }
-
   const [time, period] = timeString.split(' ');
 
   const [hours, minutes] = time!.split(':');
@@ -95,11 +90,22 @@ const createAttractions = async () => {
               const isClosed =
                 openingHour.hours.trim().toLowerCase() === 'closed';
 
+              const is24Hours =
+                openingHour.hours.trim().toLowerCase() === 'open 24 hours';
+
               return isClosed
                 ? {
                     day: days[openingHour.day as Day],
                     closeTime: null,
                     openTime: null,
+                    isClosed: true,
+                  }
+                : is24Hours
+                ? {
+                    day: days[openingHour.day as Day],
+                    closeTime: null,
+                    openTime: null,
+                    is24Hours: true,
                   }
                 : {
                     day: days[openingHour.day as Day],
@@ -223,11 +229,22 @@ const createRestaurants = async () => {
                   const isClosed =
                     openingHour.hours.trim().toLowerCase() === 'closed';
 
+                  const is24Hours =
+                    openingHour.hours.trim().toLowerCase() === 'open 24 hours';
+
                   return isClosed
                     ? {
                         day: days[openingHour.day as Day],
                         closeTime: null,
                         openTime: null,
+                        isClosed: true,
+                      }
+                    : is24Hours
+                    ? {
+                        day: days[openingHour.day as Day],
+                        closeTime: null,
+                        openTime: null,
+                        is24Hours: true,
                       }
                     : {
                         day: days[openingHour.day as Day],

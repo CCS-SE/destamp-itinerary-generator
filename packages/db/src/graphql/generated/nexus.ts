@@ -185,6 +185,8 @@ export interface NexusGenObjects {
     closeTime?: NexusGenScalars['DateTime'] | null; // DateTime
     day: number; // Int!
     id: number; // Int!
+    is24Hours: boolean; // Boolean!
+    isClosed: boolean; // Boolean!
     openTime?: NexusGenScalars['DateTime'] | null; // DateTime
   };
   Poi: {
@@ -333,6 +335,8 @@ export interface NexusGenFieldTypes {
     closeTime: NexusGenScalars['DateTime'] | null; // DateTime
     day: number; // Int!
     id: number; // Int!
+    is24Hours: boolean; // Boolean!
+    isClosed: boolean; // Boolean!
     openTime: NexusGenScalars['DateTime'] | null; // DateTime
   };
   Poi: {
@@ -488,6 +492,8 @@ export interface NexusGenFieldTypeNames {
     closeTime: 'DateTime';
     day: 'Int';
     id: 'Int';
+    is24Hours: 'Boolean';
+    isClosed: 'Boolean';
     openTime: 'DateTime';
   };
   Poi: {

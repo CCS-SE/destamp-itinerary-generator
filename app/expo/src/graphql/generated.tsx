@@ -183,6 +183,8 @@ export type OperatingHour = {
   closeTime?: Maybe<Scalars['DateTime']['output']>;
   day: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
+  is24Hours: Scalars['Boolean']['output'];
+  isClosed: Scalars['Boolean']['output'];
   openTime?: Maybe<Scalars['DateTime']['output']>;
 };
 
@@ -663,6 +665,8 @@ export type OperatingHourResolvers<
   >;
   day?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  is24Hours?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isClosed?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   openTime?: Resolver<
     Maybe<ResolversTypes['DateTime']>,
     ParentType,
@@ -980,6 +984,8 @@ export type GetBusinessDetailsQuery = {
       day: number;
       closeTime?: any | null;
       openTime?: any | null;
+      isClosed: boolean;
+      is24Hours: boolean;
     }>;
   };
 };
@@ -1097,6 +1103,8 @@ export type GetDailyItineraryPoiDetailsQuery = {
       day: number;
       openTime?: any | null;
       closeTime?: any | null;
+      isClosed: boolean;
+      is24Hours: boolean;
     }>;
   };
 };
@@ -1673,6 +1681,14 @@ export const GetBusinessDetailsDocument = {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'openTime' },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'isClosed' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'is24Hours' },
+                      },
                     ],
                   },
                 },
@@ -2128,6 +2144,14 @@ export const GetDailyItineraryPoiDetailsDocument = {
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'closeTime' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'isClosed' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'is24Hours' },
                       },
                     ],
                   },

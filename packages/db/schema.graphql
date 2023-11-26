@@ -124,6 +124,8 @@ type OperatingHour {
   closeTime: DateTime
   day: Int!
   id: Int!
+  is24Hours: Boolean!
+  isClosed: Boolean!
   openTime: DateTime
 }
 
