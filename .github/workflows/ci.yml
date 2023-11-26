@@ -4,11 +4,6 @@
 name: CI
 
 on:
-  workflow_dispatch:
-     inputs:
-      commit_sha:
-        description: 'SHA of the commit to run the workflow for'
-        required: false
   push:
     branches: [ "main" ]
   pull_request:
