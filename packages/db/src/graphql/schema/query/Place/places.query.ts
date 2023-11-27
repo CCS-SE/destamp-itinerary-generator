@@ -1,6 +1,10 @@
 import { list, nonNull, queryField, stringArg } from 'nexus';
 
-import { queryAllPlaces, queryPlace } from './places.resolver';
+import {
+  queryAllCategories,
+  queryAllPlaces,
+  queryPlace,
+} from './places.resolver';
 
 const Places = queryField('places', {
   type: nonNull(list('Place')),
@@ -15,4 +19,9 @@ const Place = queryField('place', {
   resolve: (_, args, ctx) => queryPlace(args.placeId, ctx),
 });
 
-export default [Places, Place];
+const Category = queryField('categories', {
+  type: nonNull(list('Category')),
+  resolve: (_, __, ctx) => queryAllCategories(ctx),
+});
+
+export default [Places, Place, Category];
