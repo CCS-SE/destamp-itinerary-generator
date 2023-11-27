@@ -5,11 +5,6 @@ export const UserType = enumType({
   members: ['TRAVELER', 'BUSINESS_OPERATOR'],
 });
 
-export const PlaceType = enumType({
-  name: 'PlaceType',
-  members: ['ACCOMMODATION', 'RESTAURANT', 'ATTRACTION'],
-});
-
 export const TravelSize = enumType({
   name: 'TravelSize',
   members: ['SOLO', 'COUPLE', 'FAMILY', 'GROUP'],
@@ -28,15 +23,4 @@ export const ExpenseCategory = enumType({
   ],
 });
 
-export const BusinessOwnerRole = enumType({
-  name: 'BusinessRole',
-  members: ['OWNER', 'MANAGER'],
-});
-
-export default [
-  UserType,
-  TravelSize,
-  PlaceType,
-  ExpenseCategory,
-  BusinessOwnerRole,
-];
+export default [UserType, TravelSize, ExpenseCategory];

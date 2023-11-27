@@ -7,7 +7,7 @@ const User = queryField('user', {
   args: {
     id: nonNull(stringArg()),
   },
-  resolve: (_, args, ctx) => queryUser(args.id, ctx),
+  resolve: (_, args, ctx, info) => queryUser(args.id, ctx, info),
 });
 
 export default [User];

@@ -6,6 +6,7 @@ import {
 import { asNexusMethod, makeSchema } from 'nexus';
 import { validatePlugin } from 'nexus-validate';
 
+import Enum from './enum';
 import Input from './input';
 import Models from './models';
 import Mutation from './mutation';
@@ -20,7 +21,7 @@ const schema = makeSchema({
     input: true,
     output: true,
   },
-  types: [Models, Query, Mutation, Input, DateTime, BigInt, Json],
+  types: [Models, Input, Enum, Query, Mutation, DateTime, BigInt, Json],
   outputs: {
     schema: `${__dirname}/../../../schema.graphql`,
     typegen: `${__dirname}/../generated/nexus.ts`,

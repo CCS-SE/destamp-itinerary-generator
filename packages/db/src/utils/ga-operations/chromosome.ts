@@ -1,21 +1,7 @@
-import { PlaceType } from '@prisma/client';
-
-import { NexusGenObjects } from '../../graphql/generated/nexus';
-
-type Place = NexusGenObjects['Place'];
+import { PointOfInterest } from '.';
 
 export class Chromosome {
-  constructor(public genes: Place[]) {}
-
-  parsePrice(price: string): number {
-    const [min, max] = price.split('-').map(Number);
-
-    if (min && max) {
-      return (min + max) / 2;
-    }
-
-    return parseFloat(price);
-  }
+  constructor(public genes: PointOfInterest[]) {}
 
   sumCost(): number {
     //  calculate total cost of a chromosome (list of destinations)
@@ -28,7 +14,7 @@ export class Chromosome {
   sumDuration(): number {
     //  calculate total duration of a chromosome (list of destinations)
     return this.genes.reduce((sum, gene) => {
-      if (gene.type !== PlaceType.ACCOMMODATION) {
+      if (!gene.accommodation && (gene.isAttraction || gene.restaurant)) {
         sum += gene.visitDuration;
       }
       return sum;
@@ -37,19 +23,19 @@ export class Chromosome {
 
   attractionCost(): number {
     return this.genes
-      .filter((gene) => gene.type === PlaceType.ATTRACTION)
+      .filter((gene) => gene.isAttraction)
       .reduce((sum, gene) => sum + parseInt(gene.price), 0);
   }
 
   accommodationCost(): number {
     return this.genes
-      .filter((gene) => gene.type === PlaceType.ACCOMMODATION)
+      .filter((gene) => gene.accommodation)
       .reduce((sum, gene) => sum + parseInt(gene.price), 0);
   }
 
   foodCostRange(): string {
     const priceRanges = this.genes
-      .filter((gene) => gene.type === PlaceType.RESTAURANT)
+      .filter((gene) => gene.restaurant)
       .map((restaurant) => restaurant.price);
 
     const { totalMin, totalMax } = priceRanges.reduce(
@@ -61,5 +47,15 @@ export class Chromosome {
     );
 
     return `${Math.floor(totalMin)}-${Math.floor(totalMax)}`;
+  }
+
+  parsePrice(price: string): number {
+    const [min, max] = price.split('-').map(Number);
+
+    if (min && max) {
+      return (min + max) / 2;
+    }
+
+    return parseFloat(price);
   }
 }

@@ -6,14 +6,19 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import { getTripDateFormat, tripDuration } from '~/utils/dates';
-import { amountFormatter, toSentenceCase } from '~/utils/utils';
+import { blurhash } from '~/constant/constant';
+import {
+  amountFormatter,
+  getTripDateFormat,
+  toSentenceCase,
+  tripDuration,
+} from '~/utils/utils';
 import TripMenuList from '../../Menu/TripMenu/TripMenuList';
 import BottomHalfModal from '../../Modal/BottomHalfModal';
 
 interface TripCardProps {
   id: number;
-  imgSrc: string;
+  imgSrc?: string;
   destination: string;
   startDate: Date;
   endDate: Date;
@@ -24,7 +29,6 @@ interface TripCardProps {
 
 function TripCard({
   id,
-  imgSrc,
   destination,
   startDate,
   endDate,
@@ -40,21 +44,20 @@ function TripCard({
 
   const cardWidth = Dimensions.get('window').width * 0.9;
 
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
   const daysDifference = tripDuration(startDate, endDate);
 
   return (
     <View className="m-3" testID="trip-card">
-      <Link href={`/itinerary/${id}`}>
+      <Link href={`/traveler/trip/itinerary/${id}`}>
         <View
           className=" rounded-2xl bg-gray-50 shadow-md"
           style={{ width: cardWidth }}
         >
           <Image
             testID="trip-destination-img"
-            source={imgSrc}
+            source={
+              'https://gttp.imgix.net/223596/x/0/top-23-iloilo-tourist-spots-home-to-gigantes-islands-amp-old-churches-6.jpg?auto=compress%2Cformat&ch=Width%2CDPR&dpr=1&ixlib=php-3.3.0&w=883'
+            }
             className="h-52 rounded-2xl"
             placeholder={blurhash}
             transition={1_500}

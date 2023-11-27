@@ -1,67 +1,106 @@
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { memo, useState } from 'react';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
+import * as Haptics from 'expo-haptics';
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-interface ImageItem {
-  url: string;
+import BusinessMenuList from '~/components/Menu/BusinessMenu/BusinessMenuList';
+import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import { blurhash } from '~/constant/constant';
+
+interface BusinessCardProps {
+  businessId: string;
+  businessName: string;
+  businessImages: string[];
+  businessAddress: string;
 }
 
-const BusinessProfileCard = ({
-  businessName,
+function BusinessCard({
+  businessId,
   businessImages,
+  businessName,
   businessAddress,
-  onPress,
-}: {
-  businessName: string;
-  businessImages: ImageItem[];
-  businessAddress: string;
-  onPress: () => void;
-}) => {
-  const firstImage = businessImages.length > 0 ? businessImages[0] : null;
+}: BusinessCardProps) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleViewDetails = () => {
+    router.push({
+      pathname: `/business/profile/${businessId}`,
+      params: {
+        id: businessId,
+        imageList: JSON.stringify(businessImages),
+      },
+    });
+  };
+
+  const cardWidth = Dimensions.get('window').width * 0.88;
 
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.container}>
-        {firstImage && (
-          <Image source={{ uri: firstImage.url }} style={styles.image} />
-        )}
-        <View style={styles.content}>
-          <Text style={styles.businessName}> {businessName}</Text>
-          <Text style={styles.businessAddress}>{businessAddress}</Text>
+    <View className="mt-9" testID="business-card">
+      <TouchableOpacity activeOpacity={0.9} onPress={handleViewDetails}>
+        <View
+          className="rounded-2xl bg-gray-50 shadow-md"
+          style={{ width: cardWidth }}
+        >
+          <Image
+            testID="trip-destination-img"
+            source={businessImages[businessImages.length - 2]}
+            className="h-44 rounded-2xl"
+            placeholder={blurhash}
+            transition={1_500}
+          ></Image>
+          <View
+            className="absolute h-44 rounded-2xl bg-black opacity-30"
+            style={{ width: cardWidth }}
+          />
+          <TouchableOpacity
+            accessibilityRole="button"
+            testID="business-menu-btn"
+            className=" absolute right-3 top-2 p-2"
+            activeOpacity={0.7}
+            onPress={() => {
+              setIsModalVisible(true);
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            }}
+          >
+            <FontAwesome5
+              name="ellipsis-h"
+              size={22}
+              color={'white'}
+            ></FontAwesome5>
+          </TouchableOpacity>
+          <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
+            <BusinessMenuList
+              id={businessId}
+              imageList={businessImages}
+              onModalClose={onModalClose}
+            />
+          </BottomHalfModal>
+          <View className="absolute left-4 top-[125] w-auto">
+            <Text
+              numberOfLines={1}
+              testID="business-name"
+              className="text-left font-poppins-semibold text-xl text-zinc-100"
+            >
+              {businessName}
+            </Text>
+            <Text
+              numberOfLines={1}
+              testID="business-name"
+              className="-mt-0.5 pr-9 text-left font-poppins text-[10.5px] text-zinc-100"
+            >
+              {businessAddress}
+            </Text>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
-};
+}
 
-const styles = StyleSheet.create({
-  container: {
-    width: 311,
-    height: 96,
-    backgroundColor: '#F4E8E8',
-    borderRadius: 10,
-    padding: 15,
-    margin: 20,
-    flexDirection: 'row',
-  },
-  image: {
-    width: 64,
-    height: 64,
-    borderRadius: 10,
-  },
-  content: {
-    marginLeft: 10,
-  },
-  businessName: {
-    fontFamily: 'Poppins',
-    fontWeight: 'bold',
-    fontSize: 15,
-  },
-  businessAddress: {
-    width: 200,
-    fontSize: 10,
-    fontFamily: 'Poppins',
-    marginLeft: 5,
-  },
-});
-
-export default BusinessProfileCard;
+export default memo(BusinessCard);

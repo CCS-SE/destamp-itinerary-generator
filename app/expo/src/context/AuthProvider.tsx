@@ -27,7 +27,7 @@ const AuthProvider = (props: Props) => {
         if (session.user.user_metadata.userType == 'TRAVELER') {
           router.replace('/(tabs)');
         } else {
-          router.replace('/businessProfile/businessList');
+          router.replace('/business/');
         }
       }
       const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -39,7 +39,7 @@ const AuthProvider = (props: Props) => {
             if (session.user.user_metadata.userType == 'TRAVELER') {
               router.replace('/(tabs)');
             } else {
-              router.replace('/businessProfile/businessList');
+              router.replace('/business/');
             }
           } else {
             router.replace('/login');

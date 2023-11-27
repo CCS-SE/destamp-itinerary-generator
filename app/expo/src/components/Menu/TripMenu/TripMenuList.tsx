@@ -5,10 +5,7 @@ import { useMutation } from '@apollo/client';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
-import {
-  DeleteTripDocument,
-  GetTravelerTripsDocument,
-} from '~/graphql/generated';
+import { DeleteTripDocument, GetTripsDocument } from '~/graphql/generated';
 import { confirmationAlert } from '~/utils/utils';
 import TripMenuItem from './TripMenuItem';
 
@@ -29,40 +26,26 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
 
   const [deleteTrip] = useMutation(DeleteTripDocument, {
     variables: {
-      deleteTripId: id,
+      tripId: id,
     },
   });
 
   const handleViewItineraryDetials = () => {
-    router.push(`/itinerary/${id}`);
+    router.push(`/traveler/trip/itinerary/${id}`);
   };
 
   const handleDeleteTrip = async () => {
     await deleteTrip({
+      refetchQueries: [
+        {
+          query: GetTripsDocument,
+          variables: {
+            userId: user ? user.id : '',
+          },
+        },
+      ],
       onError: (error) => {
         console.log('Error', error.message);
-      },
-      update: (cache, { data }) => {
-        const existingTrips = cache.readQuery({
-          query: GetTravelerTripsDocument,
-          variables: {
-            userId: user ? user.id : '',
-          },
-        });
-
-        const updatedTrips = existingTrips
-          ? existingTrips.travelerTrips.filter(
-              (trip) => trip.id !== data?.deleteTrip.id,
-            )
-          : [];
-
-        cache.writeQuery({
-          query: GetTravelerTripsDocument,
-          variables: {
-            userId: user ? user.id : '',
-          },
-          data: { travelerTrips: updatedTrips },
-        });
       },
     });
   };

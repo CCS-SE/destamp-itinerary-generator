@@ -7,8 +7,6 @@ import {
   calculateCostScore,
   calculateDurationScore,
   calculateFitnessScore,
-  calculateTotalCost,
-  calculateTotalDuration,
   calculateTravelDuration,
   calculateTravelExpenses,
   getCoordinates,
@@ -23,9 +21,8 @@ export async function evaluateFitness(
   tripInput: CreateTripInput,
   population: Chromosome[],
 ) {
-  const { adultCount, childCount, preferredTime } = tripInput;
+  const { travelerCount, timeSlots } = tripInput;
 
-  const totalTravelers = (adultCount || 0) + (childCount || 0);
   let totalTravelDuration = 0;
 
   const duration = tripDuration(
@@ -33,7 +30,7 @@ export async function evaluateFitness(
     new Date(tripInput.endDate),
   );
 
-  const totalDesiredTravelHours = getTotalDesiredTravelHours(preferredTime);
+  const totalDesiredTravelHours = getTotalDesiredTravelHours(timeSlots);
 
   for (let i = 0; i < population.length; i++) {
     const currentPopulation = population[i]!;
@@ -70,21 +67,24 @@ export async function evaluateFitness(
     }
 
     const estimatedTravelExpense = tripInput.isTransportationIncluded
-      ? calculateTravelExpenses(travelDistances)
+      ? calculateTravelExpenses(
+          travelDistances.splice(0, -1),
+          travelDurations.slice(0, -1),
+          travelerCount,
+        )
       : 0;
 
     const accommodationCost = chromosome?.accommodationCost();
     const foodCostRange = chromosome?.foodCostRange();
     const attractionCost = chromosome?.attractionCost();
     const sumDuration = chromosome?.sumDuration();
-    const sumCost = chromosome?.sumCost();
 
     const costScore = calculateCostScore(
       tripInput,
       accommodationCost,
       calculateAveragePrice(foodCostRange),
       attractionCost,
-      totalTravelers,
+      travelerCount,
       duration,
       estimatedTravelExpense,
     );
@@ -98,15 +98,6 @@ export async function evaluateFitness(
     currentPopulation.fitnessScore = calculateFitnessScore(
       costScore,
       durationScore,
-    );
-    currentPopulation.totalCost = calculateTotalCost(
-      sumCost,
-      totalTravelers,
-      estimatedTravelExpense,
-    );
-    currentPopulation.totalDuration = calculateTotalDuration(
-      sumDuration,
-      totalTravelDuration,
     );
     currentPopulation.travelDuration =
       calculateTravelDuration(totalTravelDuration);

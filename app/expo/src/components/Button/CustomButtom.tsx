@@ -17,12 +17,12 @@ const CustomButton = ({
   content: string;
   height: number;
   width: number;
-  buttonColor: string;
-  buttonBorderColor: string;
+  buttonColor?: string;
+  buttonBorderColor?: string;
   onClickColor: string;
-  textSize: number;
-  textColor: string;
-  onPressTextColor: string;
+  textSize?: number;
+  textColor?: string;
+  onPressTextColor?: string;
   hasShadow?: boolean;
   onPress: () => void;
 }) => {

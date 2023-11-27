@@ -1,7 +1,4 @@
-import { nullable, objectType } from 'nexus';
-
-import { UserType } from '../enum';
-import Traveler from './Traveler';
+import { objectType } from 'nexus';
 
 const User = objectType({
   name: 'User',
@@ -9,15 +6,40 @@ const User = objectType({
     t.string('id');
     t.string('email');
     t.string('password');
-    t.field('userType', { type: UserType });
-    t.nullable.field('traveler', {
-      type: nullable(Traveler),
-      resolve: (parent, _, ctx) => {
+    t.string('firstName');
+    t.string('lastName');
+    t.field('type', { type: 'UserType' });
+    t.field('createdAt', { type: 'DateTime' });
+    t.field('updatedAt', { type: 'DateTime' });
+    t.list.field('trips', {
+      type: 'Trip',
+      resolve: ({ id }, _, ctx) => {
         return ctx.prisma.user
-          .findUnique({
-            where: { id: parent.id },
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
           })
-          .traveler();
+          .trips()
+          .then((items) =>
+            items.sort(
+              (a, b) =>
+                new Date(a.startDate).getTime() -
+                new Date(b.startDate).getTime(),
+            ),
+          );
+      },
+    });
+    t.list.field('pois', {
+      type: 'Poi',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.user
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .pois();
       },
     });
   },

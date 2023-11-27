@@ -1,6 +1,7 @@
 import { Alert } from 'react-native';
+import { Moment } from 'moment';
 
-import { ExpenseCategory, TravelSize } from '~/graphql/generated';
+import { ExpenseCategory } from '~/graphql/generated';
 
 export function amountFormatter(amount: number) {
   return new Intl.NumberFormat().format(Math.floor(amount));
@@ -42,7 +43,7 @@ export const getPieChartData = (
     __typename?: 'Expense' | undefined;
     amount: number;
     category: ExpenseCategory;
-    date: Date;
+    dateSpent: Date;
   }[],
 ) => {
   return data
@@ -52,7 +53,7 @@ export const getPieChartData = (
           __typename?: 'Expense' | undefined;
           amount: number;
           category: ExpenseCategory;
-          date: Date;
+          dateSpent: Date;
         }[],
         current,
       ) => {
@@ -104,42 +105,24 @@ export const getTravelDuration = (duration: number) => {
 export const getTravelDistance = (distance: number) =>
   (distance / 1000).toFixed(1);
 
-export const calculateTravelExpense = (distance: number, duration: number) => {
-  const travelDistanceInKilometers = Math.floor(distance / 1000);
+export const calculateTravelExpense = (
+  distance: number,
+  duration: number,
+  travelerCount: number,
+) => {
+  const travelDistanceInKilometers = Math.floor(distance / 1_000);
   const flagDown = 40;
   const additionalCostPerKm = 13.5;
   const durationMinutes = Math.floor(duration / 60);
   const additionalCostPerMin = 2;
 
-  return Math.round(
-    flagDown +
-      travelDistanceInKilometers * additionalCostPerKm +
-      durationMinutes * additionalCostPerMin,
-  );
-};
-
-export const getAdultCount = (
-  size: TravelSize,
-  adultCount: number,
-  groupCount: number,
-) => {
-  if (size === TravelSize.Solo) {
-    return 1;
-  } else if (size === TravelSize.Couple) {
-    return 2;
-  } else if (size === TravelSize.Group) {
-    return groupCount;
-  } else {
-    return adultCount;
-  }
-};
-
-export const getChildCount = (size: TravelSize, childCount: number) => {
-  if (size === TravelSize.Family) {
-    return childCount;
-  } else {
-    return 0;
-  }
+  return travelDistanceInKilometers > 1
+    ? Math.round(
+        flagDown +
+          travelDistanceInKilometers * additionalCostPerKm +
+          durationMinutes * additionalCostPerMin,
+      ) * taxisNeeded(travelerCount)
+    : 0;
 };
 
 export const separateWords = (str: string) => {
@@ -151,6 +134,7 @@ interface CategoryColor {
     color: string;
   };
 }
+
 const category: CategoryColor = {
   ACCOMMODATION: {
     color: '#C79BFF',
@@ -208,14 +192,37 @@ export const getPreferredTime = (preferredTimeValues: [number, number][]) => {
   return preferredTimeValues.map(([start, end]) => `${start}:00-${end}:00`);
 };
 
-export const taxisNeeded = (adultCount: number, childCount: number) => {
-  const personCount = adultCount + childCount;
-  if (personCount < 1) {
+export const taxisNeeded = (travelerCount: number) => {
+  if (travelerCount < 1) {
     return 0;
-  } else if (personCount <= 4) {
+  } else if (travelerCount <= 4) {
     return 1;
   } else {
-    const taxisNeeded = (personCount - 1) / 4;
+    const taxisNeeded = (travelerCount - 1) / 4;
     return Math.floor(taxisNeeded) + 1;
   }
+};
+
+export function getTripDateFormat(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+export function tripDuration(
+  startDate: Date | null | string,
+  endDate: Date | null | string,
+) {
+  return Math.floor(
+    (new Date(endDate ? endDate : '').getTime() -
+      new Date(startDate ? startDate : '').getTime()) /
+      (24 * 60 * 60 * 1000) +
+      1,
+  );
+}
+
+export const formatDateToString = (date: Moment | null) => {
+  return date ? date.format('YYYY-MM-DD') : '';
 };
