@@ -11,3 +11,7 @@ export const queryPlace = (placeId: string, ctx: Context) => {
     },
   });
 };
+
+export const queryAllCategories = (ctx: Context) => {
+  return ctx.prisma.category.findMany();
+};

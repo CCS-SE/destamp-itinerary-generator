@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const SimpleButton = ({
+const BasicButton = ({
   title,
   onPress,
 }: {
@@ -35,4 +35,4 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
-export default SimpleButton;
+export default BasicButton;
