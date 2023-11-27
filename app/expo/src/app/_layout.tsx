@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
@@ -15,6 +16,7 @@ import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { fetch } from 'cross-fetch';
 
 import { AuthProvider } from '~/context/AuthProvider';
+import Logo from '../../assets/images/destampp-logo.svg';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -33,6 +35,11 @@ const client = new ApolloClient({
       Query: {
         fields: {
           trips: {
+            merge(_, incoming) {
+              return incoming;
+            },
+          },
+          trip: {
             merge(_, incoming) {
               return incoming;
             },
@@ -97,9 +104,21 @@ function RootLayoutNav() {
                       fontFamily: 'Poppins',
                     },
                     headerBackVisible: false,
+                    headerRight: () => {
+                      return (
+                        <View className="rounded-full p-0.5">
+                          <Logo height={50} width={50} />
+                        </View>
+                      );
+                    },
                   }}
                 />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(tabs)"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
               </Stack>
             </ApolloProvider>
           </ClerkProvider>

@@ -52,3 +52,13 @@ export const GetBusinessDetailsQuery = gql(
   }  
   `,
 );
+
+export const GetCategoryListQuery = gql(
+  `query GetAllCategories {
+    categories {
+      id
+      name
+    }
+  }
+`,
+);

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import OTPTextInput from 'react-native-otp-textinput';
 
 import ContactVerification from '~/components/BusinessOperator/contactVerification';
-import SimpleButton from '~/components/Button/simpleButton';
+import SimpleButton from '~/components/Button/BasicButton';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
 
 const PhoneVerification = () => {

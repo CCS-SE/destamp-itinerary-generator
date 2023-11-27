@@ -1,7 +1,7 @@
 import React from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 
-import { days, DayValue } from '~/app/constant/constant';
+import { days, DayValue } from '~/constant/constant';
 
 const formatOperatingHours = (
   operatingours: {

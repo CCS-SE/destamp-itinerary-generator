@@ -2,13 +2,12 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-
-// import { router } from 'expo-router';
+import { router } from 'expo-router';
 
 export default function MyBusinessEmptyState() {
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    // router.push('/business/create/');
+    router.push('/business/create/establishmentType');
   };
 
   return (

@@ -220,6 +220,7 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
+  categories: Array<Category>;
   poi: Poi;
   pois: Array<Poi>;
   trip: Trip;
@@ -737,6 +738,11 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  categories?: Resolver<
+    Array<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
+  >;
   poi?: Resolver<
     ResolversTypes['Poi'],
     ParentType,
@@ -988,6 +994,13 @@ export type GetBusinessDetailsQuery = {
       is24Hours: boolean;
     }>;
   };
+};
+
+export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAllCategoriesQuery = {
+  __typename?: 'Query';
+  categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
 };
 
 export type GetTripsQueryVariables = Exact<{
@@ -1702,6 +1715,35 @@ export const GetBusinessDetailsDocument = {
 } as unknown as DocumentNode<
   GetBusinessDetailsQuery,
   GetBusinessDetailsQueryVariables
+>;
+export const GetAllCategoriesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAllCategories' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'categories' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetAllCategoriesQuery,
+  GetAllCategoriesQueryVariables
 >;
 export const GetTripsDocument = {
   kind: 'Document',

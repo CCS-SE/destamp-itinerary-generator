@@ -158,6 +158,7 @@ type PoiImage {
 }
 
 type Query {
+  categories: [Category!]!
   poi(poiId: String!): Poi!
   pois(userId: String!): [Poi!]!
   trip(id: Int!): Trip!

@@ -369,6 +369,7 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    categories: NexusGenRootTypes['Category'][]; // [Category!]!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
@@ -526,6 +527,7 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    categories: 'Category';
     poi: 'Poi';
     pois: 'Poi';
     trip: 'Trip';

@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
 import { supabase } from 'config/initSupabase';
 
@@ -65,7 +66,7 @@ const BusinessListScreen = () => {
       </TouchableOpacity>
       <AbsoluteButton
         title="+"
-        onPress={() => undefined}
+        onPress={() => router.push('/business/create/establishmentType')}
         style={{ bottom: 40 }}
       />
     </View>

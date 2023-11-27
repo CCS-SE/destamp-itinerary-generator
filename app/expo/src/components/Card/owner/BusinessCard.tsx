@@ -5,9 +5,9 @@ import { Image } from 'expo-image';
 import { router } from 'expo-router';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import { blurhash } from '~/app/constant/constant';
 import BusinessMenuList from '~/components/Menu/BusinessMenu/BusinessMenuList';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
+import { blurhash } from '~/constant/constant';
 
 interface BusinessCardProps {
   businessId: string;

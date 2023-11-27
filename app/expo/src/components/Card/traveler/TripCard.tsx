@@ -6,7 +6,7 @@ import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import { blurhash } from '~/app/constant/constant';
+import { blurhash } from '~/constant/constant';
 import {
   amountFormatter,
   getTripDateFormat,

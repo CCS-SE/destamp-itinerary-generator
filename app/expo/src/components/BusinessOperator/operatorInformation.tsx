@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { router } from 'expo-router';
 
-import SimpleButton from '~/components/Button/simpleButton';
+import SimpleButton from '~/components/Button/BasicButton';
 import AuthenticationStatement from '~/components/Card/owner/authStatement';
 
 const OperatorInformation = ({

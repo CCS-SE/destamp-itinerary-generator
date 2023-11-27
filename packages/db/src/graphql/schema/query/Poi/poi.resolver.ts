@@ -57,3 +57,7 @@ export const queryPois = async (
     throw new Error('An error occurred while fetching point of interests.');
   }
 };
+
+export const queryAllCategories = (ctx: Context) => {
+  return ctx.prisma.category.findMany();
+};

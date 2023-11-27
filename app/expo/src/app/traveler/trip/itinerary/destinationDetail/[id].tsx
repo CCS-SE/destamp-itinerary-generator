@@ -8,12 +8,12 @@ import { useQuery } from '@apollo/client';
 import { Ionicons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
-import { days, DayValue } from '~/app/constant/constant';
 import DestinationDetailSkeleton from '~/components/Skeleton/DestinationDetailSkeleton';
 import {
   createSlideSchema,
   ImageSlider,
 } from '~/components/Slider/ImageSlider';
+import { days, DayValue } from '~/constant/constant';
 import { GetDailyItineraryPoiDetailsDocument } from '~/graphql/generated';
 import Back from '../../../../../../assets/images/back-icon.svg';
 

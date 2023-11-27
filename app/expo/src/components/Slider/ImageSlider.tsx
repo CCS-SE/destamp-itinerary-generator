@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Image } from 'expo-image';
 
-import { blurhash } from '~/app/constant/constant';
+import { blurhash } from '~/constant/constant';
 
 interface SlideStateProps {
   imgList: string[];
