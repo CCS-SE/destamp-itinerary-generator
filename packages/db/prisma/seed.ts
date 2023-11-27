@@ -101,23 +101,23 @@ const createAttractions = async () => {
                     isClosed: true,
                   }
                 : is24Hours
-                  ? {
-                      day: days[openingHour.day as Day],
-                      closeTime: null,
-                      openTime: null,
-                      is24Hours: true,
-                    }
-                  : {
-                      day: days[openingHour.day as Day],
-                      closeTime: set(new Date(), {
-                        hours: closingTime?.hour,
-                        minutes: closingTime?.minute,
-                      }),
-                      openTime: set(new Date(), {
-                        hours: openingTime?.hour,
-                        minutes: openingTime?.minute,
-                      }),
-                    };
+                ? {
+                    day: days[openingHour.day as Day],
+                    closeTime: null,
+                    openTime: null,
+                    is24Hours: true,
+                  }
+                : {
+                    day: days[openingHour.day as Day],
+                    closeTime: set(new Date(), {
+                      hours: closingTime?.hour,
+                      minutes: closingTime?.minute,
+                    }),
+                    openTime: set(new Date(), {
+                      hours: openingTime?.hour,
+                      minutes: openingTime?.minute,
+                    }),
+                  };
             }),
           },
         },
@@ -239,23 +239,23 @@ const createRestaurants = async () => {
                         isClosed: true,
                       }
                     : is24Hours
-                      ? {
-                          day: days[openingHour.day as Day],
-                          closeTime: null,
-                          openTime: null,
-                          is24Hours: true,
-                        }
-                      : {
-                          day: days[openingHour.day as Day],
-                          closeTime: set(new Date(), {
-                            hours: closingTime?.hour,
-                            minutes: closingTime?.minute,
-                          }),
-                          openTime: set(new Date(), {
-                            hours: openingTime?.hour,
-                            minutes: openingTime?.minute,
-                          }),
-                        };
+                    ? {
+                        day: days[openingHour.day as Day],
+                        closeTime: null,
+                        openTime: null,
+                        is24Hours: true,
+                      }
+                    : {
+                        day: days[openingHour.day as Day],
+                        closeTime: set(new Date(), {
+                          hours: closingTime?.hour,
+                          minutes: closingTime?.minute,
+                        }),
+                        openTime: set(new Date(), {
+                          hours: openingTime?.hour,
+                          minutes: openingTime?.minute,
+                        }),
+                      };
                 }),
               },
             },
