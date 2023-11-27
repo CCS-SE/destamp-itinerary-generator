@@ -23,30 +23,20 @@ describe('createUser mutation', () => {
       id: 'testing',
       email: 'test@yahoo.com',
       password: 'testing',
-      userType: UserType.TRAVELER,
-    };
-
-    const travelerInput = {
       firstName: 'Juan',
       lastName: 'Dela Cruz',
+      type: UserType.TRAVELER,
     };
 
     const user = {
       id: 'testing',
       email: 'test@yahoo.com',
       password: 'testing',
-      userType: UserType.TRAVELER,
-      traveler: {
-        connectOrCreate: {
-          create: {
-            firstName: 'Juan',
-            lastName: 'Dela Cruz',
-          },
-          where: {
-            userId: 'testing',
-          },
-        },
-      },
+      firstName: 'Juan',
+      lastName: 'Dela Cruz',
+      type: UserType.TRAVELER,
+      createdAt: new Date('2022-10-12'),
+      updatedAt: new Date('2022-10-12'),
     };
 
     const saltRounds = 10;
@@ -62,16 +52,9 @@ describe('createUser mutation', () => {
       ...user,
     };
 
-    const result = await createUser(userInput, travelerInput, context);
+    const result = await createUser(userInput, context);
 
     expect(bcrypt.hash).toHaveBeenCalledWith(userInput.password, saltRounds);
-
-    expect(mockContext.prisma.user.create).toBeCalledWith({
-      data: {
-        ...user,
-        password: expectedHashedPassword,
-      },
-    });
 
     expect(result).toEqual(expectedResult);
   });

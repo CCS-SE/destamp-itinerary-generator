@@ -29,7 +29,7 @@ function ProfileMenuList() {
   };
 
   const handleSubscriptionDetails = () => {
-    return router.push('/subscription/');
+    return router.push('/traveler/subscription');
   };
 
   const profileMenus: ProfileMenu[] = [

@@ -1,31 +1,18 @@
 import { useCallback, useState } from 'react';
 import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { Image } from 'expo-image';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
 import AddSpendingForm from '~/components/Forms/AddSpendingForm';
 import BottomHalfModal from '~/components/Modal/BottomHalfModal';
-import { PlaceType } from '~/graphql/generated';
+import {
+  createSlideSchema,
+  ImageSlider,
+} from '~/components/Slider/ImageSlider';
+import { ExpenseCategory } from '~/graphql/generated';
 import { calculateAveragePrice } from '~/utils/utils';
 import Person from '../../../../assets/images/person.svg';
-
-interface SlideStateProps {
-  imgList: string[];
-  loadQueue: number[];
-}
-
-interface SlideActionsProps {
-  loaded: number;
-}
-
-interface SlideProps {
-  uri: string;
-  loadHandle: (i: number) => void;
-  i: number;
-  loaded: number | undefined;
-}
 
 interface TimeSlot {
   start: string;
@@ -33,36 +20,39 @@ interface TimeSlot {
 }
 
 interface DestinationCardProps {
-  itineraryId: number;
-  timeSlot: TimeSlot;
+  tripId: number;
+  timeSlot?: TimeSlot;
   title: string;
   price: string;
+  isAttraction: boolean;
+  accommodation?: {
+    id: number;
+  } | null;
   imageList: string[];
   date: Date;
-  categoryType: PlaceType;
+  categoryType: ExpenseCategory;
   onPress: () => void;
-  adultCount: number;
-  childCount: number;
+  travelerCount: number;
 }
 
 export default function DestinationCard({
-  itineraryId,
+  tripId,
   timeSlot,
   title,
   price,
   imageList,
   date,
+  accommodation,
+  isAttraction,
   onPress,
   categoryType,
-  adultCount,
-  childCount,
+  travelerCount,
 }: DestinationCardProps) {
   const [{ useStore }] = useState(() => Model(createSlideSchema(imageList)));
   const [state, actions] = useStore();
   const [addExpenseModal, setAddExpenseModal] = useState(false);
 
   const isFree = price === '0';
-  const travellerCount = adultCount + childCount;
 
   const loadHandle = useCallback((i: number) => {
     actions.loaded(i);
@@ -70,9 +60,9 @@ export default function DestinationCard({
 
   const screenWidth = Dimensions.get('window').width;
   return (
-    <View className="rounded-2x mt-5 w-[360] flex-row ">
+    <View className="mt-5 w-[360] flex-row rounded-2xl ">
       <View
-        className="rounded-2x mx-7 mr-2 h-[200] pr-3"
+        className="mx-7 mr-2 h-[200] rounded-2xl pr-3"
         style={{ width: screenWidth / 1.26 }}
       >
         <Swiper
@@ -82,7 +72,7 @@ export default function DestinationCard({
           activeDotColor="#FC8040"
         >
           {state.imgList.map((item, i) => (
-            <Slide
+            <ImageSlider
               loadHandle={loadHandle}
               uri={item}
               i={i}
@@ -104,13 +94,17 @@ export default function DestinationCard({
             >
               {title}
             </Text>
-            <View className="mb-1 ml-3 flex-row">
-              <Text className="mr-1 text-gray-600">
-                {timeSlot.start == timeSlot.end
-                  ? timeSlot.start
-                  : `${timeSlot.start} - ${timeSlot.end}`}
+            <View className="mb-1 ml-2 flex-row">
+              <Text className="mr-1 font-poppins text-[14.5px] text-gray-400">
+                {timeSlot?.start == timeSlot?.end
+                  ? timeSlot?.start
+                  : `${timeSlot?.start} - ${timeSlot?.end}`}
               </Text>
-              <PriceTag isFree={isFree} price={price} />
+              <PriceTag
+                isFree={isFree}
+                price={price}
+                isAccommodation={accommodation !== null}
+              />
             </View>
           </TouchableOpacity>
 
@@ -135,17 +129,17 @@ export default function DestinationCard({
         onClose={() => setAddExpenseModal(false)}
       >
         <AddSpendingForm
-          itineraryId={itineraryId}
+          tripId={tripId}
           closeModal={() => setAddExpenseModal(false)}
           minDate={date}
           maxDate={date}
           noteString={title}
           amount={
-            categoryType == PlaceType.Restaurant
-              ? (calculateAveragePrice(price) * travellerCount).toFixed(2)
-              : categoryType == PlaceType.Attraction
-              ? (parseInt(price) * travellerCount).toFixed(2)
-              : price
+            isAttraction
+              ? (parseInt(price) * travelerCount).toFixed(2)
+              : accommodation
+              ? price
+              : (calculateAveragePrice(price) * travelerCount).toFixed(2)
           }
           categoryType={categoryType}
         />
@@ -154,47 +148,13 @@ export default function DestinationCard({
   );
 }
 
-const Slide = ({ uri, loadHandle, i }: SlideProps) => {
-  const blurhash =
-    '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[';
-
-  return (
-    <View className="flex-1 justify-center rounded-2xl bg-transparent">
-      <Image
-        className="flex-1 rounded-2xl bg-transparent"
-        onLoad={() => {
-          loadHandle(i);
-        }}
-        source={{ uri: uri }}
-        contentFit="cover"
-        placeholder={blurhash}
-        transition={1_800}
-      />
-    </View>
-  );
-};
-
-const createSlideSchema = (imageList: string[]) =>
-  ({
-    state: {
-      imgList: imageList || [],
-      loadQueue: new Array(imageList.length).fill(0),
-    },
-    actions: {
-      loaded: (index) => {
-        return (state) => {
-          state.loadQueue[index] = 1;
-        };
-      },
-    },
-  }) as ModelType<SlideStateProps, SlideActionsProps>;
-
 interface PriceTagProps {
   price: string;
   isFree: boolean;
+  isAccommodation: boolean;
 }
 
-const PriceTag = ({ price, isFree }: PriceTagProps) => {
+const PriceTag = ({ price, isFree, isAccommodation }: PriceTagProps) => {
   return (
     <View className={`rounded-lg ${isFree ? 'bg-green-200' : 'bg-pink-200'}`}>
       <View className="flex-row items-center justify-center px-1.5">
@@ -205,7 +165,11 @@ const PriceTag = ({ price, isFree }: PriceTagProps) => {
         >
           {isFree ? 'Free' : `₱${price}`}
         </Text>
-        {isFree ? null : <Person height={10} width={10} />}
+        {!isFree ? (
+          isAccommodation ? null : (
+            <Person height={10} width={10} />
+          )
+        ) : null}
       </View>
     </View>
   );

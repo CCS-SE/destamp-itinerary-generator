@@ -1,6 +1,8 @@
+import { View } from 'react-native';
 import { Tabs } from 'expo-router';
 
 import { TabBarIcon } from '~/components/Icon/TabBarIcon';
+import Logo from '../../../assets/images/destampp-logo.svg';
 
 export default function TabLayout() {
   return (
@@ -13,6 +15,13 @@ export default function TabLayout() {
             fontSize: 25,
             fontFamily: 'Poppins',
             textAlign: 'left',
+          },
+          headerRight: () => {
+            return (
+              <View className="mr-3 rounded-full p-0.5">
+                <Logo height={52} width={52} />
+              </View>
+            );
           },
           tabBarActiveTintColor: '#FC6873',
           tabBarIcon: ({ color }) => (

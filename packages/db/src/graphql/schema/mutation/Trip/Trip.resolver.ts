@@ -8,45 +8,66 @@ import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-type CreateDepartingLocationInput =
-  NexusGenInputs['CreateDepartingLocationInput'];
+
+const selectedFields = {
+  id: true,
+  price: true,
+  isAttraction: true,
+  visitDuration: true,
+  latitude: true,
+  longitude: true,
+  accommodation: true,
+  restaurant: true,
+};
 
 export const createTrip = async (
-  tripInput: CreateTripInput,
-  locationInput: CreateDepartingLocationInput,
+  userId: string,
+  input: CreateTripInput,
   ctx: Context,
 ) => {
+  const {
+    budget,
+    isAccommodationIncluded,
+    isFoodIncluded,
+    isTransportationIncluded,
+    title,
+    travelSize,
+    travelerCount,
+  } = input;
   try {
-    const restaurants = await ctx.prisma.place.findMany({
+    const restaurants = await ctx.prisma.pointOfInterest.findMany({
       where: {
-        type: 'RESTAURANT',
+        restaurant: {
+          isNot: null,
+        },
+      },
+      select: {
+        ...selectedFields,
       },
     });
 
-    const attractions = await ctx.prisma.place.findMany({
+    const attractions = await ctx.prisma.pointOfInterest.findMany({
       where: {
-        type: 'ATTRACTION',
+        isAttraction: true,
+      },
+      select: {
+        ...selectedFields,
       },
     });
 
-    const accomodations = await ctx.prisma.place.findMany({
+    const accomodations = await ctx.prisma.pointOfInterest.findMany({
       where: {
-        type: 'ACCOMMODATION',
+        accommodation: {
+          isNot: null,
+        },
       },
-      orderBy: {
-        id: 'asc',
+      select: {
+        ...selectedFields,
       },
     });
-
-    const departingLocation = await ctx.prisma.departingLocation.create({
-      data: locationInput,
-    });
-
-    const numberOfPeople =
-      (tripInput.adultCount || 0) + (tripInput.childCount || 0);
 
     const suggestedDestinations = await generateItinerary(
-      tripInput,
+      input,
       restaurants,
       attractions,
     );
@@ -54,54 +75,51 @@ export const createTrip = async (
     const bestSoFar = suggestedDestinations[0];
 
     const suggestedPlans = bestSoFar
-      ? getDaySuggestions(bestSoFar, tripInput, accomodations)
+      ? getDaySuggestions(bestSoFar, input, accomodations)
       : [];
 
-    // const dailyPlans = suggestedPlans;
-
-    const dailyPlans = await getDailyPlans(suggestedPlans, tripInput);
+    const dailyPlans = await getDailyPlans(suggestedPlans, input);
 
     return await ctx.prisma.trip.create({
       data: {
-        budget: tripInput.budget,
-        endDate: new Date(tripInput.endDate),
-        startDate: new Date(tripInput.startDate),
-        title: tripInput.title,
-        travelSize: tripInput.travelSize,
-        adultCount: tripInput.adultCount,
-        childCount: tripInput.childCount,
-        isAccommodationIncluded: tripInput.isAccommodationIncluded,
-        isFoodIncluded: tripInput.isFoodIncluded,
-        isTransportationIncluded: tripInput.isTransportationIncluded,
-        travelerId: tripInput.travelerId,
-        destinationId: tripInput.destinationId,
-        departingLocationId: departingLocation.id,
-        preferredTime: tripInput.preferredTime as string[],
-        itinerary: {
-          create: {
-            totalCost: bestSoFar?.chrom.sumCost() || 0,
-            totalDuration: bestSoFar?.chrom.sumDuration() || 0,
-            url: '',
-            dailyItineraries: {
-              create: dailyPlans.map((dailyPlan, index) => ({
-                accommodationCost: dailyPlan.chrom.accommodationCost(),
-                foodCost: multiplyRangeByPeople(
-                  dailyPlan.chrom.foodCostRange(),
-                  numberOfPeople,
-                ),
-                attractionCost:
-                  dailyPlan.chrom.attractionCost() * numberOfPeople,
-                transportationCost: dailyPlan.travelExpenses,
-                travelDistances: dailyPlan.travelDistances,
-                travelDurations: dailyPlan.travelDurations,
-                dayIndex: index,
-                destinations: {
-                  connect: dailyPlan.chrom.genes
-                    .map((gene) => gene.id)
-                    .map((id) => ({ id })),
+        budget: budget,
+        endDate: new Date(input.endDate),
+        startDate: new Date(input.startDate),
+        title: title,
+        travelSize: travelSize,
+        travelerCount: travelerCount,
+        isAccommodationIncluded: isAccommodationIncluded,
+        isFoodIncluded: isFoodIncluded,
+        isTransportationIncluded: isTransportationIncluded,
+        startingLocation: input.startingLocation,
+        timeSlots: input.timeSlots,
+        dailyItineraries: {
+          create: dailyPlans.map((dailyPlan, index) => ({
+            dayIndex: index,
+            accommodationCost: dailyPlan.chrom.accommodationCost(),
+            foodCost: multiplyRangeByPeople(
+              dailyPlan.chrom.foodCostRange(),
+              travelerCount,
+            ),
+            attractionCost: dailyPlan.chrom.attractionCost() * travelerCount,
+            transportationCost: dailyPlan.travelExpenses,
+            dailyItineraryPois: {
+              create: dailyPlan.chrom.genes.map((gene, index) => ({
+                order: index,
+                duration: dailyPlan.travelDurations[index]!,
+                distance: dailyPlan.travelDistances[index]!,
+                poi: {
+                  connect: {
+                    id: gene.id as string,
+                  },
                 },
               })),
             },
+          })),
+        },
+        user: {
+          connect: {
+            id: userId,
           },
         },
       },
@@ -113,31 +131,21 @@ export const createTrip = async (
 };
 
 export const deleteTrip = async (id: number, ctx: Context) => {
-  const itinerary = await ctx.prisma.itinerary.findFirstOrThrow({
+  await ctx.prisma.expense.deleteMany({
     where: {
-      trip: {
-        id: id,
-      },
+      tripId: id,
     },
   });
 
-  await ctx.prisma.expense.deleteMany({
+  await ctx.prisma.dailyItineraryPoi.deleteMany({
     where: {
-      itinerary: {
-        id: itinerary.id,
+      dailyItinerary: {
+        tripId: id,
       },
     },
   });
 
   await ctx.prisma.dailyItinerary.deleteMany({
-    where: {
-      itinerary: {
-        id: itinerary.id,
-      },
-    },
-  });
-
-  await ctx.prisma.itinerary.delete({
     where: {
       tripId: id,
     },
@@ -146,9 +154,6 @@ export const deleteTrip = async (id: number, ctx: Context) => {
   return await ctx.prisma.trip.delete({
     where: {
       id: id,
-    },
-    include: {
-      departingLocation: true,
     },
   });
 };

@@ -19,9 +19,8 @@ import CategoryList from '~/components/List/CategoryList';
 import {
   CreateExpenseDocument,
   ExpenseCategory,
-  GetTransactionsDocument,
+  GetTripExpensesDocument,
   MutationCreateExpenseArgs,
-  PlaceType,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
 import { CustomTextInput } from '../FormField/CustomTextInput';
@@ -32,17 +31,17 @@ import {
 
 interface AddSpendingFormProps {
   closeModal: () => void;
-  itineraryId: number;
+  tripId: number;
   minDate: Date;
   maxDate: Date;
   noteString?: string;
   amount?: string;
-  categoryType?: PlaceType | ExpenseCategory;
+  categoryType?: ExpenseCategory;
 }
 
 export default function AddSpendingForm({
   closeModal,
-  itineraryId,
+  tripId,
   minDate,
   maxDate,
   noteString,
@@ -50,11 +49,11 @@ export default function AddSpendingForm({
   categoryType,
 }: AddSpendingFormProps) {
   const defaultCategory = (): ExpenseCategory => {
-    if (categoryType === PlaceType.Accommodation) {
+    if (categoryType === ExpenseCategory.Accommodation) {
       return ExpenseCategory.Accommodation;
-    } else if (categoryType === PlaceType.Attraction) {
+    } else if (categoryType === ExpenseCategory.Sightseeing) {
       return ExpenseCategory.Sightseeing;
-    } else if (categoryType === PlaceType.Restaurant) {
+    } else if (categoryType === ExpenseCategory.Food) {
       return ExpenseCategory.Food;
     } else if (categoryType === ExpenseCategory.Transportation) {
       return ExpenseCategory.Transportation;
@@ -104,24 +103,25 @@ export default function AddSpendingForm({
     setIsSubmitting(true);
 
     const createExpenseInput: MutationCreateExpenseArgs = {
+      tripId: tripId,
       data: {
         amount: parseFloat(data.amount),
         category: category,
-        itineraryId: itineraryId,
-        date: date,
+        dateSpent: date,
         note: note,
       },
     };
 
     await createExpense({
       variables: {
+        tripId: createExpenseInput.tripId,
         data: createExpenseInput.data,
       },
       refetchQueries: [
         {
-          query: GetTransactionsDocument,
+          query: GetTripExpensesDocument,
           variables: {
-            itineraryId: itineraryId,
+            tripId: tripId,
           },
         },
       ],

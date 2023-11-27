@@ -1,19 +1,30 @@
-import { Place } from '@prisma/client';
-
-import { NexusGenInputs } from '../../graphql/generated/nexus';
+import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
 import { evaluateFitness } from './fitness';
 import { generatePopulation } from './populationInitialization';
 import { selection, selectNextGeneration } from './selection';
 import { Chromosome } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
+export type Restaurant = NexusGenObjects['Restaurant'];
+export type Accommodation = NexusGenObjects['Accommodation'];
+
+export type PointOfInterest = {
+  id: string;
+  price: string;
+  isAttraction: boolean;
+  visitDuration: number;
+  latitude: number;
+  longitude: number;
+  restaurant: Restaurant | null;
+  accommodation: Accommodation | null;
+};
 
 const REPETITION_RATE = 1;
 
 export async function generateItinerary(
   tripInput: CreateTripInput,
-  restaurants: Place[],
-  attractions: Place[],
+  restaurants: PointOfInterest[],
+  attractions: PointOfInterest[],
 ) {
   const bestSoFar: Chromosome[] = [];
   let counter = 0;

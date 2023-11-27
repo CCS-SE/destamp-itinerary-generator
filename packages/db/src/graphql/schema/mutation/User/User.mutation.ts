@@ -2,18 +2,15 @@ import { ApolloServerErrorCode } from '@apollo/server/errors';
 import { GraphQLError } from 'graphql';
 import { mutationField, nonNull } from 'nexus';
 
-import CreateTravelerInput from '../../input/Traveler.input';
-import CreateUserInput from '../../input/User.input';
 import { createUser } from './User.resolver';
 
 export const CreateUser = mutationField('createUser', {
   type: 'User',
   args: {
-    userInput: nonNull(CreateUserInput),
-    travelerInput: nonNull(CreateTravelerInput),
+    input: nonNull('CreateUserInput'),
   },
   validate: async (_, args, context) => {
-    const { email } = args.userInput;
+    const { email } = args.input;
 
     // check if email already exist
     const existingUser = await context.prisma.user.findFirst({
@@ -31,6 +28,5 @@ export const CreateUser = mutationField('createUser', {
       });
     }
   },
-  resolve: (_, args, context) =>
-    createUser(args.userInput, args.travelerInput, context),
+  resolve: (_, args, context) => createUser(args.input, context),
 });

@@ -10,13 +10,13 @@ import {
 
 import {
   ExpenseCategory,
-  GetTransactionsDocument,
+  GetTripExpensesDocument,
   UpdateExpenseDocument,
 } from '~/graphql/generated';
 import { confirmationAlert } from '~/utils/utils';
 
 interface TransactionsListItemProps {
-  itineraryId: number;
+  tripId: number;
   id: number;
   category: ExpenseCategory;
   date: string;
@@ -25,7 +25,7 @@ interface TransactionsListItemProps {
 }
 
 const TransactionsListItem = ({
-  itineraryId,
+  tripId,
   id,
   date,
   note,
@@ -54,11 +54,11 @@ const TransactionsListItem = ({
   ) => {
     await updateAmount({
       variables: {
-        updateExpenseId: id,
+        expenseId: id,
         data: {
           amount: parseFloat(amount),
           category: category,
-          date: new Date(date),
+          dateSpent: new Date(date),
           note: note,
         },
       },
@@ -67,9 +67,9 @@ const TransactionsListItem = ({
       },
       refetchQueries: [
         {
-          query: GetTransactionsDocument,
+          query: GetTripExpensesDocument,
           variables: {
-            itineraryId: itineraryId,
+            tripId: tripId,
           },
         },
       ],
@@ -89,7 +89,7 @@ const TransactionsListItem = ({
         'Cancel',
         async () =>
           await handleUpdateExpense(
-            itineraryId,
+            tripId,
             id,
             value.amount,
             category,

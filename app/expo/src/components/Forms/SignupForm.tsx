@@ -117,7 +117,7 @@ export default function SignUpForm() {
         <Text className="ml-2.5 self-start font-poppins text-base text-gray-500">
           Choose account type
         </Text>
-        <View className="mx-1.5 flex-row justify-between">
+        <View className="mx-1.5 flex-row justify-between px-2">
           <UserTypeCard
             selectedIcon={<Traveler height={40} width={30} />}
             unselectedIcon={<UnselectedTraveler height={40} width={30} />}
@@ -129,7 +129,7 @@ export default function SignUpForm() {
             selectedIcon={<BusinessOwner height={33} width={25} />}
             unselectedIcon={<UnselectedBusinessOwner height={33} width={25} />}
             isSelected={userType === UserType.BusinessOperator}
-            title="Business Owner"
+            title="Business Operator"
             onPress={() => handleUserTypeChange(UserType.BusinessOperator)}
           />
         </View>
