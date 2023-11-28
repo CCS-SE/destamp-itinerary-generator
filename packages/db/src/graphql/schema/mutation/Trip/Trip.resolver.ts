@@ -12,6 +12,8 @@ type CreateTripInput = NexusGenInputs['CreateTripInput'];
 const selectedFields = {
   id: true,
   price: true,
+  name: true,
+  categories: true,
   isAttraction: true,
   visitDuration: true,
   latitude: true,
@@ -43,6 +45,11 @@ export const createTrip = async (
       },
       select: {
         ...selectedFields,
+        accommodation: {
+          include: {
+            amenities: true,
+          },
+        },
       },
     });
 
@@ -52,6 +59,11 @@ export const createTrip = async (
       },
       select: {
         ...selectedFields,
+        accommodation: {
+          include: {
+            amenities: true,
+          },
+        },
       },
     });
 
@@ -63,6 +75,11 @@ export const createTrip = async (
       },
       select: {
         ...selectedFields,
+        accommodation: {
+          include: {
+            amenities: true,
+          },
+        },
       },
     });
 

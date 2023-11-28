@@ -1,4 +1,5 @@
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
+import { PointOfInterest } from '../ga-operations';
 
 interface Activities {
   Sightseeing?: number;
@@ -17,8 +18,6 @@ interface Preference {
   cuisines: string[];
 }
 
-type Place = NexusGenFieldTypes['Place'];
-
 function calculateSimilarityScore(
   userFeatures: string[],
   placeFeatures: string[],
@@ -33,9 +32,9 @@ function calculateSimilarityScore(
 }
 
 export function contentBasedFiltering(
-  places: Place[],
+  places: PointOfInterest[],
   preference: Preference,
-): Place[] {
+): PointOfInterest[] {
   const nonZeroActivities: string[] = Object.entries(preference.activities)
     .filter(([_, value]) => value !== undefined && value !== 0)
     .map(([key]) => key);
@@ -47,17 +46,16 @@ export function contentBasedFiltering(
     nonZeroActivities,
   );
 
-  const similarityScores = places.map((place: Place) => {
-    const placeFeatures: string[] = place.amenities
-      .map((amenity) => amenity.name)
+  const similarityScores = places.map((place: PointOfInterest) => {
+    const placeFeatures: string[] = place.categories
+      .map((category) => category.name)
       .concat(
-        place.diningCuisines.map((cuisine) => cuisine.name),
-        place.diningAtmospheres.map((atmosphere) => atmosphere.name),
-        place.categories.map((category) => category.name),
+        place.restaurant?.atmospheres || [],
+        place.accommodation?.amenities.map((amenity) => amenity.name) || [],
       );
 
     return {
-      name: place.name,
+      name: place.name as string,
       score: calculateSimilarityScore(userPreferences, placeFeatures),
     };
   });
@@ -65,7 +63,7 @@ export function contentBasedFiltering(
   const sortedScores = similarityScores.sort((a, b) => b.score - a.score);
   const filteredScores = sortedScores.filter((score) => score.score > 0);
 
-  const sortedPlaces: Place[] = filteredScores.map((score) => {
+  const sortedPlaces: PointOfInterest[] = filteredScores.map((score) => {
     return places.find((place) => place.name === score.name)!;
   });
 
