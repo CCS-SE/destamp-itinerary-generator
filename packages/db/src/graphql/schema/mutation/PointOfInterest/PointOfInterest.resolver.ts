@@ -80,3 +80,43 @@ export const createPoi = async (
     },
   });
 };
+
+export const deletePoi = async (poiId: string, ctx: Context) => {
+  await ctx.prisma.operatingHour.deleteMany({
+    where: {
+      poiId: poiId,
+    },
+  });
+
+  await ctx.prisma.image.deleteMany({
+    where: {
+      poiImage: {
+        poiId: poiId,
+      },
+    },
+  });
+
+  await ctx.prisma.poiImage.deleteMany({
+    where: {
+      poiId: poiId,
+    },
+  });
+
+  await ctx.prisma.accommodation.delete({
+    where: {
+      poiId: poiId,
+    },
+  });
+
+  await ctx.prisma.restaurant.delete({
+    where: {
+      poiId: poiId,
+    },
+  });
+
+  return await ctx.prisma.pointOfInterest.delete({
+    where: {
+      id: poiId,
+    },
+  });
+};
