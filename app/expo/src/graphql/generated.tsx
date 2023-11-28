@@ -66,6 +66,23 @@ export type CreateExpenseInput = {
   note?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CreatePoiInput = {
+  address: Scalars['String']['input'];
+  amenities?: InputMaybe<Array<Scalars['String']['input']>>;
+  atmospheres?: InputMaybe<Array<Scalars['String']['input']>>;
+  categories: Array<Scalars['String']['input']>;
+  contactNumber: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageUrls: Array<Scalars['String']['input']>;
+  isAttraction: Scalars['Boolean']['input'];
+  latitude: Scalars['Float']['input'];
+  longitude: Scalars['Float']['input'];
+  name: Scalars['String']['input'];
+  operatingHours: Array<OperatingHoursInput>;
+  price: Scalars['String']['input'];
+  visitDuration: Scalars['Int']['input'];
+};
+
 export type CreateTripInput = {
   budget: Scalars['Float']['input'];
   endDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -144,9 +161,11 @@ export type Image = {
 export type Mutation = {
   __typename?: 'Mutation';
   createExpense: Expense;
+  createMutation: Poi;
   createTrip: Trip;
   createUser: User;
   deleteExpense: Expense;
+  deletePoi: Poi;
   deleteTrip: Trip;
   updateExpense: Expense;
 };
@@ -154,6 +173,11 @@ export type Mutation = {
 export type MutationCreateExpenseArgs = {
   data: CreateExpenseInput;
   tripId: Scalars['Int']['input'];
+};
+
+export type MutationCreateMutationArgs = {
+  input: CreatePoiInput;
+  userId: Scalars['String']['input'];
 };
 
 export type MutationCreateTripArgs = {
@@ -167,6 +191,10 @@ export type MutationCreateUserArgs = {
 
 export type MutationDeleteExpenseArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type MutationDeletePoiArgs = {
+  poiId: Scalars['String']['input'];
 };
 
 export type MutationDeleteTripArgs = {
@@ -186,6 +214,14 @@ export type OperatingHour = {
   is24Hours: Scalars['Boolean']['output'];
   isClosed: Scalars['Boolean']['output'];
   openTime?: Maybe<Scalars['DateTime']['output']>;
+};
+
+export type OperatingHoursInput = {
+  closeTime?: InputMaybe<Scalars['DateTime']['input']>;
+  day: Scalars['Int']['input'];
+  is24hours: Scalars['Boolean']['input'];
+  isClosed: Scalars['Boolean']['input'];
+  openTime?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type Poi = {
@@ -430,6 +466,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Category: ResolverTypeWrapper<Category>;
   CreateExpenseInput: CreateExpenseInput;
+  CreatePoiInput: CreatePoiInput;
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
@@ -443,6 +480,7 @@ export type ResolversTypes = {
   JSON: ResolverTypeWrapper<Scalars['JSON']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   OperatingHour: ResolverTypeWrapper<OperatingHour>;
+  OperatingHoursInput: OperatingHoursInput;
   Poi: ResolverTypeWrapper<Poi>;
   PoiImage: ResolverTypeWrapper<PoiImage>;
   Query: ResolverTypeWrapper<{}>;
@@ -464,6 +502,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Category: Category;
   CreateExpenseInput: CreateExpenseInput;
+  CreatePoiInput: CreatePoiInput;
   CreateTripInput: CreateTripInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: DailyItinerary;
@@ -476,6 +515,7 @@ export type ResolversParentTypes = {
   JSON: Scalars['JSON']['output'];
   Mutation: {};
   OperatingHour: OperatingHour;
+  OperatingHoursInput: OperatingHoursInput;
   Poi: Poi;
   PoiImage: PoiImage;
   Query: {};
@@ -622,6 +662,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateExpenseArgs, 'data' | 'tripId'>
   >;
+  createMutation?: Resolver<
+    ResolversTypes['Poi'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreateMutationArgs, 'input' | 'userId'>
+  >;
   createTrip?: Resolver<
     ResolversTypes['Trip'],
     ParentType,
@@ -639,6 +685,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationDeleteExpenseArgs, 'id'>
+  >;
+  deletePoi?: Resolver<
+    ResolversTypes['Poi'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeletePoiArgs, 'poiId'>
   >;
   deleteTrip?: Resolver<
     ResolversTypes['Trip'],
@@ -910,6 +962,15 @@ export type DeleteExpenseMutationVariables = Exact<{
 export type DeleteExpenseMutation = {
   __typename?: 'Mutation';
   deleteExpense: { __typename?: 'Expense'; id: number };
+};
+
+export type DeletePoiMutationVariables = Exact<{
+  poiId: Scalars['String']['input'];
+}>;
+
+export type DeletePoiMutation = {
+  __typename?: 'Mutation';
+  deletePoi: { __typename?: 'Poi'; id: string };
 };
 
 export type CreateTripMutationVariables = Exact<{
@@ -1328,6 +1389,57 @@ export const DeleteExpenseDocument = {
   DeleteExpenseMutation,
   DeleteExpenseMutationVariables
 >;
+export const DeletePoiDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'DeletePoi' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'poiId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deletePoi' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'poiId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'poiId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<DeletePoiMutation, DeletePoiMutationVariables>;
 export const CreateTripDocument = {
   kind: 'Document',
   definitions: [
