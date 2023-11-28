@@ -88,6 +88,12 @@ export const deletePoi = async (poiId: string, ctx: Context) => {
     },
   });
 
+  await ctx.prisma.poiImage.deleteMany({
+    where: {
+      poiId: poiId,
+    },
+  });
+
   await ctx.prisma.image.deleteMany({
     where: {
       poiImage: {
@@ -96,23 +102,32 @@ export const deletePoi = async (poiId: string, ctx: Context) => {
     },
   });
 
-  await ctx.prisma.poiImage.deleteMany({
+  const restaurant = await ctx.prisma.restaurant.findUnique({
+    where: {
+      poiId: poiId,
+    },
+  });
+  const accommodation = await ctx.prisma.accommodation.findUnique({
     where: {
       poiId: poiId,
     },
   });
 
-  await ctx.prisma.accommodation.delete({
-    where: {
-      poiId: poiId,
-    },
-  });
+  if (restaurant) {
+    await ctx.prisma.restaurant.delete({
+      where: {
+        id: restaurant.id,
+      },
+    });
+  }
 
-  await ctx.prisma.restaurant.delete({
-    where: {
-      poiId: poiId,
-    },
-  });
+  if (accommodation) {
+    await ctx.prisma.accommodation.delete({
+      where: {
+        id: accommodation.id,
+      },
+    });
+  }
 
   return await ctx.prisma.pointOfInterest.delete({
     where: {
