@@ -226,3 +226,10 @@ export function tripDuration(
 export const formatDateToString = (date: Moment | null) => {
   return date ? date.format('YYYY-MM-DD') : '';
 };
+
+export const dateFormmater = (date: string) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
+};

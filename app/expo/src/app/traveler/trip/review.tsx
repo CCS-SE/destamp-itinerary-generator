@@ -26,6 +26,7 @@ import {
 import useFormstore from '~/store/useFormStore';
 import {
   amountFormatter,
+  dateFormmater,
   formatDateToString,
   separateWords,
   toSentenceCase,
@@ -75,13 +76,6 @@ export default function ReviewTripScreen() {
     router.back();
   };
 
-  const dateFormmater = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   const [createTrip] = useMutation(CreateTripDocument);
 
   const onSubmit = async () => {
@@ -116,7 +110,9 @@ export default function ReviewTripScreen() {
           travelerCount:
             tripData.travelSize === TravelSize.Group
               ? tripData.groupCount
-              : tripData.adultCount + tripData.childCount,
+              : tripData.travelSize === TravelSize.Family
+              ? tripData.adultCount + tripData.childCount
+              : tripData.adultCount,
           timeSlots: tripData.timeslots,
           startingLocation: tripData.startingLocation,
         },
