@@ -1,58 +1,67 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
-import PriceOption from '~/components/BusinessOperator/PriceRangeInput';
+import PriceInput from '~/components/BusinessOperator/PriceRange/AdmissionFee';
+import PriceRangeInput from '~/components/BusinessOperator/PriceRange/PriceRangeInput';
 import Questions from '~/components/BusinessOperator/Question';
+import BasicButton from '~/components/Button/BasicButton';
 import CreateBusinessHeader from '.';
 
 const PriceRange = () => {
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
+  const [admissionFee, setAdmissionFee] = useState<number>(0);
 
   const handleMinPriceChange = (value: string) => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
       setMinPrice(parsedValue);
-
-      // Check if the new min price is greater than current max price
-      if (parsedValue > maxPrice) {
-        // If yes, update max price to match min price
-        setMaxPrice(parsedValue);
-      }
     }
   };
 
   const handleMaxPriceChange = (value: string) => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
-      // Check if the new max price is less than current min price
-      if (parsedValue < minPrice) {
-        // If yes, update min price to match max price
-        setMinPrice(parsedValue);
-      }
-
       setMaxPrice(parsedValue);
+    }
+  };
+
+  const handleNextButton = () => {
+    if (minPrice === 0 && maxPrice === 0) {
+      Alert.alert('Invalid Price Range', 'Please input a price range.');
+    } else if (minPrice >= maxPrice) {
+      Alert.alert(
+        'Invalid Price Range',
+        'Minimum price should be lower than the maximum price.',
+      );
+    } else {
+      router.push('/business/create/restaurantFacilities');
     }
   };
 
   return (
     <View style={styles.container}>
-      <CreateBusinessHeader />
-      <ScrollView>
-        <SafeAreaView>
-          <Questions question={'Average price range per person'} />
-          <View style={styles.row}></View>
-          <View>
-            <PriceOption
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              onMinPriceChange={handleMinPriceChange}
-              onMaxPriceChange={handleMaxPriceChange}
-            />
-          </View>
-        </SafeAreaView>
-      </ScrollView>
+      <CreateBusinessHeader title={'Price Range'} />
+      <SafeAreaView>
+        <Questions question={'Average price range per person'} />
+        <View style={styles.row}></View>
+        <View>
+          <PriceRangeInput
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            onMinPriceChange={handleMinPriceChange}
+            onMaxPriceChange={handleMaxPriceChange}
+          />
+        </View>
+        <Questions question={'Admission Fee'} />
+        <Text style={{ fontFamily: 'Poppins' }}>
+          Is there a fee for visiting this place?
+        </Text>
+        <PriceInput admissionFee={admissionFee} />
+        <BasicButton title={'Next'} onPress={handleNextButton} />
+      </SafeAreaView>
     </View>
   );
 };
