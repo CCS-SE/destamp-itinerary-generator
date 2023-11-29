@@ -61,6 +61,14 @@ input CreateTripInput {
   travelerCount: Int!
 }
 
+input CreateTripPreferenceInput {
+  accommodationType: String!
+  activities: JSON!
+  amenities: [String!]!
+  cuisines: [String!]!
+  diningStyles: [String!]!
+}
+
 input CreateUserInput {
   email: String!
   firstName: String!

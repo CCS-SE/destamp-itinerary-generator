@@ -102,6 +102,14 @@ export interface NexusGenInputs {
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     travelerCount: number; // Int!
   };
+  CreateTripPreferenceInput: {
+    // input type
+    accommodationType: string; // String!
+    activities: NexusGenScalars['JSON']; // JSON!
+    amenities: string[]; // [String!]!
+    cuisines: string[]; // [String!]!
+    diningStyles: string[]; // [String!]!
+  };
   CreateUserInput: {
     // input type
     email: string; // String!
