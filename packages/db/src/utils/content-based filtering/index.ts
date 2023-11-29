@@ -1,4 +1,5 @@
 import { PointOfInterest } from '../ga-operations';
+import { places, userPreference } from './__test__/mock';
 
 interface Activities {
   Sightseeing?: number;
@@ -17,7 +18,7 @@ interface Preference {
   cuisines: string[];
 }
 
-function calculateSimilarityScore(
+export function calculateSimilarityScore(
   userFeatures: string[],
   placeFeatures: string[],
 ): number {
@@ -29,7 +30,6 @@ function calculateSimilarityScore(
   const magnitude2 = Math.sqrt(placeFeatures.length);
   return dotProduct / (magnitude1 * magnitude2);
 }
-
 export function contentBasedFiltering(
   places: PointOfInterest[],
   preference: Preference,
