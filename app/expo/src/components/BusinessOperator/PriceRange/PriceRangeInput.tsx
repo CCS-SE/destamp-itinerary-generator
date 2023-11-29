@@ -13,7 +13,6 @@ const PriceRangeInput = ({
   onMaxPriceChange: (value: string) => void;
 }) => {
   const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-
   const handleMinPriceChange = (value: string) => {
     setShowErrorMessage(false);
     if (value === '') {
@@ -22,7 +21,6 @@ const PriceRangeInput = ({
       onMinPriceChange(value);
     }
   };
-
   const handleMaxPriceChange = (value: string) => {
     setShowErrorMessage(false);
     if (value === '') {
@@ -31,14 +29,12 @@ const PriceRangeInput = ({
       onMaxPriceChange(value);
     }
   };
-
   const handleBlur = () => {
     // Check if both min and max prices are empty
     if (minPrice === 0 && maxPrice === 0) {
       setShowErrorMessage(true);
     }
   };
-
   const textBoxStyle: ViewStyle = {
     height: 40,
     borderColor: 'transparent',
@@ -49,7 +45,6 @@ const PriceRangeInput = ({
     justifyContent: 'space-around',
     padding: 5,
   };
-
   return (
     <View style={{ margin: 15, marginBottom: 40 }}>
       <View
@@ -115,5 +110,4 @@ const PriceRangeInput = ({
     </View>
   );
 };
-
 export default PriceRangeInput;

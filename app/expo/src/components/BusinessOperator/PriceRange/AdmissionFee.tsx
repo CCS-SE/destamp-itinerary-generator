@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
-const AdmissionFee = ({ admissionFee }: { admissionFee: number }) => {
-  const [feeValue, setFeeValue] = useState(admissionFee.toString());
+interface AdmissionFeeProps {
+  admissionFee: string;
+  admissionFeeOnChange: (value: number) => void;
+  onChangeText: (value: string) => void;
+}
+
+const AdmissionFee: React.FC<AdmissionFeeProps> = ({
+  admissionFee,
+  admissionFeeOnChange,
+  // onChangeText,
+}) => {
+  const [feeValue, setFeeValue] = useState<string>(admissionFee);
 
   const handleFeeChange = (value: string) => {
     setFeeValue(value);
+    const parsedValue = parseFloat(value);
+    if (!isNaN(parsedValue)) {
+      admissionFeeOnChange(parsedValue);
+    }
   };
 
   return (

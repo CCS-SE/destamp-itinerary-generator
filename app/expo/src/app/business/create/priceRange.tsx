@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
@@ -16,37 +16,32 @@ const PriceRange = () => {
   const [admissionFee, setAdmissionFee] = useState<number>(0);
   const [showAdmissionFeeInput, setShowAdmissionFeeInput] =
     useState<boolean>(true);
-
   const handleMinPriceChange = (value: string) => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
       setMinPrice(parsedValue);
     }
   };
-
   const handleMaxPriceChange = (value: string) => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
       setMaxPrice(parsedValue);
     }
   };
-
   const handleAdmissionFeeOptionSelect = (selectedOption: string | null) => {
     setShowAdmissionFeeInput(selectedOption !== 'NO');
   };
-
   const handleNextButton = () => {
     console.log('minPrice:', minPrice);
     console.log('maxPrice:', maxPrice);
     console.log('admissionFee:', admissionFee);
     console.log('showAdmissionFeeInput:', showAdmissionFeeInput);
-
     if (minPrice === 0 && maxPrice === 0) {
       console.log('Invalid Price Range');
-      Alert.alert('Invalid Price Range: Please input a price range.');
+      window.alert('Invalid Price Range: Please input a price range.');
     } else if (minPrice >= maxPrice) {
       console.log('Invalid Price Range');
-      Alert.alert(
+      window.alert(
         'Invalid Price Range: Minimum price should be lower than the maximum price.',
       );
     } else {
@@ -54,7 +49,6 @@ const PriceRange = () => {
       router.push('/business/create/establishmentType');
     }
   };
-
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <CreateBusinessHeader title={'Price Range'} />
@@ -80,7 +74,20 @@ const PriceRange = () => {
             marginBottom: 15,
           }}
         >
-          {showAdmissionFeeInput && <PriceInput admissionFee={admissionFee} />}
+          {showAdmissionFeeInput && (
+            <PriceInput
+              admissionFee={admissionFee.toString()}
+              onChangeText={(value: string) => {
+                const parsedValue = parseFloat(value);
+                if (!isNaN(parsedValue)) {
+                  setAdmissionFee(parsedValue);
+                }
+              }}
+              admissionFeeOnChange={function (value: number): void {
+                throw new Error('Function not implemented.');
+              }}
+            />
+          )}
           <PriceRangeCheckBox
             option={'NO'}
             onSelect={handleAdmissionFeeOptionSelect}
@@ -91,5 +98,4 @@ const PriceRange = () => {
     </View>
   );
 };
-
 export default PriceRange;
