@@ -59,5 +59,17 @@ export const queryPois = async (
 };
 
 export const queryAllCategories = (ctx: Context) => {
-  return ctx.prisma.category.findMany();
+  return ctx.prisma.category.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+  });
+};
+
+export const queryAllAmenities = (ctx: Context) => {
+  return ctx.prisma.amenity.findMany({
+    orderBy: {
+      name: 'asc',
+    },
+  });
 };

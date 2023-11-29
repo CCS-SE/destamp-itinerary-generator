@@ -256,6 +256,7 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
+  amenities: Array<Amenity>;
   categories: Array<Category>;
   poi: Poi;
   pois: Array<Poi>;
@@ -790,6 +791,11 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  amenities?: Resolver<
+    Array<ResolversTypes['Amenity']>,
+    ParentType,
+    ContextType
+  >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
     ParentType,
@@ -1062,6 +1068,13 @@ export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never }>;
 export type GetAllCategoriesQuery = {
   __typename?: 'Query';
   categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
+};
+
+export type GetAmenitiesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAmenitiesQuery = {
+  __typename?: 'Query';
+  amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
 };
 
 export type GetTripsQueryVariables = Exact<{
@@ -1857,6 +1870,32 @@ export const GetAllCategoriesDocument = {
   GetAllCategoriesQuery,
   GetAllCategoriesQueryVariables
 >;
+export const GetAmenitiesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAmenities' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amenities' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetAmenitiesQuery, GetAmenitiesQueryVariables>;
 export const GetTripsDocument = {
   kind: 'Document',
   definitions: [
