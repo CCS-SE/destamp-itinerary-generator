@@ -71,6 +71,23 @@ export interface NexusGenInputs {
     dateSpent: NexusGenScalars['DateTime']; // DateTime!
     note?: string | null; // String
   };
+  CreatePoiInput: {
+    // input type
+    address: string; // String!
+    amenities?: string[] | null; // [String!]
+    atmospheres?: string[] | null; // [String!]
+    categories: string[]; // [String!]!
+    contactNumber: string; // String!
+    description?: string | null; // String
+    imageUrls: string[]; // [String!]!
+    isAttraction: boolean; // Boolean!
+    latitude: number; // Float!
+    longitude: number; // Float!
+    name: string; // String!
+    operatingHours: NexusGenInputs['OperatingHoursInput'][]; // [OperatingHoursInput!]!
+    price: string; // String!
+    visitDuration: number; // Int!
+  };
   CreateTripInput: {
     // input type
     budget: number; // Float!
@@ -93,6 +110,14 @@ export interface NexusGenInputs {
     lastName: string; // String!
     password: string; // String!
     type: NexusGenEnums['UserType']; // UserType!
+  };
+  OperatingHoursInput: {
+    // input type
+    closeTime?: NexusGenScalars['DateTime'] | null; // DateTime
+    day: number; // Int!
+    is24hours: boolean; // Boolean!
+    isClosed: boolean; // Boolean!
+    openTime?: NexusGenScalars['DateTime'] | null; // DateTime
   };
   UpdateExpenseInput: {
     // input type
@@ -324,9 +349,11 @@ export interface NexusGenFieldTypes {
   Mutation: {
     // field return type
     createExpense: NexusGenRootTypes['Expense']; // Expense!
+    createMutation: NexusGenRootTypes['Poi']; // Poi!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
+    deletePoi: NexusGenRootTypes['Poi']; // Poi!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
@@ -482,9 +509,11 @@ export interface NexusGenFieldTypeNames {
   Mutation: {
     // field return type name
     createExpense: 'Expense';
+    createMutation: 'Poi';
     createTrip: 'Trip';
     createUser: 'User';
     deleteExpense: 'Expense';
+    deletePoi: 'Poi';
     deleteTrip: 'Trip';
     updateExpense: 'Expense';
   };
@@ -589,6 +618,11 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['CreateExpenseInput']; // CreateExpenseInput!
       tripId: number; // Int!
     };
+    createMutation: {
+      // args
+      input: NexusGenInputs['CreatePoiInput']; // CreatePoiInput!
+      userId: string; // String!
+    };
     createTrip: {
       // args
       data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
@@ -601,6 +635,10 @@ export interface NexusGenArgTypes {
     deleteExpense: {
       // args
       id: number; // Int!
+    };
+    deletePoi: {
+      // args
+      poiId: string; // String!
     };
     deleteTrip: {
       // args
