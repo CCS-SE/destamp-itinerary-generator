@@ -1,33 +1,15 @@
 import React from 'react';
-import { View } from 'react-native';
-import { router, Stack } from 'expo-router';
+import { Text, View } from 'react-native';
 
-import Back from '../../../../assets/images/back-btn.svg';
+import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 
-const handleBack = () => {
-  router.back();
-};
-
-const CreateBusinessHeader = () => {
+const ReviewBusiness = ({ title }: { title: string }) => {
   return (
-    <View style={{ justifyContent: 'center' }}>
-      <Stack.Screen
-        options={{
-          title: ' Create Business',
-          headerTitleStyle: {
-            color: '#FF8439',
-            fontSize: 21,
-            fontFamily: 'Poppins',
-          },
-          headerLeft: () => (
-            <View>
-              <Back height={35} width={30} onPress={handleBack} />
-            </View>
-          ),
-        }}
-      />
+    <View style={{ alignContent: 'center' }}>
+      <CreateBusinessHeader title={'Review Business'} />
+      <Text> REVIEW</Text>
     </View>
   );
 };
 
-export default CreateBusinessHeader;
+export default ReviewBusiness;
