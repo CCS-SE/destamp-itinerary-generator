@@ -276,6 +276,16 @@ export interface NexusGenObjects {
     travelerCount: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
+  TripPreference: {
+    // root type
+    accommodationType: string; // String!
+    activities: NexusGenScalars['JSON']; // JSON!
+    amenities: string[]; // [String!]!
+    cuisines: string[]; // [String!]!
+    diningStyles: string[]; // [String!]!
+    id: number; // Int!
+    tripId: number; // Int!
+  };
   User: {
     // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -445,6 +455,16 @@ export interface NexusGenFieldTypes {
     travelerCount: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
+  TripPreference: {
+    // field return type
+    accommodationType: string; // String!
+    activities: NexusGenScalars['JSON']; // JSON!
+    amenities: string[]; // [String!]!
+    cuisines: string[]; // [String!]!
+    diningStyles: string[]; // [String!]!
+    id: number; // Int!
+    tripId: number; // Int!
+  };
   User: {
     // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -605,6 +625,16 @@ export interface NexusGenFieldTypeNames {
     travelSize: 'TravelSize';
     travelerCount: 'Int';
     updatedAt: 'DateTime';
+  };
+  TripPreference: {
+    // field return type name
+    accommodationType: 'String';
+    activities: 'JSON';
+    amenities: 'String';
+    cuisines: 'String';
+    diningStyles: 'String';
+    id: 'Int';
+    tripId: 'Int';
   };
   User: {
     // field return type name

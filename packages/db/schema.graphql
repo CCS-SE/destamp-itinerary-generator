@@ -242,6 +242,16 @@ type Trip {
   updatedAt: DateTime!
 }
 
+type TripPreference {
+  accommodationType: String!
+  activities: JSON!
+  amenities: [String!]!
+  cuisines: [String!]!
+  diningStyles: [String!]!
+  id: Int!
+  tripId: Int!
+}
+
 input UpdateExpenseInput {
   amount: Float
   category: ExpenseCategory

@@ -11,6 +11,7 @@ import PointOfInterest from './PointOfInterest';
 import Restaurant from './Restaurant';
 import Stamp from './Stamp';
 import Trip from './Trip';
+import TripPreference from './TripPreference';
 import User from './User';
 
 const Models = [
@@ -28,6 +29,7 @@ const Models = [
   Amenity,
   Stamp,
   OperatingHour,
+  TripPreference,
 ];
 
 export default Models;
