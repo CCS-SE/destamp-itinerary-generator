@@ -84,7 +84,7 @@ const BusinessTimeSelector = () => {
   };
 
   return (
-    <View style={{ margin: 3 }}>
+    <View style={{ margin: 5 }}>
       <View style={{ flexDirection: 'row' }}>
         <TouchableWithoutFeedback
           onPress={() => setShowStartPicker(!showStartPicker)}

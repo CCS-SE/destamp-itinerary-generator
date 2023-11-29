@@ -8,13 +8,13 @@ import OpeningHourCheckbox from './OpeningHourCheckBox';
 interface BusinessDayItemProps {
   day: string;
   id: number;
-  onDelete: (id: number) => void;
+  // onDelete: (id: number) => void;
 }
 
 const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
   day,
   id,
-  onDelete,
+  // onDelete,
 }) => {
   const [selectedStatus, setSelectedStatus] = React.useState<string | null>(
     null,
@@ -24,15 +24,12 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
     console.log('Selected Status:', status);
     setSelectedStatus(status);
   };
-  const handleDelete = () => {
-    onDelete(id);
-  };
+  // const handleDelete = () => {
+  //   onDelete(id);
+  // };
   return (
     <View
       style={{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
         margin: 10,
       }}
     >
@@ -50,17 +47,16 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
           onSelect={handleStatusSelect}
         />
 
-        {/* Check the selected status before rendering BusinessHourSelector */}
         {selectedStatus !== '24 HOURS OPEN' && selectedStatus !== 'CLOSED' && (
           <BusinessHourSelector />
         )}
       </View>
 
-      <View style={{ alignItems: 'center', marginLeft: 10 }}>
+      {/* <View style={{ alignItems: 'center', marginLeft: 10 }}>
         <TouchableOpacity onPress={handleDelete}>
           <MaterialIcons name="delete" size={24} color="gray" />
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

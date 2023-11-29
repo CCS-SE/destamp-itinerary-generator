@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View, ViewStyle } from 'react-native';
 
-import HalfBoxContainer from '~/components/Container/HalfBoxContainer';
-
 const TimeDurationPicker = () => {
   const [selectedHour, setSelectedHour] = useState('');
   const [selectedMinute, setSelectedMinute] = useState('');

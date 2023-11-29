@@ -60,7 +60,7 @@ const PriceRangeInput = ({
           padding: 10,
           flexDirection: 'row',
           justifyContent: 'space-between',
-          backgroundColor: '#FFBD59',
+          backgroundColor: '#FFA053',
           shadowColor: '#000',
           shadowOffset: {
             width: 0,

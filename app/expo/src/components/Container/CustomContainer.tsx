@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
 
-const CustomContainer = ({
-  placeholder,
-  height,
-  width,
-}: {
+interface CustomContainerProps {
   placeholder: string;
   height: number;
   width: number;
+  value: string;
+  onChangeText: (text: string) => void;
+  numeric?: boolean; // Add numeric prop
+}
+
+const CustomContainer: React.FC<CustomContainerProps> = ({
+  placeholder,
+  height,
+  width,
+  value,
+  onChangeText,
+  numeric = false, // Default to false
 }) => {
-  const [content, setContent] = useState('');
+  const keyboardType: KeyboardTypeOptions = numeric ? 'numeric' : 'default';
 
   return (
     <View
@@ -26,8 +34,9 @@ const CustomContainer = ({
     >
       <TextInput
         placeholder={placeholder}
-        value={content}
-        onChangeText={(text) => setContent(text)}
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
         style={{ fontFamily: 'Poppins', fontSize: 15 }}
       />
     </View>

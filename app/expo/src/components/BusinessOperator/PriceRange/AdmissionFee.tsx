@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
-const AdmissionFee = ({ admissionFee }: { admissionFee: number }) => {
+const AdmissionFee = ({
+  admissionFee,
+  onChangeText,
+}: {
+  admissionFee: number;
+  onChangeText: (text: string) => void;
+}) => {
   const [feeValue, setFeeValue] = useState(admissionFee.toString());
 
   const handleFeeChange = (value: string) => {
@@ -13,14 +19,14 @@ const AdmissionFee = ({ admissionFee }: { admissionFee: number }) => {
       <View
         style={{
           alignItems: 'center',
-          borderColor: '#FFBD59',
+          borderColor: '#FFA053',
           borderRadius: 10,
-          width: 260,
+          width: 180,
           padding: 10,
           margin: 10,
           flexDirection: 'row',
           justifyContent: 'space-between',
-          backgroundColor: '#FFBD59',
+          backgroundColor: '#FFA053',
         }}
       >
         <Text
@@ -35,7 +41,7 @@ const AdmissionFee = ({ admissionFee }: { admissionFee: number }) => {
           ₱
         </Text>
         <View
-          style={{ flexDirection: 'row', alignItems: 'center', width: 200 }}
+          style={{ flexDirection: 'row', alignItems: 'center', width: 130 }}
         >
           <TextInput
             style={{
