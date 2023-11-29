@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapViewDirections from 'react-native-maps-directions';
+import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
@@ -27,6 +29,9 @@ export default function MapScreen() {
   const CARD_HEIGHT = 130;
   const CARD_WIDTH = width * 0.7;
   const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+
+  const googleMapsKey = Constants.expoConfig?.extra
+    ?.GOOGLE_MAPS_API_KEY as string;
 
   const handleBack = () => {
     return router.back();
@@ -155,6 +160,40 @@ export default function MapScreen() {
                   </Animated.View>
                 </Marker>
               );
+            })}
+
+        {data &&
+          data.trip.dailyItineraries[
+            parseInt(selectedDay as string)
+          ]?.dailyItineraryPois
+            .map((item) => item.poi)
+            .map((destination, i) => {
+              if (
+                i + 1 <
+                data.trip.dailyItineraries[parseInt(selectedDay as string)]!
+                  .dailyItineraryPois.length!
+              ) {
+                return (
+                  <MapViewDirections
+                    key={i}
+                    origin={{
+                      latitude: destination.latitude,
+                      longitude: destination.longitude,
+                    }}
+                    destination={{
+                      latitude: data.trip.dailyItineraries[
+                        parseInt(selectedDay as string)
+                      ]?.dailyItineraryPois[i + 1]?.poi.latitude as number,
+                      longitude: data.trip.dailyItineraries[
+                        parseInt(selectedDay as string)
+                      ]?.dailyItineraryPois[i + 1]?.poi.longitude as number,
+                    }}
+                    apikey={googleMapsKey}
+                    strokeColor="hotpink"
+                    strokeWidth={3}
+                  />
+                );
+              } else return null;
             })}
       </MapView>
       <Animated.ScrollView

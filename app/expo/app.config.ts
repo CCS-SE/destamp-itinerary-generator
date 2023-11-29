@@ -48,6 +48,7 @@ const defineConfig = (): ExpoConfig => ({
   },
   android: {
     package: 'com.destamp.cpu.se',
+    userInterfaceStyle: 'light',
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
@@ -66,7 +67,7 @@ const defineConfig = (): ExpoConfig => ({
     SUPABASE_ANON_KEY,
     MAPBOX_API_KEY,
     CLERK_PUBLISHABLE_KEY,
-    GOOGLE_API_KEY: GOOGLE_MAPS_API_KEY,
+    GOOGLE_MAPS_API_KEY,
   },
   experiments: {
     tsconfigPaths: true,
