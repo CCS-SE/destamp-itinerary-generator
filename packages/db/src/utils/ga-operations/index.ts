@@ -1,7 +1,6 @@
 import {
   NexusGenFieldTypes,
   NexusGenInputs,
-  NexusGenObjects,
 } from '../../graphql/generated/nexus';
 import { evaluateFitness } from './fitness';
 import { generatePopulation } from './populationInitialization';
