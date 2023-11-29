@@ -17,7 +17,6 @@ interface ClickableIconProps {
 
 const ClickableIcon: React.FC<ClickableIconProps> = ({
   onClick,
-  color,
   icon,
   title,
 }) => {

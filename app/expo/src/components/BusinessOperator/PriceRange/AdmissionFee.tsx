@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
-const AdmissionFee = ({
-  admissionFee,
-  onChangeText,
-}: {
-  admissionFee: number;
-  onChangeText: (text: string) => void;
-}) => {
+const AdmissionFee = ({ admissionFee }: { admissionFee: number }) => {
   const [feeValue, setFeeValue] = useState(admissionFee.toString());
 
   const handleFeeChange = (value: string) => {

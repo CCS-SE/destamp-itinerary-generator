@@ -94,12 +94,7 @@ const BusinessOpeningHours: React.FC = () => {
         ) : null}
         <ScrollView>
           {businessDays.map((item) => (
-            <BusinessDayItem
-              key={item.id}
-              day={item.day}
-              // onDelete={() => deleteBusinessDay(item.id)}
-              id={item.id}
-            />
+            <BusinessDayItem key={item.id} day={item.day} />
           ))}
           <View style={{ marginTop: 20 }}>
             <Question question={'Recommended Visit Duration'} />

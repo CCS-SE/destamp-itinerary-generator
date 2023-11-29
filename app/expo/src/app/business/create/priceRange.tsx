@@ -80,17 +80,7 @@ const PriceRange = () => {
             marginBottom: 15,
           }}
         >
-          {showAdmissionFeeInput && (
-            <PriceInput
-              admissionFee={admissionFee}
-              onChangeText={(value: string) => {
-                const parsedValue = parseFloat(value);
-                if (!isNaN(parsedValue)) {
-                  setAdmissionFee(parsedValue);
-                }
-              }}
-            />
-          )}
+          {showAdmissionFeeInput && <PriceInput admissionFee={admissionFee} />}
           <PriceRangeCheckBox
             option={'NO'}
             onSelect={handleAdmissionFeeOptionSelect}

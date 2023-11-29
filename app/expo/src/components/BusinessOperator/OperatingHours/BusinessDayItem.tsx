@@ -1,19 +1,18 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Text, View } from 'react-native';
 
 import BusinessHourSelector from '~/components/BusinessOperator/OperatingHours/TimeSelector';
 import OpeningHourCheckbox from './OpeningHourCheckBox';
 
 interface BusinessDayItemProps {
   day: string;
-  id: number;
+  // id: number;
   // onDelete: (id: number) => void;
 }
 
 const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
   day,
-  id,
+  // id,
   // onDelete,
 }) => {
   const [selectedStatus, setSelectedStatus] = React.useState<string | null>(
