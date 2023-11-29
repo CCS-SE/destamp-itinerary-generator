@@ -16,9 +16,6 @@ interface Category {
   name: string;
 }
 
-interface GetCategoryListQueryResult {
-  categories: Category[];
-}
 const fakeCategories: Record<string, { id: string; name: string }[]> = {
   Accommodation: [
     { id: '1', name: 'Hotel' },
@@ -113,7 +110,7 @@ const EstablishmentType = () => {
         {selectedType ? (
           <>
             <View style={{ marginBottom: 50 }}>
-              <Questions question={`Select Categories`} />
+              <Questions question={'Select Categories'} />
               <CustomButton
                 content={'Select Category'}
                 height={30}

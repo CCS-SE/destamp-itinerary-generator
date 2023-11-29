@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { KeyboardTypeOptions, Text, TextInput, View } from 'react-native';
+import React from 'react';
+import { KeyboardTypeOptions, TextInput, View } from 'react-native';
 
 interface CustomContainerProps {
   placeholder: string;

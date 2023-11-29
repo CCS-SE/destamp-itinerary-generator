@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
@@ -43,10 +43,10 @@ const PriceRange = () => {
 
     if (minPrice === 0 && maxPrice === 0) {
       console.log('Invalid Price Range');
-      window.alert('Invalid Price Range: Please input a price range.');
+      Alert.alert('Invalid Price Range: Please input a price range.');
     } else if (minPrice >= maxPrice) {
       console.log('Invalid Price Range');
-      window.alert(
+      Alert.alert(
         'Invalid Price Range: Minimum price should be lower than the maximum price.',
       );
     } else {

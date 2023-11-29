@@ -89,6 +89,9 @@ const BusinessOpeningHours: React.FC = () => {
             </Text>
           </TouchableOpacity>
         </View>
+        {validationError ? (
+          <Text style={{ color: 'red' }}>{validationError}</Text>
+        ) : null}
         <ScrollView>
           {businessDays.map((item) => (
             <BusinessDayItem
