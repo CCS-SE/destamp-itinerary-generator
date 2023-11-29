@@ -1,8 +1,11 @@
-import type { ReactNode } from 'react';
-import { FlatList } from 'react-native';
+import { useContext, type ReactNode } from 'react';
+import { FlatList, ToastAndroid } from 'react-native';
 import { router } from 'expo-router';
+import { useMutation } from '@apollo/client';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
+import { AuthContext } from '~/context/AuthProvider';
+import { DeletePoiDocument, GetBusinessesDocument } from '~/graphql/generated';
 import { confirmationAlert } from '~/utils/utils';
 import BusinessMenuItem from './BusinessMenuItem';
 
@@ -24,6 +27,14 @@ function BusinessMenuList({
   imageList,
   onModalClose,
 }: BusinessMenuListProps) {
+  const { user } = useContext(AuthContext);
+
+  const [deleteBusiness] = useMutation(DeletePoiDocument, {
+    variables: {
+      poiId: id,
+    },
+  });
+
   const handleViewDetails = () => {
     return router.push({
       pathname: `/business/profile/${id}`,
@@ -34,7 +45,24 @@ function BusinessMenuList({
     });
   };
 
-  const handleDeleteBusiness = () => {};
+  const handleDeleteBusiness = async () => {
+    await deleteBusiness({
+      refetchQueries: [
+        {
+          query: GetBusinessesDocument,
+          variables: {
+            userId: user ? user.id : '',
+          },
+        },
+      ],
+      onCompleted: () => {
+        ToastAndroid.show('Business deleted.', ToastAndroid.SHORT);
+      },
+      onError: (error) => {
+        console.log('Error', error.message);
+      },
+    });
+  };
 
   const showDeleteBusinessAlert = () => {
     confirmationAlert(
