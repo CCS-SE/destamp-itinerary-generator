@@ -140,6 +140,7 @@ type Mutation {
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
   createMutation(input: CreatePoiInput!, userId: String!): Poi!
   createTrip(data: CreateTripInput!, userId: String!): Trip!
+  createTripPreference(input: CreateTripPreferenceInput!, tripId: Int!): TripPreference!
   createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
   deletePoi(poiId: String!): Poi!

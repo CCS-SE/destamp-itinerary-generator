@@ -8,6 +8,7 @@ import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
+type CreateTripPreferenceInput = NexusGenInputs['CreateTripPreferenceInput'];
 
 const selectedFields = {
   id: true,
@@ -171,6 +172,27 @@ export const deleteTrip = async (id: number, ctx: Context) => {
   return await ctx.prisma.trip.delete({
     where: {
       id: id,
+    },
+  });
+};
+
+export const createTripPreference = async (
+  tripId: number,
+  input: CreateTripPreferenceInput,
+  ctx: Context,
+) => {
+  return await ctx.prisma.tripPreference.create({
+    data: {
+      accommodationType: input.accommodationType as string,
+      activities: input.activities,
+      amenities: input.amenities as string[],
+      cuisines: input.cuisines as string[],
+      diningStyles: input.diningStyles as string[],
+      trip: {
+        connect: {
+          id: tripId,
+        },
+      },
     },
   });
 };
