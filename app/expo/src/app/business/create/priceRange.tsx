@@ -51,8 +51,9 @@ const PriceRange = () => {
       router.push('/business/create/establishmentType');
     }
   };
-  function handleAdmissionFeeChange(_value: number): void {
+  function handleAdmissionFeeChange(): void {
     console.log('Function not implemented.');
+    // console.log(value);
   }
 
   return (
