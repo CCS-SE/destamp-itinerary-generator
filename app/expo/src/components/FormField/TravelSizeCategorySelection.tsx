@@ -98,7 +98,7 @@ export default function TravelSizeCategorySelection({
             incrementCount(initialGroupCount, onGroupCountChange)
           }
           onDecrement={() =>
-            decrementCount(initialGroupCount, onGroupCountChange, 1)
+            decrementCount(initialGroupCount, onGroupCountChange, 2)
           }
         />
       ) : initialTravelSize === TravelSize.Family ? (
