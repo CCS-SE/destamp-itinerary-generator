@@ -10,7 +10,7 @@ interface AdmissionFeeProps {
 const AdmissionFee: React.FC<AdmissionFeeProps> = ({
   admissionFee,
   admissionFeeOnChange,
-  onChangeText,
+  // onChangeText,
 }) => {
   const [feeValue, setFeeValue] = useState<string>(admissionFee);
 
