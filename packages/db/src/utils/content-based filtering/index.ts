@@ -35,7 +35,7 @@ export function contentBasedFiltering(
   preference: Preference,
 ): PointOfInterest[] {
   const nonZeroActivities: string[] = Object.entries(preference.activities)
-    .filter(([_, value]) => value !== undefined && value !== 0)
+    .filter(([, value]) => value !== undefined && value !== 0)
     .map(([key]) => key);
 
   const nonZeroActivitiesCategories: string[] = nonZeroActivities
