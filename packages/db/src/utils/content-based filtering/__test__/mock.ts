@@ -1,39 +1,9 @@
-// import { PointOfInterest } from '../../ga-operations';
+import { NexusGenFieldTypes } from '../../../graphql/generated/nexus';
+import { PointOfInterest } from '../../ga-operations';
 
-// import { NexusGenFieldTypes } from '../../../graphql/generated/nexus';
-
-type Restaurant = {
-  atmospheres: string[];
-  id: number;
-  poiId: string;
-};
-
-type Accommodation = {
-  amenities: {
-    id: number;
-    name: string;
-  }[];
-  id: number;
-  poiId: string;
-};
-
-type Category = {
-  id: number;
-  name: string;
-};
-
-type PointOfInterest = {
-  id: string;
-  name: string;
-  price: string;
-  isAttraction: boolean;
-  visitDuration: number;
-  latitude: number;
-  longitude: number;
-  restaurant: Restaurant | null;
-  accommodation: Accommodation | null;
-  categories: Category[];
-};
+export type Restaurant = NexusGenFieldTypes['Restaurant'];
+export type Accommodation = NexusGenFieldTypes['Accommodation'];
+export type Category = NexusGenFieldTypes['Category'];
 
 interface Activities {
   Sightseeing?: number;
