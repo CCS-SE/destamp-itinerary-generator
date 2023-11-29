@@ -1,40 +1,49 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import BusinessHourSelector from '~/components/BusinessOperator/BusinessHourSelector';
-import Questions from '~/components/BusinessOperator/Question';
-import TimePicker from '~/components/BusinessOperator/TimeDurationPicker';
+import BusinessDayItem from '~/components/BusinessOperator/OperatingHours/BusinessDayItem';
+import TimePicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
+import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
+import { days } from '~/constant/constant';
 import CreateBusinessHeader from '.';
 
-const BusinessOpeningHours = () => {
-  const [businessHours, setBusinessHours] = useState([{ key: 1 }]);
+interface BusinessDay {
+  day: string;
+  id: number;
+}
 
-  const addBusinessHour = () => {
-    if (businessHours.length < 7) {
-      const newKey = businessHours.length + 1;
-      setBusinessHours([...businessHours, { key: newKey }]);
+const BusinessOpeningHours: React.FC = () => {
+  const [businessDays, setBusinessDays] = useState<BusinessDay[]>([
+    { day: 'MONDAY', id: 1 },
+  ]);
+
+  const originalDays: string[] = Object.values(days);
+
+  const dayExists = (day: string) =>
+    businessDays.some((item) => item.day === day);
+
+  const addBusinessDay = () => {
+    if (businessDays.length < 7) {
+      const newId = businessDays.length + 1;
+      const nextDay = originalDays[newId % 7];
+
+      if (nextDay && !dayExists(nextDay)) {
+        setBusinessDays([...businessDays, { day: nextDay, id: newId }]);
+      }
     }
   };
 
-  const deleteBusinessHour = (keyToDelete: number) => {
-    const updatedBusinessHours = businessHours.filter(
-      (hour) => hour.key !== keyToDelete,
+  const deleteBusinessDay = (idToDelete: number) => {
+    setBusinessDays((prevBusinessDays) =>
+      prevBusinessDays
+        .filter((businessDay) => businessDay.id !== idToDelete)
+        .sort((a, b) => a.id - b.id),
     );
-    setBusinessHours(updatedBusinessHours);
   };
-
-  const renderBusinessHour = (item: { key: number }) => (
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <BusinessHourSelector />
-      <TouchableOpacity onPress={() => deleteBusinessHour(item.key)}>
-        <MaterialIcons name="delete" size={24} color="gray" />
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <View
@@ -46,42 +55,42 @@ const BusinessOpeningHours = () => {
       }}
     >
       <SafeAreaView>
-        <CreateBusinessHeader />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Questions question={'Opening Hours'} />
-          <TouchableOpacity onPress={addBusinessHour}>
-            <Text>
-              {' '}
-              <MaterialIcons
-                name="add-circle-outline"
-                size={24}
-                color="orange"
-              />
-            </Text>
-          </TouchableOpacity>
-        </View>
-        {businessHours.map((item) => (
+        <CreateBusinessHeader title={'Opening Hours'} />
+        <ScrollView>
           <View
-            key={item.key}
-            style={{
-              backgroundColor: 'transparent',
-              height: 140,
-              marginBottom: 5,
-            }}
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
-            {renderBusinessHour(item)}
+            <Question question={'Opening Hours'} />
+            <TouchableOpacity onPress={addBusinessDay}>
+              <Text>
+                {' '}
+                <MaterialIcons
+                  name="add-circle-outline"
+                  size={24}
+                  color="orange"
+                />
+              </Text>
+            </TouchableOpacity>
           </View>
-        ))}
-        <View style={{ marginTop: 20 }}>
-          <Questions question={'Recommended Visit Duration'} />
-          <TimePicker />
-          <BasicButton
-            title={'Next'}
-            onPress={() => {
-              router.push('/business/create/priceRange');
-            }}
-          />
-        </View>
+          {businessDays.map((item) => (
+            <BusinessDayItem
+              key={item.id} // Use 'id' instead of 'key'
+              day={item.day}
+              onDelete={() => deleteBusinessDay(item.id)} // Use 'id' instead of 'key'
+              id={item.id} // Pass the correct id
+            />
+          ))}
+          <View style={{ marginTop: 20 }}>
+            <Question question={'Recommended Visit Duration'} />
+            <TimePicker />
+            <BasicButton
+              title={'Next'}
+              onPress={() => {
+                router.push('/business/create/priceRange');
+              }}
+            />
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );

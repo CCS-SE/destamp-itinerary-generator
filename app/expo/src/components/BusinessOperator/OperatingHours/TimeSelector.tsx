@@ -1,28 +1,38 @@
 import React, { useState } from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
-import ModalSelector from 'react-native-modal-selector';
+import {
+  Alert,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 
-const BusinessHourSelector = () => {
+const BusinessTimeSelector = () => {
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [startHour, setStartHour] = useState(new Date());
   const [endHour, setEndHour] = useState(new Date());
-  const [startDay, setStartDay] = useState<string | null>(null);
-
-  const handleStartDayChange = (option: { label: string }) => {
-    setStartDay(option.label);
-  };
 
   const handleStartChange = (
     _event: DateTimePickerEvent,
     selected: Date | undefined,
   ) => {
     if (selected) {
-      setStartHour(selected);
+      const minTimeDifference = 30 * 60 * 1000;
+      const endTime = new Date(selected.getTime() + minTimeDifference);
+
+      if (endTime <= endHour) {
+        setStartHour(selected);
+      } else {
+        Alert.alert(
+          'Invalid Closing Hour',
+          'Closing hour should be at least 30 minutes after opening hour.',
+        );
+      }
     }
     setShowStartPicker(false);
   };
@@ -32,7 +42,18 @@ const BusinessHourSelector = () => {
     selected: Date | undefined,
   ) => {
     if (selected) {
-      setEndHour(selected);
+      const minTimeDifference = 30 * 60 * 1000; // 30 minutes in milliseconds
+      const startTime = new Date(selected.getTime() - minTimeDifference);
+
+      if (startTime >= startHour) {
+        setEndHour(selected);
+      } else {
+        Alert.alert(
+          'Invalid Closing Hour',
+          'Closing hour should be at least 30 minutes after opening hour.',
+        );
+        // setEndHour(new Date(startHour.getTime() + minTimeDifference));
+      }
     }
     setShowEndPicker(false);
   };
@@ -45,24 +66,25 @@ const BusinessHourSelector = () => {
     });
   };
 
-  const daysOfWeek = [
-    { key: '0', label: 'Sunday' },
-    { key: '1', label: 'Monday' },
-    { key: '2', label: 'Tuesday' },
-    { key: '3', label: 'Wednesday' },
-    { key: '4', label: 'Thursday' },
-    { key: '5', label: 'Friday' },
-    { key: '6', label: 'Saturday' },
-  ];
+  const containerStyles: ViewStyle = {
+    borderWidth: 1,
+    borderColor: 'transparent',
+    shadowColor: '#000',
+    backgroundColor: 'white',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderRadius: 10,
+    padding: 7,
+    justifyContent: 'space-between',
+  };
 
   return (
-    <View style={{ margin: 15 }}>
-      <ModalSelector
-        data={daysOfWeek}
-        initValue={startDay || 'Select Day'}
-        onChange={handleStartDayChange}
-        style={{ borderColor: 'pink' }}
-      />
+    <View style={{ margin: 3 }}>
       <View style={{ flexDirection: 'row' }}>
         <TouchableWithoutFeedback
           onPress={() => setShowStartPicker(!showStartPicker)}
@@ -71,15 +93,7 @@ const BusinessHourSelector = () => {
             <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
               OPENING HOUR:
             </Text>
-            <View
-              style={{
-                borderWidth: 1,
-                borderColor: 'black',
-                borderRadius: 10,
-                padding: 7,
-                justifyContent: 'space-between',
-              }}
-            >
+            <View style={containerStyles}>
               <Text
                 style={{
                   fontFamily: 'Poppins',
@@ -117,14 +131,7 @@ const BusinessHourSelector = () => {
               <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
                 CLOSING HOUR:
               </Text>
-              <View
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  padding: 7,
-                }}
-              >
+              <View style={containerStyles}>
                 <Text
                   style={{
                     fontFamily: 'Poppins',
@@ -160,4 +167,4 @@ const BusinessHourSelector = () => {
   );
 };
 
-export default BusinessHourSelector;
+export default BusinessTimeSelector;
