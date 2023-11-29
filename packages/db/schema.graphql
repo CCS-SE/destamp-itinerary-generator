@@ -30,6 +30,23 @@ input CreateExpenseInput {
   note: String
 }
 
+input CreatePoiInput {
+  address: String!
+  amenities: [String!]
+  atmospheres: [String!]
+  categories: [String!]!
+  contactNumber: String!
+  description: String
+  imageUrls: [String!]!
+  isAttraction: Boolean!
+  latitude: Float!
+  longitude: Float!
+  name: String!
+  operatingHours: [OperatingHoursInput!]!
+  price: String!
+  visitDuration: Int!
+}
+
 input CreateTripInput {
   budget: Float!
   endDate: DateTime
@@ -113,9 +130,11 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 
 type Mutation {
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
+  createMutation(input: CreatePoiInput!, userId: String!): Poi!
   createTrip(data: CreateTripInput!, userId: String!): Trip!
   createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
+  deletePoi(poiId: String!): Poi!
   deleteTrip(id: Int!): Trip!
   updateExpense(data: UpdateExpenseInput!, id: Int!): Expense!
 }
@@ -125,6 +144,14 @@ type OperatingHour {
   day: Int!
   id: Int!
   is24Hours: Boolean!
+  isClosed: Boolean!
+  openTime: DateTime
+}
+
+input OperatingHoursInput {
+  closeTime: DateTime
+  day: Int!
+  is24hours: Boolean!
   isClosed: Boolean!
   openTime: DateTime
 }
