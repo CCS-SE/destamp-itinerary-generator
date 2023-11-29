@@ -4,12 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
+import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import BusinessDayItem from '~/components/BusinessOperator/OperatingHours/BusinessDayItem';
 import TimePicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 import { days } from '~/constant/constant';
-import CreateBusinessHeader from '.';
 
 interface BusinessDay {
   day: string;
@@ -22,7 +22,7 @@ const BusinessOpeningHours: React.FC = () => {
   ]);
 
   const originalDays: string[] = Object.values(days);
-
+  const [validationError, setValidationError] = useState<string>('');
   const dayExists = (day: string) =>
     businessDays.some((item) => item.day === day);
 
@@ -31,19 +31,39 @@ const BusinessOpeningHours: React.FC = () => {
       const newId = businessDays.length + 1;
       const nextDay = originalDays[newId % 7];
 
-      if (nextDay && !dayExists(nextDay)) {
-        setBusinessDays([...businessDays, { day: nextDay, id: newId }]);
+      if (nextDay) {
+        if (!dayExists(nextDay)) {
+          setBusinessDays([...businessDays, { day: nextDay, id: newId }]);
+        } else {
+          const availableDay = originalDays.find((day) => !dayExists(day));
+          if (availableDay) {
+            setBusinessDays([
+              ...businessDays,
+              { day: availableDay, id: newId },
+            ]);
+          }
+        }
       }
     }
   };
 
-  const deleteBusinessDay = (idToDelete: number) => {
-    setBusinessDays((prevBusinessDays) =>
-      prevBusinessDays
-        .filter((businessDay) => businessDay.id !== idToDelete)
-        .sort((a, b) => a.id - b.id),
-    );
+  const validateDays = (): boolean => {
+    if (businessDays.length > 0) {
+      setValidationError('');
+      return true;
+    } else {
+      setValidationError('Please select at least one business day');
+      return false;
+    }
   };
+
+  // const deleteBusinessDay = (idToDelete: number) => {
+  //   setBusinessDays((prevBusinessDays) =>
+  //     prevBusinessDays
+  //       .filter((businessDay) => businessDay.id !== idToDelete)
+  //       .sort((a, b) => a.id - b.id),
+  //   );
+  // };
 
   return (
     <View
@@ -56,28 +76,26 @@ const BusinessOpeningHours: React.FC = () => {
     >
       <SafeAreaView>
         <CreateBusinessHeader title={'Opening Hours'} />
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Question question={'Opening Hours'} />
+          <TouchableOpacity onPress={addBusinessDay}>
+            <Text>
+              {' '}
+              <MaterialIcons
+                name="add-circle-outline"
+                size={24}
+                color="orange"
+              />
+            </Text>
+          </TouchableOpacity>
+        </View>
         <ScrollView>
-          <View
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
-            <Question question={'Opening Hours'} />
-            <TouchableOpacity onPress={addBusinessDay}>
-              <Text>
-                {' '}
-                <MaterialIcons
-                  name="add-circle-outline"
-                  size={24}
-                  color="orange"
-                />
-              </Text>
-            </TouchableOpacity>
-          </View>
           {businessDays.map((item) => (
             <BusinessDayItem
-              key={item.id} // Use 'id' instead of 'key'
+              key={item.id}
               day={item.day}
-              onDelete={() => deleteBusinessDay(item.id)} // Use 'id' instead of 'key'
-              id={item.id} // Pass the correct id
+              // onDelete={() => deleteBusinessDay(item.id)}
+              id={item.id}
             />
           ))}
           <View style={{ marginTop: 20 }}>
@@ -86,7 +104,11 @@ const BusinessOpeningHours: React.FC = () => {
             <BasicButton
               title={'Next'}
               onPress={() => {
-                router.push('/business/create/priceRange');
+                if (validateDays()) {
+                  router.push('/business/create/priceRange');
+                } else {
+                  console.error('Please select at least one business day');
+                }
               }}
             />
           </View>

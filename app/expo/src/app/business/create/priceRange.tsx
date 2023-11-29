@@ -3,16 +3,19 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
+import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import PriceInput from '~/components/BusinessOperator/PriceRange/AdmissionFee';
+import PriceRangeCheckBox from '~/components/BusinessOperator/PriceRange/PriceRangeCheckbox';
 import PriceRangeInput from '~/components/BusinessOperator/PriceRange/PriceRangeInput';
 import Questions from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
-import CreateBusinessHeader from '.';
 
 const PriceRange = () => {
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
   const [admissionFee, setAdmissionFee] = useState<number>(0);
+  const [showAdmissionFeeInput, setShowAdmissionFeeInput] =
+    useState<boolean>(true);
 
   const handleMinPriceChange = (value: string) => {
     const parsedValue = parseFloat(value);
@@ -28,25 +31,36 @@ const PriceRange = () => {
     }
   };
 
+  const handleAdmissionFeeOptionSelect = (selectedOption: string | null) => {
+    setShowAdmissionFeeInput(selectedOption !== 'NO');
+  };
+
   const handleNextButton = () => {
+    console.log('minPrice:', minPrice);
+    console.log('maxPrice:', maxPrice);
+    console.log('admissionFee:', admissionFee);
+    console.log('showAdmissionFeeInput:', showAdmissionFeeInput);
+
     if (minPrice === 0 && maxPrice === 0) {
-      Alert.alert('Invalid Price Range', 'Please input a price range.');
+      console.log('Invalid Price Range');
+      window.alert('Invalid Price Range: Please input a price range.');
     } else if (minPrice >= maxPrice) {
-      Alert.alert(
-        'Invalid Price Range',
-        'Minimum price should be lower than the maximum price.',
+      console.log('Invalid Price Range');
+      window.alert(
+        'Invalid Price Range: Minimum price should be lower than the maximum price.',
       );
     } else {
-      router.push('/business/create/restaurantFacilities');
+      console.log('Navigating to the next screen');
+      router.push('/business/create/establishmentType');
     }
   };
 
   return (
-    <View style={styles.container}>
+    <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <CreateBusinessHeader title={'Price Range'} />
       <SafeAreaView>
         <Questions question={'Average price range per person'} />
-        <View style={styles.row}></View>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}></View>
         <View>
           <PriceRangeInput
             minPrice={minPrice}
@@ -56,26 +70,36 @@ const PriceRange = () => {
           />
         </View>
         <Questions question={'Admission Fee'} />
-        <Text style={{ fontFamily: 'Poppins' }}>
+        <Text style={{ fontFamily: 'Poppins', marginBottom: 15 }}>
           Is there a fee for visiting this place?
         </Text>
-        <PriceInput admissionFee={admissionFee} />
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginBottom: 15,
+          }}
+        >
+          {showAdmissionFeeInput && (
+            <PriceInput
+              admissionFee={admissionFee}
+              onChangeText={(value: string) => {
+                const parsedValue = parseFloat(value);
+                if (!isNaN(parsedValue)) {
+                  setAdmissionFee(parsedValue);
+                }
+              }}
+            />
+          )}
+          <PriceRangeCheckBox
+            option={'NO'}
+            onSelect={handleAdmissionFeeOptionSelect}
+          />
+        </View>
         <BasicButton title={'Next'} onPress={handleNextButton} />
       </SafeAreaView>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: 'white',
-    flex: 1,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
 
 export default PriceRange;
