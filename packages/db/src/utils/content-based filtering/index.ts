@@ -1,4 +1,3 @@
-import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
 
 interface Activities {
@@ -39,11 +38,15 @@ export function contentBasedFiltering(
     .filter(([_, value]) => value !== undefined && value !== 0)
     .map(([key]) => key);
 
+  const nonZeroActivitiesCategories: string[] = nonZeroActivities
+    .map((activity) => categoriesPerType[activity] as string[])
+    .flat();
+
   const userPreferences = preference.amenities.concat(
     preference.cuisines,
     preference.diningStyles,
     [preference.accommodationType],
-    nonZeroActivities,
+    nonZeroActivitiesCategories,
   );
 
   const similarityScores = places.map((place: PointOfInterest) => {
@@ -62,10 +65,41 @@ export function contentBasedFiltering(
 
   const sortedScores = similarityScores.sort((a, b) => b.score - a.score);
   const filteredScores = sortedScores.filter((score) => score.score > 0);
-
   const sortedPlaces: PointOfInterest[] = filteredScores.map((score) => {
     return places.find((place) => place.name === score.name)!;
   });
 
   return sortedPlaces;
 }
+
+const categoriesPerType: { [key: string]: string[] } = {
+  Sightseeing: [
+    'Park',
+    'Tourist attraction',
+    'City park',
+    'Business center',
+    'Condominium complex',
+    'Garden',
+    'Historic city center',
+  ],
+  Shopping: ['Shopping mall', 'Department store', 'Gift shop'],
+  Arts: ['Art museum', 'Art gallery', 'Art studio'],
+  Outdoor: ['Skateboard park', 'Kids Park', 'Park'],
+  Museum: ['National museum', 'History museum', 'Museum', 'Art museum'],
+  Landmarks: [
+    'Cultural landmark',
+    'Historical landmark',
+    'Architecture',
+    'Historic city center',
+    'Bridge',
+    'Shrine',
+    'Monument',
+    'Historical place',
+    'Chapel',
+    'Christian church',
+    'Church',
+    'Baptist church',
+    'Catholic church',
+    'Catholic cathedral',
+  ],
+};
