@@ -1,15 +1,20 @@
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import {
+  NexusGenFieldTypes,
+  NexusGenInputs,
+} from '../../graphql/generated/nexus';
 import { evaluateFitness } from './fitness';
 import { generatePopulation } from './populationInitialization';
 import { selection, selectNextGeneration } from './selection';
 import { Chromosome } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-export type Restaurant = NexusGenObjects['Restaurant'];
-export type Accommodation = NexusGenObjects['Accommodation'];
+export type Restaurant = NexusGenFieldTypes['Restaurant'];
+export type Accommodation = NexusGenFieldTypes['Accommodation'];
+export type Category = NexusGenFieldTypes['Category'];
 
 export type PointOfInterest = {
   id: string;
+  name: string;
   price: string;
   isAttraction: boolean;
   visitDuration: number;
@@ -17,6 +22,7 @@ export type PointOfInterest = {
   longitude: number;
   restaurant: Restaurant | null;
   accommodation: Accommodation | null;
+  categories: Category[];
 };
 
 const REPETITION_RATE = 1;
