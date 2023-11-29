@@ -16,6 +16,7 @@ const PriceRange = () => {
   const [admissionFee, setAdmissionFee] = useState<number>(0);
   const [showAdmissionFeeInput, setShowAdmissionFeeInput] =
     useState<boolean>(true);
+
   const handleMinPriceChange = (value: string) => {
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
@@ -28,6 +29,7 @@ const PriceRange = () => {
       setMaxPrice(parsedValue);
     }
   };
+
   const handleAdmissionFeeOptionSelect = (selectedOption: string | null) => {
     setShowAdmissionFeeInput(selectedOption !== 'NO');
   };
@@ -49,6 +51,10 @@ const PriceRange = () => {
       router.push('/business/create/establishmentType');
     }
   };
+  function handleAdmissionFeeChange(value: number): void {
+    console.log('Function not implemented.');
+  }
+
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <CreateBusinessHeader title={'Price Range'} />
@@ -77,14 +83,12 @@ const PriceRange = () => {
           {showAdmissionFeeInput && (
             <PriceInput
               admissionFee={admissionFee.toString()}
+              admissionFeeOnChange={handleAdmissionFeeChange}
               onChangeText={(value: string) => {
                 const parsedValue = parseFloat(value);
                 if (!isNaN(parsedValue)) {
                   setAdmissionFee(parsedValue);
                 }
-              }}
-              admissionFeeOnChange={function (value: number): void {
-                throw new Error('Function not implemented.');
               }}
             />
           )}

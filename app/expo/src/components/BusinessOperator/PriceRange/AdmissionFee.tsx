@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 
 interface AdmissionFeeProps {
@@ -10,9 +10,14 @@ interface AdmissionFeeProps {
 const AdmissionFee: React.FC<AdmissionFeeProps> = ({
   admissionFee,
   admissionFeeOnChange,
-  // onChangeText,
+  onChangeText,
 }) => {
   const [feeValue, setFeeValue] = useState<string>(admissionFee);
+
+  useEffect(() => {
+    // Update feeValue when the admissionFee prop changes
+    setFeeValue(admissionFee);
+  }, [admissionFee]);
 
   const handleFeeChange = (value: string) => {
     setFeeValue(value);
