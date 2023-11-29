@@ -170,8 +170,8 @@ export default function MapScreen() {
             .map((destination, i) => {
               if (
                 i + 1 <
-                data.trip.dailyItineraries[parseInt(selectedDay as string)]
-                  ?.dailyItineraryPois.length!
+                data.trip.dailyItineraries[parseInt(selectedDay as string)]!
+                  .dailyItineraryPois.length!
               ) {
                 return (
                   <MapViewDirections
