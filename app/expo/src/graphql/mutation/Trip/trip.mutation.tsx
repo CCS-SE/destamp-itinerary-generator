@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const CreateTrip = gql(
-  `mutation CreateTrip($userId: String!, $data: CreateTripInput!) {
-    createTrip(userId: $userId, data: $data) {
+  `mutation CreateTrip($userId: String!, $tripInput: CreateTripInput!, $tripPreferenceInput: CreateTripPreferenceInput!) {
+    createTrip(userId: $userId, tripInput: $tripInput, tripPreferenceInput: $tripPreferenceInput) {
       id
     }
   }`,

@@ -10,8 +10,6 @@ export interface MapboxMatrixResponse {
   code: string;
   durations: number[][];
   distances: number[][];
-  destinations: Location[];
-  sources: Location[];
 }
 
 export const fetchMapboxMatrix = async (

@@ -239,7 +239,13 @@ export default function MapScreen() {
                 activeOpacity={0.9}
                 onPress={() => {
                   router.push({
-                    pathname: `/itinerary/destinationDetail/${poi.id}`,
+                    pathname: `/traveler/trip/itinerary/destinationDetail/${poi.id}`,
+                    params: {
+                      id: poi.id,
+                      imageList: JSON.stringify(
+                        poi.images.map((item) => item.image.url),
+                      ),
+                    },
                   });
                 }}
               >

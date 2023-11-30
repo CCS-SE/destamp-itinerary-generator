@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
+interface AmenityProps {
+  key: number;
+  value: string;
+}
+
 interface AmenitiesSelectionProps {
+  data: AmenityProps[] | [];
   onOptionChange: (options: string[]) => void;
   initialSelectedOptions: string[];
 }
 
 export default function AmenitiesSelection({
+  data,
   onOptionChange,
   initialSelectedOptions,
 }: AmenitiesSelectionProps) {
@@ -43,13 +50,3 @@ export default function AmenitiesSelection({
     />
   );
 }
-
-const data = [
-  { key: '1', value: 'Mobiles' },
-  { key: '2', value: 'Appliances' },
-  { key: '3', value: 'Cameras' },
-  { key: '4', value: 'Computers' },
-  { key: '5', value: 'Vegetables' },
-  { key: '6', value: 'Diary Products' },
-  { key: '7', value: 'Drinks' },
-];

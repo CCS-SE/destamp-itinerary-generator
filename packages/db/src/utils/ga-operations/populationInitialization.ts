@@ -1,41 +1,26 @@
 import { PointOfInterest } from '.';
 import { NexusGenInputs } from '../../graphql/generated/nexus';
-import { tripDuration } from '../utils';
 import { getBudgetAllocation } from './budgetAllocation';
 import { Chromosome } from './chromosome';
 import { Chromosome as Chrom } from './types';
-import { calculateAveragePrice, getTotalDesiredTravelHours } from './utils';
+import { calculateAveragePrice } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
 const POPULATION_SIZE = 10;
+const MAX_ITERATIONS = 24; // max number of iterations
 
 export function generatePopulation(
   input: CreateTripInput,
-  restaurants: PointOfInterest[],
-  attractions: PointOfInterest[],
+  pois: PointOfInterest[],
+  desiredTravelHours: number,
 ) {
-  const { budget, travelerCount } = input;
+  const { budget, travelerCount, isFoodIncluded } = input;
 
   const rate = getBudgetAllocation(input)!;
 
   const foodCostThreshold = budget * rate.FOOD;
   const attractionCostThreshold = budget * rate.ATTRACTION;
-
-  const duration = tripDuration(
-    new Date(input.startDate),
-    new Date(input.endDate),
-  );
-
-  const MAX_ITERATIONS = 24; // max number of iterations
-
-  const totalDesiredHours = getTotalDesiredTravelHours(input.timeSlots);
-
-  const estimatedTranspoDuration = input.isTransportationIncluded
-    ? duration * (totalDesiredHours * rate.TRANSPORT)
-    : 0; // assuming 30% of the time will go to transpo
-  const durationThreshold =
-    duration * totalDesiredHours - estimatedTranspoDuration;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
@@ -45,59 +30,48 @@ export function generatePopulation(
     let totalAttractionCost = 0;
 
     const chromosome: PointOfInterest[] = []; // list of destinations within budget and timeframe
-
-    const restaurantIndexes: number[] = [];
-    const attractionIndexes: number[] = [];
+    // const poiIndexes: number[] = [];
 
     while (
-      totalDuration <= durationThreshold &&
+      totalDuration <= desiredTravelHours &&
       (totalFoodCost <= foodCostThreshold ||
         totalAttractionCost <= attractionCostThreshold) &&
       chromosome.length < MAX_ITERATIONS
     ) {
-      const restaurantIndex = Math.floor(
-        Math.random() * (restaurants.length - 1),
-      );
-      const attractionIndex = Math.floor(
-        Math.random() * (attractions.length - 1),
-      );
+      // disable random selection
+      // const poiIndex = Math.floor(Math.random() * (pois.length - 1));
+      // const poi = pois[poiIndex]!;
 
-      if (
-        input.isFoodIncluded &&
-        !restaurantIndexes.includes(restaurantIndex)
-      ) {
-        const restaurant = restaurants[restaurantIndex]!;
+      const poi = pois.shift()!; // remove the first element from the array
 
-        const averagePrice = calculateAveragePrice(restaurant.price);
+      if (isFoodIncluded && poi.restaurant) {
+        const averagePrice = calculateAveragePrice(poi.price);
         const foodCost = averagePrice * travelerCount;
-        const placeDuration = restaurant.visitDuration / 60;
+        const poiDuration = poi.visitDuration / 60;
 
         totalFoodCost += foodCost;
-        totalDuration += placeDuration;
-        restaurantIndexes.push(restaurantIndex);
-        chromosome.push(restaurant);
+        totalDuration += poiDuration;
+        // poiIndexes.push(poiIndex);
+        chromosome.push(poi);
       }
 
-      if (!attractionIndexes.includes(attractionIndex)) {
-        const attraction = attractions[attractionIndex]!;
-        const attractionCost = parseFloat(attraction.price) * travelerCount;
-        const placeDuration = attraction.visitDuration / 60;
+      if (poi.isAttraction) {
+        const attractionCost = parseFloat(poi.price) * travelerCount;
+        const poiDuration = poi.visitDuration / 60;
 
         totalAttractionCost += attractionCost;
-        totalDuration += placeDuration;
-        attractionIndexes.push(attractionIndex);
-        chromosome.push(attraction);
+        totalDuration += poiDuration;
+        // poiIndexes.push(poiIndex);
+        chromosome.push(poi);
       }
 
       if (
-        totalDuration > durationThreshold &&
-        (totalFoodCost > foodCostThreshold ||
-          totalAttractionCost > attractionCostThreshold)
+        totalFoodCost > foodCostThreshold &&
+        totalAttractionCost > attractionCostThreshold
       ) {
         break;
       }
     }
-
     newPopulation.push({
       chrom: new Chromosome(chromosome),
       fitnessScore: 0,

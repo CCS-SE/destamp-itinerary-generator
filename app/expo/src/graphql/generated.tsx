@@ -97,6 +97,14 @@ export type CreateTripInput = {
   travelerCount: Scalars['Int']['input'];
 };
 
+export type CreateTripPreferenceInput = {
+  accommodationType: Scalars['String']['input'];
+  activities: Scalars['JSON']['input'];
+  amenities: Array<Scalars['String']['input']>;
+  cuisines: Array<Scalars['String']['input']>;
+  diningStyles: Array<Scalars['String']['input']>;
+};
+
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   firstName: Scalars['String']['input'];
@@ -181,7 +189,8 @@ export type MutationCreateMutationArgs = {
 };
 
 export type MutationCreateTripArgs = {
-  data: CreateTripInput;
+  tripInput: CreateTripInput;
+  tripPreferenceInput: CreateTripPreferenceInput;
   userId: Scalars['String']['input'];
 };
 
@@ -256,6 +265,7 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
+  amenities: Array<Amenity>;
   categories: Array<Category>;
   poi: Poi;
   pois: Array<Poi>;
@@ -325,6 +335,17 @@ export type Trip = {
   travelSize: TravelSize;
   travelerCount: Scalars['Int']['output'];
   updatedAt: Scalars['DateTime']['output'];
+};
+
+export type TripPreference = {
+  __typename?: 'TripPreference';
+  accommodationType: Scalars['String']['output'];
+  activities: Scalars['JSON']['output'];
+  amenities: Array<Scalars['String']['output']>;
+  cuisines: Array<Scalars['String']['output']>;
+  diningStyles: Array<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  tripId: Scalars['Int']['output'];
 };
 
 export type UpdateExpenseInput = {
@@ -468,6 +489,7 @@ export type ResolversTypes = {
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
   CreateTripInput: CreateTripInput;
+  CreateTripPreferenceInput: CreateTripPreferenceInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
   DailyItineraryPoi: ResolverTypeWrapper<DailyItineraryPoi>;
@@ -489,6 +511,7 @@ export type ResolversTypes = {
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   TravelSize: TravelSize;
   Trip: ResolverTypeWrapper<Trip>;
+  TripPreference: ResolverTypeWrapper<TripPreference>;
   UpdateExpenseInput: UpdateExpenseInput;
   User: ResolverTypeWrapper<User>;
   UserType: UserType;
@@ -504,6 +527,7 @@ export type ResolversParentTypes = {
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
   CreateTripInput: CreateTripInput;
+  CreateTripPreferenceInput: CreateTripPreferenceInput;
   CreateUserInput: CreateUserInput;
   DailyItinerary: DailyItinerary;
   DailyItineraryPoi: DailyItineraryPoi;
@@ -523,6 +547,7 @@ export type ResolversParentTypes = {
   Stamp: Stamp;
   String: Scalars['String']['output'];
   Trip: Trip;
+  TripPreference: TripPreference;
   UpdateExpenseInput: UpdateExpenseInput;
   User: User;
 };
@@ -672,7 +697,10 @@ export type MutationResolvers<
     ResolversTypes['Trip'],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateTripArgs, 'data' | 'userId'>
+    RequireFields<
+      MutationCreateTripArgs,
+      'tripInput' | 'tripPreferenceInput' | 'userId'
+    >
   >;
   createUser?: Resolver<
     ResolversTypes['User'],
@@ -790,6 +818,11 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  amenities?: Resolver<
+    Array<ResolversTypes['Amenity']>,
+    ParentType,
+    ContextType
+  >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
     ParentType,
@@ -895,6 +928,33 @@ export type TripResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TripPreferenceResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['TripPreference'] = ResolversParentTypes['TripPreference'],
+> = {
+  accommodationType?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType
+  >;
+  activities?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  amenities?: Resolver<
+    Array<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  cuisines?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  diningStyles?: Resolver<
+    Array<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  tripId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<
   ContextType = any,
   ParentType extends
@@ -932,6 +992,7 @@ export type Resolvers<ContextType = any> = {
   Restaurant?: RestaurantResolvers<ContextType>;
   Stamp?: StampResolvers<ContextType>;
   Trip?: TripResolvers<ContextType>;
+  TripPreference?: TripPreferenceResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
 };
 
@@ -975,7 +1036,8 @@ export type DeletePoiMutation = {
 
 export type CreateTripMutationVariables = Exact<{
   userId: Scalars['String']['input'];
-  data: CreateTripInput;
+  tripInput: CreateTripInput;
+  tripPreferenceInput: CreateTripPreferenceInput;
 }>;
 
 export type CreateTripMutation = {
@@ -1062,6 +1124,13 @@ export type GetAllCategoriesQueryVariables = Exact<{ [key: string]: never }>;
 export type GetAllCategoriesQuery = {
   __typename?: 'Query';
   categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
+};
+
+export type GetAmenitiesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetAmenitiesQuery = {
+  __typename?: 'Query';
+  amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
 };
 
 export type GetTripsQueryVariables = Exact<{
@@ -1464,12 +1533,29 @@ export const CreateTripDocument = {
         },
         {
           kind: 'VariableDefinition',
-          variable: { kind: 'Variable', name: { kind: 'Name', value: 'data' } },
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripInput' },
+          },
           type: {
             kind: 'NonNullType',
             type: {
               kind: 'NamedType',
               name: { kind: 'Name', value: 'CreateTripInput' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripPreferenceInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateTripPreferenceInput' },
             },
           },
         },
@@ -1491,10 +1577,18 @@ export const CreateTripDocument = {
               },
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'data' },
+                name: { kind: 'Name', value: 'tripInput' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'data' },
+                  name: { kind: 'Name', value: 'tripInput' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tripPreferenceInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tripPreferenceInput' },
                 },
               },
             ],
@@ -1857,6 +1951,32 @@ export const GetAllCategoriesDocument = {
   GetAllCategoriesQuery,
   GetAllCategoriesQueryVariables
 >;
+export const GetAmenitiesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAmenities' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amenities' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetAmenitiesQuery, GetAmenitiesQueryVariables>;
 export const GetTripsDocument = {
   kind: 'Document',
   definitions: [

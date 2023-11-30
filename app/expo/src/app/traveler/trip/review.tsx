@@ -26,6 +26,7 @@ import {
 import useFormstore from '~/store/useFormStore';
 import {
   amountFormatter,
+  dateFormmater,
   formatDateToString,
   separateWords,
   toSentenceCase,
@@ -75,13 +76,6 @@ export default function ReviewTripScreen() {
     router.back();
   };
 
-  const dateFormmater = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
   const [createTrip] = useMutation(CreateTripDocument);
 
   const onSubmit = async () => {
@@ -93,7 +87,7 @@ export default function ReviewTripScreen() {
     } else {
       const CreateTripInput: MutationCreateTripArgs = {
         userId: user?.id || '',
-        data: {
+        tripInput: {
           budget: parseFloat(tripData.budget),
           endDate: tripData.endDate
             ? new Date(formatDateToString(tripData.endDate))
@@ -116,16 +110,26 @@ export default function ReviewTripScreen() {
           travelerCount:
             tripData.travelSize === TravelSize.Group
               ? tripData.groupCount
-              : tripData.adultCount + tripData.childCount,
+              : tripData.travelSize === TravelSize.Family
+              ? tripData.adultCount + tripData.childCount
+              : tripData.adultCount,
           timeSlots: tripData.timeslots,
           startingLocation: tripData.startingLocation,
+        },
+        tripPreferenceInput: {
+          accommodationType: preferenceData.accommodationType,
+          activities: preferenceData.activities,
+          amenities: preferenceData.amenities,
+          cuisines: preferenceData.cuisines,
+          diningStyles: preferenceData.diningStyles,
         },
       };
 
       await createTrip({
         variables: {
           userId: user?.id || '',
-          data: CreateTripInput.data,
+          tripInput: CreateTripInput.tripInput,
+          tripPreferenceInput: CreateTripInput.tripPreferenceInput,
         },
         onCompleted: () => {
           setIsSubmitting(false);
@@ -141,7 +145,7 @@ export default function ReviewTripScreen() {
           },
         ],
         onError: (err) => {
-          // Alert.alert('Error', err.message);
+          Alert.alert('Error', err.message);
           console.log('Error', err.message);
           setIsSubmitting(false);
         },

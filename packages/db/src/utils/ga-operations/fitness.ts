@@ -1,6 +1,5 @@
 import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { fetchMapboxMatrix } from '../../service/mapboxService';
-import { tripDuration } from '../utils';
 import { Chromosome } from './types';
 import {
   calculateAveragePrice,
@@ -12,7 +11,6 @@ import {
   getCoordinates,
   getCoordinatesParam,
   getMatrixAvg,
-  getTotalDesiredTravelHours,
 } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
@@ -20,23 +18,23 @@ type CreateTripInput = NexusGenInputs['CreateTripInput'];
 export async function evaluateFitness(
   tripInput: CreateTripInput,
   population: Chromosome[],
+  duration: number,
+  desiredTravelHours: number,
 ) {
-  const { travelerCount, timeSlots } = tripInput;
+  const { travelerCount } = tripInput;
 
   let totalTravelDuration = 0;
-
-  const duration = tripDuration(
-    new Date(tripInput.startDate),
-    new Date(tripInput.endDate),
-  );
-
-  const totalDesiredTravelHours = getTotalDesiredTravelHours(timeSlots);
 
   for (let i = 0; i < population.length; i++) {
     const currentPopulation = population[i]!;
 
     const chromosome = currentPopulation.chrom;
     const genes = chromosome.genes;
+
+    // minimun coordinates to create matrix is 2 --> avoid not enought input error
+    if (genes.length < 2) {
+      continue;
+    }
 
     const coordinatePairs = getCoordinatesParam(getCoordinates(genes));
 
@@ -91,9 +89,8 @@ export async function evaluateFitness(
 
     const durationScore = calculateDurationScore(
       sumDuration,
-      duration,
       totalTravelDuration,
-      totalDesiredTravelHours,
+      desiredTravelHours,
     );
     currentPopulation.fitnessScore = calculateFitnessScore(
       costScore,

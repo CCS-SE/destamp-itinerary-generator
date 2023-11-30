@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
+import { useQuery } from '@apollo/client';
 
 import StepperButton from '~/components/Button/StepperButton';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';
@@ -13,6 +14,7 @@ import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
 import CuisineSelection from '~/components/FormField/CuisineSelection';
 import DiningStyleSelection from '~/components/FormField/DiningStyleSelection';
 import Stepper from '~/components/Stepper/Stepper';
+import { GetAmenitiesDocument } from '~/graphql/generated';
 import { TripPreferenceData } from '~/store/types';
 import useFormstore from '~/store/useFormStore';
 import Back from '../../../../assets/images/back-btn.svg';
@@ -37,6 +39,22 @@ export default function TripPreferenceScreen() {
     setCompletedSteps,
     setVisitedSteps,
   } = useFormstore();
+
+  const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
+    [],
+  );
+  const { data } = useQuery(GetAmenitiesDocument);
+
+  useEffect(() => {
+    if (data) {
+      setAmenities(
+        data.amenities.map((amenity) => ({
+          key: amenity.id,
+          value: amenity.name,
+        })),
+      );
+    }
+  }, [data]);
 
   const isAmenitiesSelected = () => {
     return preferenceData.amenities.length > 0;
@@ -231,6 +249,7 @@ export default function TripPreferenceScreen() {
       key={1}
     />,
     <AmenitiesSelection
+      data={amenities}
       initialSelectedOptions={preferenceData.amenities}
       key={2}
       onOptionChange={(value) => handleTripPreferenceChange('amenities', value)}

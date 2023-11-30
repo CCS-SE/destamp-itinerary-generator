@@ -33,9 +33,9 @@ export default function ActivitiesSelection({
             icon={activity.icon}
             color={activity.color}
             title={activity.title}
-            initialValue={(activityValues[activity.title] as number) || 0}
+            initialValue={(activityValues[activity.value] as number) || 0}
             onValueChange={(value) =>
-              handleSliderValueChange(activity.title, value)
+              handleSliderValueChange(activity.value, value)
             }
           />
         ))}
@@ -47,9 +47,9 @@ export default function ActivitiesSelection({
             icon={activity.icon}
             color={activity.color}
             title={activity.title}
-            initialValue={(activityValues[activity.title] as number) || 0}
+            initialValue={(activityValues[activity.value] as number) || 0}
             onValueChange={(value) =>
-              handleSliderValueChange(activity.title, value)
+              handleSliderValueChange(activity.value, value)
             }
           />
         ))}
@@ -61,16 +61,19 @@ export default function ActivitiesSelection({
 const activities = [
   {
     title: 'Sightseeing',
+    value: 'Sightseeing',
     color: '#65F1D0',
     icon: <Sight height={35} width={37} />,
   },
   {
     title: 'Museum',
+    value: 'Museum',
     color: '#DFCCF1',
     icon: <Museum height={35} width={37} />,
   },
   {
     title: 'Outdoor Activities',
+    value: 'Outdoor',
     color: '#FFCE98',
     icon: <Outdoor height={35} width={37} />,
   },
@@ -79,16 +82,19 @@ const activities = [
 const activities1 = [
   {
     title: 'Arts',
+    value: 'Arts',
     color: '#EDF075',
     icon: <Arts height={35} width={37} />,
   },
   {
     title: 'Shopping',
+    value: 'Shopping',
     color: '#90DCFC',
     icon: <Shopping height={35} width={37} />,
   },
   {
     title: 'Architecture and Landmarks',
+    value: 'Landmarks',
     color: '#E997AB',
     icon: <Landmark height={33} width={37} />,
   },
