@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -42,6 +42,7 @@ export default function MapScreen() {
       tripId: parseInt(id as string),
     },
   });
+  const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0);
 
   const mapAnimation = new Animated.Value(0);
 
@@ -62,6 +63,7 @@ export default function MapScreen() {
       setTimeout(() => {
         if (mapIndex !== index) {
           mapIndex = index;
+          setCurrentPlaceIndex(index);
           const { latitude, longitude } = destinations[index]!;
           mapRef?.current?.animateToRegion(
             {
@@ -161,40 +163,34 @@ export default function MapScreen() {
                 </Marker>
               );
             })}
-
         {data &&
-          data.trip.dailyItineraries[
-            parseInt(selectedDay as string)
-          ]?.dailyItineraryPois
-            .map((item) => item.poi)
-            .map((destination, i) => {
-              if (
-                i + 1 <
+        currentPlaceIndex + 1 <
+          data.trip.dailyItineraries[parseInt(selectedDay as string)]!
+            .dailyItineraryPois.length! ? (
+          <MapViewDirections
+            key={currentPlaceIndex}
+            origin={{
+              latitude: data.trip.dailyItineraries[
+                parseInt(selectedDay as string)
+              ]!.dailyItineraryPois[currentPlaceIndex]!.poi.latitude as number,
+              longitude: data.trip.dailyItineraries[
+                parseInt(selectedDay as string)
+              ]!.dailyItineraryPois[currentPlaceIndex]!.poi.longitude as number,
+            }}
+            destination={{
+              latitude:
                 data.trip.dailyItineraries[parseInt(selectedDay as string)]!
-                  .dailyItineraryPois.length!
-              ) {
-                return (
-                  <MapViewDirections
-                    key={i}
-                    origin={{
-                      latitude: destination.latitude,
-                      longitude: destination.longitude,
-                    }}
-                    destination={{
-                      latitude: data.trip.dailyItineraries[
-                        parseInt(selectedDay as string)
-                      ]?.dailyItineraryPois[i + 1]?.poi.latitude as number,
-                      longitude: data.trip.dailyItineraries[
-                        parseInt(selectedDay as string)
-                      ]?.dailyItineraryPois[i + 1]?.poi.longitude as number,
-                    }}
-                    apikey={googleMapsKey}
-                    strokeColor="hotpink"
-                    strokeWidth={3}
-                  />
-                );
-              } else return null;
-            })}
+                  .dailyItineraryPois[currentPlaceIndex + 1]!.poi.latitude,
+              longitude: data.trip.dailyItineraries[
+                parseInt(selectedDay as string)
+              ]!.dailyItineraryPois[currentPlaceIndex + 1]!.poi
+                .longitude as number,
+            }}
+            apikey={googleMapsKey}
+            strokeColor="#F65A82"
+            strokeWidth={9}
+          />
+        ) : null}
       </MapView>
       <Animated.ScrollView
         className="absolute bottom-16 left-0 right-0 py-3"
