@@ -187,7 +187,7 @@ export default function ItineraryCard({
           dailyItinerary.accommodationCost +
           dailyItinerary.transportationCost +
           calculateAveragePrice(dailyItinerary.foodCost) +
-          dailyItinerary.accommodationCost
+          dailyItinerary.attractionCost
         }
         travelerCount={travelerCount}
       />
