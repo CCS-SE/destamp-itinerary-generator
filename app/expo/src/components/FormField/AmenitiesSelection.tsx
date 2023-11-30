@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
 interface AmenityProps {
-  key: string;
+  key: number;
   value: string;
 }
 

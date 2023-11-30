@@ -369,7 +369,6 @@ export interface NexusGenFieldTypes {
     createExpense: NexusGenRootTypes['Expense']; // Expense!
     createMutation: NexusGenRootTypes['Poi']; // Poi!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
-    createTripPreference: NexusGenRootTypes['TripPreference']; // TripPreference!
     createUser: NexusGenRootTypes['User']; // User!
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deletePoi: NexusGenRootTypes['Poi']; // Poi!
@@ -541,7 +540,6 @@ export interface NexusGenFieldTypeNames {
     createExpense: 'Expense';
     createMutation: 'Poi';
     createTrip: 'Trip';
-    createTripPreference: 'TripPreference';
     createUser: 'User';
     deleteExpense: 'Expense';
     deletePoi: 'Poi';
@@ -667,13 +665,9 @@ export interface NexusGenArgTypes {
     };
     createTrip: {
       // args
-      data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
+      tripInput: NexusGenInputs['CreateTripInput']; // CreateTripInput!
+      tripPreferenceInput: NexusGenInputs['CreateTripPreferenceInput']; // CreateTripPreferenceInput!
       userId: string; // String!
-    };
-    createTripPreference: {
-      // args
-      input: NexusGenInputs['CreateTripPreferenceInput']; // CreateTripPreferenceInput!
-      tripId: number; // Int!
     };
     createUser: {
       // args

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -40,14 +40,21 @@ export default function TripPreferenceScreen() {
     setVisitedSteps,
   } = useFormstore();
 
+  const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
+    [],
+  );
   const { data } = useQuery(GetAmenitiesDocument);
 
-  const amenities = data
-    ? data.amenities.map((amenity) => ({
-        key: amenity.id.toString(),
-        value: amenity.name,
-      }))
-    : [];
+  useEffect(() => {
+    if (data) {
+      setAmenities(
+        data.amenities.map((amenity) => ({
+          key: amenity.id,
+          value: amenity.name,
+        })),
+      );
+    }
+  }, [data]);
 
   const isAmenitiesSelected = () => {
     return preferenceData.amenities.length > 0;

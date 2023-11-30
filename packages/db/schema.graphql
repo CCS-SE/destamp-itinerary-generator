@@ -139,8 +139,7 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 type Mutation {
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
   createMutation(input: CreatePoiInput!, userId: String!): Poi!
-  createTrip(data: CreateTripInput!, userId: String!): Trip!
-  createTripPreference(input: CreateTripPreferenceInput!, tripId: Int!): TripPreference!
+  createTrip(tripInput: CreateTripInput!, tripPreferenceInput: CreateTripPreferenceInput!, userId: String!): Trip!
   createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
   deletePoi(poiId: String!): Poi!

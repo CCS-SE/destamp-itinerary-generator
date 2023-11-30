@@ -87,7 +87,7 @@ export default function ReviewTripScreen() {
     } else {
       const CreateTripInput: MutationCreateTripArgs = {
         userId: user?.id || '',
-        data: {
+        tripInput: {
           budget: parseFloat(tripData.budget),
           endDate: tripData.endDate
             ? new Date(formatDateToString(tripData.endDate))
@@ -116,12 +116,20 @@ export default function ReviewTripScreen() {
           timeSlots: tripData.timeslots,
           startingLocation: tripData.startingLocation,
         },
+        tripPreferenceInput: {
+          accommodationType: preferenceData.accommodationType,
+          activities: preferenceData.activities,
+          amenities: preferenceData.amenities,
+          cuisines: preferenceData.cuisines,
+          diningStyles: preferenceData.diningStyles,
+        },
       };
 
       await createTrip({
         variables: {
           userId: user?.id || '',
-          data: CreateTripInput.data,
+          tripInput: CreateTripInput.tripInput,
+          tripPreferenceInput: CreateTripInput.tripPreferenceInput,
         },
         onCompleted: () => {
           setIsSubmitting(false);
@@ -137,7 +145,7 @@ export default function ReviewTripScreen() {
           },
         ],
         onError: (err) => {
-          // Alert.alert('Error', err.message);
+          Alert.alert('Error', err.message);
           console.log('Error', err.message);
           setIsSubmitting(false);
         },
