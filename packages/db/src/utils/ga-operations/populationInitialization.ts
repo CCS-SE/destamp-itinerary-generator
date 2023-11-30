@@ -42,27 +42,29 @@ export function generatePopulation(
       // const poiIndex = Math.floor(Math.random() * (pois.length - 1));
       // const poi = pois[poiIndex]!;
 
-      const poi = pois.shift()!; // remove the first element from the array
+      const poi = pois.shift(); // remove the first element from the array
 
-      if (isFoodIncluded && poi.restaurant) {
-        const averagePrice = calculateAveragePrice(poi.price);
-        const foodCost = averagePrice * travelerCount;
-        const poiDuration = poi.visitDuration / 60;
+      if (poi) {
+        if (isFoodIncluded && poi.restaurant) {
+          const averagePrice = calculateAveragePrice(poi.price);
+          const foodCost = averagePrice * travelerCount;
+          const poiDuration = poi.visitDuration / 60;
 
-        totalFoodCost += foodCost;
-        totalDuration += poiDuration;
-        // poiIndexes.push(poiIndex);
-        chromosome.push(poi);
-      }
+          totalFoodCost += foodCost;
+          totalDuration += poiDuration;
+          // poiIndexes.push(poiIndex);
+          chromosome.push(poi);
+        }
 
-      if (poi.isAttraction) {
-        const attractionCost = parseFloat(poi.price) * travelerCount;
-        const poiDuration = poi.visitDuration / 60;
+        if (poi.isAttraction) {
+          const attractionCost = parseFloat(poi.price) * travelerCount;
+          const poiDuration = poi.visitDuration / 60;
 
-        totalAttractionCost += attractionCost;
-        totalDuration += poiDuration;
-        // poiIndexes.push(poiIndex);
-        chromosome.push(poi);
+          totalAttractionCost += attractionCost;
+          totalDuration += poiDuration;
+          // poiIndexes.push(poiIndex);
+          chromosome.push(poi);
+        }
       }
 
       if (
