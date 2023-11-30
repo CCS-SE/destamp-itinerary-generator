@@ -1,17 +1,25 @@
+import { contentBasedFiltering } from '../../../../utils/content-based filtering';
 import { generateItinerary } from '../../../../utils/ga-operations';
 import {
-  getDailyPlans,
-  getDaySuggestions,
-} from '../../../../utils/ga-operations/daySuggestion';
-import { multiplyRangeByPeople } from '../../../../utils/ga-operations/utils';
+  assignAccommodation,
+  createDailyItinerary,
+} from '../../../../utils/ga-operations/createDailyItinerary';
+import {
+  getDesiredTravelHour,
+  multiplyRangeByPeople,
+} from '../../../../utils/ga-operations/utils';
+import { tripDuration } from '../../../../utils/utils';
 import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
+type CreateTripPreferenceInput = NexusGenInputs['CreateTripPreferenceInput'];
 
 const selectedFields = {
   id: true,
   price: true,
+  name: true,
+  categories: true,
   isAttraction: true,
   visitDuration: true,
   latitude: true,
@@ -22,7 +30,8 @@ const selectedFields = {
 
 export const createTrip = async (
   userId: string,
-  input: CreateTripInput,
+  tripInput: CreateTripInput,
+  tripPreferenceInput: CreateTripPreferenceInput,
   ctx: Context,
 ) => {
   const {
@@ -33,81 +42,84 @@ export const createTrip = async (
     title,
     travelSize,
     travelerCount,
-  } = input;
+  } = tripInput;
   try {
-    const restaurants = await ctx.prisma.pointOfInterest.findMany({
-      where: {
-        restaurant: {
-          isNot: null,
-        },
-      },
+    const pois = await ctx.prisma.pointOfInterest.findMany({
       select: {
         ...selectedFields,
-      },
-    });
-
-    const attractions = await ctx.prisma.pointOfInterest.findMany({
-      where: {
-        isAttraction: true,
-      },
-      select: {
-        ...selectedFields,
-      },
-    });
-
-    const accomodations = await ctx.prisma.pointOfInterest.findMany({
-      where: {
         accommodation: {
-          isNot: null,
+          include: {
+            amenities: true,
+          },
         },
-      },
-      select: {
-        ...selectedFields,
       },
     });
 
-    const suggestedDestinations = await generateItinerary(
-      input,
-      restaurants,
-      attractions,
+    const duration = tripDuration(tripInput.startDate, tripInput.endDate);
+
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
+
+    const filteredPois = contentBasedFiltering(pois, tripPreferenceInput);
+
+    const suggestedItineraries = await generateItinerary(
+      tripInput,
+      filteredPois,
+      duration,
+      desiredTravelHours,
     );
 
-    const bestSoFar = suggestedDestinations[0];
-
-    const suggestedPlans = bestSoFar
-      ? getDaySuggestions(bestSoFar, input, accomodations)
-      : [];
-
-    const dailyPlans = await getDailyPlans(suggestedPlans, input);
+    const dailyItineraries = await Promise.all(
+      assignAccommodation(
+        suggestedItineraries,
+        tripInput,
+        filteredPois,
+        duration,
+      ).map(async (itinerary) => {
+        const dailyItinerary = await createDailyItinerary(itinerary, tripInput);
+        return dailyItinerary;
+      }),
+    );
 
     return await ctx.prisma.trip.create({
       data: {
         budget: budget,
-        endDate: new Date(input.endDate),
-        startDate: new Date(input.startDate),
+        endDate: new Date(tripInput.endDate),
+        startDate: new Date(tripInput.startDate),
         title: title,
         travelSize: travelSize,
         travelerCount: travelerCount,
         isAccommodationIncluded: isAccommodationIncluded,
         isFoodIncluded: isFoodIncluded,
         isTransportationIncluded: isTransportationIncluded,
-        startingLocation: input.startingLocation,
-        timeSlots: input.timeSlots,
+        startingLocation: tripInput.startingLocation,
+        timeSlots: tripInput.timeSlots as [number, number][],
+        tripPreference: {
+          create: {
+            accommodationType: tripPreferenceInput.accommodationType,
+            activities: tripPreferenceInput.activities,
+            amenities: tripPreferenceInput.amenities,
+            cuisines: tripPreferenceInput.cuisines,
+            diningStyles: tripPreferenceInput.diningStyles,
+          },
+        },
         dailyItineraries: {
-          create: dailyPlans.map((dailyPlan, index) => ({
+          create: dailyItineraries.map((dailyItinerary, index) => ({
             dayIndex: index,
-            accommodationCost: dailyPlan.chrom.accommodationCost(),
+            accommodationCost: dailyItinerary.chrom.accommodationCost(),
             foodCost: multiplyRangeByPeople(
-              dailyPlan.chrom.foodCostRange(),
+              dailyItinerary.chrom.foodCostRange(),
               travelerCount,
             ),
-            attractionCost: dailyPlan.chrom.attractionCost() * travelerCount,
-            transportationCost: dailyPlan.travelExpenses,
+            attractionCost:
+              dailyItinerary.chrom.attractionCost() * travelerCount,
+            transportationCost: dailyItinerary.travelExpenses,
             dailyItineraryPois: {
-              create: dailyPlan.chrom.genes.map((gene, index) => ({
+              create: dailyItinerary.chrom.genes.map((gene, index) => ({
                 order: index,
-                duration: dailyPlan.travelDurations[index]!,
-                distance: dailyPlan.travelDistances[index]!,
+                duration: dailyItinerary.travelDurations[index]!,
+                distance: dailyItinerary.travelDistances[index]!,
                 poi: {
                   connect: {
                     id: gene.id as string,

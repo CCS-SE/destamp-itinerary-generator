@@ -47,6 +47,7 @@ model Trip {
 
   expenses         Expense[]
   dailyItineraries DailyItinerary[]
+  tripPreference   TripPreference?
 
   @@map("trips")
 }
@@ -77,6 +78,23 @@ model PointOfInterest {
   restaurant         Restaurant?
 
   @@map("point_of_interests")
+}
+
+model TripPreference {
+  id     Int  @id @default(autoincrement())
+  trip   Trip @relation(fields: [tripId], references: [id])
+  tripId Int  @unique @map("trip_id")
+
+  accommodationType String   @map("accommodation_type") @db.VarChar(255)
+  amenities         String[] @db.VarChar(255)
+  activities        Json
+  diningStyles      String[] @map("dining_styles") @db.VarChar(255)
+  cuisines          String[] @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("trip_preferences")
 }
 
 model Restaurant {

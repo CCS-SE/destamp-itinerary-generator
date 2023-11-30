@@ -35,6 +35,8 @@ export const calculateCostScore = (
 ) => {
   const { budget } = tripInput;
 
+  const dailyBudget = budget / duration;
+
   const budgetRate = getBudgetAllocation(tripInput);
 
   const foodBudgetRate = budgetRate?.FOOD || 0;
@@ -42,44 +44,49 @@ export const calculateCostScore = (
   const accommodationBudgetRate = budgetRate?.ACCOMMODATION || 0;
   const transporationBudgetRate = budgetRate?.TRANSPORT || 0;
 
-  const totalCost =
-    accommodationCost * duration +
+  const totalDailyCost =
+    accommodationCost +
     attractionCost * totalTravelers +
     foodCost * totalTravelers +
     travelExpenses;
 
-  let costDifference = tripInput.budget - totalCost;
+  let costDifference = dailyBudget - totalDailyCost;
 
-  if (totalCost === 0) {
+  if (totalDailyCost === 0) {
     return 0;
   }
 
-  const actualFoodRate = (foodCost * totalTravelers) / budget;
-  const actualAccommodationRate = (accommodationCost * duration) / budget;
-  const actualAttractionRate = (attractionCost * totalTravelers) / budget;
-  const actualTransportRate = travelExpenses / budget;
+  const actualFoodRate = (foodCost * totalTravelers) / dailyBudget;
+  const actualAccommodationRate = accommodationCost / dailyBudget;
+  const actualAttractionRate = (attractionCost * totalTravelers) / dailyBudget;
+  const actualTransportRate = travelExpenses / dailyBudget;
 
-  // check if each category exceeds allocated budget rate
-  if (actualFoodRate > accommodationBudgetRate && foodBudgetRate !== 0) {
-    costDifference -= (budget * actualFoodRate) / duration;
+  // check if each category exceeds allocated budget rate or below 50%
+  if (
+    foodBudgetRate !== 0 &&
+    (actualFoodRate > foodBudgetRate || actualFoodRate < foodBudgetRate / 2)
+  ) {
+    costDifference -= dailyBudget * actualFoodRate; // penalize cost over budget and cost below 50%
   }
   if (
-    actualAccommodationRate > accommodationBudgetRate &&
-    accommodationBudgetRate !== 0
+    accommodationBudgetRate !== 0 &&
+    (actualAccommodationRate > accommodationBudgetRate ||
+      accommodationBudgetRate < accommodationBudgetRate / 2)
   ) {
-    costDifference -= (budget * actualAccommodationRate) / duration;
+    costDifference -= dailyBudget * actualAccommodationRate;
   }
   if (
-    actualAttractionRate > attractionBudgetRate &&
-    attractionBudgetRate !== 0
+    attractionBudgetRate !== 0 &&
+    (actualAttractionRate > attractionBudgetRate || actualAttractionRate / 2)
   ) {
-    costDifference -= (budget * actualAttractionRate) / duration;
+    costDifference -= dailyBudget * actualAttractionRate;
   }
   if (
-    actualTransportRate > transporationBudgetRate &&
-    transporationBudgetRate !== 0
+    transporationBudgetRate !== 0 &&
+    (actualTransportRate > transporationBudgetRate ||
+      actualTransportRate < transporationBudgetRate / 2)
   ) {
-    costDifference -= (budget * actualTransportRate) / duration;
+    costDifference -= dailyBudget * actualTransportRate;
   }
 
   const costScore = Math.abs(costDifference) / 10_000;
@@ -89,21 +96,22 @@ export const calculateCostScore = (
 
 export const calculateDurationScore = (
   totalPlaceDuration: number,
-  duration: number,
   travelDuration: number,
-  totalDesiredTravelHours: number,
+  desiredTravelHours: number,
 ) => {
   const totalDuration =
     totalPlaceDuration / 60 + calculateTravelDuration(travelDuration);
-  const desiredDuration = duration * totalDesiredTravelHours;
-  let durationDifference = desiredDuration - totalDuration;
+  let durationDifference = desiredTravelHours - totalDuration;
 
-  if (durationDifference < 0) {
-    // if duration differenc is negative
-    durationDifference += totalDuration / duration; // penalize overtime
+  // checks if overtime or duration is below 50%
+  if (
+    durationDifference < 0 || // below or negative difference means over time
+    durationDifference > desiredTravelHours / 2 // greater difference over half of the desired hour is under time
+  ) {
+    durationDifference -= totalDuration / desiredTravelHours;
   }
 
-  const durationScore = Math.abs(durationDifference);
+  const durationScore = Math.abs(durationDifference) / 1_000;
 
   return durationScore;
 };
@@ -174,14 +182,6 @@ export const calculateTravelExpenses = (
   );
 };
 
-export const getTotalDesiredTravelHours = (
-  timeslots: [number, number][],
-): number => {
-  return timeslots.reduce((total, range) => {
-    return total + getDesiredTravelHour(range);
-  }, 0);
-};
-
 export const getDesiredTravelHour = (timeslot: [number, number]) => {
   const [startTime, endTime] = timeslot;
   return endTime! - startTime!;
@@ -204,4 +204,16 @@ export const taxisNeeded = (travelerCount: number) => {
     const taxisNeeded = (travelerCount - 1) / 4;
     return Math.floor(taxisNeeded) + 1;
   }
+};
+
+export const findPoiWithNearestPrice = (
+  pois: PointOfInterest[],
+  targetPrice: number,
+) => {
+  return pois.reduce((nearestPlace, currentPlace) => {
+    const nearestDiff = Math.abs(parseFloat(nearestPlace.price) - targetPrice);
+    const currentDiff = Math.abs(parseFloat(currentPlace.price) - targetPrice);
+
+    return currentDiff < nearestDiff ? currentPlace : nearestPlace;
+  });
 };

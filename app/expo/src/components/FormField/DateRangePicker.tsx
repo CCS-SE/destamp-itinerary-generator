@@ -3,6 +3,8 @@ import { Dimensions, Text, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { Moment } from 'moment';
 
+import { dateFormmater } from '~/utils/utils';
+
 interface DateRangePickerProps {
   onDateChange: (startDate: Moment | null, endDate: Moment | null) => void;
 }
@@ -49,7 +51,13 @@ export default function DateRangePicker({
         />
         <View className="top-2 flex-row justify-center">
           <Text className="font-poppins text-base text-gray-600">
-            Select Start Date - End Date
+            {endDate && startDate && !startDate.isSame(endDate)
+              ? `${dateFormmater(startDate?.toISOString())} - ${dateFormmater(
+                  endDate.toISOString(),
+                )}`
+              : startDate && (!endDate || startDate.isSame(endDate))
+              ? dateFormmater(startDate.toISOString())
+              : ''}
           </Text>
           <Text className="font-poppins text-base text-gray-600">
             {startDate

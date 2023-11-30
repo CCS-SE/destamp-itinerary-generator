@@ -102,6 +102,14 @@ export interface NexusGenInputs {
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     travelerCount: number; // Int!
   };
+  CreateTripPreferenceInput: {
+    // input type
+    accommodationType: string; // String!
+    activities: NexusGenScalars['JSON']; // JSON!
+    amenities: string[]; // [String!]!
+    cuisines: string[]; // [String!]!
+    diningStyles: string[]; // [String!]!
+  };
   CreateUserInput: {
     // input type
     email: string; // String!
@@ -268,6 +276,16 @@ export interface NexusGenObjects {
     travelerCount: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
+  TripPreference: {
+    // root type
+    accommodationType: string; // String!
+    activities: NexusGenScalars['JSON']; // JSON!
+    amenities: string[]; // [String!]!
+    cuisines: string[]; // [String!]!
+    diningStyles: string[]; // [String!]!
+    id: number; // Int!
+    tripId: number; // Int!
+  };
   User: {
     // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -396,6 +414,7 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
@@ -435,6 +454,16 @@ export interface NexusGenFieldTypes {
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     travelerCount: number; // Int!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
+  };
+  TripPreference: {
+    // field return type
+    accommodationType: string; // String!
+    activities: NexusGenScalars['JSON']; // JSON!
+    amenities: string[]; // [String!]!
+    cuisines: string[]; // [String!]!
+    diningStyles: string[]; // [String!]!
+    id: number; // Int!
+    tripId: number; // Int!
   };
   User: {
     // field return type
@@ -556,6 +585,7 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    amenities: 'Amenity';
     categories: 'Category';
     poi: 'Poi';
     pois: 'Poi';
@@ -596,6 +626,16 @@ export interface NexusGenFieldTypeNames {
     travelerCount: 'Int';
     updatedAt: 'DateTime';
   };
+  TripPreference: {
+    // field return type name
+    accommodationType: 'String';
+    activities: 'JSON';
+    amenities: 'String';
+    cuisines: 'String';
+    diningStyles: 'String';
+    id: 'Int';
+    tripId: 'Int';
+  };
   User: {
     // field return type name
     createdAt: 'DateTime';
@@ -625,7 +665,8 @@ export interface NexusGenArgTypes {
     };
     createTrip: {
       // args
-      data: NexusGenInputs['CreateTripInput']; // CreateTripInput!
+      tripInput: NexusGenInputs['CreateTripInput']; // CreateTripInput!
+      tripPreferenceInput: NexusGenInputs['CreateTripPreferenceInput']; // CreateTripPreferenceInput!
       userId: string; // String!
     };
     createUser: {

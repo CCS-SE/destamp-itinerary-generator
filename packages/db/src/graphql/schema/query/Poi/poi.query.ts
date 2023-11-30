@@ -1,6 +1,11 @@
 import { list, nonNull, queryField, stringArg } from 'nexus';
 
-import { queryAllCategories, queryPoi, queryPois } from './poi.resolver';
+import {
+  queryAllAmenities,
+  queryAllCategories,
+  queryPoi,
+  queryPois,
+} from './poi.resolver';
 
 const Poi = queryField('poi', {
   type: nonNull('Poi'),
@@ -18,9 +23,14 @@ const Pois = queryField('pois', {
   resolve: (_, args, ctx, info) => queryPois(args.userId, ctx, info),
 });
 
-const Category = queryField('categories', {
+const Categories = queryField('categories', {
   type: nonNull(list('Category')),
   resolve: (_, __, ctx) => queryAllCategories(ctx),
 });
 
-export default [Poi, Pois, Category];
+const Amenities = queryField('amenities', {
+  type: nonNull(list('Amenity')),
+  resolve: (_, __, ctx) => queryAllAmenities(ctx),
+});
+
+export default [Poi, Pois, Categories, Amenities];

@@ -1,15 +1,21 @@
-import { NexusGenInputs, NexusGenObjects } from '../../graphql/generated/nexus';
+import {
+  NexusGenFieldTypes,
+  NexusGenInputs,
+} from '../../graphql/generated/nexus';
+import { clusterPois } from './cluster';
 import { evaluateFitness } from './fitness';
 import { generatePopulation } from './populationInitialization';
 import { selection, selectNextGeneration } from './selection';
 import { Chromosome } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
-export type Restaurant = NexusGenObjects['Restaurant'];
-export type Accommodation = NexusGenObjects['Accommodation'];
+export type Restaurant = NexusGenFieldTypes['Restaurant'];
+export type Accommodation = NexusGenFieldTypes['Accommodation'];
+export type Category = NexusGenFieldTypes['Category'];
 
 export type PointOfInterest = {
   id: string;
+  name: string;
   price: string;
   isAttraction: boolean;
   visitDuration: number;
@@ -17,33 +23,61 @@ export type PointOfInterest = {
   longitude: number;
   restaurant: Restaurant | null;
   accommodation: Accommodation | null;
+  categories: Category[];
 };
 
-const REPETITION_RATE = 1;
-
 export async function generateItinerary(
-  tripInput: CreateTripInput,
-  restaurants: PointOfInterest[],
-  attractions: PointOfInterest[],
+  input: CreateTripInput,
+  pois: PointOfInterest[],
+  duration: number,
+  desiredTravelHours: number[],
 ) {
-  const bestSoFar: Chromosome[] = [];
-  let counter = 0;
+  const bestChromosomesPerCluster: Array<Array<Chromosome>> = new Array(
+    duration,
+  )
+    .fill(null)
+    .map(() => []);
 
-  const population = generatePopulation(tripInput, restaurants, attractions); // initialize population
-  await evaluateFitness(tripInput, population); // perform fitness evaluation
-  bestSoFar.push(population[0]!);
+  const clusteredPois = clusterPois(duration, pois);
 
-  let currentGeneration = population;
+  for (let cluster = 0; cluster < clusteredPois.length; cluster++) {
+    const population: Chromosome[] = generatePopulation(
+      input,
+      clusteredPois[cluster]!.genes,
+      desiredTravelHours[cluster]!,
+    ); // initialize population
 
-  while (counter < REPETITION_RATE) {
-    const selected = selection(currentGeneration);
-    const nextGeneration = selectNextGeneration(tripInput, selected);
-    await evaluateFitness(tripInput, nextGeneration);
+    await evaluateFitness(
+      input,
+      population,
+      duration,
+      desiredTravelHours[cluster]!,
+    ); // perform fitness evaluation
+
+    bestChromosomesPerCluster[cluster]!.push(population[0]!);
+
+    const selected = selection(population);
+    const nextGeneration = selectNextGeneration(
+      input,
+      selected,
+      duration,
+      desiredTravelHours[cluster]!,
+    );
+    await evaluateFitness(
+      input,
+      nextGeneration,
+      duration,
+      desiredTravelHours[cluster]!,
+    );
+
     nextGeneration.sort((a, b) => b.fitnessScore - a.fitnessScore);
-    bestSoFar.push(nextGeneration[0]!);
-    currentGeneration = nextGeneration;
-    counter += 1;
+    bestChromosomesPerCluster[cluster]!.push(nextGeneration[0]!);
+    bestChromosomesPerCluster[cluster]!.sort(
+      (a, b) => b.fitnessScore - a.fitnessScore,
+    );
   }
-  bestSoFar.sort((a, b) => b.fitnessScore - a.fitnessScore);
+  // best chromosome per cluster
+  const bestSoFar = bestChromosomesPerCluster.map((best) => best[0]!);
+
   return bestSoFar;
 }

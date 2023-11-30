@@ -7,11 +7,11 @@ import {
   calculateTravelDuration,
   calculateTravelExpense,
   calculateTravelExpenses,
+  findPoiWithNearestPrice,
   getCoordinates,
   getCoordinatesParam,
   getDesiredTravelHour,
   getMatrixAvg,
-  getTotalDesiredTravelHours,
   multiplyRangeByPeople,
 } from '../utils';
 import { pointOfInterests } from './mock/mock';
@@ -54,15 +54,15 @@ describe('calculateCostScore', () => {
     };
     const costScore = calculateCostScore(tripInput, 0, 750, 450, 2, 2, 345);
 
-    expect(costScore).toBe(0.1445);
+    expect(costScore).toBe(0.3895);
   });
 });
 
 describe('calculateDurationScore', () => {
   it('should get the duration score', () => {
-    const durationScore = calculateDurationScore(480, 2, 12_600, 9);
+    const durationScore = calculateDurationScore(480, 12_600, 9);
 
-    expect(durationScore).toBe(6.5);
+    expect(durationScore).toBe(0.0037777777777777775);
   });
 });
 
@@ -86,17 +86,17 @@ describe('calculateFitnessScore', () => {
     };
 
     const costScore = calculateCostScore(tripInput, 0, 750, 450, 2, 2, 345);
-    const durationScore = calculateDurationScore(480, 2, 12_600, 9);
+    const durationScore = calculateDurationScore(480, 12_600, 9);
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(0.48753138483289865);
+    expect(fitnessScore).toBe(3.652523284835941);
   });
 });
 
 describe('getCoordinates', () => {
   it('should get the coordinates of places', () => {
-    const coordinates = getCoordinates(pointOfInterests);
+    const coordinates = getCoordinates(pointOfInterests).slice(0, 5);
 
     expect(coordinates).toStrictEqual([
       [pointOfInterests[0]?.longitude, pointOfInterests[0]?.latitude],
@@ -104,19 +104,17 @@ describe('getCoordinates', () => {
       [pointOfInterests[2]?.longitude, pointOfInterests[2]?.latitude],
       [pointOfInterests[3]?.longitude, pointOfInterests[3]?.latitude],
       [pointOfInterests[4]?.longitude, pointOfInterests[4]?.latitude],
-      [pointOfInterests[5]?.longitude, pointOfInterests[5]?.latitude],
-      [pointOfInterests[6]?.longitude, pointOfInterests[6]?.latitude],
     ]);
   });
 });
 
 describe('getCoordinatesParam', () => {
   it('should get the coordinates params of places', () => {
-    const coordinates = getCoordinates(pointOfInterests);
+    const coordinates = getCoordinates(pointOfInterests).slice(0, 3);
     const coordsParams = getCoordinatesParam(coordinates);
 
     expect(coordsParams).toBe(
-      '122.5706695,10.711599;122.5538653,10.7026051;122.5703695,10.6921669;122.539675,10.7183491;122.5478876,10.7170505;122.568212,10.7014032;122.5508008,10.7025543',
+      '122.5634381,10.694334;122.5664806,10.7097639;122.5709727,10.6921949',
     );
   });
 });
@@ -149,17 +147,6 @@ describe('calculateTravelExpense', () => {
   });
 });
 
-describe('getTotalDesiredTravelHours', () => {
-  it('should get the total desired travel hours', () => {
-    const travelHours = getTotalDesiredTravelHours([
-      [10, 15],
-      [9, 13],
-    ]);
-
-    expect(travelHours).toBe(9);
-  });
-});
-
 describe('getDesiredTravelHour', () => {
   it('should get the desired travel hour', () => {
     const travelHours = getDesiredTravelHour([10, 15]);
@@ -175,5 +162,13 @@ describe('calculateTravelExpenses', () => {
       1,
     );
     expect(travelExpense).toBe(736);
+  });
+});
+
+describe('findPoiWithNearestPrice', () => {
+  it('should find poi with nearest price on the target price', () => {
+    const poiWithNearestPrice = findPoiWithNearestPrice(pointOfInterests, 500);
+
+    expect(poiWithNearestPrice.price).toBe('660');
   });
 });

@@ -5,7 +5,7 @@ import { Chromosome as Chrom } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
-const POPULATION_SIZE = 10;
+const POPULATION_SIZE = 6;
 
 export const selection = (population: Chrom[]) => {
   const selected: Chrom[] = [];
@@ -33,6 +33,8 @@ export const selection = (population: Chrom[]) => {
 export const selectNextGeneration = (
   tripInput: CreateTripInput,
   population: Chrom[],
+  duration: number,
+  desiredTravelHours: number,
 ) => {
   const nextGeneration: Chrom[] = [];
 
@@ -40,7 +42,13 @@ export const selectNextGeneration = (
     const chromosome1 = population[i]!.chrom;
     const chromosome2 = population[i + 1]!.chrom;
 
-    const { chrom1, chrom2 } = crossover(chromosome1, chromosome2, tripInput);
+    const { chrom1, chrom2 } = crossover(
+      chromosome1,
+      chromosome2,
+      tripInput,
+      duration,
+      desiredTravelHours,
+    );
 
     nextGeneration.push({
       chrom: new Chromosome(chrom1),

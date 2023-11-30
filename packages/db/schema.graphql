@@ -61,6 +61,14 @@ input CreateTripInput {
   travelerCount: Int!
 }
 
+input CreateTripPreferenceInput {
+  accommodationType: String!
+  activities: JSON!
+  amenities: [String!]!
+  cuisines: [String!]!
+  diningStyles: [String!]!
+}
+
 input CreateUserInput {
   email: String!
   firstName: String!
@@ -131,7 +139,7 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 type Mutation {
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
   createMutation(input: CreatePoiInput!, userId: String!): Poi!
-  createTrip(data: CreateTripInput!, userId: String!): Trip!
+  createTrip(tripInput: CreateTripInput!, tripPreferenceInput: CreateTripPreferenceInput!, userId: String!): Trip!
   createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
   deletePoi(poiId: String!): Poi!
@@ -185,6 +193,7 @@ type PoiImage {
 }
 
 type Query {
+  amenities: [Amenity!]!
   categories: [Category!]!
   poi(poiId: String!): Poi!
   pois(userId: String!): [Poi!]!
@@ -231,6 +240,16 @@ type Trip {
   travelSize: TravelSize!
   travelerCount: Int!
   updatedAt: DateTime!
+}
+
+type TripPreference {
+  accommodationType: String!
+  activities: JSON!
+  amenities: [String!]!
+  cuisines: [String!]!
+  diningStyles: [String!]!
+  id: Int!
+  tripId: Int!
 }
 
 input UpdateExpenseInput {

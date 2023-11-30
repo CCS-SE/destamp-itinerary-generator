@@ -5,7 +5,7 @@ import {
   calculateDurationScore,
   calculateFitnessScore,
   calculateTravelExpense,
-  getTotalDesiredTravelHours,
+  getDesiredTravelHour,
 } from '../utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
@@ -29,56 +29,60 @@ describe('durationScore', () => {
   };
 
   it('checks behaviour of duration score if its under time', () => {
-    const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
 
-    const totalDuration = 400;
+    const travelHours = desiredTravelHours[0]!;
+
+    const totalDuration = 140;
     const travelDuration = 1_000;
 
     const durationScore = calculateDurationScore(
       totalDuration,
-      duration,
       travelDuration,
       travelHours,
     );
 
-    expect(durationScore).toBe(11.055555555555555);
+    expect(durationScore).toBe(0.0023888888888888887);
     // expects a high score if it has big difference from the user's desired travel hours
   });
 
   it('checks behaviour of duration score if its closer to desired travel hour', () => {
-    const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
 
-    const totalDuration = 900;
+    const travelHours = desiredTravelHours[0]!;
+    const totalDuration = 240;
     const travelDuration = 1_000;
 
     const durationScore = calculateDurationScore(
       totalDuration,
-      duration,
       travelDuration,
       travelHours,
     );
 
-    expect(durationScore).toBe(2.7222222222222214);
+    expect(durationScore).toBe(0.0007222222222222223);
     // expects a small score if it has small difference from the user's desired travel hours
   });
 
   it('checks behaviour of duration score if it over time', () => {
-    const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
 
-    const totalDuration = 850;
-    const travelDuration = 16_000;
+    const travelHours = desiredTravelHours[0]!;
+    const totalDuration = 350;
+    const travelDuration = 2_500;
 
     const durationScore = calculateDurationScore(
       totalDuration,
-      duration,
       travelDuration,
       travelHours,
     );
 
-    expect(durationScore).toBe(8.694444444444445);
+    expect(durationScore).toBe(0.002833333333333333);
     // expects a high score if total duration exceed user's desired travel hours
   });
 });
@@ -127,7 +131,7 @@ describe('costScore', () => {
       travelExpenses,
     );
 
-    expect(costScore).toBe(0.1108);
+    expect(costScore).toBe(0.0641);
     // expects a higher score if budget was not maximized
   });
 
@@ -156,7 +160,7 @@ describe('costScore', () => {
       duration,
       travelExpenses,
     );
-    expect(costScore).toBe(0.0205);
+    expect(costScore).toBe(0.2045);
     // expects a lesser score if total cost is closer to budget
   });
 
@@ -185,7 +189,7 @@ describe('costScore', () => {
       duration,
       travelExpenses,
     );
-    expect(costScore).toBe(0.1872);
+    expect(costScore).toBe(0.4472);
     // expects a higher score if total cost exceeds budget
   });
 });
@@ -210,10 +214,14 @@ describe('evaluateFitness', () => {
     };
 
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
+
+    const travelHours = desiredTravelHours[0]!;
     const totalDistance = 10_000; // 10 km
     const travelers = 2;
-    const totalDuration = 800; // total duration of chromosome (mins)
+    const totalDuration = 215; // total duration of chromosome (mins)
     const travelDuration = 3_600; // total travel duration of the trip (sec)
 
     const accommodationCost = 0;
@@ -228,7 +236,6 @@ describe('evaluateFitness', () => {
 
     const durationScore = calculateDurationScore(
       totalDuration,
-      duration,
       travelDuration,
       travelHours,
     );
@@ -244,7 +251,7 @@ describe('evaluateFitness', () => {
     );
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
-    expect(fitnessScore).toBe(0.8546497218115156);
+    expect(fitnessScore).toBe(4.065619092147257);
     // expects a higher value if budget and time duration is within user's constraints
   });
 
@@ -267,11 +274,15 @@ describe('evaluateFitness', () => {
     };
 
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
+
+    const travelHours = desiredTravelHours[0]!;
     const totalDistance = 10_000; // 10 km
-    const totalDuration = 1000; // total duration of chromosome (mins)
+    const totalDuration = 350; // total duration of chromosome (mins)
     const travelers = 2;
-    const travelDuration = 9500;
+    const travelDuration = 9_500;
 
     const accommodationCost = 0;
     const foodCost = 700;
@@ -285,7 +296,6 @@ describe('evaluateFitness', () => {
 
     const durationScore = calculateDurationScore(
       totalDuration,
-      duration,
       travelDuration,
       travelHours,
     );
@@ -302,7 +312,7 @@ describe('evaluateFitness', () => {
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(0.38840130140329393);
+    expect(fitnessScore).toBe(4.033071183706393);
     // expects a lesser value if time duration exceeds user's constraints
   });
 
@@ -325,10 +335,14 @@ describe('evaluateFitness', () => {
     };
 
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
-    const travelHours = getTotalDesiredTravelHours(tripInput.timeSlots);
+    const desiredTravelHours = tripInput.timeSlots.map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
+
+    const travelHours = desiredTravelHours[0]!;
 
     const totalDistance = 10_000; // 10 km
-    const totalDuration = 800;
+    const totalDuration = 215;
     const travelDuration = 3_600;
     const travelers = 2;
 
@@ -344,7 +358,6 @@ describe('evaluateFitness', () => {
 
     const durationScore = calculateDurationScore(
       totalDuration,
-      duration,
       travelDuration,
       travelHours,
     );
@@ -361,7 +374,7 @@ describe('evaluateFitness', () => {
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(0.7473450566861226);
+    expect(fitnessScore).toBe(2.1278180290021598);
     // expects a lesser value if budget exceeds users constraints
   });
 });
