@@ -29,6 +29,7 @@ export function calculateSimilarityScore(
   const magnitude2 = Math.sqrt(placeFeatures.length);
   return dotProduct / (magnitude1 * magnitude2);
 }
+
 export function contentBasedFiltering(
   places: PointOfInterest[],
   preference: Preference,
