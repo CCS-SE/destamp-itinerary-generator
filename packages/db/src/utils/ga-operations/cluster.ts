@@ -21,7 +21,6 @@ export const clusterPois = (
 
   clusters.features.forEach((cluster) => {
     const clusterIndex = cluster.properties.cluster as number;
-    const a = cluster.geometry.coordinates;
     const gene = cluster.properties.gene as PointOfInterest;
 
     const existingCluster = clusteredGenes.find(
