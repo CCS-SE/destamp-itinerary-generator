@@ -7,8 +7,8 @@ import { calculateAveragePrice } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
-const POPULATION_SIZE = 10;
-const MAX_ITERATIONS = 24; // max number of iterations
+const POPULATION_SIZE = 2;
+const MAX_ITERATIONS = 20; // max number of iterations
 
 export function generatePopulation(
   input: CreateTripInput,
@@ -23,6 +23,9 @@ export function generatePopulation(
   const attractionCostThreshold = budget * rate.ATTRACTION;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
+
+  const restaurants = pois.filter((poi) => poi.restaurant);
+  const attractions = pois.filter((poi) => poi.isAttraction);
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
@@ -42,34 +45,36 @@ export function generatePopulation(
       // const poiIndex = Math.floor(Math.random() * (pois.length - 1));
       // const poi = pois[poiIndex]!;
 
-      const poi = pois.shift(); // remove the first element from the array
+      const attraction = attractions.shift();
+      const restaurant = restaurants.shift();
 
-      if (poi) {
-        if (isFoodIncluded && poi.restaurant) {
-          const averagePrice = calculateAveragePrice(poi.price);
+      if (restaurant) {
+        if (isFoodIncluded) {
+          const averagePrice = calculateAveragePrice(restaurant.price);
           const foodCost = averagePrice * travelerCount;
-          const poiDuration = poi.visitDuration / 60;
+          const poiDuration = restaurant.visitDuration / 60;
 
           totalFoodCost += foodCost;
           totalDuration += poiDuration;
           // poiIndexes.push(poiIndex);
-          chromosome.push(poi);
-        }
-
-        if (poi.isAttraction) {
-          const attractionCost = parseFloat(poi.price) * travelerCount;
-          const poiDuration = poi.visitDuration / 60;
-
-          totalAttractionCost += attractionCost;
-          totalDuration += poiDuration;
-          // poiIndexes.push(poiIndex);
-          chromosome.push(poi);
+          chromosome.push(restaurant);
         }
       }
 
+      if (attraction) {
+        const attractionCost = parseFloat(attraction.price) * travelerCount;
+        const poiDuration = attraction.visitDuration / 60;
+
+        totalAttractionCost += attractionCost;
+        totalDuration += poiDuration;
+        // poiIndexes.push(poiIndex);
+        chromosome.push(attraction);
+      }
+
       if (
-        totalFoodCost > foodCostThreshold &&
-        totalAttractionCost > attractionCostThreshold
+        totalDuration > desiredTravelHours &&
+        (totalFoodCost > foodCostThreshold ||
+          totalAttractionCost > attractionCostThreshold)
       ) {
         break;
       }

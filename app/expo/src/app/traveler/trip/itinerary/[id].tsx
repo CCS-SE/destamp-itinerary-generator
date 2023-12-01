@@ -19,16 +19,8 @@ export default function ItineraryScreen() {
   const [selectedDay, setSelectedDay] = useState(0);
   const mapRef = useRef<MapView>(null);
 
-  const DEFAULT_PADDING = { top: 50, right: 40, bottom: 40, left: 40 };
+  const DEFAULT_PADDING = { top: 60, right: 50, bottom: 60, left: 50 };
   const screenWidth = Dimensions.get('window').width;
-
-  const handleTabPress = (dayIndex: number) => {
-    setSelectedDay(dayIndex);
-  };
-
-  const handleBack = () => {
-    return router.back();
-  };
 
   const { loading, error, data } = useQuery(GetTripItineraryDocument, {
     variables: {
@@ -45,6 +37,30 @@ export default function ItineraryScreen() {
         return currentDate;
       },
     );
+  };
+
+  const fitAllMarkers = (index: number) => {
+    const latLong = data?.trip.dailyItineraries[index]?.dailyItineraryPois.map(
+      (item) => {
+        return { latitude: item.poi.latitude, longitude: item.poi.longitude };
+      },
+    );
+
+    if (mapRef) {
+      mapRef.current?.fitToCoordinates(latLong, {
+        edgePadding: DEFAULT_PADDING,
+        animated: true,
+      });
+    }
+  };
+
+  const handleTabPress = (dayIndex: number) => {
+    setSelectedDay(dayIndex);
+    fitAllMarkers(dayIndex);
+  };
+
+  const handleBack = () => {
+    return router.back();
   };
 
   const generateDayTabs = (startDate: Date, endDate: Date) => {
@@ -72,23 +88,6 @@ export default function ItineraryScreen() {
       </View>
     );
   }
-
-  const fitAllMarkers = () => {
-    const latLang =
-      data &&
-      data.trip.dailyItineraries[selectedDay]?.dailyItineraryPois.map(
-        (item) => {
-          return { latitude: item.poi.latitude, longitude: item.poi.longitude };
-        },
-      );
-
-    if (mapRef) {
-      mapRef.current?.fitToCoordinates(latLang, {
-        edgePadding: DEFAULT_PADDING,
-        animated: true,
-      });
-    }
-  };
 
   return (
     <>
@@ -130,7 +129,6 @@ export default function ItineraryScreen() {
             latitudeDelta: 0.0822,
             longitudeDelta: 0.0421,
           }}
-          onMapReady={fitAllMarkers}
         >
           {data &&
             data.trip.dailyItineraries[selectedDay]?.dailyItineraryPois.map(
