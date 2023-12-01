@@ -163,28 +163,26 @@ export default function MapScreen() {
                 </Marker>
               );
             })}
-        {data &&
-        currentPlaceIndex + 1 <
-          data.trip.dailyItineraries[parseInt(selectedDay as string)]!
-            .dailyItineraryPois.length! ? (
+        {data && currentPlaceIndex - 1 > 0 ? (
           <MapViewDirections
             key={currentPlaceIndex}
             origin={{
               latitude: data.trip.dailyItineraries[
                 parseInt(selectedDay as string)
-              ]!.dailyItineraryPois[currentPlaceIndex]!.poi.latitude as number,
+              ]!.dailyItineraryPois[currentPlaceIndex - 1]!.poi
+                .latitude as number,
               longitude: data.trip.dailyItineraries[
                 parseInt(selectedDay as string)
-              ]!.dailyItineraryPois[currentPlaceIndex]!.poi.longitude as number,
+              ]!.dailyItineraryPois[currentPlaceIndex - 1]!.poi
+                .longitude as number,
             }}
             destination={{
               latitude:
                 data.trip.dailyItineraries[parseInt(selectedDay as string)]!
-                  .dailyItineraryPois[currentPlaceIndex + 1]!.poi.latitude,
+                  .dailyItineraryPois[currentPlaceIndex]!.poi.latitude,
               longitude: data.trip.dailyItineraries[
                 parseInt(selectedDay as string)
-              ]!.dailyItineraryPois[currentPlaceIndex + 1]!.poi
-                .longitude as number,
+              ]!.dailyItineraryPois[currentPlaceIndex]!.poi.longitude as number,
             }}
             apikey={googleMapsKey}
             strokeColor="#F65A82"
