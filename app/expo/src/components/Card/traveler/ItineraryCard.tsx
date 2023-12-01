@@ -203,17 +203,41 @@ export default function ItineraryCard({
         />
         <View>
           {!isAccommodationIncluded ? (
-            <View className="flex-row">
-              <Location
-                height={30}
-                width={30}
-                style={{
-                  position: 'absolute',
-                  marginTop: 20,
-                  marginLeft: -16,
-                }}
-              />
-              <StartingLocationCard locationName={startingLocation} />
+            <View>
+              <View className="flex-row">
+                <Location
+                  height={30}
+                  width={30}
+                  style={{
+                    position: 'absolute',
+                    marginTop: 20,
+                    marginLeft: -16,
+                  }}
+                />
+                <StartingLocationCard locationName={startingLocation} />
+              </View>
+              <View className="mt-5 flex-row">
+                <DirectionCard
+                  date={date}
+                  categoryType={ExpenseCategory.Transportation}
+                  tripId={tripId}
+                  icon={
+                    <Driving height={20} width={20} style={{ marginLeft: 8 }} />
+                  }
+                  duration={`${getTravelDuration(
+                    dailyItinerary.dailyItineraryPois[0]!.duration,
+                  )}`}
+                  distance={`${getTravelDistance(
+                    dailyItinerary.dailyItineraryPois[0]!.distance,
+                  )} km`}
+                  isTransportationIncluded={isTransportationIncluded}
+                  transportationPrice={`${calculateTravelExpense(
+                    dailyItinerary.dailyItineraryPois[0]!.distance,
+                    dailyItinerary.dailyItineraryPois[0]!.duration,
+                    travelerCount,
+                  )}`}
+                />
+              </View>
             </View>
           ) : (
             <></>
@@ -284,9 +308,7 @@ export default function ItineraryCard({
                       travelerCount={travelerCount}
                     />
                   </View>
-                  {index === poiVisitDurations.length - 1 ? (
-                    <></>
-                  ) : (
+                  {isAccommodationIncluded ? (
                     <View className="mt-5 flex-row">
                       <DirectionCard
                         date={date}
@@ -305,6 +327,39 @@ export default function ItineraryCard({
                         transportationPrice={`${calculateTravelExpense(
                           item.distance,
                           item.duration,
+                          travelerCount,
+                        )}`}
+                      />
+                    </View>
+                  ) : index === poiVisitDurations.length - 1 ? (
+                    <></>
+                  ) : (
+                    <View className="mt-5 flex-row">
+                      <DirectionCard
+                        date={date}
+                        categoryType={ExpenseCategory.Transportation}
+                        tripId={tripId}
+                        icon={
+                          <Driving
+                            height={20}
+                            width={20}
+                            style={{ marginLeft: 8 }}
+                          />
+                        }
+                        duration={`${getTravelDuration(
+                          dailyItinerary.dailyItineraryPois[index + 1]!
+                            .duration,
+                        )}`}
+                        distance={`${getTravelDistance(
+                          dailyItinerary.dailyItineraryPois[index + 1]!
+                            .distance,
+                        )} km`}
+                        isTransportationIncluded={isTransportationIncluded}
+                        transportationPrice={`${calculateTravelExpense(
+                          dailyItinerary.dailyItineraryPois[index + 1]!
+                            .distance,
+                          dailyItinerary.dailyItineraryPois[index + 1]!
+                            .duration,
                           travelerCount,
                         )}`}
                       />
