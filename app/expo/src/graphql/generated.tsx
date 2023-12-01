@@ -265,6 +265,7 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
+  allPois: Array<Poi>;
   amenities: Array<Amenity>;
   categories: Array<Category>;
   poi: Poi;
@@ -818,6 +819,7 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  allPois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
   amenities?: Resolver<
     Array<ResolversTypes['Amenity']>,
     ParentType,
