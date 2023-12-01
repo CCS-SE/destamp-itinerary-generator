@@ -5,7 +5,7 @@ import { Chromosome as Chrom } from './types';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
-const POPULATION_SIZE = 6;
+const POPULATION_SIZE = 2;
 
 export const selection = (population: Chrom[]) => {
   const selected: Chrom[] = [];
