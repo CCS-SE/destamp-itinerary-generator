@@ -7,3 +7,11 @@ export const CreateUser = gql(
     }
   }`,
 );
+
+export const EditUser = gql(
+  `mutation EditUser($userId: String!, $input: EditUserInput!) {
+    editUser(userId: $userId, input: $input) {
+      id
+    }
+  }`,
+);

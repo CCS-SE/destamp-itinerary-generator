@@ -137,6 +137,11 @@ export type DailyItineraryPoi = {
   poi: Poi;
 };
 
+export type EditUserInput = {
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+};
+
 export type Expense = {
   __typename?: 'Expense';
   amount: Scalars['Float']['output'];
@@ -175,6 +180,7 @@ export type Mutation = {
   deleteExpense: Expense;
   deletePoi: Poi;
   deleteTrip: Trip;
+  editUser: User;
   updateExpense: Expense;
 };
 
@@ -208,6 +214,11 @@ export type MutationDeletePoiArgs = {
 
 export type MutationDeleteTripArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type MutationEditUserArgs = {
+  input: EditUserInput;
+  userId: Scalars['String']['input'];
 };
 
 export type MutationUpdateExpenseArgs = {
@@ -495,6 +506,7 @@ export type ResolversTypes = {
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
   DailyItineraryPoi: ResolverTypeWrapper<DailyItineraryPoi>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  EditUserInput: EditUserInput;
   Expense: ResolverTypeWrapper<Expense>;
   ExpenseCategory: ExpenseCategory;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
@@ -533,6 +545,7 @@ export type ResolversParentTypes = {
   DailyItinerary: DailyItinerary;
   DailyItineraryPoi: DailyItineraryPoi;
   DateTime: Scalars['DateTime']['output'];
+  EditUserInput: EditUserInput;
   Expense: Expense;
   Float: Scalars['Float']['output'];
   Image: Image;
@@ -726,6 +739,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationDeleteTripArgs, 'id'>
+  >;
+  editUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditUserArgs, 'input' | 'userId'>
   >;
   updateExpense?: Resolver<
     ResolversTypes['Expense'],
@@ -1067,6 +1086,16 @@ export type CreateUserMutationVariables = Exact<{
 export type CreateUserMutation = {
   __typename?: 'Mutation';
   createUser: { __typename?: 'User'; id: string };
+};
+
+export type EditUserMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+  input: EditUserInput;
+}>;
+
+export type EditUserMutation = {
+  __typename?: 'Mutation';
+  editUser: { __typename?: 'User'; id: string };
 };
 
 export type GetBusinessesQueryVariables = Exact<{
@@ -1714,6 +1743,79 @@ export const CreateUserDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export const EditUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'EditUserInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditUserMutation, EditUserMutationVariables>;
 export const GetBusinessesDocument = {
   kind: 'Document',
   definitions: [

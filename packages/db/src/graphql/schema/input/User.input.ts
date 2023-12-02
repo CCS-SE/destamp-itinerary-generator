@@ -1,6 +1,6 @@
 import { inputObjectType } from 'nexus';
 
-const CreateUserInput = inputObjectType({
+export const CreateUserInput = inputObjectType({
   name: 'CreateUserInput',
   definition(t) {
     t.string('id');
@@ -12,4 +12,10 @@ const CreateUserInput = inputObjectType({
   },
 });
 
-export default CreateUserInput;
+export const EditUserInput = inputObjectType({
+  name: 'EditUserInput',
+  definition(t) {
+    t.string('firstName');
+    t.string('lastName');
+  },
+});
