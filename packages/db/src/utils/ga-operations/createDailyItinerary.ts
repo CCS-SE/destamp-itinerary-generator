@@ -64,52 +64,92 @@ export const assignAccommodation = (
 };
 
 export const createDailyItinerary = async (
-  itinerary: Chrom,
+  chromosome: Chrom,
   input: CreateTripInput,
 ) => {
-  const { chrom } = itinerary;
+  const { genes } = chromosome.chrom;
 
-  const coordinatePairs = getCoordinatesParam(getCoordinates(chrom.genes));
+  const startingLocation: PointOfInterest = {
+    ...genes[0]!,
+    latitude: input.startingLocation.center[1] as number,
+    longitude: input.startingLocation.center[0] as number,
+  };
 
+  // add starting location to matrix if accommodation is not included
+  const pois = input.isAccommodationIncluded
+    ? genes
+    : [startingLocation].concat(genes);
+
+  const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
   const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
 
-  const travelDistances = [];
-  const travelDurations = [];
+  const distances = new Array(pois.length).fill(Infinity) as number[];
+  const durations = new Array(pois.length).fill(Infinity) as number[];
 
   const avgDistance = getMatrixAvg(matrix.distances);
   const avgDuration = getMatrixAvg(matrix.durations);
 
-  for (let i = 0; i < chrom.genes.length; i++) {
-    const placeDistance = matrix.distances[i]![i + 1];
-    const placeDuration = matrix.durations[i]![i + 1];
+  const visited = new Set<number>();
 
-    if (placeDistance == null || placeDistance <= 0) {
-      travelDistances.push(avgDistance);
-    } else {
-      travelDistances.push(placeDistance);
-    }
-    if (placeDuration == null || placeDuration <= 0) {
-      travelDurations.push(avgDuration);
-    } else {
-      travelDurations.push(placeDuration);
+  distances[0] = 0;
+  durations[0] = 0;
+
+  while (visited.size < pois.length) {
+    const index = Array.from(distances.keys()).find(
+      (i) => !visited.has(i) && distances[i] !== Infinity,
+    );
+
+    if (index === undefined) break;
+
+    visited.add(index);
+
+    for (let i = 0; i < pois.length; i++) {
+      const distance = matrix.distances[index]![i]!;
+      const duration = matrix.durations[index]![i]!;
+
+      if (distance !== null && distance > 0) {
+        const newDistance = distances[index]! + distance;
+        const newDuration = durations[index]! + duration;
+
+        if (newDistance < distances[i]!) {
+          distances[i] = newDistance;
+          durations[i] = newDuration;
+        }
+      }
     }
   }
 
-  const validDistances = travelDistances.slice(0, -1);
-  const validDurations = travelDurations.slice(0, -1);
+  // sort genes according to shortest path
+  const sortedGenes = pois.sort(
+    (a, b) =>
+      distances[pois.indexOf(a)]! +
+      durations[pois.indexOf(a)]! -
+      (distances[pois.indexOf(b)]! + durations[pois.indexOf(b)]!),
+  );
 
-  const updatedItinerary: Chrom = {
-    ...itinerary,
+  // removed initialized 0 distance / duration
+  distances.shift();
+  durations.shift();
+
+  distances.push(avgDistance);
+  durations.push(avgDuration);
+
+  // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
+  const orderedGenes = input.isAccommodationIncluded
+    ? sortedGenes
+    : sortedGenes.slice(1);
+
+  // update the chrosome with ordered genes
+  const updatedChoromosome: Chrom = {
+    ...chromosome,
     travelExpenses: input.isTransportationIncluded
-      ? calculateTravelExpenses(
-          validDistances,
-          validDurations,
-          input.travelerCount,
-        )
+      ? calculateTravelExpenses(distances, durations, input.travelerCount)
       : 0,
-    travelDurations: travelDurations,
-    travelDistances: travelDistances,
+    travelDurations: durations,
+    travelDistances: distances,
   };
 
-  return updatedItinerary;
+  updatedChoromosome.chrom.genes = orderedGenes;
+
+  return updatedChoromosome;
 };

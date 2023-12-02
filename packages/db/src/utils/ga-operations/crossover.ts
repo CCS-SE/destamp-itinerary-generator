@@ -75,39 +75,42 @@ export const crossoverEval = (
   const chromosome: PointOfInterest[] = [];
 
   for (const poi of pois) {
-    if (totalDuration >= desiredTravelHours) {
+    if (poi.isAttraction) {
+      const attractionCost = parseFloat(poi.price) * travelerCount;
+      const poiDuration = poi.visitDuration / 60;
+
+      if (
+        budgets.attraction + attractionCost <= attractionThreshold &&
+        totalDuration + poiDuration <= desiredTravelHours
+      ) {
+        budgets.attraction += attractionCost;
+        totalDuration += poiDuration;
+        chromosome.push(poi);
+      }
+    }
+
+    if (poi.restaurant) {
+      const averagePrice = calculateAveragePrice(poi.price);
+      const foodCost = averagePrice * travelerCount;
+      const poiDuration = poi.visitDuration / 60;
+
+      if (
+        budgets.food + averagePrice <= foodThreshold &&
+        foodDuration + poiDuration <= foodMaxDuration &&
+        totalDuration + poiDuration <= desiredTravelHours
+      ) {
+        budgets.food += foodCost;
+        foodDuration += poiDuration;
+        totalDuration += poiDuration;
+        chromosome.push(poi);
+      }
+    }
+
+    if (
+      totalDuration > desiredTravelHours &&
+      (budgets.attraction > attractionThreshold || budgets.food > foodThreshold)
+    ) {
       return chromosome;
-    } else {
-      if (poi.isAttraction) {
-        const attractionCost = parseFloat(poi.price) * travelerCount;
-        const poiDuration = poi.visitDuration / 60;
-
-        if (
-          budgets.attraction + attractionCost <= attractionThreshold &&
-          totalDuration + poiDuration <= desiredTravelHours
-        ) {
-          budgets.attraction += attractionCost;
-          totalDuration += poiDuration;
-          chromosome.push(poi);
-        }
-      }
-
-      if (poi.restaurant) {
-        const averagePrice = calculateAveragePrice(poi.price);
-        const foodCost = averagePrice * travelerCount;
-        const poiDuration = poi.visitDuration / 60;
-
-        if (
-          budgets.food + averagePrice <= foodThreshold &&
-          foodDuration + poiDuration <= foodMaxDuration &&
-          totalDuration + poiDuration <= desiredTravelHours
-        ) {
-          budgets.food += foodCost;
-          foodDuration += poiDuration;
-          totalDuration += poiDuration;
-          chromosome.push(poi);
-        }
-      }
     }
   }
   return chromosome;

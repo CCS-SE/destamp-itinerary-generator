@@ -63,6 +63,8 @@ export const createTrip = async (
 
     const filteredPois = contentBasedFiltering(pois, tripPreferenceInput);
 
+    console.log(filteredPois.length);
+
     const suggestedItineraries = await generateItinerary(
       tripInput,
       filteredPois,
@@ -143,6 +145,12 @@ export const createTrip = async (
 };
 
 export const deleteTrip = async (id: number, ctx: Context) => {
+  await ctx.prisma.tripPreference.delete({
+    where: {
+      tripId: id,
+    },
+  });
+
   await ctx.prisma.expense.deleteMany({
     where: {
       tripId: id,

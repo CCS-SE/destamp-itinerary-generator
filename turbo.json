@@ -24,6 +24,7 @@
   },
   "globalEnv": [
     "DATABASE_URL",
+    "NEW_DATABASE_URL",
     "EXPO_ROUTER_APP_ROOT",
     "NODE_ENV",
     "SKIP_ENV_VALIDATION",

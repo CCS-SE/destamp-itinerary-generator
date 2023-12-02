@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
   Dimensions,
@@ -21,6 +21,7 @@ import Mark from '../../../../../assets/images/marker.svg';
 
 export default function MapScreen() {
   const { id, selectedDay } = useLocalSearchParams();
+  const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0);
   const mapRef = useRef<MapView>(null);
   const scrollView = useRef<ScrollView>(null);
 
@@ -29,6 +30,8 @@ export default function MapScreen() {
   const CARD_HEIGHT = 130;
   const CARD_WIDTH = width * 0.7;
   const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+
+  const edgePadding = { top: 100, right: 130, bottom: 200, left: 130 };
 
   const googleMapsKey = Constants.expoConfig?.extra
     ?.GOOGLE_MAPS_API_KEY as string;
@@ -43,6 +46,23 @@ export default function MapScreen() {
     },
   });
 
+  const selectedDailyItinerary =
+    data?.trip.dailyItineraries[parseInt(selectedDay as string)];
+
+  const startingLocation = {
+    ...selectedDailyItinerary?.dailyItineraryPois[0]?.poi,
+    id: '',
+    latitude: data?.trip.startingLocation.center[1],
+    longitude: data?.trip.startingLocation.center[0],
+    name: data?.trip.startingLocation.name,
+  };
+
+  const dailyItineraryPois = data?.trip.isAccommodationIncluded
+    ? selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi)
+    : [startingLocation].concat(
+        selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi) ||
+          [],
+      );
   const mapAnimation = new Animated.Value(0);
 
   useEffect(() => {
@@ -62,24 +82,35 @@ export default function MapScreen() {
       setTimeout(() => {
         if (mapIndex !== index) {
           mapIndex = index;
-          const { latitude, longitude } = destinations[index]!;
-          mapRef?.current?.animateToRegion(
+          setCurrentPlaceIndex(index);
+          const firstLocation = destinations[index];
+          const secondLocation = destinations[index + 1];
+          mapRef?.current?.fitToCoordinates(
+            [
+              {
+                latitude: firstLocation?.latitude as number,
+                longitude: firstLocation?.longitude as number,
+              },
+              {
+                latitude:
+                  secondLocation?.latitude ||
+                  (firstLocation?.latitude as number),
+                longitude:
+                  secondLocation?.longitude ||
+                  (firstLocation?.longitude as number),
+              },
+            ],
             {
-              latitude: latitude,
-              longitude: longitude,
-              latitudeDelta: 0.09422,
-              longitudeDelta: 0.04422,
+              edgePadding: edgePadding,
+              animated: true,
             },
-            350,
           );
         }
-      }, 100);
+      }, 200);
     });
   });
 
-  const interpolations = data!.trip.dailyItineraries[
-    parseInt(selectedDay as string)
-  ]!.dailyItineraryPois.map((item) => item.poi).map((_, index) => {
+  const interpolations = dailyItineraryPois?.map((_, index) => {
     const inputRange = [
       (index - 1) * CARD_WIDTH,
       index * CARD_WIDTH,
@@ -88,7 +119,7 @@ export default function MapScreen() {
 
     const scale = mapAnimation.interpolate({
       inputRange,
-      outputRange: [1, 1.7, 1],
+      outputRange: [1, 2, 1],
       extrapolate: 'clamp',
     });
 
@@ -109,92 +140,83 @@ export default function MapScreen() {
         className="h-screen w-screen"
         provider={PROVIDER_GOOGLE}
         onMapReady={() => {
-          const destinations = data?.trip.dailyItineraries[
-            parseInt(selectedDay as string)
-          ]!.dailyItineraryPois.map((item) => item.poi);
-          const firstDestination = destinations![0];
-
-          if (destinations![0] && mapRef.current) {
-            mapRef.current.animateToRegion(
+          const firstLocation = dailyItineraryPois![0];
+          const secondLocation = dailyItineraryPois![1];
+          if (dailyItineraryPois![0] && mapRef.current) {
+            mapRef?.current?.fitToCoordinates(
+              [
+                {
+                  latitude: firstLocation?.latitude,
+                  longitude: firstLocation?.longitude,
+                },
+                {
+                  latitude: secondLocation?.latitude || firstLocation?.latitude,
+                  longitude:
+                    secondLocation?.longitude || firstLocation?.longitude,
+                },
+              ],
               {
-                latitude: firstDestination!.latitude,
-                longitude: firstDestination!.longitude,
-                latitudeDelta: 0.09422,
-                longitudeDelta: 0.04422,
+                edgePadding: edgePadding,
+                animated: true,
               },
-              350,
             );
           }
         }}
       >
         {data &&
-          data.trip.dailyItineraries[
-            parseInt(selectedDay as string)
-          ]?.dailyItineraryPois
-            .map((item) => item.poi)
-            .map((poi, i) => {
-              const scaleStyle = {
-                transform: [
-                  {
-                    scale: interpolations[i]!.scale,
-                  },
-                ],
-              };
+          dailyItineraryPois?.map((poi, i) => {
+            const scaleStyle = {
+              transform: [
+                {
+                  scale: interpolations![i]!.scale,
+                },
+              ],
+            };
 
-              return (
-                <Marker
-                  key={i}
-                  identifier={poi.id}
-                  coordinate={{
-                    latitude: poi.latitude,
-                    longitude: poi.longitude,
-                  }}
-                  pinColor="#F65A82"
-                >
-                  <Animated.View className="h-32 w-32 items-center justify-center">
-                    <Animated.View
-                      style={[{ width: 40, height: 40 }, scaleStyle]}
-                    >
-                      <Mark height={40} width={40} />
-                    </Animated.View>
+            return (
+              <Marker
+                key={i}
+                identifier={poi.id}
+                coordinate={{
+                  latitude: poi.latitude,
+                  longitude: poi.longitude,
+                }}
+                pinColor="#F65A82"
+              >
+                <Animated.View className="h-32 w-32 items-center justify-center">
+                  <Animated.View
+                    style={[{ width: 40, height: 40 }, scaleStyle]}
+                  >
+                    <Mark height={40} width={40} />
                   </Animated.View>
-                </Marker>
-              );
-            })}
-
-        {data &&
-          data.trip.dailyItineraries[
-            parseInt(selectedDay as string)
-          ]?.dailyItineraryPois
-            .map((item) => item.poi)
-            .map((destination, i) => {
-              if (
-                i + 1 <
-                data.trip.dailyItineraries[parseInt(selectedDay as string)]!
-                  .dailyItineraryPois.length!
-              ) {
-                return (
-                  <MapViewDirections
-                    key={i}
-                    origin={{
-                      latitude: destination.latitude,
-                      longitude: destination.longitude,
-                    }}
-                    destination={{
-                      latitude: data.trip.dailyItineraries[
-                        parseInt(selectedDay as string)
-                      ]?.dailyItineraryPois[i + 1]?.poi.latitude as number,
-                      longitude: data.trip.dailyItineraries[
-                        parseInt(selectedDay as string)
-                      ]?.dailyItineraryPois[i + 1]?.poi.longitude as number,
-                    }}
-                    apikey={googleMapsKey}
-                    strokeColor="hotpink"
-                    strokeWidth={3}
-                  />
-                );
-              } else return null;
-            })}
+                </Animated.View>
+              </Marker>
+            );
+          })}
+        {data && currentPlaceIndex + 1 < dailyItineraryPois!.length ? (
+          <MapViewDirections
+            key={currentPlaceIndex}
+            origin={{
+              latitude: selectedDailyItinerary?.dailyItineraryPois[
+                currentPlaceIndex
+              ]!.poi.latitude as number,
+              longitude: selectedDailyItinerary?.dailyItineraryPois[
+                currentPlaceIndex
+              ]!.poi.longitude as number,
+            }}
+            destination={{
+              latitude: selectedDailyItinerary?.dailyItineraryPois[
+                currentPlaceIndex + 1
+              ]!.poi.latitude as number,
+              longitude: selectedDailyItinerary?.dailyItineraryPois[
+                currentPlaceIndex + 1
+              ]!.poi.longitude as number,
+            }}
+            apikey={googleMapsKey}
+            strokeColor="#F65A82"
+            strokeWidth={9}
+          />
+        ) : null}
       </MapView>
       <Animated.ScrollView
         className="absolute bottom-16 left-0 right-0 py-3"
@@ -229,52 +251,50 @@ export default function MapScreen() {
         )}
       >
         {data &&
-          data.trip.dailyItineraries[
-            parseInt(selectedDay as string)
-          ]?.dailyItineraryPois
-            .map((item) => item.poi)
-            .map((poi, index) => (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={0.9}
-                onPress={() => {
+          dailyItineraryPois?.map((poi, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.95}
+              onPress={() => {
+                if (poi.id) {
                   router.push({
                     pathname: `/traveler/trip/itinerary/destinationDetail/${poi.id}`,
                     params: {
-                      id: poi.id,
+                      id: poi.id as string,
                       imageList: JSON.stringify(
-                        poi.images.map((item) => item.image.url),
+                        poi.images?.map((item) => item.image.url),
                       ),
                     },
                   });
-                }}
+                }
+              }}
+            >
+              <View
+                className="mx-4 overflow-hidden rounded-3xl bg-white"
+                style={{ width: CARD_WIDTH - 10, height: CARD_HEIGHT }}
               >
-                <View
-                  className="mx-4 overflow-hidden rounded-3xl bg-white"
-                  style={{ width: CARD_WIDTH - 10, height: CARD_HEIGHT }}
-                >
-                  <View className="flex-1 px-7 py-1.5">
-                    <Text
-                      numberOfLines={1}
-                      className="font-poppins text-base text-gray-600"
-                    >
-                      {poi.name}
+                <View className="flex-1 px-7 py-1.5">
+                  <Text
+                    numberOfLines={1}
+                    className="font-poppins text-base text-gray-600"
+                  >
+                    {poi.name}
+                  </Text>
+                  <View className="flex-row ">
+                    <Image
+                      source={{ uri: poi.id ? poi.images![0]!.image.url : '' }}
+                      className="mt-2 h-16 w-28 rounded-md"
+                    />
+                  </View>
+                  <View className="w-12 self-end rounded-md bg-blue-200 p-0.5 text-center">
+                    <Text className="text-center font-poppins-medium text-xs text-blue-600">
+                      Day {parseInt(selectedDay as string) + 1}
                     </Text>
-                    <View className="flex-row ">
-                      <Image
-                        source={{ uri: poi.images[0]?.image.url }}
-                        className="mt-2 h-16 w-28 rounded-md"
-                      />
-                    </View>
-                    <View className="w-12 self-end rounded-md bg-blue-200 p-0.5 text-center">
-                      <Text className="text-center font-poppins-medium text-xs text-blue-600">
-                        Day {parseInt(selectedDay as string) + 1}
-                      </Text>
-                    </View>
                   </View>
                 </View>
-              </TouchableOpacity>
-            ))}
+              </View>
+            </TouchableOpacity>
+          ))}
       </Animated.ScrollView>
     </View>
   );
