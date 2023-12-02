@@ -197,6 +197,7 @@ type Query {
   categories: [Category!]!
   poi(poiId: String!): Poi!
   pois(userId: String!): [Poi!]!
+  restaurantCategoriesMoreThanFive: [Category!]!
   trip(id: Int!): Trip!
   trips(userId: String!): [Trip!]!
   user(id: String!): User!

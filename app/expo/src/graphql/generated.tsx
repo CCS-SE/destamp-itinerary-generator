@@ -265,11 +265,11 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
-  allPois: Array<Poi>;
   amenities: Array<Amenity>;
   categories: Array<Category>;
   poi: Poi;
   pois: Array<Poi>;
+  restaurantCategoriesMoreThanFive: Array<Category>;
   trip: Trip;
   trips: Array<Trip>;
   user: User;
@@ -819,7 +819,6 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  allPois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
   amenities?: Resolver<
     Array<ResolversTypes['Amenity']>,
     ParentType,
@@ -841,6 +840,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryPoisArgs, 'userId'>
+  >;
+  restaurantCategoriesMoreThanFive?: Resolver<
+    Array<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
   >;
   trip?: Resolver<
     ResolversTypes['Trip'],
@@ -1128,11 +1132,16 @@ export type GetAllCategoriesQuery = {
   categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
 };
 
-export type GetAmenitiesQueryVariables = Exact<{ [key: string]: never }>;
+export type GetPoiFeaturesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAmenitiesQuery = {
+export type GetPoiFeaturesQuery = {
   __typename?: 'Query';
   amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
+  restaurantCategoriesMoreThanFive: Array<{
+    __typename?: 'Category';
+    id: number;
+    name: string;
+  }>;
 };
 
 export type GetTripsQueryVariables = Exact<{
@@ -1953,13 +1962,13 @@ export const GetAllCategoriesDocument = {
   GetAllCategoriesQuery,
   GetAllCategoriesQueryVariables
 >;
-export const GetAmenitiesDocument = {
+export const GetPoiFeaturesDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetAmenities' },
+      name: { kind: 'Name', value: 'GetPoiFeatures' },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -1974,11 +1983,22 @@ export const GetAmenitiesDocument = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'restaurantCategoriesMoreThanFive' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<GetAmenitiesQuery, GetAmenitiesQueryVariables>;
+} as unknown as DocumentNode<GetPoiFeaturesQuery, GetPoiFeaturesQueryVariables>;
 export const GetTripsDocument = {
   kind: 'Document',
   definitions: [

@@ -418,6 +418,7 @@ export interface NexusGenFieldTypes {
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    restaurantCategoriesMoreThanFive: NexusGenRootTypes['Category'][]; // [Category!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     user: NexusGenRootTypes['User']; // User!
@@ -589,6 +590,7 @@ export interface NexusGenFieldTypeNames {
     categories: 'Category';
     poi: 'Poi';
     pois: 'Poi';
+    restaurantCategoriesMoreThanFive: 'Category';
     trip: 'Trip';
     trips: 'Trip';
     user: 'User';
