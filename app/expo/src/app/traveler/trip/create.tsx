@@ -343,20 +343,25 @@ export default function CreateTripScreen() {
           ),
         }}
       />
-      <View className="flex-1 overflow-hidden p-3.5">
-        <Accordion
-          activeSections={activeSections}
-          sections={Sections.filter((_, index) => visitedSteps.includes(index))}
-          touchableComponent={TouchableOpacity}
-          expandMultiple={false}
-          renderHeader={renderHeader}
-          renderContent={renderContent}
-          duration={500}
-          onChange={setSections}
-          expandFromBottom={false}
-          containerStyle={{ height: 500 }}
-        />
-      </View>
+      <ScrollView ref={scrollViewRef} scrollToOverflowEnabled>
+        <View className="flex-1 overflow-hidden p-3.5">
+          <Accordion
+            activeSections={activeSections}
+            sections={Sections.filter((_, index) =>
+              visitedSteps.includes(index),
+            )}
+            touchableComponent={TouchableOpacity}
+            touchableProps={{ activeOpacity: 0.9 }}
+            expandMultiple={false}
+            renderHeader={renderHeader}
+            renderContent={renderContent}
+            duration={500}
+            onChange={setSections}
+            expandFromBottom={false}
+            containerStyle={{ height: 500 }}
+          />
+        </View>
+      </ScrollView>
       <View>
         {renderNextButton()}
         <Text className="mt-2 self-center font-poppins-medium text-lg text-gray-400">
