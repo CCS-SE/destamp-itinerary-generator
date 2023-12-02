@@ -196,6 +196,25 @@ export default function CreateTripScreen() {
 
     const missingDataSection = !tripData[currentStepIndex];
 
+    if (tripData.startingLocation?.name === '') {
+      setActiveSection(1);
+      setSections([1]);
+      alert('Please select starting location.');
+      return;
+    }
+
+    if (!isStartingDateSelected()) {
+      setActiveSection(3);
+      setSections([3]);
+      alert('Please select date.');
+      return;
+    }
+
+    if (!tripData.budget) {
+      alert('Please enter your budget.');
+      return;
+    }
+
     if (!missingDataSection && budgetError == '') {
       setCompletedSteps([...completedSteps, activeSection]);
       setData({
