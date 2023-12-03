@@ -199,18 +199,18 @@ export default function MapScreen() {
             origin={{
               latitude: selectedDailyItinerary?.dailyItineraryPois[
                 currentPlaceIndex
-              ]!.poi.latitude as number,
+              ]?.poi.latitude as number,
               longitude: selectedDailyItinerary?.dailyItineraryPois[
                 currentPlaceIndex
-              ]!.poi.longitude as number,
+              ]?.poi.longitude as number,
             }}
             destination={{
               latitude: selectedDailyItinerary?.dailyItineraryPois[
                 currentPlaceIndex + 1
-              ]!.poi.latitude as number,
+              ]?.poi.latitude as number,
               longitude: selectedDailyItinerary?.dailyItineraryPois[
                 currentPlaceIndex + 1
-              ]!.poi.longitude as number,
+              ]?.poi.longitude as number,
             }}
             apikey={googleMapsKey}
             strokeColor="#F65A82"

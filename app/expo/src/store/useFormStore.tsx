@@ -65,7 +65,7 @@ export const initialFormState = {
       Landmarks: 0,
     },
     diningStyles: ['Fine'],
-    cuisines: ['LocalsBest'],
+    cuisines: ['American'],
   },
   reviewData: {
     title: 'Iloilo City Trip',

@@ -5,6 +5,7 @@ import {
   queryAllCategories,
   queryPoi,
   queryPois,
+  queryRestaurantCategoriesMoreThanFive,
 } from './poi.resolver';
 
 const Poi = queryField('poi', {
@@ -33,4 +34,18 @@ const Amenities = queryField('amenities', {
   resolve: (_, __, ctx) => queryAllAmenities(ctx),
 });
 
-export default [Poi, Pois, Categories, Amenities];
+const RestaurantCategoriesMoreThanFive = queryField(
+  'restaurantCategoriesMoreThanFive',
+  {
+    type: nonNull(list('Category')),
+    resolve: (_, __, ctx) => queryRestaurantCategoriesMoreThanFive(ctx),
+  },
+);
+
+export default [
+  Poi,
+  Pois,
+  Categories,
+  Amenities,
+  RestaurantCategoriesMoreThanFive,
+];

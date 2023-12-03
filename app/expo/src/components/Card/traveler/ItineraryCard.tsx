@@ -95,45 +95,6 @@ export default function ItineraryCard({
   const hour = getStartTime(timeslots, 0);
   const min = 0;
 
-  // function moveAccommodationToFront() {
-  //   const itemToMove = destinations.find(
-  //     (item) => item?.type === PlaceType.Accommodation,
-  //   ) as never;
-  //   if (destinations.includes(itemToMove)) {
-  //     destinations = destinations.filter((item) => item !== itemToMove);
-
-  //     destinations = [itemToMove as Destination, ...destinations];
-  //   }
-  //   return destinations;
-  // }
-
-  // const arrangedDestinations = (): Destination[] => {
-  //   // moveAccommodationToFront();
-  //   const restaurants = destinations.filter(
-  //     (dest) => dest.type === PlaceType.Restaurant,
-  //   ) as Destination[];
-  //   const otherDestinations = destinations.filter(
-  //     (dest) => dest.type !== PlaceType.Restaurant,
-  //   ) as Destination[];
-
-  //   const arrangedDestinations: Destination[] = [];
-  //   let i = 0;
-  //   let j = 0;
-
-  //   while (i < otherDestinations.length || j < restaurants.length) {
-  //     if (i < otherDestinations.length) {
-  //       arrangedDestinations.push(otherDestinations[i]!);
-  //       i++;
-  //     }
-  //     if (j < restaurants.length) {
-  //       arrangedDestinations.push(restaurants[j]!);
-  //       j++;
-  //     }
-  //   }
-
-  //   return arrangedDestinations;
-  // };
-
   const visitDurations = dailyItinerary.dailyItineraryPois.map(
     (item) => item.poi.visitDuration,
   );
@@ -309,28 +270,32 @@ export default function ItineraryCard({
                     />
                   </View>
                   {isAccommodationIncluded ? (
-                    <View className="mt-5 flex-row">
-                      <DirectionCard
-                        date={date}
-                        categoryType={ExpenseCategory.Transportation}
-                        tripId={tripId}
-                        icon={
-                          <Driving
-                            height={20}
-                            width={20}
-                            style={{ marginLeft: 8 }}
-                          />
-                        }
-                        duration={`${getTravelDuration(item.duration)}`}
-                        distance={`${getTravelDistance(item.distance)} km`}
-                        isTransportationIncluded={isTransportationIncluded}
-                        transportationPrice={`${calculateTravelExpense(
-                          item.distance,
-                          item.duration,
-                          travelerCount,
-                        )}`}
-                      />
-                    </View>
+                    index !== poiVisitDurations.length - 1 ? (
+                      <View className="mt-5 flex-row">
+                        <DirectionCard
+                          date={date}
+                          categoryType={ExpenseCategory.Transportation}
+                          tripId={tripId}
+                          icon={
+                            <Driving
+                              height={20}
+                              width={20}
+                              style={{ marginLeft: 8 }}
+                            />
+                          }
+                          duration={`${getTravelDuration(item.duration)}`}
+                          distance={`${getTravelDistance(item.distance)} km`}
+                          isTransportationIncluded={isTransportationIncluded}
+                          transportationPrice={`${calculateTravelExpense(
+                            item.distance,
+                            item.duration,
+                            travelerCount,
+                          )}`}
+                        />
+                      </View>
+                    ) : (
+                      <></>
+                    )
                   ) : index === poiVisitDurations.length - 1 ? (
                     <></>
                   ) : (

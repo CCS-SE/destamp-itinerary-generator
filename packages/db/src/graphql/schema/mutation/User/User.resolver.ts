@@ -4,6 +4,7 @@ import { Context } from '../../../context';
 import { NexusGenInputs } from '../../../generated/nexus';
 
 type CreateUserInput = NexusGenInputs['CreateUserInput'];
+type EditUserInput = NexusGenInputs['EditUserInput'];
 
 export const createUser = async (input: CreateUserInput, ctx: Context) => {
   // encrypt user’s password
@@ -21,6 +22,22 @@ export const createUser = async (input: CreateUserInput, ctx: Context) => {
       firstName: input.firstName,
       lastName: input.lastName,
       type: input.type,
+    },
+  });
+};
+
+export const editUser = async (
+  userId: string,
+  input: EditUserInput,
+  ctx: Context,
+) => {
+  return await ctx.prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      firstName: input.firstName as string,
+      lastName: input.lastName as string,
     },
   });
 };
