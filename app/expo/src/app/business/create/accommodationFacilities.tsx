@@ -22,12 +22,12 @@ const AccommodationFacilities = () => {
       );
       return;
     }
-    router.push('/business/create/index');
+    router.push('/business/create/verificationPage');
   };
 
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
-      <CreateBusinessHeader title={'Accommodation Facilities'} />
+      <CreateBusinessHeader title={'Accom Facilities'} />
       <SafeAreaView>
         <ScrollView>
           <View style={{ padding: 20 }}>

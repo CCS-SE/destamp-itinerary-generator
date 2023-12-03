@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, TextInput, View } from 'react-native';
 
 interface AdmissionFeeProps {
   admissionFee: string;
   admissionFeeOnChange: (value: number) => void;
-  onChangeText: (value: string) => void;
 }
 
 const AdmissionFee: React.FC<AdmissionFeeProps> = ({
   admissionFee,
   admissionFeeOnChange,
-  // onChangeText,
 }) => {
-  const [feeValue, setFeeValue] = useState<string>(admissionFee);
-
-  useEffect(() => {
-    // Update feeValue when the admissionFee prop changes
-    setFeeValue(admissionFee);
-  }, [admissionFee]);
-
   const handleFeeChange = (value: string) => {
-    setFeeValue(value);
     const parsedValue = parseFloat(value);
     if (!isNaN(parsedValue)) {
       admissionFeeOnChange(parsedValue);
@@ -63,9 +53,12 @@ const AdmissionFee: React.FC<AdmissionFeeProps> = ({
               backgroundColor: 'white',
               flex: 1,
               padding: 5,
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              textAlign: 'center',
             }}
             keyboardType="numeric"
-            value={feeValue}
+            value={admissionFee}
             maxLength={9}
             onChangeText={handleFeeChange}
           />

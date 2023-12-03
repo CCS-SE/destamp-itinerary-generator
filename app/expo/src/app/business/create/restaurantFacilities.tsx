@@ -50,6 +50,7 @@ const RestaurantFacilities = () => {
               <CuisineSelection
                 onOptionChange={(options) => setSelectedCuisines(options)}
                 initialSelectedOptions={selectedCuisines}
+                data={[]}
               />
             </View>
 

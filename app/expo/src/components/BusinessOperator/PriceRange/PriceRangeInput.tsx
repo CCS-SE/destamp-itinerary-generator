@@ -30,7 +30,6 @@ const PriceRangeInput = ({
     }
   };
   const handleBlur = () => {
-    // Check if both min and max prices are empty
     if (minPrice === 0 && maxPrice === 0) {
       setShowErrorMessage(true);
     }
@@ -54,13 +53,13 @@ const PriceRangeInput = ({
   };
 
   return (
-    <View style={{ margin: 5, marginBottom: 40 }}>
+    <View style={{ marginBottom: 40 }}>
       <View
         style={{
           alignItems: 'center',
           borderRadius: 10,
           width: 280,
-          height: 100,
+          height: 70,
           padding: 10,
           flexDirection: 'row',
           backgroundColor: '#EB4586',
@@ -90,7 +89,12 @@ const PriceRangeInput = ({
           style={{ flexDirection: 'row', alignItems: 'center', width: 200 }}
         >
           <TextInput
-            style={textBoxStyle}
+            style={{
+              ...textBoxStyle,
+              fontFamily: 'Poppins',
+              fontSize: 20,
+              textAlign: 'center',
+            }}
             keyboardType="numeric"
             maxLength={9} // Limit maxPrice to 9 digits
             value={minPrice !== 0 ? minPrice.toString() : ''}
@@ -101,7 +105,12 @@ const PriceRangeInput = ({
             -
           </Text>
           <TextInput
-            style={textBoxStyle}
+            style={{
+              ...textBoxStyle,
+              fontFamily: 'Poppins',
+              fontSize: 20,
+              textAlign: 'center',
+            }}
             keyboardType="numeric"
             maxLength={9} // Limit maxPrice to 9 digits
             value={maxPrice !== 0 ? maxPrice.toString() : ''}

@@ -51,9 +51,9 @@ const PriceRange = () => {
       router.push('/business/create/establishmentType');
     }
   };
-  function handleAdmissionFeeChange(): void {
-    console.log('Function not implemented.');
-    // console.log(value);
+  function handleAdmissionFeeChange(value: number): void {
+    console.log('Admission Fee changed:', value);
+    setAdmissionFee(value);
   }
 
   return (
@@ -71,26 +71,22 @@ const PriceRange = () => {
           />
         </View>
         <Questions question={'Admission Fee'} />
-        <Text style={{ fontFamily: 'Poppins', marginBottom: 15 }}>
+        <Text
+          style={{ fontFamily: 'Poppins', marginBottom: 15, color: 'gray' }}
+        >
           Is there a fee for visiting this place?
         </Text>
         <View
           style={{
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: 15,
+            marginBottom: 50,
           }}
         >
           {showAdmissionFeeInput && (
             <AdmissionFee
               admissionFee={admissionFee.toString()}
               admissionFeeOnChange={handleAdmissionFeeChange}
-              onChangeText={(value: string) => {
-                const parsedValue = parseFloat(value);
-                if (!isNaN(parsedValue)) {
-                  setAdmissionFee(parsedValue);
-                }
-              }}
             />
           )}
           <PriceRangeCheckBox

@@ -54,7 +54,7 @@ const PriceRangeCheckBox = ({
               fontFamily: 'Poppins',
               marginLeft: 5,
               fontSize: 18,
-              color: 'black',
+              color: 'gray',
             }}
           >
             {option}

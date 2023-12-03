@@ -22,7 +22,7 @@ const AttractionActivities = () => {
     }
 
     // Continue with the save logic
-    router.push('/business/create/index');
+    router.push('/business/create/verificationPage');
   };
 
   return (
