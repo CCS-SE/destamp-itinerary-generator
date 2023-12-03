@@ -207,6 +207,9 @@ importers:
       react-native-dropdown-select-list:
         specifier: ^2.0.5
         version: 2.0.5
+      react-native-flip-card:
+        specifier: ^3.5.7
+        version: 3.5.7
       react-native-gesture-handler:
         specifier: ^2.12.1
         version: 2.12.1(react-native@0.72.5)(react@18.2.0)
@@ -334,6 +337,9 @@ importers:
       '@types/react-native-datepicker':
         specifier: ^1.7.1
         version: 1.7.2(react-native@0.72.5)
+      '@types/react-native-flip-card':
+        specifier: ^3.5.5
+        version: 3.5.5(react-native@0.72.5)
       '@types/react-test-renderer':
         specifier: ^18.0.0
         version: 18.0.3
@@ -6132,6 +6138,15 @@ packages:
       '@types/react': 18.2.24
       '@types/react-native': 0.72.3(react-native@0.72.5)
       moment: 2.29.4
+    transitivePeerDependencies:
+      - react-native
+    dev: true
+
+  /@types/react-native-flip-card@3.5.5(react-native@0.72.5):
+    resolution: {integrity: sha512-WR0PzFr3R0DUSV1t/OuAnq9dyIVkHeFy7Giix3DYT0HCxzYMIvb5ly57nDbpi6x3CN7UIjnYouJ0k7VsZMzdRw==}
+    dependencies:
+      '@types/react': 18.2.24
+      '@types/react-native': 0.72.3(react-native@0.72.5)
     transitivePeerDependencies:
       - react-native
     dev: true
@@ -14046,6 +14061,13 @@ packages:
     dependencies:
       react-native: 0.72.5(@babel/core@7.23.0)(@babel/preset-env@7.22.20)(react@18.2.0)
       react-native-svg: 13.9.0(react-native@0.72.5)(react@18.2.0)
+    dev: false
+
+  /react-native-flip-card@3.5.7:
+    resolution: {integrity: sha512-++ePtVn+4vICWaBUhNpVMa/g6ZdLFl77vabWAFqfO7yyVmpyhs4CEZvkZUBxs30IRShqWsqSpmhgVCmP5AYfQw==}
+    dependencies:
+      deprecated-react-native-prop-types: 4.1.0
+      prop-types: 15.8.1
     dev: false
 
   /react-native-gesture-handler@2.12.1(react-native@0.72.5)(react@18.2.0):

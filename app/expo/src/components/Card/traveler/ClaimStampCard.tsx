@@ -53,6 +53,7 @@ function ClaimStampCard({ id, url, title }: ClaimStampCardProps) {
           query: GetTripsDocument,
           variables: {
             userId: user ? user.id : '',
+            stampId: id,
           },
         },
         {
