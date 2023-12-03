@@ -15,7 +15,6 @@ interface Category {
 
 const EstablishmentType = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedCategory] = useState<Category | null>(null);
 
   const handleTypeSelection = (type: string) => {
     setSelectedType(type);
@@ -25,10 +24,6 @@ const EstablishmentType = () => {
       return;
     }
 
-    if (!selectedCategory) {
-      Alert.alert('Select Category', 'Please choose at least one category.');
-      return;
-    }
     if (selectedType === 'Accommodation') {
       router.push('/business/create/accommodationFacilities');
       console.log('Redirect to accommodation facilities');
@@ -42,7 +37,7 @@ const EstablishmentType = () => {
   };
 
   return (
-    <View style={{}}>
+    <View>
       <CreateBusinessHeader title={'Establishment Type'} />
       <View style={{ alignItems: 'center' }}>
         <SafeAreaView>
