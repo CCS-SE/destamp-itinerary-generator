@@ -73,3 +73,36 @@ export const queryAllAmenities = (ctx: Context) => {
     },
   });
 };
+
+export const queryRestaurantCategoriesMoreThanFive = async (ctx: Context) => {
+  const categories = await ctx.prisma.category.findMany({
+    where: {
+      name: {
+        notIn: [
+          'Family restaurant',
+          'Buffet restaurant',
+          'Fast food restaurant',
+          'Restaurant',
+        ],
+      },
+    },
+    include: {
+      pois: {
+        where: {
+          isAttraction: false,
+          restaurant: {
+            isNot: null,
+          },
+          accommodation: {
+            is: null,
+          },
+        },
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+
+  return categories.filter((category) => category.pois.length >= 5);
+};

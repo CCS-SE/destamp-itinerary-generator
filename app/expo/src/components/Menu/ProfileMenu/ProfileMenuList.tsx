@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
+import { useContext, type ReactNode } from 'react';
 import { Alert, FlatList } from 'react-native';
 import { router } from 'expo-router';
 import { useAuth } from '@clerk/clerk-expo';
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { supabase } from 'config/initSupabase';
 
+import { AuthContext } from '~/context/AuthProvider';
 import ProfileMenuItem from './ProfileMenuItem';
 
 interface ProfileMenu {
@@ -15,6 +16,8 @@ interface ProfileMenu {
 }
 
 function ProfileMenuList() {
+  const { user } = useContext(AuthContext);
+
   const { isLoaded, signOut } = useAuth();
 
   if (!isLoaded) {
@@ -32,12 +35,21 @@ function ProfileMenuList() {
     return router.push('/traveler/subscription');
   };
 
+  const handleEditProfile = () => {
+    return router.push({
+      pathname: '/traveler/edit',
+      params: {
+        id: user ? user.id : '',
+      },
+    });
+  };
+
   const profileMenus: ProfileMenu[] = [
     {
       icon: <AntDesign name="user" color={'#727272'} size={26} />,
       title: 'Edit Profile',
       color: '#727272',
-      onPress: () => undefined,
+      onPress: handleEditProfile,
     },
     {
       icon: <MaterialIcons name="subscriptions" color={'#727272'} size={24} />,

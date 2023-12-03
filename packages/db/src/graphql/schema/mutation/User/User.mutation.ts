@@ -1,8 +1,8 @@
 import { ApolloServerErrorCode } from '@apollo/server/errors';
 import { GraphQLError } from 'graphql';
-import { mutationField, nonNull } from 'nexus';
+import { mutationField, nonNull, stringArg } from 'nexus';
 
-import { createUser } from './User.resolver';
+import { createUser, editUser } from './User.resolver';
 
 export const CreateUser = mutationField('createUser', {
   type: 'User',
@@ -29,4 +29,13 @@ export const CreateUser = mutationField('createUser', {
     }
   },
   resolve: (_, args, context) => createUser(args.input, context),
+});
+
+export const EditUser = mutationField('editUser', {
+  type: 'User',
+  args: {
+    userId: nonNull(stringArg()),
+    input: nonNull('EditUserInput'),
+  },
+  resolve: (_, args, context) => editUser(args.userId, args.input, context),
 });

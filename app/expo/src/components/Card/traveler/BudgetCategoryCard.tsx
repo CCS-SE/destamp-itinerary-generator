@@ -15,18 +15,18 @@ const BudgetCategoryCard = ({
 }: BudgetCategoryCardProps) => {
   return isSelected ? (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
-      <View className="my-2 ml-2 h-[75] w-[100] items-center justify-center rounded-lg bg-orange-100">
+      <View className="mx-2 my-2 h-[75] w-[88] items-center justify-center rounded-lg bg-orange-100">
         {icon}
-        <Text className="font-poppins-medium text-[11px] text-orange-500">
+        <Text className="font-poppins-medium text-[9px] text-orange-500">
           {title}
         </Text>
       </View>
     </TouchableOpacity>
   ) : (
     <TouchableOpacity onPress={onPress} activeOpacity={0.8}>
-      <View className="my-2 ml-2 h-[75] w-[100] items-center justify-center rounded-lg bg-gray-100">
+      <View className="mx-2 my-2 h-[75] w-[88] items-center justify-center rounded-lg bg-gray-100">
         {icon}
-        <Text className="font-poppins text-[11px] text-gray-500">{title}</Text>
+        <Text className="font-poppins text-[9px] text-gray-500">{title}</Text>
       </View>
     </TouchableOpacity>
   );
