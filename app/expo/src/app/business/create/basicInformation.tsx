@@ -49,7 +49,7 @@ const BusinessBasicInformation: React.FC = () => {
     } else if (field === 'description' && trimmedValue.length > 2000) {
       setValidationErrors({
         ...validationErrors,
-        [field]: `Exceeded maximum character limit (2000 characters).`,
+        [field]: 'Exceeded maximum character limit (2000 characters).',
       });
     } else {
       setFormData({ ...formData, [field]: trimmedValue });
