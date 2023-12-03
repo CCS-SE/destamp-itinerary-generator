@@ -13,6 +13,7 @@ const MAX_ITERATIONS = 20; // max number of iterations
 export function generatePopulation(
   input: CreateTripInput,
   pois: PointOfInterest[],
+  duration: number,
   desiredTravelHours: number,
 ) {
   const { budget, travelerCount, isFoodIncluded } = input;
@@ -36,9 +37,9 @@ export function generatePopulation(
     // const poiIndexes: number[] = [];
 
     while (
-      totalDuration <= desiredTravelHours &&
-      (totalFoodCost <= foodCostThreshold ||
-        totalAttractionCost <= attractionCostThreshold) &&
+      (totalDuration <= desiredTravelHours &&
+        (totalFoodCost <= foodCostThreshold ||
+          totalAttractionCost <= attractionCostThreshold)) ||
       chromosome.length < MAX_ITERATIONS
     ) {
       // disable random selection
@@ -47,6 +48,11 @@ export function generatePopulation(
 
       const attraction = attractions.shift();
       const restaurant = restaurants.shift();
+
+      // if restaurants and attractons are empty (no element can be shifted)
+      if (!restaurant && !attraction) {
+        break;
+      }
 
       if (restaurant) {
         if (isFoodIncluded) {
@@ -79,6 +85,7 @@ export function generatePopulation(
         break;
       }
     }
+
     newPopulation.push({
       chrom: new Chromosome(chromosome),
       fitnessScore: 0,

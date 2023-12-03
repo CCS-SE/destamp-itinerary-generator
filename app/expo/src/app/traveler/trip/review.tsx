@@ -89,6 +89,7 @@ export default function ReviewTripScreen() {
         userId: user?.id || '',
         tripInput: {
           budget: parseFloat(tripData.budget),
+          destination: JSON.parse(JSON.stringify(tripData.destination)),
           endDate: tripData.endDate
             ? new Date(formatDateToString(tripData.endDate))
             : new Date(formatDateToString(tripData.startDate)),
@@ -179,8 +180,9 @@ export default function ReviewTripScreen() {
             style={{ width: inputWidth }}
           >
             <TextInput
-              className="h-[46] flex-1 rounded-xl border border-gray-500 p-3.5  font-poppins text-base text-gray-500"
+              className=" flex-1 rounded-xl border border-gray-500 py-2.5 pl-2 pr-8 font-poppins text-base text-gray-500"
               value={reviewData.title}
+              numberOfLines={1}
               onChangeText={(text) => handleTitleChange(text)}
             />
             <TouchableOpacity

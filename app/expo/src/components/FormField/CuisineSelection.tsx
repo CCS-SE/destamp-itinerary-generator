@@ -3,12 +3,19 @@ import { View } from 'react-native';
 
 import CuisineCategoryCard from '../Card/traveler/CuisineCard';
 
+interface RestaurantCategory {
+  id: number;
+  name: string;
+}
+
 interface CuisineSelectionProps {
+  data: RestaurantCategory[];
   onOptionChange: (option: string[]) => void;
   initialSelectedOptions: string[];
 }
 
 export default function CuisineSelection({
+  data,
   onOptionChange,
   initialSelectedOptions,
 }: CuisineSelectionProps) {
@@ -30,14 +37,14 @@ export default function CuisineSelection({
   };
 
   return (
-    <View className=" w-[330]">
+    <View className=" w-[330] ">
       <View className="flex-row flex-wrap">
-        {cuisines.map((cuisine, i) => (
+        {data.map((cuisine, i) => (
           <View className="mx-1.5 my-1 flex-row justify-between" key={i}>
             <CuisineCategoryCard
-              title={cuisine.title}
-              isSelected={isOptionSelected(cuisine.keyword)}
-              onPress={() => handleOptionChange(cuisine.keyword)}
+              title={cuisine.name}
+              isSelected={isOptionSelected(cuisine.name)}
+              onPress={() => handleOptionChange(cuisine.name)}
             />
           </View>
         ))}
@@ -45,46 +52,3 @@ export default function CuisineSelection({
     </View>
   );
 }
-
-const cuisines = [
-  {
-    title: 'Locals Best',
-    keyword: 'LocalsBest',
-  },
-  {
-    title: 'Filipino',
-    keyword: 'Filipino',
-  },
-  {
-    title: 'Korean',
-    keyword: 'Korean',
-  },
-  {
-    title: 'Thai',
-    keyword: 'Thai',
-  },
-  {
-    title: 'Indian',
-    keyword: 'Indian',
-  },
-  {
-    title: 'American',
-    keyword: 'American',
-  },
-  {
-    title: 'Japanese',
-    keyword: 'Japanese',
-  },
-  {
-    title: 'Chinese',
-    keyword: 'Chinese',
-  },
-  {
-    title: 'Italian',
-    keyword: 'Italian',
-  },
-  {
-    title: 'Spanish',
-    keyword: 'Spanish',
-  },
-];

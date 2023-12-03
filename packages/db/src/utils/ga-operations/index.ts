@@ -44,6 +44,7 @@ export async function generateItinerary(
     const population: Chromosome[] = generatePopulation(
       input,
       clusteredPois[cluster]!.genes,
+      duration,
       desiredTravelHours[cluster]!,
     ); // initialize population
 

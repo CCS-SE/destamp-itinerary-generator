@@ -196,6 +196,25 @@ export default function CreateTripScreen() {
 
     const missingDataSection = !tripData[currentStepIndex];
 
+    if (tripData.startingLocation?.name === '') {
+      setActiveSection(1);
+      setSections([1]);
+      alert('Please select starting location.');
+      return;
+    }
+
+    if (!isStartingDateSelected()) {
+      setActiveSection(3);
+      setSections([3]);
+      alert('Please select date.');
+      return;
+    }
+
+    if (!tripData.budget) {
+      alert('Please enter your budget.');
+      return;
+    }
+
     if (!missingDataSection && budgetError == '') {
       setCompletedSteps([...completedSteps, activeSection]);
       setData({
@@ -249,6 +268,7 @@ export default function CreateTripScreen() {
   const fields = [
     <AutoComplete
       key={1}
+      initialValue={tripData.destination}
       data={destinations}
       onChange={(value) => handleTripDataChange('destination', value)}
     />,
@@ -324,20 +344,25 @@ export default function CreateTripScreen() {
           ),
         }}
       />
-      <View className="flex-1 overflow-hidden p-3.5">
-        <Accordion
-          activeSections={activeSections}
-          sections={Sections.filter((_, index) => visitedSteps.includes(index))}
-          touchableComponent={TouchableOpacity}
-          expandMultiple={false}
-          renderHeader={renderHeader}
-          renderContent={renderContent}
-          duration={500}
-          onChange={setSections}
-          expandFromBottom={false}
-          containerStyle={{ height: 500 }}
-        />
-      </View>
+      <ScrollView ref={scrollViewRef} scrollToOverflowEnabled>
+        <View className="flex-1 overflow-hidden p-3.5">
+          <Accordion
+            activeSections={activeSections}
+            sections={Sections.filter((_, index) =>
+              visitedSteps.includes(index),
+            )}
+            touchableComponent={TouchableOpacity}
+            touchableProps={{ activeOpacity: 0.9 }}
+            expandMultiple={false}
+            renderHeader={renderHeader}
+            renderContent={renderContent}
+            duration={500}
+            onChange={setSections}
+            expandFromBottom={false}
+            containerStyle={{ height: 500 }}
+          />
+        </View>
+      </ScrollView>
       <View>
         {renderNextButton()}
         <Text className="mt-2 self-center font-poppins-medium text-lg text-gray-400">

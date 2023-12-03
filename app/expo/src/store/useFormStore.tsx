@@ -10,6 +10,13 @@ const stepVariant = {
   3: 'reviewData',
 };
 
+const destinations = [
+  {
+    id: '1',
+    title: 'Iloilo City',
+  },
+];
+
 type setDataType =
   | { step: 1; data: CreateTripData }
   | { step: 2; data: TripPreferenceData }
@@ -39,7 +46,7 @@ export const initialFormState = {
   tripData: {
     budget: '',
     budgetInclusions: [ExpenseCategory.Accommodation] as [ExpenseCategory],
-    destination: '',
+    destination: destinations[0]!,
     endDate: null,
     startDate: null,
     startingLocation: {
@@ -65,7 +72,7 @@ export const initialFormState = {
       Landmarks: 0,
     },
     diningStyles: ['Fine'],
-    cuisines: ['LocalsBest'],
+    cuisines: ['American'],
   },
   reviewData: {
     title: 'Iloilo City Trip',

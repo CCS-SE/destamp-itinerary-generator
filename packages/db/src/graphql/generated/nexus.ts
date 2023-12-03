@@ -91,6 +91,7 @@ export interface NexusGenInputs {
   CreateTripInput: {
     // input type
     budget: number; // Float!
+    destination: string; // String!
     endDate?: NexusGenScalars['DateTime'] | null; // DateTime
     isAccommodationIncluded: boolean; // Boolean!
     isFoodIncluded: boolean; // Boolean!
@@ -118,6 +119,11 @@ export interface NexusGenInputs {
     lastName: string; // String!
     password: string; // String!
     type: NexusGenEnums['UserType']; // UserType!
+  };
+  EditUserInput: {
+    // input type
+    firstName: string; // String!
+    lastName: string; // String!
   };
   OperatingHoursInput: {
     // input type
@@ -263,6 +269,7 @@ export interface NexusGenObjects {
     // root type
     budget: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
+    destination: string; // String!
     endDate: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     isAccommodationIncluded: boolean; // Boolean!
@@ -366,6 +373,7 @@ export interface NexusGenFieldTypes {
   };
   Mutation: {
     // field return type
+    claimStamp: NexusGenRootTypes['User']; // User!
     createExpense: NexusGenRootTypes['Expense']; // Expense!
     createMutation: NexusGenRootTypes['Poi']; // Poi!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
@@ -373,6 +381,7 @@ export interface NexusGenFieldTypes {
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deletePoi: NexusGenRootTypes['Poi']; // Poi!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
+    editUser: NexusGenRootTypes['User']; // User!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
   OperatingHour: {
@@ -416,8 +425,11 @@ export interface NexusGenFieldTypes {
     // field return type
     amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
+    isStampedClaimed: boolean; // Boolean!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    restaurantCategoriesMoreThanFive: NexusGenRootTypes['Category'][]; // [Category!]!
+    stamp: NexusGenRootTypes['Stamp']; // Stamp!
     trip: NexusGenRootTypes['Trip']; // Trip!
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     user: NexusGenRootTypes['User']; // User!
@@ -433,6 +445,7 @@ export interface NexusGenFieldTypes {
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     dateCollected: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
+    image: NexusGenRootTypes['Image']; // Image!
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
@@ -441,6 +454,7 @@ export interface NexusGenFieldTypes {
     budget: number; // Float!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     dailyItineraries: NexusGenRootTypes['DailyItinerary'][]; // [DailyItinerary!]!
+    destination: string; // String!
     endDate: NexusGenScalars['DateTime']; // DateTime!
     expenses: NexusGenRootTypes['Expense'][]; // [Expense!]!
     id: number; // Int!
@@ -474,6 +488,7 @@ export interface NexusGenFieldTypes {
     lastName: string; // String!
     password: string; // String!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    stamps: NexusGenRootTypes['Stamp'][]; // [Stamp!]!
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     type: NexusGenEnums['UserType']; // UserType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -537,6 +552,7 @@ export interface NexusGenFieldTypeNames {
   };
   Mutation: {
     // field return type name
+    claimStamp: 'User';
     createExpense: 'Expense';
     createMutation: 'Poi';
     createTrip: 'Trip';
@@ -544,6 +560,7 @@ export interface NexusGenFieldTypeNames {
     deleteExpense: 'Expense';
     deletePoi: 'Poi';
     deleteTrip: 'Trip';
+    editUser: 'User';
     updateExpense: 'Expense';
   };
   OperatingHour: {
@@ -587,8 +604,11 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     amenities: 'Amenity';
     categories: 'Category';
+    isStampedClaimed: 'Boolean';
     poi: 'Poi';
     pois: 'Poi';
+    restaurantCategoriesMoreThanFive: 'Category';
+    stamp: 'Stamp';
     trip: 'Trip';
     trips: 'Trip';
     user: 'User';
@@ -604,6 +624,7 @@ export interface NexusGenFieldTypeNames {
     createdAt: 'DateTime';
     dateCollected: 'DateTime';
     id: 'Int';
+    image: 'Image';
     title: 'String';
     updatedAt: 'DateTime';
   };
@@ -612,6 +633,7 @@ export interface NexusGenFieldTypeNames {
     budget: 'Float';
     createdAt: 'DateTime';
     dailyItineraries: 'DailyItinerary';
+    destination: 'String';
     endDate: 'DateTime';
     expenses: 'Expense';
     id: 'Int';
@@ -645,6 +667,7 @@ export interface NexusGenFieldTypeNames {
     lastName: 'String';
     password: 'String';
     pois: 'Poi';
+    stamps: 'Stamp';
     trips: 'Trip';
     type: 'UserType';
     updatedAt: 'DateTime';
@@ -653,6 +676,11 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    claimStamp: {
+      // args
+      stampId: number; // Int!
+      userId: string; // String!
+    };
     createExpense: {
       // args
       data: NexusGenInputs['CreateExpenseInput']; // CreateExpenseInput!
@@ -685,6 +713,11 @@ export interface NexusGenArgTypes {
       // args
       id: number; // Int!
     };
+    editUser: {
+      // args
+      input: NexusGenInputs['EditUserInput']; // EditUserInput!
+      userId: string; // String!
+    };
     updateExpense: {
       // args
       data: NexusGenInputs['UpdateExpenseInput']; // UpdateExpenseInput!
@@ -692,6 +725,11 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
+    isStampedClaimed: {
+      // args
+      stampId: number; // Int!
+      userId: string; // String!
+    };
     poi: {
       // args
       poiId: string; // String!
@@ -699,6 +737,10 @@ export interface NexusGenArgTypes {
     pois: {
       // args
       userId: string; // String!
+    };
+    stamp: {
+      // args
+      stampId: number; // Int!
     };
     trip: {
       // args
