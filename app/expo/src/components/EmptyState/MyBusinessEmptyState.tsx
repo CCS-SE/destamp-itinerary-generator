@@ -7,7 +7,7 @@ import { router } from 'expo-router';
 export default function MyBusinessEmptyState() {
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    router.push('/business/create/basicInformation');
+    router.push('/business/create/overview');
   };
 
   return (

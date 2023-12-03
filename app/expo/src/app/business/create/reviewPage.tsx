@@ -121,9 +121,7 @@ export default function ReviewBusiness() {
             />
           </View>
           <GradientButton
-            onPress={function (): void {
-              console.log('Function not implemented.');
-            }}
+            onPress={() => router.push('/business/create/verificationPage')}
             title={'Create Business'}
             isSubmitting={false}
           />
