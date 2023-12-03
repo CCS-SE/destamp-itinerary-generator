@@ -114,7 +114,6 @@ export function contentBasedFiltering(
       };
     },
   );
-  console.log(sortedPlaces);
 
   const placesFilteredByAccommodationType = sortedPlaces.filter((place) =>
     place.accommodation === null
@@ -157,5 +156,3 @@ const categoriesPerType: { [key: string]: string[] } = {
     'Catholic cathedral',
   ],
 };
-
-console.log(contentBasedFiltering(places, userPreference));
