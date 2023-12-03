@@ -37,6 +37,7 @@ export const createTrip = async (
   const {
     budget,
     isAccommodationIncluded,
+    destination,
     isFoodIncluded,
     isTransportationIncluded,
     title,
@@ -89,6 +90,7 @@ export const createTrip = async (
         budget: budget,
         endDate: new Date(tripInput.endDate),
         startDate: new Date(tripInput.startDate),
+        destination: destination,
         title: title,
         travelSize: travelSize,
         travelerCount: travelerCount,

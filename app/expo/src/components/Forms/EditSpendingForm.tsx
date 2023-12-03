@@ -209,7 +209,7 @@ export default function EditSpendingForm({
         title="Save"
         onPress={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
-        size={280}
+        width={280}
         className="mb-10"
       />
     </View>
