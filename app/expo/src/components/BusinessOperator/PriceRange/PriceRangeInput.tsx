@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View, ViewStyle } from 'react-native';
+import { Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
 
 const PriceRangeInput = ({
   minPrice,
@@ -36,7 +36,7 @@ const PriceRangeInput = ({
     }
   };
   const textBoxStyle: ViewStyle = {
-    height: 40,
+    height: 50,
     borderColor: 'transparent',
     borderRadius: 5,
     backgroundColor: 'white',
@@ -44,18 +44,26 @@ const PriceRangeInput = ({
     flex: 1,
     justifyContent: 'space-around',
     padding: 5,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   };
+
   return (
-    <View style={{ margin: 15, marginBottom: 40 }}>
+    <View style={{ margin: 5, marginBottom: 40 }}>
       <View
         style={{
           alignItems: 'center',
           borderRadius: 10,
-          width: 260,
+          width: 280,
+          height: 100,
           padding: 10,
           flexDirection: 'row',
-          justifyContent: 'space-between',
-          backgroundColor: '#FFA053',
+          backgroundColor: '#EB4586',
           shadowColor: '#000',
           shadowOffset: {
             width: 0,
@@ -71,7 +79,7 @@ const PriceRangeInput = ({
             fontFamily: 'Poppins',
             fontSize: 20,
             fontWeight: 'bold',
-            paddingRight: 8,
+            marginRight: 20,
             paddingLeft: 8,
             color: 'white',
           }}
@@ -89,7 +97,7 @@ const PriceRangeInput = ({
             onChangeText={handleMinPriceChange}
             onBlur={handleBlur}
           />
-          <Text style={{ fontSize: 18, marginHorizontal: 5, color: 'white' }}>
+          <Text style={{ fontSize: 25, marginHorizontal: 5, color: 'white' }}>
             -
           </Text>
           <TextInput

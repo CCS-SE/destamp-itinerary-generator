@@ -32,10 +32,15 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
         margin: 10,
       }}
     >
-      <View style={{ justifyContent: 'flex-start' }}>
+      <View style={{ justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row' }}>
           <Text
-            style={{ fontFamily: 'Poppins', fontSize: 18, color: '#FFBD59' }}
+            style={{
+              fontFamily: 'Poppins',
+              fontSize: 18,
+              color: '#FFBD59',
+              paddingBottom: 8,
+            }}
           >
             {day}
           </Text>
@@ -50,7 +55,6 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
           <BusinessHourSelector />
         )}
       </View>
-
       {/* <View style={{ alignItems: 'center', marginLeft: 10 }}>
         <TouchableOpacity onPress={handleDelete}>
           <MaterialIcons name="delete" size={24} color="gray" />

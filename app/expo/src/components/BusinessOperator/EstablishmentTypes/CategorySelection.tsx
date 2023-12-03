@@ -9,7 +9,7 @@ import { Category as GraphQLCategory } from '~/graphql/generated';
 interface CategorySelectionProps {
   isVisible: boolean;
   onClose: () => void;
-  onSelectCategory: (category: GraphQLCategory) => void; // Use the GraphQLCategory type here
+  onSelectCategory: (category: GraphQLCategory) => void;
   selectedCategory: GraphQLCategory | null;
   categories: GraphQLCategory[];
 }

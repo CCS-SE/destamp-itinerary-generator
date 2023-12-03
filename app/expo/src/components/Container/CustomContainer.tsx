@@ -1,24 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { KeyboardTypeOptions, TextInput, View } from 'react-native';
 
 interface CustomContainerProps {
   placeholder: string;
-  height: number;
   width: number;
   value: string;
   onChangeText: (text: string) => void;
-  numeric?: boolean; // Add numeric prop
+  numeric?: boolean;
+  multiline?: boolean; // Make multiline optional
 }
 
 const CustomContainer: React.FC<CustomContainerProps> = ({
   placeholder,
-  height,
   width,
   value,
   onChangeText,
-  numeric = false, // Default to false
+  numeric = false,
+  multiline = false, // Default to false if not provided
 }) => {
   const keyboardType: KeyboardTypeOptions = numeric ? 'numeric' : 'default';
+  const [contentHeight, setContentHeight] = useState(0);
 
   return (
     <View
@@ -28,7 +29,7 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
         borderRadius: 10,
         padding: 10,
         margin: 10,
-        height,
+        minHeight: 50,
         width,
       }}
     >
@@ -37,7 +38,15 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
-        style={{ fontFamily: 'Poppins', fontSize: 15 }}
+        style={{
+          fontFamily: 'Poppins',
+          fontSize: 15,
+          height: Math.max(35, contentHeight),
+        }}
+        multiline={multiline} // Conditionally apply multiline based on the prop value
+        onContentSizeChange={(e) => {
+          setContentHeight(e.nativeEvent.contentSize.height);
+        }}
       />
     </View>
   );
