@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, TextStyle, View, ViewStyle } from 'react-native';
+import { Text, TextInput, View, ViewStyle } from 'react-native';
 
 const PriceRangeInput = ({
   minPrice,
