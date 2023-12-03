@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
 
@@ -51,6 +52,7 @@ export function calculateSimilarityScore(
 
 const formatCuisineName = (cuisines: string[]) => {
   return cuisines.map((cuisine) =>
+    // eslint-disable-next-line quotes
     cuisine != "Local's Best" ? cuisine + ' restaurant' : cuisine,
   );
 };
