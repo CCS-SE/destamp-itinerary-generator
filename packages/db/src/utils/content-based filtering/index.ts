@@ -1,6 +1,5 @@
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
-import { places, userPreference } from './__test__/mock';
 
 interface Activities {
   Sightseeing?: number;
