@@ -15,9 +15,7 @@ interface Category {
 
 const EstablishmentType = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
+  const [selectedCategory] = useState<Category | null>(null);
 
   const handleTypeSelection = (type: string) => {
     setSelectedType(type);
