@@ -30,7 +30,7 @@ const PriceRangeCheckBox = ({
               height: 20,
               borderRadius: 5,
               borderWidth: 1,
-              borderColor: 'grey',
+              borderColor: 'gray',
               backgroundColor: selectedOption === option ? '#C43737' : 'white',
               marginRight: 2,
               justifyContent: 'center',
@@ -53,7 +53,7 @@ const PriceRangeCheckBox = ({
             style={{
               fontFamily: 'Poppins',
               marginLeft: 5,
-              fontSize: 13,
+              fontSize: 18,
               color: 'black',
             }}
           >

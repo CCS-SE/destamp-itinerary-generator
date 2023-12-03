@@ -52,12 +52,12 @@ const EstablishmentType = () => {
 
   const handleTypeSelection = (type: string) => {
     setSelectedType(type);
-    setShowCategories(false); // Reset the flag when a new type is selected
+    setShowCategories(false);
   };
 
   const handleCategoryToggle = (category: Category) => {
     setSelectedCategory(category);
-    setShowCategories(true); // Set the flag to show the categories
+    setShowCategories(true);
   };
 
   const handleContinue = () => {

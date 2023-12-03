@@ -119,6 +119,11 @@ export interface NexusGenInputs {
     password: string; // String!
     type: NexusGenEnums['UserType']; // UserType!
   };
+  EditUserInput: {
+    // input type
+    firstName: string; // String!
+    lastName: string; // String!
+  };
   OperatingHoursInput: {
     // input type
     closeTime?: NexusGenScalars['DateTime'] | null; // DateTime
@@ -373,6 +378,7 @@ export interface NexusGenFieldTypes {
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deletePoi: NexusGenRootTypes['Poi']; // Poi!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
+    editUser: NexusGenRootTypes['User']; // User!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
   OperatingHour: {
@@ -418,6 +424,7 @@ export interface NexusGenFieldTypes {
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    restaurantCategoriesMoreThanFive: NexusGenRootTypes['Category'][]; // [Category!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
     user: NexusGenRootTypes['User']; // User!
@@ -544,6 +551,7 @@ export interface NexusGenFieldTypeNames {
     deleteExpense: 'Expense';
     deletePoi: 'Poi';
     deleteTrip: 'Trip';
+    editUser: 'User';
     updateExpense: 'Expense';
   };
   OperatingHour: {
@@ -589,6 +597,7 @@ export interface NexusGenFieldTypeNames {
     categories: 'Category';
     poi: 'Poi';
     pois: 'Poi';
+    restaurantCategoriesMoreThanFive: 'Category';
     trip: 'Trip';
     trips: 'Trip';
     user: 'User';
@@ -684,6 +693,11 @@ export interface NexusGenArgTypes {
     deleteTrip: {
       // args
       id: number; // Int!
+    };
+    editUser: {
+      // args
+      input: NexusGenInputs['EditUserInput']; // EditUserInput!
+      userId: string; // String!
     };
     updateExpense: {
       // args

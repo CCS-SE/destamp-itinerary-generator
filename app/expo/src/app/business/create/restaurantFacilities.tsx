@@ -28,7 +28,7 @@ const RestaurantFacilities = () => {
       );
       return;
     }
-    router.push('/business/create/index');
+    router.push('/business/create/reviewPage');
   };
 
   return (

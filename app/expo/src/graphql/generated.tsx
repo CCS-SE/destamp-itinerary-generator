@@ -137,6 +137,11 @@ export type DailyItineraryPoi = {
   poi: Poi;
 };
 
+export type EditUserInput = {
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
+};
+
 export type Expense = {
   __typename?: 'Expense';
   amount: Scalars['Float']['output'];
@@ -175,6 +180,7 @@ export type Mutation = {
   deleteExpense: Expense;
   deletePoi: Poi;
   deleteTrip: Trip;
+  editUser: User;
   updateExpense: Expense;
 };
 
@@ -208,6 +214,11 @@ export type MutationDeletePoiArgs = {
 
 export type MutationDeleteTripArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type MutationEditUserArgs = {
+  input: EditUserInput;
+  userId: Scalars['String']['input'];
 };
 
 export type MutationUpdateExpenseArgs = {
@@ -265,11 +276,11 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
-  allPois: Array<Poi>;
   amenities: Array<Amenity>;
   categories: Array<Category>;
   poi: Poi;
   pois: Array<Poi>;
+  restaurantCategoriesMoreThanFive: Array<Category>;
   trip: Trip;
   trips: Array<Trip>;
   user: User;
@@ -495,6 +506,7 @@ export type ResolversTypes = {
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
   DailyItineraryPoi: ResolverTypeWrapper<DailyItineraryPoi>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  EditUserInput: EditUserInput;
   Expense: ResolverTypeWrapper<Expense>;
   ExpenseCategory: ExpenseCategory;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
@@ -533,6 +545,7 @@ export type ResolversParentTypes = {
   DailyItinerary: DailyItinerary;
   DailyItineraryPoi: DailyItineraryPoi;
   DateTime: Scalars['DateTime']['output'];
+  EditUserInput: EditUserInput;
   Expense: Expense;
   Float: Scalars['Float']['output'];
   Image: Image;
@@ -727,6 +740,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationDeleteTripArgs, 'id'>
   >;
+  editUser?: Resolver<
+    ResolversTypes['User'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditUserArgs, 'input' | 'userId'>
+  >;
   updateExpense?: Resolver<
     ResolversTypes['Expense'],
     ParentType,
@@ -819,7 +838,6 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
-  allPois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
   amenities?: Resolver<
     Array<ResolversTypes['Amenity']>,
     ParentType,
@@ -841,6 +859,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryPoisArgs, 'userId'>
+  >;
+  restaurantCategoriesMoreThanFive?: Resolver<
+    Array<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
   >;
   trip?: Resolver<
     ResolversTypes['Trip'],
@@ -1065,6 +1088,16 @@ export type CreateUserMutation = {
   createUser: { __typename?: 'User'; id: string };
 };
 
+export type EditUserMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+  input: EditUserInput;
+}>;
+
+export type EditUserMutation = {
+  __typename?: 'Mutation';
+  editUser: { __typename?: 'User'; id: string };
+};
+
 export type GetBusinessesQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
@@ -1128,11 +1161,16 @@ export type GetAllCategoriesQuery = {
   categories: Array<{ __typename?: 'Category'; id: number; name: string }>;
 };
 
-export type GetAmenitiesQueryVariables = Exact<{ [key: string]: never }>;
+export type GetPoiFeaturesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type GetAmenitiesQuery = {
+export type GetPoiFeaturesQuery = {
   __typename?: 'Query';
   amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
+  restaurantCategoriesMoreThanFive: Array<{
+    __typename?: 'Category';
+    id: number;
+    name: string;
+  }>;
 };
 
 export type GetTripsQueryVariables = Exact<{
@@ -1705,6 +1743,79 @@ export const CreateUserDocument = {
     },
   ],
 } as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export const EditUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'EditUserInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditUserMutation, EditUserMutationVariables>;
 export const GetBusinessesDocument = {
   kind: 'Document',
   definitions: [
@@ -1953,13 +2064,13 @@ export const GetAllCategoriesDocument = {
   GetAllCategoriesQuery,
   GetAllCategoriesQueryVariables
 >;
-export const GetAmenitiesDocument = {
+export const GetPoiFeaturesDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetAmenities' },
+      name: { kind: 'Name', value: 'GetPoiFeatures' },
       selectionSet: {
         kind: 'SelectionSet',
         selections: [
@@ -1974,11 +2085,22 @@ export const GetAmenitiesDocument = {
               ],
             },
           },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'restaurantCategoriesMoreThanFive' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
         ],
       },
     },
   ],
-} as unknown as DocumentNode<GetAmenitiesQuery, GetAmenitiesQueryVariables>;
+} as unknown as DocumentNode<GetPoiFeaturesQuery, GetPoiFeaturesQueryVariables>;
 export const GetTripsDocument = {
   kind: 'Document',
   definitions: [
