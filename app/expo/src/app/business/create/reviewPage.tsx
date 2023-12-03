@@ -1,60 +1,17 @@
-import React, { useContext, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
-import { useMutation } from '@apollo/client';
-import { MaterialIcons } from '@expo/vector-icons';
 
 import GradientButton from '~/components/Button/GradientButton';
 import ReviewCard from '~/components/Card/traveler/ReviewCard';
-import { AuthContext } from '~/context/AuthProvider';
-import {
-  CreateTripDocument,
-  ExpenseCategory,
-  GetTripsDocument,
-  MutationCreateTripArgs,
-  TravelSize,
-} from '~/graphql/generated';
-import useFormstore from '~/store/useFormStore';
-import {
-  amountFormatter,
-  dateFormmater,
-  formatDateToString,
-  separateWords,
-  toSentenceCase,
-} from '~/utils/utils';
 import Back from '../../../../assets/images/back-btn.svg';
-import Peso from '../../../../assets/images/review-budget.svg';
-import Calendar from '../../../../assets/images/review-calendar.svg';
-import Destination from '../../../../assets/images/review-destination.svg';
-import TravelGroupSize from '../../../../assets/images/review-travel-size.svg';
-
-const isIncluded = (
-  value: ExpenseCategory,
-  budgetInclusion: ExpenseCategory[],
-) => {
-  return budgetInclusion.includes(value) ? true : false;
-};
 
 export default function ReviewBusiness() {
   const router = useRouter();
-  const { preferenceData, tripData, reviewData, setData, reset } =
-    useFormstore();
-
   const handleBackButtonPress = () => {
     router.back();
   };
-
-  const [createTrip] = useMutation(CreateTripDocument);
 
   return (
     <SafeAreaView className="flex-1 bg-white p-2" edges={['bottom']}>
