@@ -8,14 +8,21 @@ import TripCard from '~/components/Card/traveler/TripCard';
 import MyTripEmptyState from '~/components/EmptyState/MyTripEmptyState';
 import TripScreenSkeleton from '~/components/Skeleton/TripScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetTripsDocument } from '~/graphql/generated';
+import { GetStampDocument, GetTripsDocument } from '~/graphql/generated';
 
 export default function MyTrip() {
   const { user } = useContext(AuthContext);
 
+  const stamp = useQuery(GetStampDocument, {
+    variables: {
+      stampId: 1,
+    },
+  });
+
   const { loading, error, data } = useQuery(GetTripsDocument, {
     variables: {
       userId: user ? user.id : '',
+      stampId: stamp.data ? stamp.data?.stamp.id : 0,
     },
   });
 
@@ -48,12 +55,16 @@ export default function MyTrip() {
           renderItem={({ item }) => (
             <TripCard
               id={item.id}
-              destination={item!.title}
+              title={item.title}
               startDate={item.startDate}
               endDate={item.endDate}
               budget={item.budget}
               travelSize={item.travelSize}
               totalTravellers={item.travelerCount}
+              stampId={stamp.data?.stamp.id || 0}
+              stampUrl={stamp.data?.stamp.image.url || ''}
+              stampTitle={stamp.data?.stamp.title || ''}
+              isStampClaimed={data.isStampedClaimed}
             />
           )}
           showsVerticalScrollIndicator={false}
