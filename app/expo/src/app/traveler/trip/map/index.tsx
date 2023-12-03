@@ -193,23 +193,23 @@ export default function MapScreen() {
               </Marker>
             );
           })}
-        {data && currentPlaceIndex + 1 < dailyItineraryPois!.length ? (
+        {data && currentPlaceIndex - 1 >= 0 ? (
           <MapViewDirections
             key={currentPlaceIndex}
             origin={{
               latitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex
+                currentPlaceIndex - 1
               ]?.poi.latitude as number,
               longitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex
+                currentPlaceIndex - 1
               ]?.poi.longitude as number,
             }}
             destination={{
               latitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex + 1
+                currentPlaceIndex
               ]?.poi.latitude as number,
               longitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex + 1
+                currentPlaceIndex
               ]?.poi.longitude as number,
             }}
             apikey={googleMapsKey}
