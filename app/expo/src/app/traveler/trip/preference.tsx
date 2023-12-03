@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Text, TouchableOpacity, View } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,7 +14,7 @@ import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
 import CuisineSelection from '~/components/FormField/CuisineSelection';
 import DiningStyleSelection from '~/components/FormField/DiningStyleSelection';
 import Stepper from '~/components/Stepper/Stepper';
-import { GetAmenitiesDocument } from '~/graphql/generated';
+import { GetPoiFeaturesDocument } from '~/graphql/generated';
 import { TripPreferenceData } from '~/store/types';
 import useFormstore from '~/store/useFormStore';
 import Back from '../../../../assets/images/back-btn.svg';
@@ -43,7 +43,12 @@ export default function TripPreferenceScreen() {
   const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
     [],
   );
-  const { data } = useQuery(GetAmenitiesDocument);
+
+  const screenHeight = Dimensions.get('window').height;
+
+  const [cuisines, setCuisines] = useState<{ id: number; name: string }[]>([]);
+
+  const { data } = useQuery(GetPoiFeaturesDocument);
 
   useEffect(() => {
     if (data) {
@@ -53,11 +58,20 @@ export default function TripPreferenceScreen() {
           value: amenity.name,
         })),
       );
+      setCuisines(
+        data.restaurantCategoriesMoreThanFive.map((category) => ({
+          id: category.id,
+          name: category.name.replace('restaurant', '').trim(),
+        })),
+      );
     }
   }, [data]);
 
   const isAmenitiesSelected = () => {
-    return preferenceData.amenities.length > 0;
+    return (
+      (preferenceData.amenities && preferenceData.amenities.length > 0) ||
+      amenities.length > 0
+    );
   };
 
   const isActivitiesSelected = () => {
@@ -190,6 +204,32 @@ export default function TripPreferenceScreen() {
 
     const missingDataSection = !preferenceData[currentStepIndex];
 
+    if (!isAmenitiesSelected()) {
+      setActiveSection(1);
+      setSections([1]);
+      alert('Please select at least one amenity.');
+      return;
+    }
+
+    if (!isActivitiesSelected()) {
+      setActiveSection(2);
+      setSections([2]);
+      alert('Please select at least one activity.');
+      return;
+    }
+
+    if (!isDiningStylesSelected()) {
+      setActiveSection(3);
+      setSections([3]);
+      alert('Please select at least one dining style.');
+      return;
+    }
+
+    if (!isCuisinesSelected()) {
+      alert('Please select at least one cuisine.');
+      return;
+    }
+
     if (!missingDataSection) {
       setCompletedSteps([...completedSteps, activeSection]);
       setData({
@@ -269,6 +309,7 @@ export default function TripPreferenceScreen() {
       key={4}
     />,
     <CuisineSelection
+      data={cuisines}
       initialSelectedOptions={preferenceData.cuisines}
       onOptionChange={(value) => handleTripPreferenceChange('cuisines', value)}
       key={5}
@@ -314,7 +355,7 @@ export default function TripPreferenceScreen() {
             duration={500}
             onChange={setSections}
             expandFromBottom={false}
-            containerStyle={{ height: 500 }}
+            containerStyle={{ height: screenHeight * 0.7 }}
           />
         </View>
       </ScrollView>

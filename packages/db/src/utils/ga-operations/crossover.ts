@@ -58,13 +58,15 @@ export const crossoverEval = (
   const { budget, travelerCount } = tripInput;
 
   const rate = getBudgetAllocation(tripInput)!;
+  const dailyBudget = budget / duration;
 
-  const attractionThreshold = (budget * rate.ATTRACTION) / duration;
-  const foodThreshold = (budget * rate.FOOD) / duration;
+  const attractionThreshold = dailyBudget * rate.ATTRACTION;
+  const foodThreshold = dailyBudget * rate.FOOD;
 
   const foodMaxDuration = desiredTravelHours * 0.3;
 
   let foodDuration = 0;
+  let totalCost = 0;
   let totalDuration = 0;
 
   const budgets = {
@@ -84,6 +86,7 @@ export const crossoverEval = (
         totalDuration + poiDuration <= desiredTravelHours
       ) {
         budgets.attraction += attractionCost;
+        totalCost += attractionCost;
         totalDuration += poiDuration;
         chromosome.push(poi);
       }
@@ -100,16 +103,14 @@ export const crossoverEval = (
         totalDuration + poiDuration <= desiredTravelHours
       ) {
         budgets.food += foodCost;
+        totalCost += foodCost;
         foodDuration += poiDuration;
         totalDuration += poiDuration;
         chromosome.push(poi);
       }
     }
 
-    if (
-      totalDuration > desiredTravelHours &&
-      (budgets.attraction > attractionThreshold || budgets.food > foodThreshold)
-    ) {
+    if (totalCost > dailyBudget) {
       return chromosome;
     }
   }
