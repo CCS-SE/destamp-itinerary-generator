@@ -44,6 +44,7 @@ const AccommodationFacilities = () => {
               <AmenitiesSelection
                 onOptionChange={(options) => setSelectedAmenities(options)}
                 initialSelectedOptions={selectedAmenities}
+                data={[]}
               />
             </View>
 

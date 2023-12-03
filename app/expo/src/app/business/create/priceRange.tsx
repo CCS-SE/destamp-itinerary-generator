@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
-import PriceInput from '~/components/BusinessOperator/PriceRange/AdmissionFee';
+import AdmissionFee from '~/components/BusinessOperator/PriceRange/AdmissionFee';
 import PriceRangeCheckBox from '~/components/BusinessOperator/PriceRange/PriceRangeCheckbox';
 import PriceRangeInput from '~/components/BusinessOperator/PriceRange/PriceRangeInput';
 import Questions from '~/components/BusinessOperator/Question';
@@ -82,7 +82,7 @@ const PriceRange = () => {
           }}
         >
           {showAdmissionFeeInput && (
-            <PriceInput
+            <AdmissionFee
               admissionFee={admissionFee.toString()}
               admissionFeeOnChange={handleAdmissionFeeChange}
               onChangeText={(value: string) => {

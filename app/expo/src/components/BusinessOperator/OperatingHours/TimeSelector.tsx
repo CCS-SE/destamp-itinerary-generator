@@ -42,7 +42,7 @@ const BusinessTimeSelector = () => {
     selected: Date | undefined,
   ) => {
     if (selected) {
-      const minTimeDifference = 30 * 60 * 1000; // 30 minutes in milliseconds
+      const minTimeDifference = 30 * 60 * 1000;
       const startTime = new Date(selected.getTime() - minTimeDifference);
 
       if (startTime >= startHour) {
@@ -52,7 +52,6 @@ const BusinessTimeSelector = () => {
           'Invalid Closing Hour',
           'Closing hour should be at least 30 minutes after opening hour.',
         );
-        // setEndHour(new Date(startHour.getTime() + minTimeDifference));
       }
     }
     setShowEndPicker(false);
@@ -79,7 +78,7 @@ const BusinessTimeSelector = () => {
     shadowRadius: 3.84,
     elevation: 5,
     borderRadius: 10,
-    padding: 7,
+    padding: 10,
     justifyContent: 'space-between',
   };
 
@@ -90,7 +89,7 @@ const BusinessTimeSelector = () => {
           onPress={() => setShowStartPicker(!showStartPicker)}
         >
           <View style={{ padding: 10 }}>
-            <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
               OPENING HOUR:
             </Text>
             <View style={containerStyles}>
@@ -128,7 +127,7 @@ const BusinessTimeSelector = () => {
             onPress={() => setShowEndPicker(!showEndPicker)}
           >
             <View style={{ padding: 10 }}>
-              <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
                 CLOSING HOUR:
               </Text>
               <View style={containerStyles}>
