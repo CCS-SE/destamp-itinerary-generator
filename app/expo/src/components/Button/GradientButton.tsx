@@ -11,21 +11,22 @@ interface GradientButtonProps extends TouchableOpacityProps {
   onPress: () => void;
   title: string;
   isSubmitting: boolean;
-  size?: number;
+  width?: number;
 }
 
 export default function GradientButton({
   onPress,
   title,
   isSubmitting,
+  width: size,
   ...touchableOpacityProps
 }: GradientButtonProps) {
-  const buttonWidth = Dimensions.get('window').width * 0.86;
+  const buttonWidth = Dimensions.get('window').width * (size || 0.86);
 
   return (
     <TouchableOpacity
       accessibilityRole="button"
-      activeOpacity={0.7}
+      activeOpacity={0.88}
       onPress={onPress}
       disabled={isSubmitting}
       {...touchableOpacityProps}

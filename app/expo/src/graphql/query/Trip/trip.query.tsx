@@ -1,16 +1,18 @@
 import { gql } from '@apollo/client';
 
 export const GetTripsQuery = gql(
-  `query GetTrips($userId: String!) {
+  `query GetTrips($userId: String!, $stampId: Int!) {
     trips(userId: $userId) {
       id
       budget
       endDate
       startDate
       title
+      destination
       travelerCount
       travelSize
     }
+    isStampedClaimed(userId: $userId, stampId: $stampId)
   }
   `,
 );

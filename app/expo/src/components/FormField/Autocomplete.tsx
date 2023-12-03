@@ -8,12 +8,14 @@ interface ItemProps {
 }
 
 interface AutoCompleteInputProps {
+  initialValue: ItemProps;
   data: ItemProps[];
   onChange: (value: string) => void;
 }
 
 export default function AutoComplete({
   data,
+  initialValue,
   onChange,
 }: AutoCompleteInputProps) {
   const inputWidth = Dimensions.get('window').width * 0.8;
@@ -31,7 +33,7 @@ export default function AutoComplete({
     <AutocompleteDropdown
       clearOnFocus={false}
       closeOnBlur={true}
-      initialValue={data[0]}
+      initialValue={initialValue}
       onSelectItem={handleChange}
       dataSet={data}
       containerStyle={{ width: inputWidth }}

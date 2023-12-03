@@ -41,3 +41,22 @@ export const editUser = async (
     },
   });
 };
+
+export const claimStamp = async (
+  userId: string,
+  stampId: number,
+  ctx: Context,
+) => {
+  return await ctx.prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      stamps: {
+        connect: {
+          id: stampId,
+        },
+      },
+    },
+  });
+};

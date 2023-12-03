@@ -8,6 +8,18 @@ const Stamp = objectType({
     t.field('dateCollected', { type: 'DateTime' });
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
+    t.field('image', {
+      type: 'Image',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.stamp
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .image();
+      },
+    });
   },
 });
 

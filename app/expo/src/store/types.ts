@@ -12,7 +12,7 @@ export type Activities = {
 };
 
 export interface CreateTripData {
-  destination: string;
+  destination: { id: string; title: string };
   startingLocation: {
     place_name: string;
     name: string;
