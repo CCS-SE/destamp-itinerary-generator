@@ -20,14 +20,7 @@ const User = objectType({
               id: id,
             },
           })
-          .trips()
-          .then((items) =>
-            items.sort(
-              (a, b) =>
-                new Date(a.startDate).getTime() -
-                new Date(b.startDate).getTime(),
-            ),
-          );
+          .trips();
       },
     });
     t.list.field('pois', {
@@ -40,6 +33,18 @@ const User = objectType({
             },
           })
           .pois();
+      },
+    });
+    t.list.field('stamps', {
+      type: 'Stamp',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.user
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .stamps();
       },
     });
   },

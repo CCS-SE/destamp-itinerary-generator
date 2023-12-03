@@ -40,6 +40,9 @@ export const queryTrips = (
       include: {
         ...includedFields,
       },
+      orderBy: {
+        startDate: 'asc',
+      },
     });
   } catch (error) {
     console.error(error);

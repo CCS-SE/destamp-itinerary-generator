@@ -1,8 +1,10 @@
 import { useContext } from 'react';
 import { Dimensions, Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@apollo/client';
 
+import StampCard from '~/components/Card/traveler/StampCard';
 import StampDisplayEmptyState from '~/components/EmptyState/StampDisplayEmptyState';
 import ProfileIcon from '~/components/Icon/ProfileIcon';
 import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
@@ -33,10 +35,12 @@ export default function Profile() {
           style={{ width: width }}
         >
           {data && (
-            <ProfileIcon
-              firstName={data.user.firstName}
-              lastName={data.user.lastName}
-            />
+            <TouchableOpacity>
+              <ProfileIcon
+                firstName={data.user.firstName}
+                lastName={data.user.lastName}
+              />
+            </TouchableOpacity>
           )}
           <View className="mx-5">
             <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.user.firstName}`}</Text>
@@ -48,7 +52,11 @@ export default function Profile() {
           </View>
         </View>
       </SafeAreaView>
-      <StampDisplayEmptyState />
+      {data && data.user.stamps.length !== 0 ? (
+        <StampCard url={data?.user.stamps[0]?.image.url || ''} />
+      ) : (
+        <StampDisplayEmptyState />
+      )}
       <ProfileMenuList />
     </View>
   );

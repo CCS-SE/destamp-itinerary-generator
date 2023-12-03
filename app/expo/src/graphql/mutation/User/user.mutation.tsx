@@ -15,3 +15,11 @@ export const EditUser = gql(
     }
   }`,
 );
+
+export const ClaimStamp = gql(
+  `mutation ClaimStamp($userId: String!, $stampId: Int!) {
+    claimStamp(userId: $userId, stampId: $stampId) {
+      id
+    }
+  }`,
+);

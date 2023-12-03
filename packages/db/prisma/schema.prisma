@@ -32,6 +32,7 @@ model Trip {
 
   title                    String     @db.VarChar(255)
   budget                   Float
+  destination              String     @default("") @db.VarChar(255)
   startingLocation         Json       @map("starting_location")
   travelSize               TravelSize @default(SOLO) @map("travel_size")
   travelerCount            Int        @map("traveler_count")

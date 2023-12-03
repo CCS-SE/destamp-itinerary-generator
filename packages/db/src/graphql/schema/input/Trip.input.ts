@@ -5,6 +5,7 @@ const CreateTripInput = inputObjectType({
   definition(t) {
     t.string('title');
     t.float('budget');
+    t.string('destination');
     t.field('travelSize', { type: 'TravelSize' });
     t.int('travelerCount');
     t.field('startDate', { type: 'DateTime' });

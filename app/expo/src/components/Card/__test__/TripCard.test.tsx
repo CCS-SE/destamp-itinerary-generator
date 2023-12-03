@@ -16,10 +16,10 @@ jest.mock('@supabase/supabase-js', () => {
 describe('Trip Card', () => {
   it('should render trip destination and image', () => {
     const { getByTestId } = render(<TripCard {...tripCardData} />);
-    const destinationElement = getByTestId('trip-destination');
+    const destinationElement = getByTestId('trip-title');
     const imageElement = getByTestId('trip-destination-img');
 
-    expect(destinationElement.children[0]).toBe(tripCardData.destination);
+    expect(destinationElement.children[0]).toBe(tripCardData.title);
     expect(imageElement.props.source[0].uri).toEqual(tripCardData.imgSrc);
   });
 

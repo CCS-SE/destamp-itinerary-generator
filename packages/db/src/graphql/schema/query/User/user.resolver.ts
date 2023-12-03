@@ -34,3 +34,16 @@ export const queryUser = (
     throw new Error('An error occurred while fetching user.');
   }
 };
+
+export const queryStamp = (stampId: number, ctx: Context) => {
+  try {
+    return ctx.prisma.stamp.findUniqueOrThrow({
+      where: {
+        id: stampId,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while fetching stamp.');
+  }
+};
