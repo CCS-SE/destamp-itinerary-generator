@@ -1,3 +1,4 @@
+import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
 
 interface Activities {
@@ -17,6 +18,24 @@ interface Preference {
   cuisines: string[];
 }
 
+export type Restaurant = NexusGenFieldTypes['Restaurant'];
+export type Accommodation = NexusGenFieldTypes['Accommodation'];
+export type Category = NexusGenFieldTypes['Category'];
+
+interface PointOfInterestWithScore {
+  id: string;
+  name: string;
+  price: string;
+  isAttraction: boolean;
+  visitDuration: number;
+  latitude: number;
+  longitude: number;
+  restaurant: Restaurant | null;
+  accommodation: Accommodation | null;
+  categories: Category[];
+  score: number;
+}
+
 export function calculateSimilarityScore(
   userFeatures: string[],
   placeFeatures: string[],
@@ -30,10 +49,30 @@ export function calculateSimilarityScore(
   return dotProduct / (magnitude1 * magnitude2);
 }
 
+const formatCuisineName = (cuisines: string[]) => {
+  return cuisines.map((cuisine) =>
+    cuisine != "Local's Best" ? cuisine + ' restaurant' : cuisine,
+  );
+};
+
+const formatDiningStyleName = (diningStyles: string[]) => {
+  return diningStyles.map((diningStyle) => {
+    if (diningStyle === 'Fine') {
+      return 'Upscaled';
+    } else if (diningStyle === 'Buffet') {
+      return 'Buffet restaurant';
+    } else if (diningStyle === 'Fast') {
+      return 'Fast food restaurant';
+    } else {
+      return diningStyle;
+    }
+  });
+};
+
 export function contentBasedFiltering(
   places: PointOfInterest[],
   preference: Preference,
-): PointOfInterest[] {
+): PointOfInterestWithScore[] {
   const nonZeroActivities: string[] = Object.entries(preference.activities)
     .filter(([, value]) => value !== undefined && value !== 0)
     .map(([key]) => key);
@@ -42,14 +81,14 @@ export function contentBasedFiltering(
     .map((activity) => categoriesPerType[activity] as string[])
     .flat();
 
-  const userPreferences = preference.amenities.concat(
-    preference.cuisines,
-    preference.diningStyles,
-    [preference.accommodationType],
-    nonZeroActivitiesCategories,
-  );
-
   const similarityScores = places.map((place: PointOfInterest) => {
+    const userPreferences = preference.amenities.concat(
+      formatCuisineName(preference.cuisines),
+      formatDiningStyleName(preference.diningStyles),
+      [preference.accommodationType],
+      nonZeroActivitiesCategories,
+    );
+
     const placeFeatures: string[] = place.categories
       .map((category) => category.name)
       .concat(
@@ -65,11 +104,26 @@ export function contentBasedFiltering(
 
   const sortedScores = similarityScores.sort((a, b) => b.score - a.score);
   const filteredScores = sortedScores.filter((score) => score.score > 0);
-  const sortedPlaces: PointOfInterest[] = filteredScores.map((score) => {
-    return places.find((place) => place.name === score.name)!;
-  });
 
-  return sortedPlaces;
+  const sortedPlaces: PointOfInterestWithScore[] = filteredScores.map(
+    (score) => {
+      return {
+        ...places.find((place) => place.name === score.name)!,
+        score: score.score,
+      };
+    },
+  );
+  console.log(sortedPlaces.length);
+
+  const placesFilteredByAccommodationType = sortedPlaces.filter((place) =>
+    place.accommodation !== null || place.accommodation !== undefined
+      ? place.categories
+          .map((category) => category.name)
+          .includes(preference.accommodationType)
+      : true,
+  );
+  console.log(placesFilteredByAccommodationType.length);
+  return placesFilteredByAccommodationType;
 }
 
 const categoriesPerType: { [key: string]: string[] } = {

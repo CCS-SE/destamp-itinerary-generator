@@ -55,6 +55,6 @@ const accommodations = [
   {
     title: 'Bed & Breakfast',
     icon: <BedAndBreakfast height={30} width={30} />,
-    keyword: 'BedAndBreakfast',
+    keyword: 'Bed & breakfast',
   },
 ];
