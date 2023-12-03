@@ -1,5 +1,6 @@
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
+import { places, userPreference } from './__test__/mock';
 
 interface Activities {
   Sightseeing?: number;
@@ -22,7 +23,7 @@ export type Restaurant = NexusGenFieldTypes['Restaurant'];
 export type Accommodation = NexusGenFieldTypes['Accommodation'];
 export type Category = NexusGenFieldTypes['Category'];
 
-interface PointOfInterestWithScore {
+export interface PointOfInterestWithScore {
   id: string;
   name: string;
   price: string;
@@ -113,16 +114,15 @@ export function contentBasedFiltering(
       };
     },
   );
-  console.log(sortedPlaces.length);
+  console.log(sortedPlaces);
 
   const placesFilteredByAccommodationType = sortedPlaces.filter((place) =>
-    place.accommodation !== null || place.accommodation !== undefined
-      ? place.categories
+    place.accommodation === null
+      ? true
+      : place.categories
           .map((category) => category.name)
-          .includes(preference.accommodationType)
-      : true,
+          .includes(preference.accommodationType),
   );
-  console.log(placesFilteredByAccommodationType.length);
   return placesFilteredByAccommodationType;
 }
 
@@ -157,3 +157,5 @@ const categoriesPerType: { [key: string]: string[] } = {
     'Catholic cathedral',
   ],
 };
+
+console.log(contentBasedFiltering(places, userPreference));

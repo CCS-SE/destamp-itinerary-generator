@@ -1,5 +1,6 @@
 import { NexusGenFieldTypes } from '../../../graphql/generated/nexus';
 import { PointOfInterest } from '../../ga-operations';
+import { calculateSimilarityScore, PointOfInterestWithScore } from '../index';
 
 export type Restaurant = NexusGenFieldTypes['Restaurant'];
 export type Accommodation = NexusGenFieldTypes['Accommodation'];
@@ -33,8 +34,8 @@ export const userPreference: Preference = {
     Shopping: 66,
     Landmarks: 0,
   },
-  diningStyles: ['Fast Food'],
-  cuisines: ['Filipino restaurant', 'Western restaurant', 'Korean restaurant'],
+  diningStyles: ['Fast'],
+  cuisines: ['Filipino', 'Western', 'Korean'],
 };
 
 export const places: PointOfInterest[] = [
@@ -209,7 +210,7 @@ export const places: PointOfInterest[] = [
   },
 ];
 
-export const expectedPlaces: PointOfInterest[] = [
+export const expectedPlaces: PointOfInterestWithScore[] = [
   {
     isAttraction: false,
     accommodation: {
@@ -242,6 +243,7 @@ export const expectedPlaces: PointOfInterest[] = [
     longitude: 122.5538653,
     name: 'Hotel Del Rio',
     price: '0',
+    score: 0.47140452079103173,
     visitDuration: 45,
   },
   {
@@ -267,6 +269,25 @@ export const expectedPlaces: PointOfInterest[] = [
     longitude: 122.5538653,
     name: 'Iloilo Esplanade 1 Extension & Skateboard Park',
     price: '0',
+    score: 0.4082482904638631,
+    visitDuration: 45,
+  },
+  {
+    isAttraction: true,
+    accommodation: null,
+    restaurant: null,
+    categories: [
+      {
+        id: 1,
+        name: 'Shopping mall',
+      },
+    ],
+    id: '1',
+    latitude: 10.711599,
+    longitude: 122.5706695,
+    name: 'SM City Iloilo',
+    price: '0',
+    score: 0.23570226039551587,
     visitDuration: 45,
   },
   {
@@ -288,54 +309,7 @@ export const expectedPlaces: PointOfInterest[] = [
     longitude: 122.5538653,
     name: 'Jollibee',
     price: '0',
-    visitDuration: 45,
-  },
-
-  {
-    isAttraction: false,
-    accommodation: {
-      amenities: [
-        {
-          id: 1,
-          name: 'Free WiFi',
-        },
-        {
-          id: 2,
-          name: 'Swimming Pool',
-        },
-      ],
-      id: 1,
-      poiId: '1',
-    },
-    restaurant: null,
-    categories: [
-      {
-        id: 7,
-        name: 'Inn',
-      },
-    ],
-    id: '5',
-    latitude: 10.7026051,
-    longitude: 122.5538653,
-    name: 'Inn',
-    price: '0',
-    visitDuration: 45,
-  },
-  {
-    isAttraction: true,
-    accommodation: null,
-    restaurant: null,
-    categories: [
-      {
-        id: 1,
-        name: 'Shopping mall',
-      },
-    ],
-    id: '1',
-    latitude: 10.711599,
-    longitude: 122.5706695,
-    name: 'SM City Iloilo',
-    price: '0',
+    score: 0.16666666666666666,
     visitDuration: 45,
   },
 ];
