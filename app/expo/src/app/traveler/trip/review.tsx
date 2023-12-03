@@ -89,6 +89,7 @@ export default function ReviewTripScreen() {
         userId: user?.id || '',
         tripInput: {
           budget: parseFloat(tripData.budget),
+          destination: JSON.parse(JSON.stringify(tripData.destination)),
           endDate: tripData.endDate
             ? new Date(formatDateToString(tripData.endDate))
             : new Date(formatDateToString(tripData.startDate)),

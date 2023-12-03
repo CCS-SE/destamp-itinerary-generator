@@ -268,6 +268,7 @@ export default function CreateTripScreen() {
   const fields = [
     <AutoComplete
       key={1}
+      initialValue={tripData.destination}
       data={destinations}
       onChange={(value) => handleTripDataChange('destination', value)}
     />,

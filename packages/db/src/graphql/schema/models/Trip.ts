@@ -8,6 +8,7 @@ const Trip = objectType({
     t.int('id');
     t.string('title');
     t.float('budget');
+    t.string('destination');
     t.field('travelSize', { type: TravelSize });
     t.int('travelerCount');
     t.boolean('isAccommodationIncluded');
