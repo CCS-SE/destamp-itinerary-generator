@@ -1,6 +1,6 @@
 import { NexusGenFieldTypes } from '../../../graphql/generated/nexus';
 import { PointOfInterest } from '../../ga-operations';
-import { calculateSimilarityScore, PointOfInterestWithScore } from '../index';
+import { PointOfInterestWithScore } from '../index';
 
 export type Restaurant = NexusGenFieldTypes['Restaurant'];
 export type Accommodation = NexusGenFieldTypes['Accommodation'];
