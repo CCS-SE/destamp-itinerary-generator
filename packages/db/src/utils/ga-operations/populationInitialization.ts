@@ -20,12 +20,14 @@ export function generatePopulation(
 
   const rate = getBudgetAllocation(input)!;
 
-  const foodCostThreshold = budget * rate.FOOD;
-  const attractionCostThreshold = budget * rate.ATTRACTION;
+  const foodCostThreshold = (budget * rate.FOOD) / duration;
+  const attractionCostThreshold = (budget * rate.ATTRACTION) / duration;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
-  const restaurants = pois.filter((poi) => poi.restaurant);
+  const restaurants = pois
+    .filter((poi) => poi.restaurant)
+    .map((poi) => ({ ...poi, averagePrice: calculateAveragePrice(poi.price) }));
   const attractions = pois.filter((poi) => poi.isAttraction);
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
@@ -33,8 +35,10 @@ export function generatePopulation(
     let totalFoodCost = 0;
     let totalAttractionCost = 0;
 
+    let attractionIndex = 0;
+    let restaurantIndex = 0;
+
     const chromosome: PointOfInterest[] = []; // list of destinations within budget and timeframe
-    // const poiIndexes: number[] = [];
 
     while (
       (totalDuration <= desiredTravelHours &&
@@ -42,27 +46,21 @@ export function generatePopulation(
           totalAttractionCost <= attractionCostThreshold)) ||
       chromosome.length < MAX_ITERATIONS
     ) {
-      // disable random selection
-      // const poiIndex = Math.floor(Math.random() * (pois.length - 1));
-      // const poi = pois[poiIndex]!;
+      const attraction = attractions[attractionIndex];
+      const restaurant = restaurants[restaurantIndex];
 
-      const attraction = attractions.shift();
-      const restaurant = restaurants.shift();
-
-      // if restaurants and attractons are empty (no element can be shifted)
       if (!restaurant && !attraction) {
         break;
       }
 
       if (restaurant) {
         if (isFoodIncluded) {
-          const averagePrice = calculateAveragePrice(restaurant.price);
-          const foodCost = averagePrice * travelerCount;
+          const foodCost = restaurant.averagePrice * travelerCount;
           const poiDuration = restaurant.visitDuration / 60;
 
           totalFoodCost += foodCost;
           totalDuration += poiDuration;
-          // poiIndexes.push(poiIndex);
+          restaurantIndex++;
           chromosome.push(restaurant);
         }
       }
@@ -73,7 +71,7 @@ export function generatePopulation(
 
         totalAttractionCost += attractionCost;
         totalDuration += poiDuration;
-        // poiIndexes.push(poiIndex);
+        attractionIndex++;
         chromosome.push(attraction);
       }
 
