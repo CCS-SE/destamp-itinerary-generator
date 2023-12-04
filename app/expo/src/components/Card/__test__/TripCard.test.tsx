@@ -62,8 +62,7 @@ describe('Trip Card', () => {
     const tripMenuData = tripMenuList.props.data;
 
     expect(tripMenuData[0].title).toBe('View trip details');
-    expect(tripMenuData[1].title).toBe('Share trip');
-    expect(tripMenuData[2].title).toBe('Regenerate trip');
-    expect(tripMenuData[3].title).toBe('Delete trip');
+    expect(tripMenuData[1].title).toBe('Regenerate trip');
+    expect(tripMenuData[2].title).toBe('Delete trip');
   });
 });

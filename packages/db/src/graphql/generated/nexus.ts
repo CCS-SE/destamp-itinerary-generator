@@ -382,6 +382,7 @@ export interface NexusGenFieldTypes {
     deletePoi: NexusGenRootTypes['Poi']; // Poi!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
     editUser: NexusGenRootTypes['User']; // User!
+    regenerateTrip: NexusGenRootTypes['Trip']; // Trip!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
   OperatingHour: {
@@ -467,6 +468,7 @@ export interface NexusGenFieldTypes {
     title: string; // String!
     travelSize: NexusGenEnums['TravelSize']; // TravelSize!
     travelerCount: number; // Int!
+    tripPreference: NexusGenRootTypes['TripPreference'] | null; // TripPreference
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
   TripPreference: {
@@ -561,6 +563,7 @@ export interface NexusGenFieldTypeNames {
     deletePoi: 'Poi';
     deleteTrip: 'Trip';
     editUser: 'User';
+    regenerateTrip: 'Trip';
     updateExpense: 'Expense';
   };
   OperatingHour: {
@@ -646,6 +649,7 @@ export interface NexusGenFieldTypeNames {
     title: 'String';
     travelSize: 'TravelSize';
     travelerCount: 'Int';
+    tripPreference: 'TripPreference';
     updatedAt: 'DateTime';
   };
   TripPreference: {
@@ -717,6 +721,10 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs['EditUserInput']; // EditUserInput!
       userId: string; // String!
+    };
+    regenerateTrip: {
+      // args
+      id: number; // Int!
     };
     updateExpense: {
       // args

@@ -1,4 +1,7 @@
-import { contentBasedFiltering } from '../../../../utils/content-based filtering';
+import {
+  contentBasedFiltering,
+  Preference,
+} from '../../../../utils/content-based filtering';
 import { generateItinerary } from '../../../../utils/ga-operations';
 import {
   assignAccommodation,
@@ -178,4 +181,122 @@ export const deleteTrip = async (id: number, ctx: Context) => {
       id: id,
     },
   });
+};
+
+export const regenerateTrip = async (id: number, ctx: Context) => {
+  try {
+    const pois = await ctx.prisma.pointOfInterest.findMany({
+      select: {
+        ...selectedFields,
+        accommodation: {
+          include: {
+            amenities: true,
+          },
+        },
+      },
+    });
+
+    const trip = await ctx.prisma.trip
+      .findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          tripPreference: true,
+        },
+      })
+      .then((trip) => {
+        if (!trip) throw new Error('Trip not found');
+        return trip;
+      });
+
+    const duration = tripDuration(trip.startDate, trip.endDate);
+
+    const desiredTravelHours = JSON.parse(JSON.stringify(trip.timeSlots)).map(
+      (time: [number, number]) => getDesiredTravelHour(time),
+    ) as number[];
+
+    const filteredPois = contentBasedFiltering(
+      pois,
+      trip.tripPreference as Preference,
+      true,
+    );
+
+    console.log(filteredPois.length);
+
+    const suggestedItineraries = await generateItinerary(
+      trip,
+      filteredPois,
+      duration,
+      desiredTravelHours,
+    );
+
+    const dailyItineraries = await Promise.all(
+      assignAccommodation(
+        suggestedItineraries,
+        trip,
+        filteredPois,
+        duration,
+      ).map(async (itinerary) => {
+        const dailyItinerary = await createDailyItinerary(itinerary, trip);
+        return dailyItinerary;
+      }),
+    );
+
+    await ctx.prisma.expense.deleteMany({
+      where: {
+        tripId: id,
+      },
+    });
+
+    await ctx.prisma.dailyItineraryPoi.deleteMany({
+      where: {
+        dailyItinerary: {
+          tripId: id,
+        },
+      },
+    });
+
+    await ctx.prisma.dailyItinerary.deleteMany({
+      where: {
+        tripId: id,
+      },
+    });
+
+    return await ctx.prisma.trip.update({
+      where: {
+        id: id,
+      },
+      data: {
+        dailyItineraries: {
+          create: dailyItineraries.map((dailyItinerary, index) => ({
+            dayIndex: index,
+            accommodationCost: dailyItinerary.chrom.accommodationCost(),
+            foodCost: multiplyRangeByPeople(
+              dailyItinerary.chrom.foodCostRange(),
+              trip?.travelerCount,
+            ),
+            attractionCost:
+              dailyItinerary.chrom.attractionCost() * trip?.travelerCount,
+            transportationCost: dailyItinerary.travelExpenses,
+            dailyItineraryPois: {
+              create: dailyItinerary.chrom.genes.map((gene, index) => ({
+                order: index,
+                duration: dailyItinerary.travelDurations[index]!,
+                distance: dailyItinerary.travelDistances[index]!,
+                poi: {
+                  connect: {
+                    id: gene.id as string,
+                  },
+                },
+              })),
+            },
+          })),
+        },
+      },
+    });
+  } catch (error) {
+    console.error('Error regenerating trip:', error);
+    throw error;
+  }
 };

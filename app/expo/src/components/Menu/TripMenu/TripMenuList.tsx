@@ -5,7 +5,11 @@ import { useMutation } from '@apollo/client';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
-import { DeleteTripDocument, GetTripsDocument } from '~/graphql/generated';
+import {
+  DeleteTripDocument,
+  GetTripsDocument,
+  RegenerateTripDocument,
+} from '~/graphql/generated';
 import { confirmationAlert } from '~/utils/utils';
 import TripMenuItem from './TripMenuItem';
 
@@ -45,7 +49,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
         },
       ],
       onError: (error) => {
-        console.log('Error', error.message);
+        console.log('Error', error);
       },
     });
   };
@@ -57,6 +61,37 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
       'Delete',
       'Cancel',
       () => handleDeleteTrip(),
+    );
+  };
+
+  const [regenerateTrip] = useMutation(RegenerateTripDocument);
+
+  const handleRegenerateTrip = async () => {
+    await regenerateTrip({
+      variables: {
+        regenerateTripId: id,
+      },
+      refetchQueries: [
+        {
+          query: GetTripsDocument,
+          variables: {
+            userId: user ? user.id : '',
+          },
+        },
+      ],
+      onError: (error) => {
+        console.log('Error', error.message);
+      },
+    });
+  };
+
+  const showRegenerateTripAlert = () => {
+    confirmationAlert(
+      'Regenerate trip',
+      'Are you sure you want to regenerate this trip?',
+      'Confirm',
+      'Cancel',
+      () => handleRegenerateTrip(),
     );
   };
 
@@ -74,16 +109,10 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
       onClick: () => handleViewItineraryDetials(),
     },
     {
-      icon: <Ionicons name="share-outline" color={'#403f3f'} size={24} />,
-      title: 'Share trip',
-      color: '#403f3f',
-      onClick: () => undefined,
-    },
-    {
       icon: <Feather name="repeat" color={'#403f3f'} size={21.5} />,
       title: 'Regenerate trip',
       color: '#403f3f',
-      onClick: () => undefined,
+      onClick: () => showRegenerateTripAlert(),
     },
     {
       icon: <AntDesign name="delete" color={'#FB2E53'} size={22} />,
