@@ -27,7 +27,11 @@ export const assignAccommodation = (
     (budget * budgetRate.ACCOMMODATION) / duration,
   );
 
-  const accommodations = pois.filter((poi) => poi.accommodation);
+  const accommodations = pois.filter(
+    (poi) =>
+      poi.accommodation &&
+      parseFloat(poi.price) <= suggestedAccommodationPricePerDay,
+  );
 
   if (input.isAccommodationIncluded) {
     if (accommodations) {
