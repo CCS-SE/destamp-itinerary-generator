@@ -1,4 +1,4 @@
-import { objectType } from 'nexus';
+import { nullable, objectType } from 'nexus';
 
 import { TravelSize } from '../enum';
 
@@ -43,6 +43,18 @@ const Trip = objectType({
           })
           .dailyItineraries()
           .then((item) => item.sort((a, b) => a.dayIndex - b.dayIndex));
+      },
+    });
+    t.field('tripPreference', {
+      type: nullable('TripPreference'),
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.trip
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .tripPreference();
       },
     });
   },

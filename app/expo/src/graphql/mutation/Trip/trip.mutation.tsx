@@ -16,3 +16,11 @@ export const DeleteTrip = gql(
   }
   `,
 );
+
+export const RegenerateTrip = gql(
+  `mutation RegenerateTrip($regenerateTripId: Int!) {
+    regenerateTrip(id: $regenerateTripId) {
+      id
+    }
+  }`,
+);

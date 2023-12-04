@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Text, TextInput, View, ViewStyle } from 'react-native';
 
 const TimeDurationPicker = () => {
   const [selectedHour, setSelectedHour] = useState('');
@@ -32,14 +32,33 @@ const TimeDurationPicker = () => {
     }
   };
 
+  const containerStyles: ViewStyle = {
+    borderWidth: 1,
+    borderColor: 'transparent',
+    width: 200,
+    shadowColor: '#000',
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    borderRadius: 10,
+    padding: 7,
+    justifyContent: 'center',
+    alignSelf: 'center',
+  };
+
   return (
     <View>
-      <Text style={{ fontFamily: 'Poppins', fontSize: 18 }}>
+      <Text style={{ fontFamily: 'Poppins', fontSize: 15, marginBottom: 15 }}>
         {displayTime()}
       </Text>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={{ fontFamily: 'Poppins', fontSize: 18 }}>Hour: </Text>
 
+      <View style={containerStyles}>
         <TextInput
           style={{ fontFamily: 'Poppins', fontSize: 18 }}
           placeholder="00 "
@@ -48,8 +67,7 @@ const TimeDurationPicker = () => {
           onChangeText={handleHourChange}
           keyboardType="numeric"
         />
-
-        <Text style={{ fontFamily: 'Poppins', fontSize: 18 }}> Minute: </Text>
+        <Text style={{ fontFamily: 'Poppins', fontSize: 18 }}> : </Text>
         <TextInput
           style={{ fontFamily: 'Poppins', fontSize: 18 }}
           placeholder="00 "

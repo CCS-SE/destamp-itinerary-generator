@@ -152,6 +152,7 @@ type Mutation {
   deletePoi(poiId: String!): Poi!
   deleteTrip(id: Int!): Trip!
   editUser(input: EditUserInput!, userId: String!): User!
+  regenerateTrip(id: Int!): Trip!
   updateExpense(data: UpdateExpenseInput!, id: Int!): Expense!
 }
 
@@ -251,6 +252,7 @@ type Trip {
   title: String!
   travelSize: TravelSize!
   travelerCount: Int!
+  tripPreference: TripPreference
   updatedAt: DateTime!
 }
 

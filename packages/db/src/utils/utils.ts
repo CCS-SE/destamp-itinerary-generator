@@ -11,3 +11,14 @@ export function tripDuration(
       )
     : 1;
 }
+
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffledArray = [...array];
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i);
+    const temp = shuffledArray[i];
+    shuffledArray[i] = shuffledArray[j] as T;
+    shuffledArray[j] = temp as T;
+  }
+  return shuffledArray;
+}
