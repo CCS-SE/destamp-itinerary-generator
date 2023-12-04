@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
-import AccommodationPriceRange from '~/components/BusinessOperator/PriceRange/accommodationPriceRange';
+import AccommodationPriceRange from '~/components/BusinessOperator/PriceRange/AccommodationPriceRange';
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';

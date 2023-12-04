@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 
 import AtmosphereSelection from '~/components/BusinessOperator/AtmosphereSelection';
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
-import RestaurantPriceRange from '~/components/BusinessOperator/PriceRange/restaurantPriceRange';
+import RestaurantPriceRange from '~/components/BusinessOperator/PriceRange/RestaurantPriceRange';
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 
