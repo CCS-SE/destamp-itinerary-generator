@@ -66,7 +66,7 @@ const BusinessListScreen = () => {
       </TouchableOpacity>
       <AbsoluteButton
         title="+"
-        onPress={() => router.push('/business/create/establishmentType')}
+        onPress={() => router.push('/business/create/overview')}
         style={{ bottom: 40 }}
       />
     </View>
