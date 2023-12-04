@@ -1356,42 +1356,14 @@ export type GetDailyItineraryPoiDetailsQuery = {
       isClosed: boolean;
       is24Hours: boolean;
     }>;
-  };
-};
-
-export type GetTripInputsQueryVariables = Exact<{
-  tripId: Scalars['Int']['input'];
-}>;
-
-export type GetTripInputsQuery = {
-  __typename?: 'Query';
-  trip: {
-    __typename?: 'Trip';
-    id: number;
-    title: string;
-    budget: number;
-    destination: string;
-    travelSize: TravelSize;
-    travelerCount: number;
-    isAccommodationIncluded: boolean;
-    isFoodIncluded: boolean;
-    isTransportationIncluded: boolean;
-    startingLocation: any;
-    timeSlots: any;
-    startDate: any;
-    endDate: any;
-    tripPreference?: {
-      __typename?: 'TripPreference';
-      id: number;
-      tripId: number;
-      accommodationType: string;
-      activities: any;
-      amenities: Array<string>;
-      diningStyles: Array<string>;
-      cuisines: Array<string>;
+    accommodation?: {
+      __typename?: 'Accommodation';
+      amenities: Array<{ __typename?: 'Amenity'; name: string }>;
     } | null;
-    dailyItineraries: Array<{ __typename?: 'DailyItinerary'; id: number }>;
-    expenses: Array<{ __typename?: 'Expense'; id: number }>;
+    restaurant?: {
+      __typename?: 'Restaurant';
+      atmospheres: Array<string>;
+    } | null;
   };
 };
 
@@ -2800,6 +2772,41 @@ export const GetDailyItineraryPoiDetailsDocument = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'accommodation' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'amenities' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'restaurant' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'atmospheres' },
+                      },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -2811,135 +2818,6 @@ export const GetDailyItineraryPoiDetailsDocument = {
   GetDailyItineraryPoiDetailsQuery,
   GetDailyItineraryPoiDetailsQueryVariables
 >;
-export const GetTripInputsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetTripInputs' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'tripId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'trip' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'id' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'tripId' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'tripPreference' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'tripId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'accommodationType' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'activities' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'amenities' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'diningStyles' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'cuisines' },
-                      },
-                    ],
-                  },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'budget' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'destination' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'travelSize' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'travelerCount' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'isAccommodationIncluded' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'isFoodIncluded' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'isTransportationIncluded' },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'startingLocation' },
-                },
-                { kind: 'Field', name: { kind: 'Name', value: 'timeSlots' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'dailyItineraries' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'expenses' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode<GetTripInputsQuery, GetTripInputsQueryVariables>;
 export const GetUserInfoDocument = {
   kind: 'Document',
   definitions: [

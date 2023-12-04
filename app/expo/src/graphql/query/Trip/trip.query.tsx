@@ -105,6 +105,14 @@ export const GetDailyItineraryPoiDetailsQuery = gql(
         isClosed
         is24Hours
       }
+      accommodation {
+        amenities {
+          name
+        }
+      }
+      restaurant {
+        atmospheres
+      }
     }
   }
   `,
