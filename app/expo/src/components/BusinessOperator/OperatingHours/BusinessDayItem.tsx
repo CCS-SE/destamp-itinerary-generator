@@ -10,11 +10,7 @@ interface BusinessDayItemProps {
   // onDelete: (id: number) => void;
 }
 
-const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
-  day,
-  // id,
-  // onDelete,
-}) => {
+const BusinessDayItem: React.FC<BusinessDayItemProps> = ({ day }) => {
   const [selectedStatus, setSelectedStatus] = React.useState<string | null>(
     null,
   );
@@ -23,9 +19,6 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
     console.log('Selected Status:', status);
     setSelectedStatus(status);
   };
-  // const handleDelete = () => {
-  //   onDelete(id);
-  // };
   return (
     <View
       style={{

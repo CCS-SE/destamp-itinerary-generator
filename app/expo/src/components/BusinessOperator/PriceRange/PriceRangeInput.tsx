@@ -48,13 +48,14 @@ const PriceRangeInput = ({
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 1,
+    elevation: 3,
   };
 
   return (
     <View style={{ marginBottom: 40 }}>
       <View
+        className=" h-[60] w-[70] items-center justify-center rounded-lg bg-gray-100"
         style={{
           alignItems: 'center',
           borderRadius: 10,
@@ -62,7 +63,7 @@ const PriceRangeInput = ({
           height: 70,
           padding: 10,
           flexDirection: 'row',
-          backgroundColor: '#EB4586',
+          // backgroundColor: '#FF8439',
           shadowColor: '#000',
           shadowOffset: {
             width: 0,
@@ -70,7 +71,7 @@ const PriceRangeInput = ({
           },
           shadowOpacity: 0.25,
           shadowRadius: 3.84,
-          elevation: 5,
+          elevation: 3,
         }}
       >
         <Text
@@ -80,7 +81,7 @@ const PriceRangeInput = ({
             fontWeight: 'bold',
             marginRight: 20,
             paddingLeft: 8,
-            color: 'white',
+            color: 'gray',
           }}
         >
           ₱
@@ -101,7 +102,7 @@ const PriceRangeInput = ({
             onChangeText={handleMinPriceChange}
             onBlur={handleBlur}
           />
-          <Text style={{ fontSize: 25, marginHorizontal: 5, color: 'white' }}>
+          <Text style={{ fontSize: 25, marginHorizontal: 5, color: 'gray' }}>
             -
           </Text>
           <TextInput

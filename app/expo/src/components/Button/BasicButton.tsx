@@ -10,7 +10,11 @@ const BasicButton = ({
 }) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={onPress}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onPress}
+        activeOpacity={0.9}
+      >
         <Text style={styles.title}>{title} </Text>
       </TouchableOpacity>
     </View>
