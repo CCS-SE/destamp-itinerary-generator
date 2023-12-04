@@ -19,13 +19,13 @@ export const GetUserInfoQuery = gql(
   } `,
 );
 
-export const GetStampQuery = gql(
-  `query GetStamp($stampId: Int!) {
-    stamp(stampId: $stampId) {
+export const GetUnclaimedStampsQuery = gql(
+  `query GetUnclaimedStamps($userId: String!) {
+    unclaimedStamps(userId: $userId) {
       id
       title
-      dateCollected
       image {
+        id
         url
       }
     }

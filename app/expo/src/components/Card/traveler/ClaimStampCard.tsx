@@ -15,9 +15,9 @@ import {
 } from '~/graphql/generated';
 
 interface ClaimStampCardProps {
-  id: number;
-  url: string;
-  title: string;
+  id?: number;
+  url?: string;
+  title?: string;
 }
 
 function ClaimStampCard({ id, url, title }: ClaimStampCardProps) {
@@ -36,7 +36,7 @@ function ClaimStampCard({ id, url, title }: ClaimStampCardProps) {
     setIsSubmitting(true);
     await claimStamp({
       variables: {
-        stampId: id,
+        stampId: id || 0,
         userId: user ? user.id : '',
       },
       onCompleted: () => {
@@ -53,7 +53,6 @@ function ClaimStampCard({ id, url, title }: ClaimStampCardProps) {
           query: GetTripsDocument,
           variables: {
             userId: user ? user.id : '',
-            stampId: id,
           },
         },
         {

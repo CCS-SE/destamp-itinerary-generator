@@ -285,19 +285,13 @@ export type Query = {
   __typename?: 'Query';
   amenities: Array<Amenity>;
   categories: Array<Category>;
-  isStampedClaimed: Scalars['Boolean']['output'];
   poi: Poi;
   pois: Array<Poi>;
   restaurantCategoriesMoreThanFive: Array<Category>;
-  stamp: Stamp;
   trip: Trip;
   trips: Array<Trip>;
+  unclaimedStamps: Array<Stamp>;
   user: User;
-};
-
-export type QueryIsStampedClaimedArgs = {
-  stampId: Scalars['Int']['input'];
-  userId: Scalars['String']['input'];
 };
 
 export type QueryPoiArgs = {
@@ -308,15 +302,15 @@ export type QueryPoisArgs = {
   userId: Scalars['String']['input'];
 };
 
-export type QueryStampArgs = {
-  stampId: Scalars['Int']['input'];
-};
-
 export type QueryTripArgs = {
   id: Scalars['Int']['input'];
 };
 
 export type QueryTripsArgs = {
+  userId: Scalars['String']['input'];
+};
+
+export type QueryUnclaimedStampsArgs = {
   userId: Scalars['String']['input'];
 };
 
@@ -875,12 +869,6 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
-  isStampedClaimed?: Resolver<
-    ResolversTypes['Boolean'],
-    ParentType,
-    ContextType,
-    RequireFields<QueryIsStampedClaimedArgs, 'stampId' | 'userId'>
-  >;
   poi?: Resolver<
     ResolversTypes['Poi'],
     ParentType,
@@ -898,12 +886,6 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
-  stamp?: Resolver<
-    ResolversTypes['Stamp'],
-    ParentType,
-    ContextType,
-    RequireFields<QueryStampArgs, 'stampId'>
-  >;
   trip?: Resolver<
     ResolversTypes['Trip'],
     ParentType,
@@ -915,6 +897,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryTripsArgs, 'userId'>
+  >;
+  unclaimedStamps?: Resolver<
+    Array<ResolversTypes['Stamp']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUnclaimedStampsArgs, 'userId'>
   >;
   user?: Resolver<
     ResolversTypes['User'],
@@ -1227,12 +1215,10 @@ export type GetPoiFeaturesQuery = {
 
 export type GetTripsQueryVariables = Exact<{
   userId: Scalars['String']['input'];
-  stampId: Scalars['Int']['input'];
 }>;
 
 export type GetTripsQuery = {
   __typename?: 'Query';
-  isStampedClaimed: boolean;
   trips: Array<{
     __typename?: 'Trip';
     id: number;
@@ -1369,19 +1355,18 @@ export type GetUserInfoQuery = {
   };
 };
 
-export type GetStampQueryVariables = Exact<{
-  stampId: Scalars['Int']['input'];
+export type GetUnclaimedStampsQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
 }>;
 
-export type GetStampQuery = {
+export type GetUnclaimedStampsQuery = {
   __typename?: 'Query';
-  stamp: {
+  unclaimedStamps: Array<{
     __typename?: 'Stamp';
     id: number;
     title: string;
-    dateCollected: any;
-    image: { __typename?: 'Image'; url: string };
-  };
+    image: { __typename?: 'Image'; id: string; url: string };
+  }>;
 };
 
 export const CreateExpenseDocument = {
@@ -2270,17 +2255,6 @@ export const GetTripsDocument = {
             },
           },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'stampId' },
-          },
-          type: {
-            kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-          },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -2314,28 +2288,6 @@ export const GetTripsDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'travelSize' } },
               ],
             },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'isStampedClaimed' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'userId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'userId' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'stampId' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'stampId' },
-                },
-              },
-            ],
           },
         ],
       },
@@ -2828,23 +2780,26 @@ export const GetUserInfoDocument = {
     },
   ],
 } as unknown as DocumentNode<GetUserInfoQuery, GetUserInfoQueryVariables>;
-export const GetStampDocument = {
+export const GetUnclaimedStampsDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetStamp' },
+      name: { kind: 'Name', value: 'GetUnclaimedStamps' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'stampId' },
+            name: { kind: 'Name', value: 'userId' },
           },
           type: {
             kind: 'NonNullType',
-            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
           },
         },
       ],
@@ -2853,14 +2808,14 @@ export const GetStampDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'stamp' },
+            name: { kind: 'Name', value: 'unclaimedStamps' },
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'stampId' },
+                name: { kind: 'Name', value: 'userId' },
                 value: {
                   kind: 'Variable',
-                  name: { kind: 'Name', value: 'stampId' },
+                  name: { kind: 'Name', value: 'userId' },
                 },
               },
             ],
@@ -2871,14 +2826,11 @@ export const GetStampDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'dateCollected' },
-                },
-                {
-                  kind: 'Field',
                   name: { kind: 'Name', value: 'image' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
                     ],
                   },
@@ -2890,4 +2842,7 @@ export const GetStampDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetStampQuery, GetStampQueryVariables>;
+} as unknown as DocumentNode<
+  GetUnclaimedStampsQuery,
+  GetUnclaimedStampsQueryVariables
+>;
