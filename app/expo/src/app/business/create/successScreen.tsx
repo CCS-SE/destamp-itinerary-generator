@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Stack } from 'expo-router';
 
-import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import GradientButton from '~/components/Button/GradientButton';
 import Logo from '../../../../assets/images/destampp-logo.svg';
 
