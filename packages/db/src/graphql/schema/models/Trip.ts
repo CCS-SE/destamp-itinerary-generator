@@ -1,4 +1,4 @@
-import { nonNull, nullable, objectType } from 'nexus';
+import { nullable, objectType } from 'nexus';
 
 import { TravelSize } from '../enum';
 
