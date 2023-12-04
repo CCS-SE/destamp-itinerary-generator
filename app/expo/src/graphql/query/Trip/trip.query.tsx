@@ -110,37 +110,3 @@ export const GetDailyItineraryPoiDetailsQuery = gql(
   }
   `,
 );
-
-export const GetTripInputs = gql(`
-query GetTripInputs($tripId: Int!) {
-  trip(id: $tripId) {
-    tripPreference {
-      id
-      tripId
-      accommodationType
-      activities
-      amenities
-      diningStyles
-      cuisines
-    }
-    id
-    title
-    budget
-    destination
-    travelSize
-    travelerCount
-    isAccommodationIncluded
-    isFoodIncluded
-    isTransportationIncluded
-    startingLocation
-    timeSlots
-    startDate
-    endDate
-    dailyItineraries {
-      id
-    }
-    expenses {
-      id
-    }
-  }
-}`);
