@@ -16,10 +16,7 @@ export default function ReviewBusiness() {
   return (
     <SafeAreaView className="flex-1 bg-white p-2" edges={['bottom']}>
       <View>
-        <ScrollView
-          // className="self-center"
-          showsVerticalScrollIndicator={false}
-        >
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View>
             <Stack.Screen
               options={{
@@ -39,7 +36,7 @@ export default function ReviewBusiness() {
             />
           </View>
 
-          <View className="mt-7">
+          <View style={{ margin: 20 }}>
             <Text className="font-poppins text-xl text-orange-600">
               Basic Information
             </Text>
@@ -82,7 +79,7 @@ export default function ReviewBusiness() {
               isEditabble
             />
           </View>
-          <View className="mt-7">
+          <View style={{ margin: 20 }}>
             <Text className="font-poppins text-xl text-orange-600">
               Price Range
             </Text>
@@ -101,7 +98,7 @@ export default function ReviewBusiness() {
               isEditabble
             />
           </View>
-          <View className="mt-7">
+          <View style={{ margin: 20 }}>
             <Text className="font-poppins text-xl text-orange-600">
               Establishment Type
             </Text>
@@ -121,7 +118,7 @@ export default function ReviewBusiness() {
             />
           </View>
           <GradientButton
-            onPress={() => router.push('/business/create/verificationPage')}
+            onPress={() => router.push('/business/create/successScreen')}
             title={'Create Business'}
             isSubmitting={false}
           />

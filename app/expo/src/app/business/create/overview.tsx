@@ -4,11 +4,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import {
-  AntDesign,
   Entypo,
   FontAwesome,
   FontAwesome5,
-  Foundation,
   Ionicons,
   MaterialIcons,
 } from '@expo/vector-icons';
@@ -31,27 +29,16 @@ const OverviewPage = () => {
       <View style={{ alignItems: 'center', margin: 10 }}>
         <SafeAreaView>
           <ScrollView showsVerticalScrollIndicator={false}>
-            <View
+            <Text
               style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                paddingLeft: 30,
-                paddingRight: 30,
-                marginBottom: 10,
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                color: '#FF8439',
+                paddingLeft: 10,
               }}
             >
-              <Foundation name="torso-business" size={60} color="#FF8439" />
-              <Text
-                style={{
-                  fontFamily: 'Poppins',
-                  fontSize: 25,
-                  color: '#FF8439',
-                  paddingLeft: 20,
-                }}
-              >
-                Get started on your business journey!
-              </Text>
-            </View>
+              Get started on your journey!
+            </Text>
 
             <View style={{ margin: 5 }}>
               <Text style={subTitleFontStyle}>
@@ -128,23 +115,6 @@ const OverviewPage = () => {
                 permit.
               </Text>
               {/* <View> */}
-              <OverviewTag
-                content={'VALID ID'}
-                icon={<AntDesign name="idcard" size={24} color="white" />}
-              />
-              <Text
-                style={{
-                  fontFamily: 'Poppins',
-                  fontSize: 13,
-                  flex: 1,
-                  padding: 10,
-                  color: '#FF8439',
-                }}
-              >
-                National ID, Driver's Liscence, Passport, UMID, GSIS, Phil
-                Health, and a like
-              </Text>
-              {/* </View> */}
 
               <OverviewTag
                 content={'Business Permit'}
