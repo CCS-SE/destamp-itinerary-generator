@@ -1,6 +1,6 @@
 import { intArg, mutationField, nonNull, stringArg } from 'nexus';
 
-import { createTrip, deleteTrip } from './Trip.resolver';
+import { createTrip, deleteTrip, regenerateTrip } from './Trip.resolver';
 
 export const CreateTrip = mutationField('createTrip', {
   type: 'Trip',
@@ -19,4 +19,12 @@ export const DeleteTrip = mutationField('deleteTrip', {
     id: nonNull(intArg()),
   },
   resolve: (_, args, ctx) => deleteTrip(args.id, ctx),
+});
+
+export const RegenerateTrip = mutationField('regenerateTrip', {
+  type: 'Trip',
+  args: {
+    id: nonNull(intArg()),
+  },
+  resolve: (_, args, ctx) => regenerateTrip(args.id, ctx),
 });

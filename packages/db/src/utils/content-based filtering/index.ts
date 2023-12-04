@@ -1,6 +1,7 @@
 /* eslint-disable indent */
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
+import { shuffleArray } from '../utils';
 
 interface Activities {
   Sightseeing?: number;
@@ -11,7 +12,7 @@ interface Activities {
   Landmarks?: number;
 }
 
-interface Preference {
+export interface Preference {
   accommodationType: string;
   amenities: string[];
   activities: Activities;
@@ -74,6 +75,7 @@ const formatDiningStyleName = (diningStyles: string[]) => {
 export function contentBasedFiltering(
   places: PointOfInterest[],
   preference: Preference,
+  forRegenerate: boolean = false,
 ): PointOfInterestWithScore[] {
   const nonZeroActivities: string[] = Object.entries(preference.activities)
     .filter(([, value]) => value !== undefined && value !== 0)
@@ -123,6 +125,10 @@ export function contentBasedFiltering(
           .map((category) => category.name)
           .includes(preference.accommodationType),
   );
+
+  if (forRegenerate) {
+    return shuffleArray(placesFilteredByAccommodationType);
+  }
   return placesFilteredByAccommodationType;
 }
 
