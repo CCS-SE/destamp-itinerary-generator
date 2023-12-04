@@ -5,8 +5,8 @@ import { router } from 'expo-router';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import Questions from '~/components/BusinessOperator/Question';
-import BasicButton from '~/components/Button/BasicButton';
 import EstablishmentTypeButton from '~/components/Button/EstablishmentTypeButton';
+import StepperButton from '~/components/Button/StepperButton';
 
 const EstablishmentType = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -32,9 +32,9 @@ const EstablishmentType = () => {
   };
 
   return (
-    <View>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <CreateBusinessHeader title={'Establishment Type'} />
-      <View style={{ alignItems: 'center' }}>
+      <View style={{ alignItems: 'center', marginBottom: 70 }}>
         <SafeAreaView>
           <View style={{ marginBottom: 30 }}>
             <Questions question={'What type of place is this?'} />
@@ -54,9 +54,9 @@ const EstablishmentType = () => {
               isSelected={selectedType === 'Restaurant'}
             />
           </View>
-          <BasicButton title={'Continue'} onPress={handleContinue} />
         </SafeAreaView>
       </View>
+      <StepperButton onPress={handleContinue} label={'Continue'} />
     </View>
   );
 };

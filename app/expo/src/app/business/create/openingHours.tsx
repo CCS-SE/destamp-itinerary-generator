@@ -8,7 +8,7 @@ import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import BusinessDayItem from '~/components/BusinessOperator/OperatingHours/BusinessDayItem';
 import TimePicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
 import Question from '~/components/BusinessOperator/Question';
-import BasicButton from '~/components/Button/BasicButton';
+import StepperButton from '~/components/Button/StepperButton';
 import { days } from '~/constant/constant';
 
 interface BusinessDay {
@@ -77,10 +77,8 @@ const BusinessOpeningHours: React.FC = () => {
       <SafeAreaView>
         <CreateBusinessHeader title={'Opening Hours'} />
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Question question={'Opening Hours'} />
           <TouchableOpacity onPress={addBusinessDay}>
             <Text>
-              {' '}
               <MaterialIcons
                 name="add-circle-outline"
                 size={24}
@@ -96,21 +94,22 @@ const BusinessOpeningHours: React.FC = () => {
           {businessDays.map((item) => (
             <BusinessDayItem key={item.id} day={item.day} />
           ))}
-          <View style={{ marginTop: 20 }}>
-            <Question question={'Recommended Visit Duration'} />
-            <TimePicker />
-            <BasicButton
-              title={'Next'}
-              onPress={() => {
-                if (validateDays()) {
-                  router.push('/business/create/priceRange');
-                } else {
-                  console.error('Please select at least one business day');
-                }
-              }}
-            />
-          </View>
+
+          <Question question={'Recommended Visit Duration'} />
+          <TimePicker />
         </ScrollView>
+        <View className="-top-4">
+          <StepperButton
+            onPress={() => {
+              if (validateDays()) {
+                router.push('/business/create/establishmentType');
+              } else {
+                console.error('Please select at least one business day');
+              }
+            }}
+            label={'Next'}
+          />
+        </View>
       </SafeAreaView>
     </View>
   );

@@ -8,7 +8,7 @@ import axios from 'axios';
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import Map from '~/components/BusinessOperator/Map';
 import Question from '~/components/BusinessOperator/Question';
-import BasicButton from '~/components/Button/BasicButton';
+import StepperButton from '~/components/Button/StepperButton';
 import CustomContainer from '~/components/Container/CustomContainer';
 
 interface FormData {
@@ -100,9 +100,7 @@ const BusinessBasicInformation: React.FC = () => {
       errors.businessName = 'Business Name cannot exceed 10 words';
     }
 
-    if (!formData.description.trim()) {
-      errors.description = 'Description is required';
-    } else if (formData.description.trim().length > description_maxCharacters) {
+    if (formData.description.trim().length > description_maxCharacters) {
       errors.description = 'Description cannot exceed 2000 characters';
     }
 
@@ -119,7 +117,6 @@ const BusinessBasicInformation: React.FC = () => {
 
   const handleNext = (): void => {
     if (validateForm()) {
-      // Assuming router.push is a valid function, replace with your actual routing logic
       router.push('/business/create/openingHours');
     }
   };
@@ -128,7 +125,7 @@ const BusinessBasicInformation: React.FC = () => {
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <CreateBusinessHeader title={'Basic Information'} />
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Question question={'About'} />
           <CustomContainer
             placeholder={'Business Name'}
@@ -177,7 +174,7 @@ const BusinessBasicInformation: React.FC = () => {
             businessName={formData.businessName}
             address={formData.address}
           />
-          <BasicButton title={'Next'} onPress={handleNext} />
+          <StepperButton onPress={handleNext} label={'Next'} />
         </ScrollView>
       </SafeAreaView>
     </View>

@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
+import { useQuery } from '@apollo/client';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
+import AccommodationPriceRange from '~/components/BusinessOperator/PriceRange/accommodationPriceRange';
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';
 import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
+import { GetPoiFeaturesDocument } from '~/graphql/generated';
+import useFormstore from '~/store/useFormStore';
 
 const AccommodationFacilities = () => {
   const [selectedAccommodation, setSelectedAccommodation] =
@@ -22,15 +26,34 @@ const AccommodationFacilities = () => {
       );
       return;
     }
-    router.push('/business/create/verificationPage');
+    console.log(amenities);
+    router.push('/business/create/uploadPhotos');
   };
+
+  const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
+    [],
+  );
+
+  const { preferenceData } = useFormstore();
+
+  const { data } = useQuery(GetPoiFeaturesDocument);
+  useEffect(() => {
+    if (data) {
+      setAmenities(
+        data.amenities.map((amenity) => ({
+          key: amenity.id,
+          value: amenity.name,
+        })),
+      );
+    }
+  }, [data]);
 
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <CreateBusinessHeader title={'Accom Facilities'} />
       <SafeAreaView>
         <ScrollView>
-          <View style={{ padding: 20 }}>
+          <View style={{ padding: 20, margin: 10, alignContent: 'center' }}>
             <Question question={'Select Category'} />
             <View style={{ alignItems: 'center', marginBottom: 30 }}>
               <AccommodationSelection
@@ -43,10 +66,11 @@ const AccommodationFacilities = () => {
             <View style={{ justifyContent: 'center', margin: 10 }}>
               <AmenitiesSelection
                 onOptionChange={(options) => setSelectedAmenities(options)}
-                initialSelectedOptions={selectedAmenities}
+                initialSelectedOptions={preferenceData.amenities}
                 data={[]}
               />
             </View>
+            <AccommodationPriceRange />
 
             <BasicButton title={'Save'} onPress={handleSave} />
           </View>

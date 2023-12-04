@@ -16,12 +16,9 @@ const AttractionActivities = () => {
 
   const handleSave = () => {
     if (Object.keys(selectedActivities).length === 0) {
-      // Display an alert or any other feedback to the user
       Alert.alert('Please select at least one activity.');
       return;
     }
-
-    // Continue with the save logic
     router.push('/business/create/verificationPage');
   };
 
