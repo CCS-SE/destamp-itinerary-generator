@@ -20,6 +20,7 @@ const AdmissionFee: React.FC<AdmissionFeeProps> = ({
   return (
     <View>
       <View
+        className=" h-[60] w-[70] items-center justify-center rounded-lg bg-gray-100"
         style={{
           alignItems: 'center',
           borderColor: '#EB4586',
@@ -28,7 +29,15 @@ const AdmissionFee: React.FC<AdmissionFeeProps> = ({
           padding: 10,
           margin: 10,
           flexDirection: 'row',
-          backgroundColor: '#EB4586',
+          height: 80,
+          shadowColor: '#000',
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 1,
         }}
       >
         <Text
@@ -37,7 +46,7 @@ const AdmissionFee: React.FC<AdmissionFeeProps> = ({
             fontWeight: 'bold',
             marginRight: 15,
             paddingLeft: 8,
-            color: 'white',
+            color: 'gray',
           }}
         >
           ₱
@@ -56,6 +65,14 @@ const AdmissionFee: React.FC<AdmissionFeeProps> = ({
               fontFamily: 'Poppins',
               fontSize: 18,
               textAlign: 'center',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 1,
             }}
             keyboardType="numeric"
             value={admissionFee}

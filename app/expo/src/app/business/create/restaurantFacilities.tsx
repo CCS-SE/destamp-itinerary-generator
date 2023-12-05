@@ -4,9 +4,9 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
-import AtmosphereSelection from '~/components/BusinessOperator/AtmosphereSelection';
+import AtmosphereSelection from '~/components/BusinessOperator/EstablishmentTypes/AtmosphereSelection';
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
-import RestaurantPriceRange from '~/components/BusinessOperator/PriceRange/RestaurantPriceRange';
+import PriceRange from '~/components/BusinessOperator/PriceRange/PriceRange';
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 
@@ -36,7 +36,7 @@ const RestaurantFacilities = () => {
               initialSelectedOptions={selectedAtmosphere}
             />
 
-            <RestaurantPriceRange />
+            <PriceRange />
 
             <BasicButton title={'Save'} onPress={handleSave} />
           </View>
