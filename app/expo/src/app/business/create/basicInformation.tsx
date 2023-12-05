@@ -11,6 +11,7 @@ import Question from '~/components/BusinessOperator/Question';
 import StepperButton from '~/components/Button/StepperButton';
 import CustomContainer from '~/components/Container/CustomContainer';
 
+// Define the form data structure
 interface FormData {
   latitude: string;
   longitude: string;
@@ -21,6 +22,7 @@ interface FormData {
 }
 
 const BusinessBasicInformation: React.FC = () => {
+  // State for form data and validation errors
   const [formData, setFormData] = useState<FormData>({
     latitude: '',
     longitude: '',
@@ -29,32 +31,40 @@ const BusinessBasicInformation: React.FC = () => {
     description: '',
     contactNumber: '',
   });
+
   const [validationErrors, setValidationErrors] = useState<Partial<FormData>>(
     {},
   );
+
+  // Google Maps API key from Constants
   const googleMapsKey = Constants.expoConfig?.extra
     ?.GOOGLE_MAPS_API_KEY as string;
 
+  // Handle input changes in the form
   const handleInputChange = async (
     field: keyof FormData,
     value: string,
   ): Promise<void> => {
-    const trimmedValue = value.trim();
+    // Trim value for all fields except businessName and description
+    const trimmedValue = value;
 
+    // Validation checks for businessName and description
     if (field === 'businessName' && trimmedValue.split(/\s+/).length > 10) {
       setValidationErrors({
         ...validationErrors,
         [field]: 'Exceeded maximum word limit (10 words).',
       });
-    } else if (field === 'description' && trimmedValue.length > 2000) {
+    } else if (field === 'description' && value.length > 1500) {
       setValidationErrors({
         ...validationErrors,
-        [field]: 'Exceeded maximum character limit (2000 characters).',
+        [field]: 'Exceeded maximum character limit (1500 characters).',
       });
     } else {
+      // Update form data and reset validation errors
       setFormData({ ...formData, [field]: trimmedValue });
       setValidationErrors({ ...validationErrors, [field]: '' });
 
+      // Additional logic for handling address (e.g., geocoding)
       if (field === 'address') {
         console.log('Address before API call:', trimmedValue);
 
@@ -84,13 +94,7 @@ const BusinessBasicInformation: React.FC = () => {
     }
   };
 
-  const validatePhoneNumber = (phoneNumber: string): boolean => {
-    const phoneNumberRegex = /^(09|\+?639)\d{9}$/;
-    return phoneNumberRegex.test(phoneNumber);
-  };
-
-  const description_maxCharacters = 2000;
-
+  // Validate the entire form
   const validateForm = (): boolean => {
     const errors: Partial<FormData> = {};
 
@@ -100,8 +104,8 @@ const BusinessBasicInformation: React.FC = () => {
       errors.businessName = 'Business Name cannot exceed 10 words';
     }
 
-    if (formData.description.trim().length > description_maxCharacters) {
-      errors.description = 'Description cannot exceed 2000 characters';
+    if (formData.description.trim().length > 1500) {
+      errors.description = 'Description cannot exceed 1500 characters';
     }
 
     if (!formData.contactNumber.trim()) {
@@ -110,28 +114,41 @@ const BusinessBasicInformation: React.FC = () => {
       errors.contactNumber = 'Invalid phone number format';
     }
 
+    // Update validation errors state
     setValidationErrors(errors);
 
+    // Return true if there are no errors, indicating the form is valid
     return Object.keys(errors).length === 0;
   };
 
+  // Validate phone number format
+  const validatePhoneNumber = (phoneNumber: string): boolean => {
+    const phoneNumberRegex = /^(09|\+?639)\d{9}$/;
+    return phoneNumberRegex.test(phoneNumber);
+  };
+
+  // Handle the "Next" button click
   const handleNext = (): void => {
+    // If the form is valid, navigate to the next step
     if (validateForm()) {
       router.push('/business/create/openingHours');
     }
   };
 
+  // Render the component
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <CreateBusinessHeader title={'Basic Information'} />
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView showsVerticalScrollIndicator={false}>
+          {/* Render form sections */}
           <Question question={'About'} />
           <CustomContainer
             placeholder={'Business Name'}
             width={300}
             value={formData.businessName}
             onChangeText={(text) => handleInputChange('businessName', text)}
+            multiline={true}
           />
           {validationErrors.businessName && (
             <Text style={{ color: 'red', marginBottom: 10 }}>
