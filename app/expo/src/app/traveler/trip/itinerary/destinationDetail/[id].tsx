@@ -155,7 +155,7 @@ export default function DestinationDetailScreen() {
                     {data.poi.restaurant.atmospheres.map(
                       (atmosphere, index) => (
                         <View
-                          className="rounded-xl  border border-pink-600 px-2 py-1"
+                          className="mr-1.5  rounded-xl border border-pink-600 px-2 py-1"
                           key={index}
                         >
                           <Text className="font-poppins text-[9px] text-pink-600">

@@ -94,6 +94,7 @@ export const createDailyItinerary = async (
 
     distances[0] = 0;
     durations[0] = 0;
+    sortedGenes[0] = pois[0];
 
     while (visited.size < pois.length) {
       const index = Array.from(distances.keys()).find(
