@@ -8,7 +8,7 @@ const TimeDurationPicker = () => {
   useEffect(() => {
     // Set an initial time of 1 hour
     setSelectedHour('1');
-    setSelectedMinute('00');
+    setSelectedMinute('30');
   }, []);
 
   const handleHourChange = (hour: string) => {
@@ -28,7 +28,7 @@ const TimeDurationPicker = () => {
     const hourText =
       selectedHour === '1' || selectedHour === '0' ? 'Hour' : 'Hours';
     const minuteText =
-      selectedMinute === '1' || selectedMinute === '1' ? 'Minute' : 'Minutes';
+      selectedMinute === '1' || selectedMinute === '0' ? 'Minute' : 'Minutes';
 
     if (!selectedHour && !selectedMinute) {
       return '00 Hours and 00 Minutes';
