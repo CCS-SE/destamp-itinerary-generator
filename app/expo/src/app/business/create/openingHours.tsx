@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import BusinessDayItem from '~/components/BusinessOperator/OperatingHours/BusinessDayItem';
-import TimePicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
+import TimeDurationPicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
 import Question from '~/components/BusinessOperator/Question';
 import StepperButton from '~/components/Button/StepperButton';
 import { days } from '~/constant/constant';
@@ -48,68 +48,91 @@ const BusinessOpeningHours: React.FC = () => {
   };
 
   const validateDays = (): boolean => {
-    if (businessDays.length > 0) {
+    if (businessDays.length > 2) {
       setValidationError('');
       return true;
     } else {
-      setValidationError('Please select at least one business day');
+      Alert.alert('Error', 'Please select at least three business days.');
+      setValidationError('Please select at least three business days.');
+
       return false;
     }
   };
-
-  // const deleteBusinessDay = (idToDelete: number) => {
-  //   setBusinessDays((prevBusinessDays) =>
-  //     prevBusinessDays
-  //       .filter((businessDay) => businessDay.id !== idToDelete)
-  //       .sort((a, b) => a.id - b.id),
-  //   );
-  // };
 
   return (
     <View
       style={{
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-between',
         backgroundColor: 'white',
       }}
     >
       <SafeAreaView>
         <CreateBusinessHeader title={'Opening Hours'} />
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ marginLeft: 150 }}>
           <TouchableOpacity onPress={addBusinessDay}>
-            <Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 5,
+                backgroundColor: 'orange',
+                borderRadius: 20,
+                width: 170,
+                height: 30,
+                paddingRight: 13,
+                justifyContent: 'flex-end',
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: 'Poppins',
+                  color: 'white',
+                  fontSize: 12,
+                  padding: 5,
+                }}
+              >
+                ADD BUSINESS DAY
+              </Text>
               <MaterialIcons
                 name="add-circle-outline"
                 size={24}
-                color="orange"
+                color="white"
               />
-            </Text>
+            </View>
           </TouchableOpacity>
         </View>
         {validationError ? (
           <Text style={{ color: 'red' }}>{validationError}</Text>
         ) : null}
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {businessDays.map((item) => (
-            <BusinessDayItem key={item.id} day={item.day} />
+            <BusinessDayItem
+              key={item.id}
+              day={item.day}
+              id={0}
+              onAddDay={function (): void {
+                console.log('Function not implemented.');
+              }}
+            />
           ))}
-
-          <Question question={'Recommended Visit Duration'} />
-          <TimePicker />
+          <View style={{ margin: 10, marginTop: 30 }}>
+            <Question question={'Recommended Visit Duration'} />
+            <TimeDurationPicker />
+            <View style={{ marginTop: 100, paddingBottom: 50 }}>
+              <StepperButton
+                onPress={() => {
+                  if (validateDays()) {
+                    router.push('/business/create/establishmentType');
+                  } else {
+                    console.error('Please select at least three business days');
+                  }
+                }}
+                label={'Next'}
+              />
+            </View>
+          </View>
         </ScrollView>
-        <View className="-top-4">
-          <StepperButton
-            onPress={() => {
-              if (validateDays()) {
-                router.push('/business/create/establishmentType');
-              } else {
-                console.error('Please select at least one business day');
-              }
-            }}
-            label={'Next'}
-          />
-        </View>
       </SafeAreaView>
     </View>
   );

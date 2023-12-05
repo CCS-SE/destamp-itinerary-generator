@@ -12,25 +12,32 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 
 const BusinessTimeSelector = () => {
+  const initialOpeningTime = new Date();
+  initialOpeningTime.setHours(8, 0, 0, 0); // Set initial opening time to 8 AM
+
+  const initialClosingTime = new Date();
+  initialClosingTime.setHours(21, 0, 0, 0); // Set initial closing time to 5 PM
+
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
-  const [startHour, setStartHour] = useState(new Date());
-  const [endHour, setEndHour] = useState(new Date());
+  const [startHour, setStartHour] = useState<Date>(initialOpeningTime);
+  const [endHour, setEndHour] = useState<Date>(initialClosingTime);
 
   const handleStartChange = (
     _event: DateTimePickerEvent,
     selected: Date | undefined,
   ) => {
     if (selected) {
-      const minTimeDifference = 30 * 60 * 1000;
+      const minTimeDifference = 60 * 60 * 1000; // 60 minutes in milliseconds
       const endTime = new Date(selected.getTime() + minTimeDifference);
 
-      if (endTime <= endHour) {
+      // Check if the closing time is at least 1 hour after the opening time
+      if (!endHour || endTime <= endHour) {
         setStartHour(selected);
       } else {
         Alert.alert(
-          'Invalid Closing Hour',
-          'Closing hour should be at least 30 minutes after opening hour.',
+          'Invalid Opening Hour',
+          'Opening hour should be at least 1 hour before closing hour.',
         );
       }
     }
@@ -42,15 +49,16 @@ const BusinessTimeSelector = () => {
     selected: Date | undefined,
   ) => {
     if (selected) {
-      const minTimeDifference = 30 * 60 * 1000;
+      const minTimeDifference = 60 * 60 * 1000; // 60 minutes in milliseconds
       const startTime = new Date(selected.getTime() - minTimeDifference);
 
-      if (startTime >= startHour) {
+      // Check if the opening time is at least 1 hour before the closing time
+      if (!startHour || startHour <= startTime) {
         setEndHour(selected);
       } else {
         Alert.alert(
           'Invalid Closing Hour',
-          'Closing hour should be at least 30 minutes after opening hour.',
+          'Closing hour should be at least 1 hour after opening hour.',
         );
       }
     }
@@ -83,12 +91,12 @@ const BusinessTimeSelector = () => {
   };
 
   return (
-    <View style={{ margin: 5 }}>
+    <View>
       <View style={{ flexDirection: 'row' }}>
         <TouchableWithoutFeedback
           onPress={() => setShowStartPicker(!showStartPicker)}
         >
-          <View style={{ padding: 10 }}>
+          <View style={{ padding: 10, marginRight: 10 }}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
               OPENING HOUR:
             </Text>
@@ -126,7 +134,7 @@ const BusinessTimeSelector = () => {
           <TouchableWithoutFeedback
             onPress={() => setShowEndPicker(!showEndPicker)}
           >
-            <View style={{ padding: 10 }}>
+            <View style={{ padding: 10, marginLeft: 10 }}>
               <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
                 CLOSING HOUR:
               </Text>
