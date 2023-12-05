@@ -204,13 +204,12 @@ type PoiImage {
 type Query {
   amenities: [Amenity!]!
   categories: [Category!]!
-  isStampedClaimed(stampId: Int!, userId: String!): Boolean!
   poi(poiId: String!): Poi!
   pois(userId: String!): [Poi!]!
   restaurantCategoriesMoreThanFive: [Category!]!
-  stamp(stampId: Int!): Stamp!
   trip(id: Int!): Trip!
   trips(userId: String!): [Trip!]!
+  unclaimedStamps(userId: String!): [Stamp!]!
   user(id: String!): User!
 }
 

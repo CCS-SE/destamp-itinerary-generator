@@ -5,7 +5,6 @@ import * as Haptics from 'expo-haptics';
 import { Image } from 'expo-image';
 import { Link } from 'expo-router';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
-import moment from 'moment';
 
 import { blurhash } from '~/constant/constant';
 import {
@@ -16,7 +15,6 @@ import {
 } from '~/utils/utils';
 import TripMenuList from '../../Menu/TripMenu/TripMenuList';
 import BottomHalfModal from '../../Modal/BottomHalfModal';
-import ClaimStampCard from './ClaimStampCard';
 
 interface TripCardProps {
   id: number;
@@ -27,10 +25,6 @@ interface TripCardProps {
   budget: number;
   travelSize: string;
   totalTravellers: number;
-  stampId: number;
-  stampUrl: string;
-  stampTitle: string;
-  isStampClaimed: boolean;
 }
 
 function TripCard({
@@ -41,10 +35,6 @@ function TripCard({
   budget,
   travelSize,
   totalTravellers,
-  stampId,
-  stampUrl,
-  stampTitle,
-  isStampClaimed,
 }: TripCardProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -52,16 +42,11 @@ function TripCard({
     setIsModalVisible(false);
   };
 
-  const isEndOfTrip = moment(new Date()).isSameOrAfter(new Date(endDate));
-
   const cardWidth = Dimensions.get('window').width * 0.9;
 
   const daysDifference = tripDuration(startDate, endDate);
 
-  // check if end of trip or stamp is not yet claimed
-  return isEndOfTrip && !isStampClaimed ? (
-    <ClaimStampCard id={stampId} url={stampUrl} title={stampTitle} />
-  ) : (
+  return (
     <View className="m-3" testID="trip-card">
       <Link href={`/traveler/trip/itinerary/${id}`}>
         <View

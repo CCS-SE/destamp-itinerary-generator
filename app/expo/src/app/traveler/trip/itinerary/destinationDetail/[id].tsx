@@ -110,7 +110,10 @@ export default function DestinationDetailScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView className="-mt-10 flex-1" edges={['left', 'right']}>
         {data && (
-          <ScrollView className="flex-1 rounded-tl-3xl rounded-tr-3xl bg-white p-4">
+          <ScrollView
+            className="flex-1 rounded-tl-3xl rounded-tr-3xl bg-white p-4"
+            showsVerticalScrollIndicator={false}
+          >
             <View
               className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
               style={{ width: screenWidth / 1.13 }}
@@ -134,6 +137,39 @@ export default function DestinationDetailScreen() {
               )}
               {displayCategories(data.poi.categories)}
             </View>
+            {data.poi.restaurant ? (
+              <View
+                className="mt-3 self-center rounded-2xl bg-gray-100 p-2 "
+                style={{ width: screenWidth / 1.13 }}
+              >
+                <View
+                  className="ml-2 flex columns-2"
+                  style={{
+                    width: screenWidth,
+                  }}
+                >
+                  <Text className="mb-2 mt-1 text-base text-gray-600">
+                    Dining Atmosphere
+                  </Text>
+                  <View className="flex flex-row flex-wrap">
+                    {data.poi.restaurant.atmospheres.map(
+                      (atmosphere, index) => (
+                        <View
+                          className="mr-1.5  rounded-xl border border-pink-600 px-2 py-1"
+                          key={index}
+                        >
+                          <Text className="font-poppins text-[9px] text-pink-600">
+                            {atmosphere}
+                          </Text>
+                        </View>
+                      ),
+                    )}
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <></>
+            )}
             <View
               className="mt-3 self-center rounded-2xl bg-gray-100 p-2"
               style={{ width: screenWidth / 1.13 }}
@@ -177,7 +213,7 @@ export default function DestinationDetailScreen() {
                   data.poi.operatingHours.map((oh, index) => (
                     <View key={index} className="mx-3 flex-row">
                       <Text
-                        className={`mx-3 w-14 font-poppins-medium ${
+                        className={` w-16 font-poppins-medium ${
                           oh.day === new Date().getDay()
                             ? 'text-[18px] text-orange-500'
                             : ' text-base text-gray-500'
@@ -217,6 +253,36 @@ export default function DestinationDetailScreen() {
                   No opening hours provided.
                 </Text>
               </View>
+            )}
+            {data.poi.accommodation ? (
+              <View
+                className="mt-3 self-center rounded-2xl bg-gray-100 p-2 "
+                style={{ width: screenWidth / 1.13 }}
+              >
+                <View
+                  className="ml-2 flex columns-2"
+                  style={{
+                    width: screenWidth / 1.2,
+                  }}
+                >
+                  <Text className="mb-2 mt-1 text-base text-gray-600">
+                    Amenities
+                  </Text>
+                  <View className="mb-2 flex flex-row flex-wrap">
+                    {data.poi.accommodation.amenities.map((amenity, index) => (
+                      <Text
+                        className="font-poppins text-xs text-gray-600"
+                        key={index}
+                        style={{ width: '50%' }}
+                      >
+                        • {amenity.name}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            ) : (
+              <></>
             )}
           </ScrollView>
         )}

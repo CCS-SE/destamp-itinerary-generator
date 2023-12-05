@@ -426,13 +426,12 @@ export interface NexusGenFieldTypes {
     // field return type
     amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
-    isStampedClaimed: boolean; // Boolean!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
     restaurantCategoriesMoreThanFive: NexusGenRootTypes['Category'][]; // [Category!]!
-    stamp: NexusGenRootTypes['Stamp']; // Stamp!
     trip: NexusGenRootTypes['Trip']; // Trip!
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+    unclaimedStamps: NexusGenRootTypes['Stamp'][]; // [Stamp!]!
     user: NexusGenRootTypes['User']; // User!
   };
   Restaurant: {
@@ -607,13 +606,12 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     amenities: 'Amenity';
     categories: 'Category';
-    isStampedClaimed: 'Boolean';
     poi: 'Poi';
     pois: 'Poi';
     restaurantCategoriesMoreThanFive: 'Category';
-    stamp: 'Stamp';
     trip: 'Trip';
     trips: 'Trip';
+    unclaimedStamps: 'Stamp';
     user: 'User';
   };
   Restaurant: {
@@ -733,11 +731,6 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
-    isStampedClaimed: {
-      // args
-      stampId: number; // Int!
-      userId: string; // String!
-    };
     poi: {
       // args
       poiId: string; // String!
@@ -746,15 +739,15 @@ export interface NexusGenArgTypes {
       // args
       userId: string; // String!
     };
-    stamp: {
-      // args
-      stampId: number; // Int!
-    };
     trip: {
       // args
       id: number; // Int!
     };
     trips: {
+      // args
+      userId: string; // String!
+    };
+    unclaimedStamps: {
       // args
       userId: string; // String!
     };

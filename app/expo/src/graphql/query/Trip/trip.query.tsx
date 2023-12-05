@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GetTripsQuery = gql(
-  `query GetTrips($userId: String!, $stampId: Int!) {
+  `query GetTrips($userId: String!) {
     trips(userId: $userId) {
       id
       budget
@@ -12,7 +12,6 @@ export const GetTripsQuery = gql(
       travelerCount
       travelSize
     }
-    isStampedClaimed(userId: $userId, stampId: $stampId)
   }
   `,
 );
@@ -105,6 +104,14 @@ export const GetDailyItineraryPoiDetailsQuery = gql(
         closeTime
         isClosed
         is24Hours
+      }
+      accommodation {
+        amenities {
+          name
+        }
+      }
+      restaurant {
+        atmospheres
       }
     }
   }

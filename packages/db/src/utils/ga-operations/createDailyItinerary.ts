@@ -27,7 +27,11 @@ export const assignAccommodation = (
     (budget * budgetRate.ACCOMMODATION) / duration,
   );
 
-  const accommodations = pois.filter((poi) => poi.accommodation);
+  const accommodations = pois.filter(
+    (poi) =>
+      poi.accommodation &&
+      parseFloat(poi.price) <= suggestedAccommodationPricePerDay,
+  );
 
   if (input.isAccommodationIncluded) {
     if (accommodations) {
@@ -79,8 +83,9 @@ export const createDailyItinerary = async (
     const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
     const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
 
-    const distances = new Array(pois.length).fill(Infinity) as number[];
-    const durations = new Array(pois.length).fill(Infinity) as number[];
+    const distances = Array(pois.length).fill(Infinity);
+    const durations = Array(pois.length).fill(Infinity);
+    const sortedGenes = Array(pois.length).fill(null);
 
     const avgDistance = getMatrixAvg(matrix.distances);
     const avgDuration = getMatrixAvg(matrix.durations);
@@ -89,6 +94,7 @@ export const createDailyItinerary = async (
 
     distances[0] = 0;
     durations[0] = 0;
+    sortedGenes[0] = pois[0];
 
     while (visited.size < pois.length) {
       const index = Array.from(distances.keys()).find(
@@ -103,24 +109,18 @@ export const createDailyItinerary = async (
         const distance = matrix.distances[index]![i]!;
         const duration = matrix.durations[index]![i]!;
 
-        if (distance !== null && distance > 0) {
-          const newDistance = distances[index]! + distance;
+        if (!visited.has(i) && distance !== null && distance > 0) {
+          const newDistance = distances[index] + distance;
+          const newDuration = durations[index] + duration;
 
-          if (newDistance < distances[i]!) {
-            distances[i] = distance;
-            durations[i] = duration;
+          if (newDistance < distances[i]) {
+            distances[i] = newDistance;
+            durations[i] = newDuration;
+            sortedGenes[i] = pois[i];
           }
         }
       }
     }
-
-    // sort genes according to shortest path
-    const sortedGenes = pois.sort(
-      (a, b) =>
-        distances[pois.indexOf(a)]! +
-        durations[pois.indexOf(a)]! -
-        (distances[pois.indexOf(b)]! + durations[pois.indexOf(b)]!),
-    );
 
     // removed initialized 0 distance / duration
     distances.shift();
