@@ -27,34 +27,30 @@ export const assignAccommodation = (
     (budget * budgetRate.ACCOMMODATION) / duration,
   );
 
-  const accommodations = pois.filter(
-    (poi) =>
-      poi.accommodation &&
-      parseFloat(poi.price) <= suggestedAccommodationPricePerDay,
-  );
+  const accommodations = pois.filter((poi) => poi.accommodation);
+
+  console.log('accom', accommodations.length);
+
+  const updateDailyItineraries = (
+    dailyItineraries: Chrom[],
+    accommodation: PointOfInterest,
+  ): Chrom[] => {
+    return dailyItineraries.map((itinerary) => {
+      const updatedItinerary = { ...itinerary };
+      updatedItinerary.chrom.genes.unshift(accommodation);
+      return updatedItinerary;
+    });
+  };
 
   if (input.isAccommodationIncluded) {
-    if (accommodations) {
-      const updatedDailyItineraries = dailyItineraries.map((itinerary) => {
-        const updatedItinerary = { ...itinerary };
-
-        // assign the first accommodation
-        updatedItinerary.chrom.genes.unshift(accommodations[0]!);
-        return updatedItinerary;
-      });
-      return updatedDailyItineraries;
-    } else {
-      const accommodationWithNearestPrice = findPoiWithNearestPrice(
-        accommodations,
-        suggestedAccommodationPricePerDay,
-      );
-      const updatedDailyItineraries = dailyItineraries.map((itinerary) => {
-        const updatedItinerary = { ...itinerary };
-        updatedItinerary.chrom.genes.unshift(accommodationWithNearestPrice);
-        return updatedItinerary;
-      });
-      return updatedDailyItineraries;
-    }
+    const accommodationWithNearestPrice = findPoiWithNearestPrice(
+      accommodations,
+      suggestedAccommodationPricePerDay,
+    );
+    return updateDailyItineraries(
+      dailyItineraries,
+      accommodationWithNearestPrice,
+    );
   } else {
     return dailyItineraries;
   }
@@ -78,6 +74,7 @@ export const createDailyItinerary = async (
     : [startingLocation].concat(genes);
 
   console.log(pois.length);
+  console.log(pois);
 
   if (pois.length > 1) {
     const coordinatePairs = getCoordinatesParam(getCoordinates(pois));

@@ -6,9 +6,11 @@ import {
   ScrollView,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Stack, useRouter } from 'expo-router';
 import { useMutation } from '@apollo/client';
@@ -134,6 +136,10 @@ export default function ReviewTripScreen() {
         },
         onCompleted: () => {
           setIsSubmitting(false);
+          ToastAndroid.show(
+            'Itinerary generated successfully',
+            ToastAndroid.SHORT,
+          );
           router.push('/(tabs)');
           reset();
         },
@@ -148,6 +154,7 @@ export default function ReviewTripScreen() {
         onError: (err) => {
           Alert.alert('Error', err.message);
           console.log('Error', err.message);
+          ToastAndroid.show('Failed to generate itinerary', ToastAndroid.SHORT);
           setIsSubmitting(false);
         },
       });
@@ -156,6 +163,12 @@ export default function ReviewTripScreen() {
 
   return (
     <SafeAreaView className="flex-1 bg-white p-2" edges={['bottom']}>
+      <Spinner
+        visible={isSubmitting}
+        overlayColor="rgba(0, 0, 0, 0.50)"
+        textStyle={{ color: 'white' }}
+        textContent={'Generating itinerary...'}
+      />
       <ScrollView className="self-center" showsVerticalScrollIndicator={false}>
         <View>
           <Stack.Screen

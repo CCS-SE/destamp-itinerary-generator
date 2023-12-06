@@ -25,6 +25,8 @@ interface TripCardProps {
   budget: number;
   travelSize: string;
   totalTravellers: number;
+  setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function TripCard({
@@ -35,6 +37,8 @@ function TripCard({
   budget,
   travelSize,
   totalTravellers,
+  setRegenerating,
+  setDeleting,
 }: TripCardProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -83,7 +87,12 @@ function TripCard({
             ></FontAwesome5>
           </TouchableOpacity>
           <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
-            <TripMenuList id={id} onModalClose={onModalClose} />
+            <TripMenuList
+              id={id}
+              onModalClose={onModalClose}
+              setRegenerating={setRegenerating}
+              setDeleting={setDeleting}
+            />
           </BottomHalfModal>
           <View className="absolute left-4 top-40 w-[215] flex-row justify-between">
             <Text
