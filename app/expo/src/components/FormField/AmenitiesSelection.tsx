@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { ViewStyle } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
 interface AmenityProps {
