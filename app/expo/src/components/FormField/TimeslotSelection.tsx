@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { RangeSlider } from '@react-native-assets/slider';
 
 interface PreferedTimeProps {
@@ -56,7 +57,11 @@ export default function TimeslotSelection({
   };
 
   return (
-    <View>
+    <ScrollView
+      className="h-64"
+      showsVerticalScrollIndicator
+      persistentScrollbar={true}
+    >
       {ranges.map((range, index) => (
         <View key={index}>
           <View className="w-[310] flex-row items-center justify-between">
@@ -94,6 +99,6 @@ export default function TimeslotSelection({
           </View>
         </View>
       ))}
-    </View>
+    </ScrollView>
   );
 }
