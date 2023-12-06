@@ -74,7 +74,6 @@ export const createDailyItinerary = async (
     : [startingLocation].concat(genes);
 
   console.log(pois.length);
-  console.log(pois);
 
   if (pois.length > 1) {
     const coordinatePairs = getCoordinatesParam(getCoordinates(pois));

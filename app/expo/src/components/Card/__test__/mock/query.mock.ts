@@ -8,12 +8,14 @@ export const tripCardData = {
   startDate: new Date(2023, 5, 9),
   travelSize: TravelSize.Group,
   imgSrc:
-    'https://gttp.imgix.net/223596/x/0/top-23-iloilo-tourist-spots-home-to-gigantes-islands-amp-old-churches-6.jpg?auto=compress%2Cformat&ch=Width%2CDPR&dpr=1&ixlib=php-3.3.0&w=883',
+    'https://lh5.googleusercontent.com/p/AF1QipM3no0xRNR49mLdCGlRknEdhi7oFruc4gAVyNKc=w675-h390-n-k-no',
   totalTravellers: 10,
   stampId: 1,
   stampUrl: 'test',
   stampTitle: 'Iloilo City',
   isStampClaimed: true,
+  setRegenerating: () => {},
+  setDeleting: () => {},
 };
 
 const id = 123;

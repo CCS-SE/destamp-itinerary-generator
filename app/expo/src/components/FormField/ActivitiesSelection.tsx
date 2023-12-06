@@ -26,7 +26,7 @@ export default function ActivitiesSelection({
 
   return (
     <View>
-      <View className="mt-3 w-[320] flex-row justify-between">
+      <View className="mr-1 mt-3 w-[300] flex-row justify-between">
         {activities.map((activity, i) => (
           <CircularSlider
             key={i}
@@ -40,7 +40,7 @@ export default function ActivitiesSelection({
           />
         ))}
       </View>
-      <View className="mt-3 w-[320] flex-row justify-between">
+      <View className="mr-1 mt-3 w-[300] flex-row justify-between">
         {activities1.map((activity, i) => (
           <CircularSlider
             key={i}
@@ -83,7 +83,7 @@ const activities1 = [
   {
     title: 'Arts',
     value: 'Arts',
-    color: '#EDF075',
+    color: '#C4EF78',
     icon: <Arts height={35} width={37} />,
   },
   {

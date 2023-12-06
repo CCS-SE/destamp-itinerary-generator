@@ -46,8 +46,8 @@ export default function DateRangePicker({
           selectedDayTextColor="#FFFFFF"
           previousTitleStyle={{ fontSize: 14, marginLeft: 18 }}
           nextTitleStyle={{ fontSize: 14, marginRight: 18 }}
-          width={320}
-          height={400}
+          width={screenWidth / 1.4}
+          height={350}
         />
         <View className="top-2 flex-row justify-center">
           <Text className="font-poppins text-base text-gray-600">
