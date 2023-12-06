@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PriceRangeInput from '~/components/BusinessOperator/PriceRange/PriceRangeInput';
 import Questions from '~/components/BusinessOperator/Question';
 
-const AccommodationPriceRange = () => {
+const PriceRange = ({ title }: { title: string }) => {
   const [minPrice, setMinPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(0);
 
@@ -25,7 +25,7 @@ const AccommodationPriceRange = () => {
   return (
     <View style={{ backgroundColor: 'white', flex: 1 }}>
       <SafeAreaView>
-        <Questions question={'Average price range of room per night'} />
+        <Questions question={title} />
         <View style={{ flexDirection: 'row', alignItems: 'center' }}></View>
         <View style={{ alignItems: 'center', margin: 10 }}>
           <PriceRangeInput
@@ -39,4 +39,4 @@ const AccommodationPriceRange = () => {
     </View>
   );
 };
-export default AccommodationPriceRange;
+export default PriceRange;

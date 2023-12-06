@@ -19,16 +19,27 @@ const AccommodationFacilities = () => {
     useState<string>('');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
+  const [minPrice] = useState<number>(0);
+  const [maxPrice] = useState<number>(0);
+
   const handleSave = () => {
+    console.log('minPrice:', minPrice);
+    console.log('maxPrice:', maxPrice);
+
     if (!selectedAccommodation && selectedAmenities.length === 0) {
       Alert.alert(
         'Incomplete',
         'Please select at least one option for Accommodation or Amenities.',
       );
-      return;
+    } else if (minPrice > maxPrice) {
+      console.log('Invalid Price Range');
+      window.alert(
+        'Invalid Price Range: Minimum price should be lower than the maximum price.',
+      );
+    } else {
+      console.log(amenities);
+      router.push('/business/create/uploadPhotos');
     }
-    console.log(amenities);
-    router.push('/business/create/uploadPhotos');
   };
 
   const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
@@ -73,7 +84,7 @@ const AccommodationFacilities = () => {
                 data={[]}
               />
             </View>
-            <PriceRange />
+            <PriceRange title={'Average price of rooms'} />
 
             <BasicButton title={'Save'} onPress={handleSave} />
           </ScrollView>

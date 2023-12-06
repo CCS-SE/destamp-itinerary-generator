@@ -13,15 +13,26 @@ import BasicButton from '~/components/Button/BasicButton';
 const RestaurantFacilities = () => {
   const [selectedAtmosphere, setSelectedAtmosphere] = useState<string[]>([]);
 
+  const [minPrice] = useState<number>(0);
+  const [maxPrice] = useState<number>(0);
+
   const handleSave = () => {
+    console.log('minPrice:', minPrice);
+    console.log('maxPrice:', maxPrice);
+
     if (selectedAtmosphere.length === 0) {
       Alert.alert(
         'Complete information first',
         'Please select options for Dining Style, Cuisines, and Atmosphere.',
       );
-      return;
+    } else if (minPrice > maxPrice) {
+      console.log('Invalid Price Range');
+      window.alert(
+        'Invalid Price Range: Minimum price should be lower than the maximum price.',
+      );
+    } else {
+      router.push('/business/create/uploadPhotos');
     }
-    router.push('/business/create/uploadPhotos');
   };
 
   return (
@@ -36,7 +47,7 @@ const RestaurantFacilities = () => {
               initialSelectedOptions={selectedAtmosphere}
             />
 
-            <PriceRange />
+            <PriceRange title={'Average price per person'} />
 
             <BasicButton title={'Save'} onPress={handleSave} />
           </View>
