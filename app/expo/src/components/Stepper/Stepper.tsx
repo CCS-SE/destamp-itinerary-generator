@@ -43,7 +43,7 @@ export default function Stepper({
 
 const FieldTitle = ({ title }: FieldTitleProps) => {
   return (
-    <Text className="ml-4 font-poppins-medium text-lg text-[#FC8040]">
+    <Text className="ml-4 pr-6 font-poppins-medium text-base text-[#FC8040]">
       {title}
     </Text>
   );

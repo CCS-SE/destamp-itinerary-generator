@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { ViewStyle } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
 interface AmenityProps {
@@ -42,9 +43,12 @@ export default function AmenitiesSelection({
         borderWidth: 2,
         width: '90%',
       }}
-      badgeStyles={{ backgroundColor: '#F9E3E8' }}
-      labelStyles={{ color: '#DE4D6C', fontSize: 16 }}
-      badgeTextStyles={{ color: '#DE4D6C' }}
+      badgeStyles={{
+        backgroundColor: '#F9E3E8',
+        width: 'auto',
+        paddingHorizontal: 10,
+      }}
+      badgeTextStyles={{ color: '#DE4D6C', fontSize: 10 } as ViewStyle}
       placeholder="Select amenities"
       searchPlaceholder="Select amenities"
     />
