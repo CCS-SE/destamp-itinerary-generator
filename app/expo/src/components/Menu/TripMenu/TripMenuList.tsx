@@ -7,6 +7,7 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '~/context/AuthProvider';
 import {
   DeleteTripDocument,
+  GetTripItineraryDocument,
   GetTripsDocument,
   RegenerateTripDocument,
 } from '~/graphql/generated';
@@ -88,9 +89,9 @@ function TripMenuList({
       },
       refetchQueries: [
         {
-          query: GetTripsDocument,
+          query: GetTripItineraryDocument,
           variables: {
-            userId: user ? user.id : '',
+            tripId: id,
           },
         },
       ],
@@ -100,8 +101,13 @@ function TripMenuList({
         setRegenerating(false);
       },
       onCompleted: () => {
-        ToastAndroid.show('Trip regenerated successfully', ToastAndroid.SHORT);
-        setRegenerating(false);
+        setTimeout(() => {
+          ToastAndroid.show(
+            'Trip regenerated successfully',
+            ToastAndroid.SHORT,
+          );
+          setRegenerating(false);
+        }, 10000);
       },
     });
   };
