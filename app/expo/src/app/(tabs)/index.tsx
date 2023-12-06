@@ -3,7 +3,6 @@ import { FlatList, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
-import LottieView from 'lottie-react-native';
 import moment from 'moment';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
