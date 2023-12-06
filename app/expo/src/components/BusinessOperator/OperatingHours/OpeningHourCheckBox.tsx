@@ -21,12 +21,12 @@ const OpeningHourCheckbox = ({
   };
 
   return (
-    <View style={{ flexDirection: 'row', marginLeft: 15 }}>
+    <View style={{ flexDirection: 'row', margin: 10 }}>
       {options.map((option, index) => (
         <TouchableOpacity
           key={option}
           onPress={() => handleOptionSelect(option)}
-          style={{ marginRight: index < options.length - 1 ? 10 : 0 }}
+          style={{ marginRight: index < options.length - 1 ? 20 : 0 }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View
@@ -42,7 +42,7 @@ const OpeningHourCheckbox = ({
                       ? '#C43737'
                       : 'green'
                     : 'white',
-                marginRight: 2,
+                // marginRight: 2,
                 justifyContent: 'center',
                 alignItems: 'center',
               }}

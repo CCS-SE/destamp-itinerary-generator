@@ -36,7 +36,7 @@ const EstablishmentType = () => {
       <CreateBusinessHeader title={'Establishment Type'} />
       <View style={{ alignItems: 'center', marginBottom: 70 }}>
         <SafeAreaView>
-          <View style={{ marginBottom: 30 }}>
+          <View style={{ marginBottom: 150 }}>
             <Questions question={'What type of place is this?'} />
             <EstablishmentTypeButton
               label="Accommodation"
