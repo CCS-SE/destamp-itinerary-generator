@@ -1,5 +1,5 @@
 import { useContext, type ReactNode } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, ToastAndroid } from 'react-native';
 import { router } from 'expo-router';
 import { useMutation } from '@apollo/client';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '~/context/AuthProvider';
 import {
   DeleteTripDocument,
+  GetTripItineraryDocument,
   GetTripsDocument,
   RegenerateTripDocument,
 } from '~/graphql/generated';
@@ -22,10 +23,17 @@ interface TripMenu {
 
 interface TripMenuListProps {
   id: number;
+  setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
   onModalClose: () => void;
 }
 
-function TripMenuList({ onModalClose, id }: TripMenuListProps) {
+function TripMenuList({
+  onModalClose,
+  id,
+  setDeleting,
+  setRegenerating,
+}: TripMenuListProps) {
   const { user } = useContext(AuthContext);
 
   const [deleteTrip] = useMutation(DeleteTripDocument, {
@@ -39,6 +47,7 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
   };
 
   const handleDeleteTrip = async () => {
+    setDeleting(true);
     await deleteTrip({
       refetchQueries: [
         {
@@ -50,6 +59,12 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
       ],
       onError: (error) => {
         console.log('Error', error);
+        setDeleting(false);
+        ToastAndroid.show('Failed to delete trip', ToastAndroid.SHORT);
+      },
+      onCompleted: () => {
+        setDeleting(false);
+        ToastAndroid.show('Trip deleted successfully', ToastAndroid.SHORT);
       },
     });
   };
@@ -67,20 +82,32 @@ function TripMenuList({ onModalClose, id }: TripMenuListProps) {
   const [regenerateTrip] = useMutation(RegenerateTripDocument);
 
   const handleRegenerateTrip = async () => {
+    setRegenerating(true);
     await regenerateTrip({
       variables: {
         regenerateTripId: id,
       },
       refetchQueries: [
         {
-          query: GetTripsDocument,
+          query: GetTripItineraryDocument,
           variables: {
-            userId: user ? user.id : '',
+            tripId: id,
           },
         },
       ],
       onError: (error) => {
         console.log('Error', error.message);
+        ToastAndroid.show('Failed to regenerate trip', ToastAndroid.SHORT);
+        setRegenerating(false);
+      },
+      onCompleted: () => {
+        setTimeout(() => {
+          ToastAndroid.show(
+            'Trip regenerated successfully',
+            ToastAndroid.SHORT,
+          );
+          setRegenerating(false);
+        }, 10000);
       },
     });
   };

@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
+import Spinner from 'react-native-loading-spinner-overlay';
 import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
@@ -17,6 +18,9 @@ import {
 
 export default function MyTrip() {
   const { user } = useContext(AuthContext);
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
 
   const { loading, error, data } = useQuery(GetTripsDocument, {
     variables: {
@@ -68,6 +72,18 @@ export default function MyTrip() {
 
   return (
     <View testID="my-trip" className="flex-1 items-center bg-gray-50">
+      <Spinner
+        visible={isDeleting}
+        overlayColor="rgba(0, 0, 0, 0.50)"
+        textStyle={{ color: 'white' }}
+        textContent={'Deleting trip...'}
+      />
+      <Spinner
+        visible={isRegenerating}
+        overlayColor="rgba(0, 0, 0, 0.50)"
+        textStyle={{ color: 'white' }}
+        textContent={'Regenerating trip...'}
+      />
       {data && (
         <FlatList
           testID="my-trip-list"
@@ -89,6 +105,8 @@ export default function MyTrip() {
                 budget={item.budget}
                 travelSize={item.travelSize}
                 totalTravellers={item.travelerCount}
+                setRegenerating={setIsRegenerating}
+                setDeleting={setIsDeleting}
               />
             );
           }}
