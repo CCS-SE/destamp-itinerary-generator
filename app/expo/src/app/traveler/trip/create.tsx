@@ -388,7 +388,7 @@ const Sections = [
     title: 'Where do you want to travel?',
   },
   {
-    title: 'Where do you want to start your trip?',
+    title: 'Where do you want to start \nyour trip?',
   },
   {
     title: 'Whom are you traveling with?',
@@ -400,7 +400,7 @@ const Sections = [
     title: 'When is your free time?',
   },
   {
-    title: 'What should be included in your budget?',
+    title: 'What should be included in \nyour budget?',
   },
   {
     title: 'How much is your budget?',
