@@ -13,8 +13,23 @@ type CustomThumbProps = {
   thumb: 'min' | 'max';
 };
 
-const CustomThumb = ({ value }: CustomThumbProps) => {
-  return <Text style={{ fontSize: 12 }}>{value}</Text>;
+const CustomThumb = ({ value, thumb }: CustomThumbProps) => {
+  const isMaxThumb = thumb === 'max';
+
+  return (
+    <View
+      style={{
+        width: 20, // Adjust the size of the circle as needed
+        height: 16, // Adjust the size of the circle as needed
+        borderRadius: 10, // Make it a circle by setting borderRadius to half of the width/height
+        backgroundColor: isMaxThumb ? '#EB4586' : '#EB4586',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      {/* <Text style={{ color: 'white' }}>{value}</Text> */}
+    </View>
+  );
 };
 
 const MIN = 6;
@@ -57,48 +72,51 @@ export default function TimeslotSelection({
   };
 
   return (
-    <ScrollView
-      className="h-64"
-      showsVerticalScrollIndicator
-      persistentScrollbar={true}
-    >
-      {ranges.map((range, index) => (
-        <View key={index}>
-          <View className="w-[310] flex-row items-center justify-between">
-            <Text className="font-poppins-medium text-lg text-gray-500">{`Day  ${
-              index + 1
-            }`}</Text>
-            <View className="px-.5 w-[130] items-center rounded-lg bg-[#F9EBEE] py-1">
-              <Text className="font-poppins-medium text-base text-[#FF6E93] ">{`${dayDisplay(
-                range[0],
-              )} - ${dayDisplay(range[1])}`}</Text>
+    <View>
+      <ScrollView
+        style={{ height: 400 }}
+        showsVerticalScrollIndicator={true}
+        persistentScrollbar={true}
+      >
+        {ranges.map((range, index) => (
+          <View key={index} style={{ padding: 1 }}>
+            <View className="m-1 w-[310] flex-row items-center justify-between">
+              <Text className="font-poppins-medium text-lg text-gray-500">{`DAY  ${
+                index + 1
+              }`}</Text>
+              <View className="px-.5 w-[100] items-center rounded-lg bg-[#F9EBEE] py-1">
+                <Text className="font-poppins-medium text-xs text-[#FF6E93] ">{`${dayDisplay(
+                  range[0],
+                )} - ${dayDisplay(range[1])}`}</Text>
+              </View>
+            </View>
+            <View className="my-1 flex-row">
+              <Text className="text-md font-poppins text-gray-600">{`${MIN} AM`}</Text>
+              <RangeSlider
+                style={{
+                  width: 225,
+                  height: 20,
+                  flexGrow: 0,
+                  paddingHorizontal: 12,
+                }}
+                range={range}
+                step={1}
+                CustomThumb={CustomThumb}
+                onValueChange={(newRange) => handleRangeChange(index, newRange)}
+                outboundColor="#E5E7EB"
+                inboundColor="#EB4586"
+                trackHeight={8}
+                minimumValue={MIN}
+                maximumValue={MAX}
+              />
+
+              <Text className="text-ms font-poppins text-gray-600">{`${
+                MAX - 12
+              } AM`}</Text>
             </View>
           </View>
-          <View className="my-1 flex-row">
-            <Text className="font-poppins text-base text-gray-600">{`${MIN} AM`}</Text>
-            <RangeSlider
-              style={{
-                width: 225,
-                height: 25,
-                flexGrow: 0,
-                paddingHorizontal: 12,
-              }}
-              range={range}
-              step={1}
-              CustomThumb={CustomThumb}
-              onValueChange={(newRange) => handleRangeChange(index, newRange)}
-              outboundColor="#DCDCDC"
-              inboundColor="#FC8040"
-              trackHeight={12}
-              minimumValue={MIN}
-              maximumValue={MAX}
-            />
-            <Text className="font-poppins text-base text-gray-600">{`${
-              MAX - 12
-            } AM`}</Text>
-          </View>
-        </View>
-      ))}
-    </ScrollView>
+        ))}
+      </ScrollView>
+    </View>
   );
 }
