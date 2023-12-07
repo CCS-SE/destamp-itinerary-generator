@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 import { router } from 'expo-router';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
