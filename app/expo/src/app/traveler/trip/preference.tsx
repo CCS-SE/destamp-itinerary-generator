@@ -35,7 +35,6 @@ export default function TripPreferenceScreen() {
     visitedSteps,
     tripData,
     setData,
-    reset,
     setActiveSection,
     setActiveSections,
     setCompletedSteps,
