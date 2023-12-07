@@ -48,17 +48,8 @@ export default function AddSpendingForm({
   amount,
   categoryType,
 }: AddSpendingFormProps) {
-  const defaultCategory = (): ExpenseCategory => {
-    if (categoryType === ExpenseCategory.Accommodation) {
-      return ExpenseCategory.Accommodation;
-    } else if (categoryType === ExpenseCategory.Sightseeing) {
-      return ExpenseCategory.Sightseeing;
-    } else if (categoryType === ExpenseCategory.Food) {
-      return ExpenseCategory.Food;
-    } else if (categoryType === ExpenseCategory.Transportation) {
-      return ExpenseCategory.Transportation;
-    } else return ExpenseCategory.Accommodation;
-  };
+  const defaultCategory = (): ExpenseCategory =>
+    categoryType as ExpenseCategory;
   const [datePicker, setDatePicker] = useState(false);
   const [note, setNote] = useState(noteString ? noteString : '');
   const [date, setDate] = useState(new Date(minDate));
@@ -141,6 +132,24 @@ export default function AddSpendingForm({
           Add Spending
         </Text>
       </View>
+
+      <Text className="ml-7 mt-2 self-start font-poppins text-lg text-[#4C4C4C]">
+        Category
+      </Text>
+      <CategoryList category={category} onCategoryChange={onCategoryChange} />
+      {datePicker && (
+        <View>
+          <View>
+            <DateTimePicker
+              value={date}
+              mode="date"
+              onChange={onDateChange}
+              minimumDate={new Date(minDate)}
+              maximumDate={new Date(maxDate)}
+            />
+          </View>
+        </View>
+      )}
       <Controller
         control={control}
         name="amount"
@@ -163,23 +172,6 @@ export default function AddSpendingForm({
           );
         }}
       />
-      <Text className="-mt-2 ml-10 self-start font-poppins text-lg text-[#4C4C4C]">
-        Category
-      </Text>
-      <CategoryList category={category} onCategoryChange={onCategoryChange} />
-      {datePicker && (
-        <View>
-          <View>
-            <DateTimePicker
-              value={date}
-              mode="date"
-              onChange={onDateChange}
-              minimumDate={new Date(minDate)}
-              maximumDate={new Date(maxDate)}
-            />
-          </View>
-        </View>
-      )}
       <View className="p.5 mt-1 h-12 w-[330] rounded-xl border-2 border-[#F78E48]">
         <Pressable onPress={toggleDatePicker}>
           <TextInput
@@ -204,8 +196,6 @@ export default function AddSpendingForm({
         title="Add"
         onPress={handleSubmit(onSubmit)}
         isSubmitting={isSubmitting}
-        width={290}
-        className="mb-10"
       />
     </View>
   );
