@@ -33,8 +33,12 @@ export default function AmountTextInput({
   const inputWidth = Dimensions.get('window').width * 0.82;
 
   const handleAmountChange = (value: string) => {
-    setAmount(value);
-    onChangeText(value);
+    // setAmount(value);
+    // onChangeText(value);
+    const sanitizedValue = value.replace(/^0+/, '');
+
+    setAmount(sanitizedValue);
+    onChangeText(sanitizedValue);
 
     let costCutoff = 200;
     const MIN_HOTEL_PRICE = 385;
@@ -44,33 +48,36 @@ export default function AmountTextInput({
       const parsedValue = parseFloat(value.trim());
       const input = parsedValue / totalTraveler;
 
+      let minBudget = 0;
       if (budgetInlusions.includes(ExpenseCategory.Accommodation)) {
-        accommodationCutoff = MIN_HOTEL_PRICE / totalTraveler;
+        minBudget += MIN_HOTEL_PRICE / totalTraveler;
       }
+
+      // Adjust the minimum budget based on the duration
+      minBudget *= duration;
 
       if (
         !budgetInlusions.includes(ExpenseCategory.Food) &&
         !budgetInlusions.includes(ExpenseCategory.Transportation) &&
         !budgetInlusions.includes(ExpenseCategory.Accommodation)
       ) {
-        costCutoff = 0;
+        minBudget = 0;
       }
-
-      const minBudget = Math.ceil(costCutoff + accommodationCutoff);
+      minBudget = Math.ceil(minBudget);
 
       setMinBudget(minBudget);
 
       if (input < minBudget) {
-        setErrorMsg('Try increasing your budget or scale down duration.');
-        onBudgetError('Try increasing your budget or scale down duration.');
+        setErrorMsg(`Min Budget: ₱${minBudget} per person for the whole trip.`);
+        onBudgetError(
+          `Min Budget: ₱${minBudget} per person for the whole trip.`,
+        );
       } else {
         setErrorMsg('');
         onBudgetError('');
-        setMinBudget(0);
       }
     }
   };
-
   return (
     <View>
       <View className="flex-row items-center" style={{ width: inputWidth }}>
@@ -105,7 +112,7 @@ export default function AmountTextInput({
             testID={textInputProps.testID + '-error'}
             className=" font-poppins text-xs text-gray-500"
           >
-            {minBugdget != 0 ? `Min Budget: ₱${minBugdget} per peson` : ''}
+            Try increasing your budget or scale down duration.
           </Text>
         </>
       )}
