@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, TextInput, View, ViewStyle } from 'react-native';
 
-const TimeDurationPicker = () => {
-  const [selectedHour, setSelectedHour] = useState('1');
-  const [selectedMinute, setSelectedMinute] = useState('30');
+import addBusinessFormStore from '~/store/addBusinessFormStore';
 
-  useEffect(() => {
-    // Set an initial time of 1 hour
-    setSelectedHour('1');
-    setSelectedMinute('30');
-  }, []);
+const TimeDurationPicker = () => {
+  const { openingHours, setData } = addBusinessFormStore();
 
   const handleHourChange = (hour: string) => {
-    setSelectedHour(hour);
+    setData({
+      step: 2,
+      data: {
+        ...openingHours,
+        hour: hour,
+      },
+    });
   };
 
   const handleMinuteChange = (minute: string) => {
@@ -21,20 +22,25 @@ const TimeDurationPicker = () => {
       ? Math.min(parseInt(sanitizedMinute, 10), 59).toString()
       : '';
 
-    setSelectedMinute(sanitizedMinute);
+    setData({
+      step: 2,
+      data: {
+        ...openingHours,
+        minute: sanitizedMinute,
+      },
+    });
   };
 
   const displayTime = () => {
-    const hourText =
-      selectedHour === '1' || selectedHour === '0' ? 'Hour' : 'Hours';
-    const minuteText =
-      selectedMinute === '1' || selectedMinute === '0' ? 'Minute' : 'Minutes';
-
-    if (!selectedHour && !selectedMinute) {
-      return '00 Hours and 00 Minutes';
-    } else {
-      return `${selectedHour} ${hourText} and ${selectedMinute} ${minuteText}`;
-    }
+    return `${
+      parseInt(openingHours.hour.toString()) > 1
+        ? `${openingHours.hour.toString()} Hours`
+        : `${openingHours.hour.toString()} Hour`
+    } and ${
+      parseInt(openingHours.minute.toString()) > 1
+        ? `${openingHours.minute.toString()} Minutes`
+        : `${openingHours.minute.toString()} Minute`
+    }`;
   };
 
   const containerStyles: ViewStyle = {
@@ -62,13 +68,12 @@ const TimeDurationPicker = () => {
       <Text style={{ fontFamily: 'Poppins', fontSize: 15, marginBottom: 15 }}>
         {displayTime()}
       </Text>
-
       <View style={containerStyles}>
         <TextInput
           style={{ fontFamily: 'Poppins', fontSize: 18 }}
           placeholder="00"
           maxLength={2}
-          value={selectedHour}
+          value={openingHours.hour.toString()}
           onChangeText={handleHourChange}
           keyboardType="numeric"
         />
@@ -77,7 +82,7 @@ const TimeDurationPicker = () => {
           style={{ fontFamily: 'Poppins', fontSize: 18 }}
           placeholder="00"
           maxLength={2}
-          value={selectedMinute}
+          value={openingHours.minute.toString()}
           onChangeText={handleMinuteChange}
           keyboardType="numeric"
         />
