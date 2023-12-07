@@ -233,6 +233,8 @@ const ExpensePage = () => {
               </View>
             ) : (
               <SwipeListView
+                showsVerticalScrollIndicator
+                persistentScrollbar
                 scrollEnabled={true}
                 data={
                   dateFilter === 'All'
