@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View } from 'react-native';
+import { Alert, TouchableOpacity, View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
@@ -11,23 +11,28 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { ClerkProvider } from '@clerk/clerk-expo';
+import { AntDesign } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { supabase } from 'config/initSupabase';
 import { fetch } from 'cross-fetch';
 
 import { AuthProvider } from '~/context/AuthProvider';
-import Logo from '../../assets/images/destampp-logo.svg';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-const URL = 'https://destamp-cpu.onrender.com';
+const URL = 'https://cpu-destamp.onrender.com';
+
+// const LOCAL_SYSTEM_IP_ADDRESS = '10.10.10.17';
+// const PORT = 4000;
 
 const client = new ApolloClient({
   link: createHttpLink({
     uri: `${URL}/graphql`,
+    // uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
     fetch,
   }),
   cache: new InMemoryCache({
@@ -53,6 +58,11 @@ const client = new ApolloClient({
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: '(tabs)',
+};
+
+const handleLogout = async () => {
+  // added temp logout button
+  return await supabase.auth.signOut();
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -112,7 +122,25 @@ function RootLayoutNav() {
                     headerRight: () => {
                       return (
                         <View className="rounded-full p-0.5">
-                          <Logo height={50} width={50} />
+                          <TouchableOpacity
+                            onPress={() => {
+                              Alert.alert(
+                                'Logout',
+                                'Are you sure you want to logout?',
+                                [
+                                  {
+                                    text: 'Cancel',
+                                    onPress: () =>
+                                      console.log('Cancel Pressed'),
+                                    style: 'cancel',
+                                  },
+                                  { text: 'Yes', onPress: handleLogout },
+                                ],
+                              );
+                            }}
+                          >
+                            <AntDesign name="logout" size={24} color="black" />
+                          </TouchableOpacity>
                         </View>
                       );
                     },

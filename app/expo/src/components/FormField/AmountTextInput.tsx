@@ -28,13 +28,16 @@ export default function AmountTextInput({
 }: AmountTextInputProps) {
   const [amount, setAmount] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [minBugdget, setMinBudget] = useState(0);
+  const [minBudget, setMinBudget] = useState(0);
 
   const inputWidth = Dimensions.get('window').width * 0.82;
 
   const handleAmountChange = (value: string) => {
-    setAmount(value);
-    onChangeText(value);
+    // setAmount(value);
+    // onChangeText(value);
+    const sanitizedValue = value.replace(/^0+/, '');
+    setAmount(sanitizedValue);
+    onChangeText(sanitizedValue);
 
     let costCutoff = 200;
     const MIN_HOTEL_PRICE = 385;
@@ -56,7 +59,10 @@ export default function AmountTextInput({
         costCutoff = 0;
       }
 
-      const minBudget = Math.ceil(costCutoff + accommodationCutoff);
+      let minBudget = Math.ceil(costCutoff + accommodationCutoff);
+
+      // Multiply minBudget by duration
+      minBudget *= duration;
 
       setMinBudget(minBudget);
 
@@ -105,7 +111,9 @@ export default function AmountTextInput({
             testID={textInputProps.testID + '-error'}
             className=" font-poppins text-xs text-gray-500"
           >
-            {minBugdget != 0 ? `Min Budget: ₱${minBugdget} per peson` : ''}
+            {minBudget !== 0
+              ? `Min Budget: ₱${minBudget} per person for the whole trip.`
+              : ''}
           </Text>
         </>
       )}
