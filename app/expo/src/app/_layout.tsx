@@ -99,12 +99,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  // const handleBackButton = () => {
-  //   // Return true to disable the default back button behavior
-  //   return true;
-  // };
-
-  // useBackHandler(handleBackButton);
   return (
     <ThemeProvider value={DefaultTheme}>
       <AutocompleteDropdownContextProvider>
