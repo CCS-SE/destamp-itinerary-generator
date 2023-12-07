@@ -288,10 +288,13 @@ export type PoiImage = {
 
 export type Query = {
   __typename?: 'Query';
+  accommodationCategoires: Array<Category>;
   amenities: Array<Amenity>;
+  attractionCategoires: Array<Category>;
   categories: Array<Category>;
   poi: Poi;
   pois: Array<Poi>;
+  restaurantCategoires: Array<Category>;
   restaurantCategoriesMoreThanFive: Array<Category>;
   trip: Trip;
   trips: Array<Trip>;
@@ -871,8 +874,18 @@ export type QueryResolvers<
   ParentType extends
     ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  accommodationCategoires?: Resolver<
+    Array<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
+  >;
   amenities?: Resolver<
     Array<ResolversTypes['Amenity']>,
+    ParentType,
+    ContextType
+  >;
+  attractionCategoires?: Resolver<
+    Array<ResolversTypes['Category']>,
     ParentType,
     ContextType
   >;
@@ -892,6 +905,11 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryPoisArgs, 'userId'>
+  >;
+  restaurantCategoires?: Resolver<
+    Array<ResolversTypes['Category']>,
+    ParentType,
+    ContextType
   >;
   restaurantCategoriesMoreThanFive?: Resolver<
     Array<ResolversTypes['Category']>,
@@ -1237,6 +1255,28 @@ export type GetPoiFeaturesQuery = {
     id: number;
     name: string;
   }>;
+};
+
+export type GetPoiFacilitiesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type GetPoiFacilitiesQuery = {
+  __typename?: 'Query';
+  restaurantCategoires: Array<{
+    __typename?: 'Category';
+    id: number;
+    name: string;
+  }>;
+  attractionCategoires: Array<{
+    __typename?: 'Category';
+    id: number;
+    name: string;
+  }>;
+  accommodationCategoires: Array<{
+    __typename?: 'Category';
+    id: number;
+    name: string;
+  }>;
+  amenities: Array<{ __typename?: 'Amenity'; id: number; name: string }>;
 };
 
 export type GetTripsQueryVariables = Exact<{
@@ -2318,6 +2358,68 @@ export const GetPoiFeaturesDocument = {
     },
   ],
 } as unknown as DocumentNode<GetPoiFeaturesQuery, GetPoiFeaturesQueryVariables>;
+export const GetPoiFacilitiesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPoiFacilities' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'restaurantCategoires' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'attractionCategoires' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accommodationCategoires' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'amenities' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetPoiFacilitiesQuery,
+  GetPoiFacilitiesQueryVariables
+>;
 export const GetTripsDocument = {
   kind: 'Document',
   definitions: [

@@ -202,10 +202,13 @@ type PoiImage {
 }
 
 type Query {
+  accommodationCategoires: [Category!]!
   amenities: [Amenity!]!
+  attractionCategoires: [Category!]!
   categories: [Category!]!
   poi(poiId: String!): Poi!
   pois(userId: String!): [Poi!]!
+  restaurantCategoires: [Category!]!
   restaurantCategoriesMoreThanFive: [Category!]!
   trip(id: Int!): Trip!
   trips(userId: String!): [Trip!]!

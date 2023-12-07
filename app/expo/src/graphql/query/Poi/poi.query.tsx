@@ -13,3 +13,25 @@ export const GetPoiFeaturesQuery = gql(
   }
   `,
 );
+
+export const GetPoiFacilitiesQuery = gql(
+  `query GetPoiFacilities {
+    restaurantCategoires {
+      id
+      name
+    }
+    attractionCategoires {
+      id
+      name
+    }
+    accommodationCategoires {
+      id
+      name
+    }
+    amenities {
+      id
+      name
+    }
+  }
+  `,
+);
