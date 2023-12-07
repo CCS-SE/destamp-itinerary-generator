@@ -1,10 +1,13 @@
 import { list, nonNull, queryField, stringArg } from 'nexus';
 
 import {
+  queryAccommodationCategories,
   queryAllAmenities,
   queryAllCategories,
+  queryAttractionCategories,
   queryPoi,
   queryPois,
+  queryRestaurantCategories,
   queryRestaurantCategoriesMoreThanFive,
 } from './poi.resolver';
 
@@ -42,10 +45,29 @@ const RestaurantCategoriesMoreThanFive = queryField(
   },
 );
 
+const RestaurantCategories = queryField('restaurantCategoires', {
+  type: list('Category'),
+  resolve: (_, __, ctx) => queryRestaurantCategories(ctx),
+});
+
+const AttractionCategories = queryField('attractionCategoires', {
+  type: list('Category'),
+  resolve: (_, __, ctx) => queryAttractionCategories(ctx),
+});
+
+const AccommodationCategories = queryField('accommodationCategoires', {
+  type: list('Category'),
+  resolve: (_, __, ctx) => queryAccommodationCategories(ctx),
+});
+
 export default [
   Poi,
   Pois,
   Categories,
   Amenities,
   RestaurantCategoriesMoreThanFive,
+  RestaurantCategories,
+  AccommodationCategories,
+  AttractionCategories,
+  Amenities,
 ];

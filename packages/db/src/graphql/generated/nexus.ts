@@ -424,10 +424,13 @@ export interface NexusGenFieldTypes {
   };
   Query: {
     // field return type
+    accommodationCategoires: NexusGenRootTypes['Category'][]; // [Category!]!
     amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
+    attractionCategoires: NexusGenRootTypes['Category'][]; // [Category!]!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     poi: NexusGenRootTypes['Poi']; // Poi!
     pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    restaurantCategoires: NexusGenRootTypes['Category'][]; // [Category!]!
     restaurantCategoriesMoreThanFive: NexusGenRootTypes['Category'][]; // [Category!]!
     trip: NexusGenRootTypes['Trip']; // Trip!
     trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
@@ -604,10 +607,13 @@ export interface NexusGenFieldTypeNames {
   };
   Query: {
     // field return type name
+    accommodationCategoires: 'Category';
     amenities: 'Amenity';
+    attractionCategoires: 'Category';
     categories: 'Category';
     poi: 'Poi';
     pois: 'Poi';
+    restaurantCategoires: 'Category';
     restaurantCategoriesMoreThanFive: 'Category';
     trip: 'Trip';
     trips: 'Trip';

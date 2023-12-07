@@ -106,3 +106,54 @@ export const queryRestaurantCategoriesMoreThanFive = async (ctx: Context) => {
 
   return categories.filter((category) => category.pois.length >= 5);
 };
+
+export const queryRestaurantCategories = async (ctx: Context) => {
+  return await ctx.prisma.category.findMany({
+    where: {
+      pois: {
+        every: {
+          restaurant: {
+            isNot: null,
+          },
+          isAttraction: false,
+        },
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+};
+
+export const queryAttractionCategories = async (ctx: Context) => {
+  return await ctx.prisma.category.findMany({
+    where: {
+      pois: {
+        every: {
+          isAttraction: true,
+        },
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+};
+
+export const queryAccommodationCategories = async (ctx: Context) => {
+  return await ctx.prisma.category.findMany({
+    where: {
+      pois: {
+        every: {
+          isAttraction: false,
+          accommodation: {
+            isNot: null,
+          },
+        },
+      },
+    },
+    orderBy: {
+      name: 'asc',
+    },
+  });
+};
