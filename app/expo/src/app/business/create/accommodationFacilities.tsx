@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
-import AccommodationPriceRange from '~/components/BusinessOperator/PriceRange/AccommodationPriceRange';
+import PriceRange from '~/components/BusinessOperator/PriceRange/PriceRange';
 import Question from '~/components/BusinessOperator/Question';
 import BasicButton from '~/components/Button/BasicButton';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';
@@ -19,15 +19,27 @@ const AccommodationFacilities = () => {
     useState<string>('');
   const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
 
+  const [minPrice] = useState<number>(0);
+  const [maxPrice] = useState<number>(0);
+
   const handleSave = () => {
+    console.log('minPrice:', minPrice);
+    console.log('maxPrice:', maxPrice);
+
     if (!selectedAccommodation && selectedAmenities.length === 0) {
       Alert.alert(
+        'Incomplete',
         'Please select at least one option for Accommodation or Amenities.',
       );
-      return;
+    } else if (minPrice > maxPrice) {
+      console.log('Invalid Price Range');
+      window.alert(
+        'Invalid Price Range: Minimum price should be lower than the maximum price.',
+      );
+    } else {
+      console.log(amenities);
+      router.push('/business/create/uploadPhotos');
     }
-    console.log(amenities);
-    router.push('/business/create/uploadPhotos');
   };
 
   const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
@@ -49,11 +61,13 @@ const AccommodationFacilities = () => {
   }, [data]);
 
   return (
-    <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
-      <CreateBusinessHeader title={'Accom Facilities'} />
+    <View style={{ backgroundColor: 'white', flex: 1 }}>
+      <CreateBusinessHeader title={'Accommodation'} />
       <SafeAreaView>
-        <ScrollView>
-          <View style={{ padding: 20, margin: 10, alignContent: 'center' }}>
+        <View
+          style={{ marginLeft: 25, marginRight: 10, alignContent: 'center' }}
+        >
+          <ScrollView>
             <Question question={'Select Category'} />
             <View style={{ alignItems: 'center', marginBottom: 30 }}>
               <AccommodationSelection
@@ -70,11 +84,11 @@ const AccommodationFacilities = () => {
                 data={[]}
               />
             </View>
-            <AccommodationPriceRange />
+            <PriceRange title={'Average price of rooms'} />
 
             <BasicButton title={'Save'} onPress={handleSave} />
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </View>
   );

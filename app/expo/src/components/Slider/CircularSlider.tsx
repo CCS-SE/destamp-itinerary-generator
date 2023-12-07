@@ -24,16 +24,16 @@ const CircularSlider = ({
 }: CircularSliderProps) => {
   const [value, setValue] = useState(initialValue);
 
-  const radius = 45;
-  const strokeWidth = 17;
+  const radius = 40;
+  const strokeWidth = 13;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (value / 100) * circumference;
 
   const handleTap = (event: GestureHandlerStateChangeEvent) => {
     if (event.nativeEvent.state === State.ACTIVE) {
-      const newValue = value + 33.33;
-      setValue(newValue >= 100 ? 0 : newValue);
-      onValueChange(newValue >= 100 ? 0 : newValue);
+      const newValue = value + 100;
+      setValue(newValue > 100 ? 0 : newValue);
+      onValueChange(newValue > 100 ? 0 : newValue);
     }
   };
 
@@ -64,8 +64,8 @@ const CircularSlider = ({
             className="rounded-full p-1"
             style={{
               position: 'absolute',
-              top: radius / 2,
-              left: radius / 2,
+              top: radius / 2.4,
+              left: radius / 2.3,
               justifyContent: 'center',
               alignItems: 'center',
             }}

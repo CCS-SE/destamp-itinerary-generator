@@ -1,15 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Text, TextInput, View, ViewStyle } from 'react-native';
 
 const TimeDurationPicker = () => {
-  const [selectedHour, setSelectedHour] = useState('1');
-  const [selectedMinute, setSelectedMinute] = useState('30');
-
-  useEffect(() => {
-    // Set an initial time of 1 hour
-    setSelectedHour('1');
-    setSelectedMinute('30');
-  }, []);
+  const [selectedHour, setSelectedHour] = useState('');
+  const [selectedMinute, setSelectedMinute] = useState('');
 
   const handleHourChange = (hour: string) => {
     setSelectedHour(hour);
@@ -25,15 +19,16 @@ const TimeDurationPicker = () => {
   };
 
   const displayTime = () => {
-    const hourText =
-      selectedHour === '1' || selectedHour === '0' ? 'Hour' : 'Hours';
-    const minuteText =
-      selectedMinute === '1' || selectedMinute === '0' ? 'Minute' : 'Minutes';
-
-    if (!selectedHour && !selectedMinute) {
+    if (selectedHour === '1' && selectedMinute === '1') {
+      return `${selectedHour} Hour and ${selectedMinute} Minute`;
+    } else if (selectedHour === '1') {
+      return `${selectedHour} Hour and ${selectedMinute} Minutes`;
+    } else if (selectedMinute === '1') {
+      return `${selectedHour} Hours and ${selectedMinute} Minute`;
+    } else if (!selectedHour && !selectedMinute) {
       return '00 Hours and 00 Minutes';
     } else {
-      return `${selectedHour} ${hourText} and ${selectedMinute} ${minuteText}`;
+      return `${selectedHour} Hours and ${selectedMinute} Minutes`;
     }
   };
 
@@ -62,11 +57,10 @@ const TimeDurationPicker = () => {
       <Text style={{ fontFamily: 'Poppins', fontSize: 15, marginBottom: 15 }}>
         {displayTime()}
       </Text>
-
       <View style={containerStyles}>
         <TextInput
           style={{ fontFamily: 'Poppins', fontSize: 18 }}
-          placeholder="00"
+          placeholder="00 "
           maxLength={2}
           value={selectedHour}
           onChangeText={handleHourChange}
@@ -75,7 +69,7 @@ const TimeDurationPicker = () => {
         <Text style={{ fontFamily: 'Poppins', fontSize: 18 }}> : </Text>
         <TextInput
           style={{ fontFamily: 'Poppins', fontSize: 18 }}
-          placeholder="00"
+          placeholder="00 "
           maxLength={2}
           value={selectedMinute}
           onChangeText={handleMinuteChange}

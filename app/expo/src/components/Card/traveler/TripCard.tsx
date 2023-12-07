@@ -25,6 +25,8 @@ interface TripCardProps {
   budget: number;
   travelSize: string;
   totalTravellers: number;
+  setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function TripCard({
@@ -35,6 +37,8 @@ function TripCard({
   budget,
   travelSize,
   totalTravellers,
+  setRegenerating,
+  setDeleting,
 }: TripCardProps) {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -56,7 +60,9 @@ function TripCard({
           <Image
             testID="trip-destination-img"
             source={
-              'https://gttp.imgix.net/223596/x/0/top-23-iloilo-tourist-spots-home-to-gigantes-islands-amp-old-churches-6.jpg?auto=compress%2Cformat&ch=Width%2CDPR&dpr=1&ixlib=php-3.3.0&w=883'
+              images[
+                parseInt(id.toString()[id.toString().length - 1] as string)
+              ]
             }
             className="h-52 rounded-2xl"
             placeholder={blurhash}
@@ -83,7 +89,12 @@ function TripCard({
             ></FontAwesome5>
           </TouchableOpacity>
           <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
-            <TripMenuList id={id} onModalClose={onModalClose} />
+            <TripMenuList
+              id={id}
+              onModalClose={onModalClose}
+              setRegenerating={setRegenerating}
+              setDeleting={setDeleting}
+            />
           </BottomHalfModal>
           <View className="absolute left-4 top-40 w-[215] flex-row justify-between">
             <Text
@@ -142,5 +153,18 @@ const travelSizeIcon: Record<string, ReactNode> = {
   FAMILY: <AntDesign name="home" size={15} color={'#808080'} />,
   GROUP: <AntDesign name="team" size={15} color={'#808080'} />,
 };
+
+const images: string[] = [
+  'https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcSi8R9T36oyyaXjot89S3qiK87PGjo-w1nd3YxGYw9kQhOTyUMdHs_3ICnqxK_SDf2OgK3NIk5XANZ-H6fJuJ13V1-DkcQrGcLt-btxAQ',
+  'https://lh5.googleusercontent.com/p/AF1QipM3no0xRNR49mLdCGlRknEdhi7oFruc4gAVyNKc=w675-h390-n-k-no',
+  'https://lh5.googleusercontent.com/proxy/rue5zgfmReWVgGb8gZpo8w_P3MrrIPug0ZVBRW11BFwcbseNXiFlZFvmIKIvToBtTNYkm3Bha9qC8WCmVbcxsi9qZTJdMyPUKdHMZ1ULhMDRwRKOpSABzoft4P3Rk_f7RhYvJdPC_s9WkxT78-y7tuFTHiXGKKw=w675-h390-n-k-no',
+  'https://lh5.googleusercontent.com/p/AF1QipNDQRUiEkGDT7uJKKNoARxbPwBIydqEE87g6_ns=w675-h390-n-k-no',
+  'https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcTfaddCTG-VVsHKuD4zSMgGnrGXpnZsfsQc3woPSemiHexpKtHsQCNQ9lIxqNau4BFRAthYfNYjkQdcYs5pBoBlpJDU_-8knq_ovt6L2CU',
+  'https://encrypted-tbn3.gstatic.com/licensed-image?q=tbn:ANd9GcQoHzT0tzwu-t5ynAsGSqkvlJOVXq_5e9JLvJebggmbmcZ3wx88h0Te4mv-khZoFtPp-jF1258PkC9iFvtOCyk1SoGROmlcOtiDW1P2Bg',
+  'https://lh5.googleusercontent.com/p/AF1QipNNcwXy4neqPppRQek_si8h6N8bRuoD72zjj0U=w675-h390-n-k-no',
+  'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSENVZcHN6bNO9ICfNGh_utg1hjw5OsNTtdn9tpBWlv5475EBUJd251orLzAat758iE25m0dau0rbArxzNQKyOA6vIjajHEUL5HkBASag',
+  'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcS_-FJFL6ia3Pm67HRqKZ-8yD2QSKQ2TNBOnJahfVEFifalbeaU5V_WyhT_X9Jp0SvY7drgY2i9HtTScWnHN9XLDT8BkHPVb0JgK1LgEg',
+  'https://www.detourista.com/wp/wp-content/uploads/Tax-Place/Philippines/Iloilo/Iloilo/Featured/001-Calle-Real-in-Iloilo-City-150105-063819.jpg',
+];
 
 export default memo(TripCard);

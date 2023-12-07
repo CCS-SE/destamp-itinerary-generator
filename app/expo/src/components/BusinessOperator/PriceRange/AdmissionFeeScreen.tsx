@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 
-import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import AdmissionFee from '~/components/BusinessOperator/PriceRange/AdmissionFeeContainer';
 import PriceRangeCheckBox from '~/components/BusinessOperator/PriceRange/PriceRangeCheckbox';
 import Questions from '~/components/BusinessOperator/Question';
@@ -28,7 +27,7 @@ const AdmissionFeeScreen = () => {
 
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
-      <CreateBusinessHeader title={'Price Range'} />
+      {/* <CreateBusinessHeader title={'Price Range'} /> */}
       <SafeAreaView>
         <Questions question={'Admission Fee'} />
         <Text
@@ -54,7 +53,7 @@ const AdmissionFeeScreen = () => {
             onSelect={handleAdmissionFeeOptionSelect}
           />
         </View>
-        <BasicButton title={'Next'} onPress={handleNextButton} />
+        <BasicButton title={'Next'} onPress={handleNextButton} />z
       </SafeAreaView>
     </View>
   );

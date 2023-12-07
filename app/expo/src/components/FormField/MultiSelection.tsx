@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { ViewStyle } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 
 interface AmenityProps {
@@ -7,17 +6,19 @@ interface AmenityProps {
   value: string;
 }
 
-interface AmenitiesSelectionProps {
+interface MultiSelectionProps {
+  placeholder: string;
   data: AmenityProps[] | [];
   onOptionChange: (options: string[]) => void;
   initialSelectedOptions: string[];
 }
 
-export default function AmenitiesSelection({
+export default function MultiSelection({
+  placeholder,
   data,
   onOptionChange,
   initialSelectedOptions,
-}: AmenitiesSelectionProps) {
+}: MultiSelectionProps) {
   const [selectedOptions, setSelectedOptions] = useState<string[]>(
     initialSelectedOptions,
   );
@@ -37,20 +38,16 @@ export default function AmenitiesSelection({
       data={data}
       save="value"
       label="Amenities"
-      boxStyles={{ borderColor: '#FC8040', borderWidth: 2, width: '90%' }}
+      boxStyles={{ borderColor: '#FC8040', borderWidth: 2 }}
       dropdownStyles={{
         borderColor: '#FC8040',
         borderWidth: 2,
-        width: '90%',
       }}
-      badgeStyles={{
-        backgroundColor: '#F9E3E8',
-        width: 'auto',
-        paddingHorizontal: 10,
-      }}
-      badgeTextStyles={{ color: '#DE4D6C', fontSize: 10 } as ViewStyle}
-      placeholder="Select amenities"
-      searchPlaceholder="Select amenities"
+      badgeStyles={{ backgroundColor: '#F9E3E8' }}
+      labelStyles={{ color: '#DE4D6C', fontSize: 16 }}
+      badgeTextStyles={{ color: '#DE4D6C' }}
+      placeholder={`Select ${placeholder}`}
+      searchPlaceholder={`Select ${placeholder}`}
     />
   );
 }

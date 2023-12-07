@@ -18,7 +18,7 @@ import GradientButton from '~/components/Button/GradientButton';
 const OverviewPage = () => {
   const subTitleFontStyle = {
     fontFamily: 'Poppins',
-    fontSize: 18,
+    fontSize: 16,
     color: '#404040',
     padding: 10,
   };
@@ -80,7 +80,7 @@ const OverviewPage = () => {
                     }
                   />
                   <OverviewTag
-                    content={'Price Range'}
+                    content={'Price'}
                     icon={
                       <FontAwesome5 name="money-bill" size={24} color="white" />
                     }
@@ -111,15 +111,24 @@ const OverviewPage = () => {
             </View>
             <View style={{ margin: 5 }}>
               <Text style={subTitleFontStyle}>
-                Verify your business by uploading a valid ID and your business
-                permit.
+                Verify your business by uploading a your business permit and
+                upload photos of your establishment.
               </Text>
               {/* <View> */}
-
-              <OverviewTag
-                content={'Business Permit'}
-                icon={<Ionicons name="ios-documents" size={24} color="white" />}
-              />
+              <View style={{ flexDirection: 'row' }}>
+                <OverviewTag
+                  content={'Business Permit'}
+                  icon={
+                    <Ionicons name="ios-documents" size={24} color="white" />
+                  }
+                />
+                <OverviewTag
+                  content={'Business Photos'}
+                  icon={
+                    <FontAwesome name="file-photo-o" size={20} color="white" />
+                  }
+                />
+              </View>
             </View>
             <GradientButton
               onPress={() => router.push('/business/create/basicInformation')}
