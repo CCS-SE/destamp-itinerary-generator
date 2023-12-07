@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import { Tabs } from 'expo-router';
 
 import { TabBarIcon } from '~/components/Icon/TabBarIcon';
@@ -27,6 +27,17 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="cursor" color={color} size={24} />
           ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                fontFamily: 'Poppins',
+                color: focused ? '#FC6873' : 'gray',
+                fontSize: 10,
+              }}
+            >
+              My Trips
+            </Text>
+          ),
         }}
       />
       <Tabs.Screen
@@ -37,6 +48,17 @@ export default function TabLayout() {
           tabBarActiveTintColor: '#FC6873',
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="user" color={color} size={24} />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                fontFamily: 'Poppins',
+                color: focused ? '#FC6873' : 'gray',
+                fontSize: 10,
+              }}
+            >
+              Profile
+            </Text>
           ),
         }}
       />

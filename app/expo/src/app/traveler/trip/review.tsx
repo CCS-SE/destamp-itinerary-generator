@@ -247,20 +247,33 @@ export default function ReviewTripScreen() {
         </View>
         <View className="mt-7">
           <Text className="font-poppins text-xl text-gray-600">Preference</Text>
-          <ReviewCard
-            title="Accommodation Type"
-            value={separateWords(preferenceData.accommodationType)}
-            section="0"
-            isPreference
-            isEditabble
-          />
-          <ReviewCard
-            title="Amenities"
-            amenities={preferenceData.amenities}
-            section="1"
-            isEditabble
-            isArray
-          />
+          {/* Accommodation Type */}
+          {tripData.budgetInclusions &&
+            tripData.budgetInclusions.includes(
+              ExpenseCategory.Accommodation,
+            ) && (
+              <ReviewCard
+                title="Accommodation Type"
+                value={separateWords(preferenceData.accommodationType)}
+                section="0"
+                isPreference
+                isEditabble
+              />
+            )}
+          {/* Amenities */}
+          {tripData.budgetInclusions &&
+            tripData.budgetInclusions.includes(
+              ExpenseCategory.Accommodation,
+            ) && (
+              <ReviewCard
+                title="Amenities"
+                amenities={preferenceData.amenities}
+                section="1"
+                isEditabble
+                isArray
+              />
+            )}
+          {/* Activities */}
           <ReviewCard
             title="Activities"
             activities={preferenceData.activities}
@@ -268,20 +281,28 @@ export default function ReviewTripScreen() {
             isEditabble
             isArray
           />
-          <ReviewCard
-            title="Dining Styles"
-            diningStyles={preferenceData.diningStyles}
-            section="3"
-            isEditabble
-            isArray
-          />
-          <ReviewCard
-            title="Cuisines"
-            cuisines={preferenceData.cuisines}
-            section="4"
-            isEditabble
-            isArray
-          />
+          {/* Dining Styles */}
+          {tripData.budgetInclusions &&
+            tripData.budgetInclusions.includes(ExpenseCategory.Food) && (
+              <ReviewCard
+                title="Dining Styles"
+                diningStyles={preferenceData.diningStyles}
+                section="3"
+                isEditabble
+                isArray
+              />
+            )}
+          {/* Cuisines */}
+          {tripData.budgetInclusions &&
+            tripData.budgetInclusions.includes(ExpenseCategory.Food) && (
+              <ReviewCard
+                title="Cuisines"
+                cuisines={preferenceData.cuisines}
+                section="4"
+                isEditabble
+                isArray
+              />
+            )}
         </View>
       </ScrollView>
       <View className="self-center">
