@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 
-import addBusinessFormStore from '~/store/addBusinessFormStore';
 import Peso from '../../../../assets/images/peso-sign.svg';
 
 interface SinglePriceInputProps {
