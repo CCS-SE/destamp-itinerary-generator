@@ -38,6 +38,7 @@ describe('calculateCostScore', () => {
   it('should get the cost score', () => {
     const tripInput: CreateTripInput = {
       budget: 2_500,
+      destination: 'Iloilo City',
       endDate: new Date('2023-08-12'),
       isAccommodationIncluded: false,
       isFoodIncluded: true,
@@ -71,6 +72,7 @@ describe('calculateFitnessScore', () => {
     const tripInput: CreateTripInput = {
       budget: 2_500,
       endDate: new Date('2023-08-12'),
+      destination: 'Iloilo City',
       isAccommodationIncluded: false,
       isFoodIncluded: true,
       isTransportationIncluded: true,
