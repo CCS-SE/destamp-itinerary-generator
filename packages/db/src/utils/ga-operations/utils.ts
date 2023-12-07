@@ -66,25 +66,23 @@ export const calculateCostScore = (
     foodBudgetRate !== 0 &&
     (actualFoodRate > foodBudgetRate || actualFoodRate < foodBudgetRate / 2)
   ) {
-    costDifference -= dailyBudget * actualFoodRate; // penalize cost over budget and cost below 50%
+    costDifference -= dailyBudget * actualFoodRate; // penalize cost over budget
   }
   if (
     accommodationBudgetRate !== 0 &&
-    (actualAccommodationRate > accommodationBudgetRate ||
-      accommodationBudgetRate < accommodationBudgetRate / 2)
+    actualAccommodationRate > accommodationBudgetRate
   ) {
     costDifference -= dailyBudget * actualAccommodationRate;
   }
   if (
     attractionBudgetRate !== 0 &&
-    (actualAttractionRate > attractionBudgetRate || actualAttractionRate / 2)
+    actualAttractionRate > attractionBudgetRate
   ) {
     costDifference -= dailyBudget * actualAttractionRate;
   }
   if (
     transporationBudgetRate !== 0 &&
-    (actualTransportRate > transporationBudgetRate ||
-      actualTransportRate < transporationBudgetRate / 2)
+    actualTransportRate > transporationBudgetRate
   ) {
     costDifference -= dailyBudget * actualTransportRate;
   }

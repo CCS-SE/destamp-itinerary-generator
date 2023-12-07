@@ -8,7 +8,7 @@ import { calculateAveragePrice } from './utils';
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
 
 const POPULATION_SIZE = 2;
-const MAX_ITERATIONS = 20; // max number of iterations
+const MAX_ITERATIONS = 15; // max number of iterations
 
 export function generatePopulation(
   input: CreateTripInput,
@@ -20,8 +20,16 @@ export function generatePopulation(
 
   const rate = getBudgetAllocation(input)!;
 
-  const foodCostThreshold = (budget * rate.FOOD) / duration;
-  const attractionCostThreshold = (budget * rate.ATTRACTION) / duration;
+  const dailyBudget = budget / duration;
+
+  const accommdationCostThreshold = dailyBudget * rate.ACCOMMODATION;
+  const transportationCostThreshold = dailyBudget * rate.TRANSPORT;
+
+  const estimatedTravelDuration = desiredTravelHours * rate.TRANSPORT;
+
+  const targetCost =
+    dailyBudget - (accommdationCostThreshold + transportationCostThreshold);
+  const targetDuration = desiredTravelHours - estimatedTravelDuration;
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
@@ -32,8 +40,7 @@ export function generatePopulation(
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
-    let totalFoodCost = 0;
-    let totalAttractionCost = 0;
+    let totalCost = 0;
 
     let attractionIndex = 0;
     let restaurantIndex = 0;
@@ -41,9 +48,8 @@ export function generatePopulation(
     const chromosome: PointOfInterest[] = []; // list of destinations within budget and timeframe
 
     while (
-      (totalDuration <= desiredTravelHours &&
-        (totalFoodCost <= foodCostThreshold ||
-          totalAttractionCost <= attractionCostThreshold)) ||
+      totalDuration <= targetDuration &&
+      totalCost <= targetCost &&
       chromosome.length < MAX_ITERATIONS
     ) {
       const attraction = attractions[attractionIndex];
@@ -58,7 +64,7 @@ export function generatePopulation(
           const foodCost = restaurant.averagePrice * travelerCount;
           const poiDuration = restaurant.visitDuration / 60;
 
-          totalFoodCost += foodCost;
+          totalCost += foodCost;
           totalDuration += poiDuration;
           restaurantIndex++;
           chromosome.push(restaurant);
@@ -69,17 +75,13 @@ export function generatePopulation(
         const attractionCost = parseFloat(attraction.price) * travelerCount;
         const poiDuration = attraction.visitDuration / 60;
 
-        totalAttractionCost += attractionCost;
+        totalCost += attractionCost;
         totalDuration += poiDuration;
         attractionIndex++;
         chromosome.push(attraction);
       }
 
-      if (
-        totalDuration > desiredTravelHours &&
-        (totalFoodCost > foodCostThreshold ||
-          totalAttractionCost > attractionCostThreshold)
-      ) {
+      if (totalCost > targetCost && totalDuration > targetDuration) {
         break;
       }
     }
@@ -92,6 +94,11 @@ export function generatePopulation(
       travelDistances: [],
       travelDurations: [],
     });
+
+    totalDuration = 0;
+    totalCost = 0;
+    attractionIndex = 0;
+    restaurantIndex = 0;
   }
   return newPopulation;
 }

@@ -13,6 +13,7 @@ type CreateTripInput = NexusGenInputs['CreateTripInput'];
 describe('durationScore', () => {
   const tripInput: CreateTripInput = {
     budget: 2_500,
+    destination: 'Iloilo City',
     endDate: new Date('2023-08-11'),
     isAccommodationIncluded: false,
     isFoodIncluded: true,
@@ -90,6 +91,7 @@ describe('durationScore', () => {
 describe('costScore', () => {
   const tripInput: CreateTripInput = {
     budget: 2_500,
+    destination: 'Iloilo City',
     endDate: new Date('2023-08-11'),
     isAccommodationIncluded: false,
     isFoodIncluded: true,
@@ -131,7 +133,7 @@ describe('costScore', () => {
       travelExpenses,
     );
 
-    expect(costScore).toBe(0.0641);
+    expect(costScore).toBe(0.0441);
     // expects a higher score if budget was not maximized
   });
 
@@ -142,8 +144,8 @@ describe('costScore', () => {
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
 
     const accommodationCost = 0;
-    const foodCost = 500;
-    const attractionCost = 250;
+    const foodCost = 350;
+    const attractionCost = 200;
     const totalTravelers = 2;
     const travelExpenses = calculateTravelExpense(
       totalDistance,
@@ -160,7 +162,7 @@ describe('costScore', () => {
       duration,
       travelExpenses,
     );
-    expect(costScore).toBe(0.2045);
+    expect(costScore).toBe(0.1245);
     // expects a lesser score if total cost is closer to budget
   });
 
@@ -171,7 +173,7 @@ describe('costScore', () => {
     const duration = tripDuration(tripInput.startDate, tripInput.endDate);
 
     const accommodationCost = 0;
-    const foodCost = 950;
+    const foodCost = 550;
     const attractionCost = 400;
     const totalTravelers = 2;
     const travelExpenses = calculateTravelExpense(
@@ -189,7 +191,7 @@ describe('costScore', () => {
       duration,
       travelExpenses,
     );
-    expect(costScore).toBe(0.4472);
+    expect(costScore).toBe(0.2872);
     // expects a higher score if total cost exceeds budget
   });
 });
@@ -198,6 +200,7 @@ describe('evaluateFitness', () => {
   it('should evaluate fitness score of chromosome within budget and time', () => {
     const tripInput: CreateTripInput = {
       budget: 2_500,
+      destination: 'Iloilo City',
       endDate: new Date('2023-08-11'),
       isAccommodationIncluded: false,
       isFoodIncluded: true,
@@ -225,8 +228,8 @@ describe('evaluateFitness', () => {
     const travelDuration = 3_600; // total travel duration of the trip (sec)
 
     const accommodationCost = 0;
-    const foodCost = 700;
-    const attractionCost = 400;
+    const foodCost = 300;
+    const attractionCost = 200;
     const totalTravelers = 2;
     const travelExpenses = calculateTravelExpense(
       totalDistance,
@@ -251,13 +254,14 @@ describe('evaluateFitness', () => {
     );
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
-    expect(fitnessScore).toBe(4.065619092147257);
+    expect(fitnessScore).toBe(15.31510835439161);
     // expects a higher value if budget and time duration is within user's constraints
   });
 
   it('should evaluate fitness score of chromosome within budget and but over time', () => {
     const tripInput: CreateTripInput = {
       budget: 2_500,
+      destination: 'Iloilo City',
       endDate: new Date('2023-08-11'),
       isAccommodationIncluded: false,
       isFoodIncluded: true,
@@ -285,8 +289,8 @@ describe('evaluateFitness', () => {
     const travelDuration = 9_500;
 
     const accommodationCost = 0;
-    const foodCost = 700;
-    const attractionCost = 400;
+    const foodCost = 300;
+    const attractionCost = 200;
     const totalTravelers = 2;
     const travelExpenses = calculateTravelExpense(
       totalDistance,
@@ -312,13 +316,14 @@ describe('evaluateFitness', () => {
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(4.033071183706393);
+    expect(fitnessScore).toBe(14.92537313432836);
     // expects a lesser value if time duration exceeds user's constraints
   });
 
   it('should evaluate fitness score of chromosome over budget and within time', () => {
     const tripInput: CreateTripInput = {
       budget: 2_500,
+      destination: 'Iloilo City',
       endDate: new Date('2023-08-11'),
       isAccommodationIncluded: false,
       isFoodIncluded: true,
@@ -347,8 +352,8 @@ describe('evaluateFitness', () => {
     const travelers = 2;
 
     const accommodationCost = 0;
-    const foodCost = 1000;
-    const attractionCost = 900;
+    const foodCost = 600;
+    const attractionCost = 400;
     const totalTravelers = 2;
     const travelExpenses = calculateTravelExpense(
       totalDistance,
@@ -374,7 +379,7 @@ describe('evaluateFitness', () => {
 
     const fitnessScore = calculateFitnessScore(costScore, durationScore);
 
-    expect(fitnessScore).toBe(2.1278180290021598);
+    expect(fitnessScore).toBe(4.871039236221048);
     // expects a lesser value if budget exceeds users constraints
   });
 });
