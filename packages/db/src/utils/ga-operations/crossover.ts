@@ -64,6 +64,14 @@ export const crossoverEval = (
   const foodThreshold = dailyBudget * rate.FOOD;
 
   const foodMaxDuration = desiredTravelHours * 0.3;
+  const estimatedTravelDuration = desiredTravelHours * rate.TRANSPORT;
+
+  const transportationCostThreshold = dailyBudget * rate.TRANSPORT;
+  const accommdationCostThreshold = dailyBudget * rate.ACCOMMODATION;
+
+  const targetCost =
+    dailyBudget - (accommdationCostThreshold + transportationCostThreshold);
+  const targetDuration = desiredTravelHours - estimatedTravelDuration;
 
   let foodDuration = 0;
   let totalCost = 0;
@@ -83,7 +91,7 @@ export const crossoverEval = (
 
       if (
         budgets.attraction + attractionCost <= attractionThreshold &&
-        totalDuration + poiDuration <= desiredTravelHours
+        totalDuration + poiDuration <= targetDuration
       ) {
         budgets.attraction += attractionCost;
         totalCost += attractionCost;
@@ -99,20 +107,22 @@ export const crossoverEval = (
 
       if (
         budgets.food + averagePrice <= foodThreshold &&
-        foodDuration + poiDuration <= foodMaxDuration &&
-        totalDuration + poiDuration <= desiredTravelHours
+        foodDuration + poiDuration <= foodMaxDuration
       ) {
-        budgets.food += foodCost;
-        totalCost += foodCost;
-        foodDuration += poiDuration;
-        totalDuration += poiDuration;
-        chromosome.push(poi);
+        if (totalDuration + poiDuration <= targetDuration) {
+          budgets.food += foodCost;
+          totalCost += foodCost;
+          foodDuration += poiDuration;
+          totalDuration += poiDuration;
+          chromosome.push(poi);
+        }
       }
     }
 
-    if (totalCost > dailyBudget) {
+    if (totalCost > targetCost) {
       return chromosome;
     }
   }
+
   return chromosome;
 };
