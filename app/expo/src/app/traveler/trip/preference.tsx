@@ -14,7 +14,7 @@ import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
 import CuisineSelection from '~/components/FormField/CuisineSelection';
 import DiningStyleSelection from '~/components/FormField/DiningStyleSelection';
 import Stepper from '~/components/Stepper/Stepper';
-import { GetPoiFeaturesDocument } from '~/graphql/generated';
+import { ExpenseCategory, GetPoiFeaturesDocument } from '~/graphql/generated';
 import { TripPreferenceData } from '~/store/types';
 import useFormstore from '~/store/useFormStore';
 import Back from '../../../../assets/images/back-btn.svg';
@@ -33,12 +33,47 @@ export default function TripPreferenceScreen() {
     activeSections,
     completedSteps,
     visitedSteps,
+    tripData,
     setData,
+    reset,
     setActiveSection,
     setActiveSections,
     setCompletedSteps,
     setVisitedSteps,
   } = useFormstore();
+
+  const Sections = [
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
+      ? [
+          {
+            title: 'Choose accommodation type',
+          },
+        ]
+      : []),
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
+      ? [
+          {
+            title: 'Choose amenities',
+          },
+        ]
+      : []),
+    {
+      title: 'Choose activities you like',
+    },
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Food)
+      ? [
+          {
+            title: 'Choose dining styles',
+          },
+          {
+            title: 'Choose cuisines you like',
+          },
+        ]
+      : []),
+  ];
 
   const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
     [],
@@ -281,19 +316,34 @@ export default function TripPreferenceScreen() {
   };
 
   const fields = [
-    <AccommodationSelection
-      initialSelectedOption={preferenceData.accommodationType}
-      onOptionChange={(value) =>
-        handleTripPreferenceChange('accommodationType', value)
-      }
-      key={1}
-    />,
-    <AmenitiesSelection
-      data={amenities}
-      initialSelectedOptions={preferenceData.amenities}
-      key={2}
-      onOptionChange={(value) => handleTripPreferenceChange('amenities', value)}
-    />,
+    // Accommodation Selection
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
+      ? [
+          <AccommodationSelection
+            initialSelectedOption={preferenceData.accommodationType}
+            onOptionChange={(value) =>
+              handleTripPreferenceChange('accommodationType', value)
+            }
+            key={1}
+          />,
+        ]
+      : []),
+    // Amenities Selection
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
+      ? [
+          <AmenitiesSelection
+            data={amenities}
+            initialSelectedOptions={preferenceData.amenities}
+            key={2}
+            onOptionChange={(value) =>
+              handleTripPreferenceChange('amenities', value)
+            }
+          />,
+        ]
+      : []),
+    // Activities Selection
     <ActivitiesSelection
       initialActivityValues={preferenceData.activities}
       onActivitiesSliderValueChange={(name, value) =>
@@ -301,21 +351,34 @@ export default function TripPreferenceScreen() {
       }
       key={3}
     />,
-    <DiningStyleSelection
-      initialSelectedOptions={preferenceData.diningStyles}
-      onOptionChange={(value) =>
-        handleTripPreferenceChange('diningStyles', value)
-      }
-      key={4}
-    />,
-    <CuisineSelection
-      data={cuisines}
-      initialSelectedOptions={preferenceData.cuisines}
-      onOptionChange={(value) => handleTripPreferenceChange('cuisines', value)}
-      key={5}
-    />,
+    // Dining Style Selection
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Food)
+      ? [
+          <DiningStyleSelection
+            initialSelectedOptions={preferenceData.diningStyles}
+            onOptionChange={(value) =>
+              handleTripPreferenceChange('diningStyles', value)
+            }
+            key={4}
+          />,
+        ]
+      : []),
+    // Cuisine Selection
+    ...(tripData.budgetInclusions &&
+    tripData.budgetInclusions.includes(ExpenseCategory.Food)
+      ? [
+          <CuisineSelection
+            data={cuisines}
+            initialSelectedOptions={preferenceData.cuisines}
+            onOptionChange={(value) =>
+              handleTripPreferenceChange('cuisines', value)
+            }
+            key={5}
+          />,
+        ]
+      : []),
   ];
-
   useEffect(() => {
     setActiveSection(section ? parseInt(section as string) : 0);
     setSections([section ? parseInt(section as string) : activeSection]);
@@ -375,22 +438,4 @@ const stepperProperty: (keyof TripPreferenceData)[] = [
   'activities',
   'diningStyles',
   'cuisines',
-];
-
-const Sections = [
-  {
-    title: 'Choose accommodation type',
-  },
-  {
-    title: 'Choose amenities',
-  },
-  {
-    title: 'Choose activities you like',
-  },
-  {
-    title: 'Choose dining styles',
-  },
-  {
-    title: 'Choose cuisines you like',
-  },
 ];

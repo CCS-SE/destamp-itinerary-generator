@@ -344,8 +344,12 @@ export default function CreateTripScreen() {
           ),
         }}
       />
-      <ScrollView ref={scrollViewRef} scrollToOverflowEnabled>
-        <View className="flex-1 overflow-hidden p-3.5">
+      <ScrollView
+        ref={scrollViewRef}
+        scrollToOverflowEnabled
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={{ margin: 10, height: 650 }}>
           <Accordion
             activeSections={activeSections}
             sections={Sections.filter((_, index) =>
