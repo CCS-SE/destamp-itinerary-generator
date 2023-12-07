@@ -28,7 +28,7 @@ export default function AmountTextInput({
 }: AmountTextInputProps) {
   const [amount, setAmount] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
-  const [minBugdget, setMinBudget] = useState(0);
+  const [minBudget, setMinBudget] = useState(0);
 
   const inputWidth = Dimensions.get('window').width * 0.82;
 
@@ -36,7 +36,6 @@ export default function AmountTextInput({
     // setAmount(value);
     // onChangeText(value);
     const sanitizedValue = value.replace(/^0+/, '');
-
     setAmount(sanitizedValue);
     onChangeText(sanitizedValue);
 
@@ -48,36 +47,36 @@ export default function AmountTextInput({
       const parsedValue = parseFloat(value.trim());
       const input = parsedValue / totalTraveler;
 
-      let minBudget = 0;
       if (budgetInlusions.includes(ExpenseCategory.Accommodation)) {
-        minBudget += MIN_HOTEL_PRICE / totalTraveler;
+        accommodationCutoff = MIN_HOTEL_PRICE / totalTraveler;
       }
-
-      // Adjust the minimum budget based on the duration
-      minBudget *= duration;
 
       if (
         !budgetInlusions.includes(ExpenseCategory.Food) &&
         !budgetInlusions.includes(ExpenseCategory.Transportation) &&
         !budgetInlusions.includes(ExpenseCategory.Accommodation)
       ) {
-        minBudget = 0;
+        costCutoff = 0;
       }
-      minBudget = Math.ceil(minBudget);
+
+      let minBudget = Math.ceil(costCutoff + accommodationCutoff);
+
+      // Multiply minBudget by duration
+      minBudget *= duration;
 
       setMinBudget(minBudget);
 
       if (input < minBudget) {
-        setErrorMsg(`Min Budget: ₱${minBudget} per person for the whole trip.`);
-        onBudgetError(
-          `Min Budget: ₱${minBudget} per person for the whole trip.`,
-        );
+        setErrorMsg('Try increasing your budget or scale down duration.');
+        onBudgetError('Try increasing your budget or scale down duration.');
       } else {
         setErrorMsg('');
         onBudgetError('');
+        setMinBudget(0);
       }
     }
   };
+
   return (
     <View>
       <View className="flex-row items-center" style={{ width: inputWidth }}>
@@ -112,7 +111,9 @@ export default function AmountTextInput({
             testID={textInputProps.testID + '-error'}
             className=" font-poppins text-xs text-gray-500"
           >
-            Try increasing your budget or scale down duration.
+            {minBudget !== 0
+              ? `Min Budget: ₱${minBudget} per person for the whole trip.`
+              : ''}
           </Text>
         </>
       )}

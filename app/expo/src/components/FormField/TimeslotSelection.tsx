@@ -13,7 +13,7 @@ type CustomThumbProps = {
   thumb: 'min' | 'max';
 };
 
-const CustomThumb = ({ value, thumb }: CustomThumbProps) => {
+const CustomThumb = ({ thumb }: CustomThumbProps) => {
   const isMaxThumb = thumb === 'max';
 
   return (
