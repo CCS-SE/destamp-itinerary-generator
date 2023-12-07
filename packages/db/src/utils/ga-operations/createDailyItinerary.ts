@@ -2,13 +2,13 @@ import { PointOfInterest } from '.';
 import { NexusGenInputs } from '../../graphql/generated/nexus';
 import { fetchMapboxMatrix } from '../../service/mapboxService';
 import { getBudgetAllocation } from './budgetAllocation';
+import shortestPath from './shortestPath';
 import { Chromosome as Chrom } from './types';
 import {
   calculateTravelExpenses,
   findPoiWithNearestPrice,
   getCoordinates,
   getCoordinatesParam,
-  getMatrixAvg,
 } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
@@ -27,34 +27,28 @@ export const assignAccommodation = (
     (budget * budgetRate.ACCOMMODATION) / duration,
   );
 
-  const accommodations = pois.filter(
-    (poi) =>
-      poi.accommodation &&
-      parseFloat(poi.price) <= suggestedAccommodationPricePerDay,
-  );
+  const accommodations = pois.filter((poi) => poi.accommodation);
+
+  const updateDailyItineraries = (
+    dailyItineraries: Chrom[],
+    accommodation: PointOfInterest,
+  ): Chrom[] => {
+    return dailyItineraries.map((itinerary) => {
+      const updatedItinerary = { ...itinerary };
+      updatedItinerary.chrom.genes.unshift(accommodation);
+      return updatedItinerary;
+    });
+  };
 
   if (input.isAccommodationIncluded) {
-    if (accommodations) {
-      const updatedDailyItineraries = dailyItineraries.map((itinerary) => {
-        const updatedItinerary = { ...itinerary };
-
-        // assign the first accommodation
-        updatedItinerary.chrom.genes.unshift(accommodations[0]!);
-        return updatedItinerary;
-      });
-      return updatedDailyItineraries;
-    } else {
-      const accommodationWithNearestPrice = findPoiWithNearestPrice(
-        accommodations,
-        suggestedAccommodationPricePerDay,
-      );
-      const updatedDailyItineraries = dailyItineraries.map((itinerary) => {
-        const updatedItinerary = { ...itinerary };
-        updatedItinerary.chrom.genes.unshift(accommodationWithNearestPrice);
-        return updatedItinerary;
-      });
-      return updatedDailyItineraries;
-    }
+    const accommodationWithNearestPrice = findPoiWithNearestPrice(
+      accommodations,
+      suggestedAccommodationPricePerDay,
+    );
+    return updateDailyItineraries(
+      dailyItineraries,
+      accommodationWithNearestPrice,
+    );
   } else {
     return dailyItineraries;
   }
@@ -67,9 +61,24 @@ export const createDailyItinerary = async (
   const { genes } = chromosome.chrom;
 
   const startingLocation: PointOfInterest = {
-    ...genes[0]!,
+    id: 'start',
+    name: 'Starting Location',
+    price: '0',
+    isAttraction: false,
+    visitDuration: 0,
     latitude: input.startingLocation.center[1] as number,
     longitude: input.startingLocation.center[0] as number,
+    restaurant: {
+      id: 0,
+      atmospheres: [],
+      poiId: '',
+    },
+    accommodation: {
+      id: 0,
+      amenities: [],
+      poiId: '',
+    },
+    categories: [],
   };
 
   // add starting location to matrix if accommodation is not included
@@ -83,56 +92,21 @@ export const createDailyItinerary = async (
     const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
     const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
 
-    const distances = Array(pois.length).fill(Infinity);
-    const durations = Array(pois.length).fill(Infinity);
-    const sortedGenes = Array(pois.length).fill(null);
-
-    const avgDistance = getMatrixAvg(matrix.distances);
-    const avgDuration = getMatrixAvg(matrix.durations);
-
-    const visited = new Set<number>();
-
-    distances[0] = 0;
-    durations[0] = 0;
-    sortedGenes[0] = pois[0];
-
-    while (visited.size < pois.length) {
-      const index = Array.from(distances.keys()).find(
-        (i) => !visited.has(i) && distances[i] !== Infinity,
-      );
-
-      if (index === undefined) break;
-
-      visited.add(index);
-
-      for (let i = 0; i < pois.length; i++) {
-        const distance = matrix.distances[index]![i]!;
-        const duration = matrix.durations[index]![i]!;
-
-        if (!visited.has(i) && distance !== null && distance > 0) {
-          const newDistance = distances[index] + distance;
-          const newDuration = durations[index] + duration;
-
-          if (newDistance < distances[i]) {
-            distances[i] = newDistance;
-            durations[i] = newDuration;
-            sortedGenes[i] = pois[i];
-          }
-        }
-      }
-    }
+    const { distances, durations, orderedPOIs } = shortestPath(
+      pois,
+      matrix.distances,
+      matrix.durations,
+      pois[0]!,
+    );
 
     // removed initialized 0 distance / duration
-    distances.shift();
-    durations.shift();
-
-    distances.push(avgDistance);
-    durations.push(avgDuration);
+    distances.push(distances.shift());
+    durations.push(durations.shift());
 
     // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
     const orderedGenes = input.isAccommodationIncluded
-      ? sortedGenes
-      : sortedGenes.slice(1);
+      ? orderedPOIs
+      : orderedPOIs.slice(1);
 
     // update the chrosome with ordered genes
     const updatedChoromosome: Chrom = {
@@ -140,8 +114,8 @@ export const createDailyItinerary = async (
       travelExpenses: input.isTransportationIncluded
         ? calculateTravelExpenses(distances, durations, input.travelerCount)
         : 0,
-      travelDurations: durations,
-      travelDistances: distances,
+      travelDurations: durations as number[],
+      travelDistances: distances as number[],
     };
 
     updatedChoromosome.chrom.genes = orderedGenes;
