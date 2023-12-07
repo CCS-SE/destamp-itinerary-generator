@@ -10,9 +10,9 @@ import { useQuery } from '@apollo/client';
 import StepperButton from '~/components/Button/StepperButton';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';
 import ActivitiesSelection from '~/components/FormField/ActivitiesSelection';
-import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
 import CuisineSelection from '~/components/FormField/CuisineSelection';
 import DiningStyleSelection from '~/components/FormField/DiningStyleSelection';
+import MultiSelection from '~/components/FormField/MultiSelection';
 import Stepper from '~/components/Stepper/Stepper';
 import { ExpenseCategory, GetPoiFeaturesDocument } from '~/graphql/generated';
 import { TripPreferenceData } from '~/store/types';
@@ -332,13 +332,14 @@ export default function TripPreferenceScreen() {
     ...(tripData.budgetInclusions &&
     tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
       ? [
-          <AmenitiesSelection
+          <MultiSelection
             data={amenities}
             initialSelectedOptions={preferenceData.amenities}
             key={2}
             onOptionChange={(value) =>
               handleTripPreferenceChange('amenities', value)
             }
+            placeholder="Amenities"
           />,
         ]
       : []),
