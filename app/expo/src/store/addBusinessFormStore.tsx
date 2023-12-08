@@ -112,8 +112,8 @@ export const initialFormState = {
         openingTime: new Date(new Date().setHours(10, 0)),
       },
     ],
-    hour: '1',
-    minute: '30',
+    hour: 1,
+    minute: 0,
   } as OpeningHoursData,
   establishment: {
     type: 'Accommodation',
@@ -129,12 +129,12 @@ export const initialFormState = {
   } as AttractionFacilitesData,
   restaurantFacilities: {
     atmpospheres: ['Upscaled'],
-    categories: ['American Restaurant'],
+    categories: [],
     minPrice: '200',
     maxPrice: '400',
   } as RestaurantFacilitesData,
   businessImages: {
-    permitUrl: '',
+    permitUrl: null,
     urls: [],
   } as BusinessImagesData,
 };

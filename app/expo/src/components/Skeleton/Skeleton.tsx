@@ -26,7 +26,7 @@ const Skeleton = ({ width, height, style }: SkeletonProps) => {
         {
           width: width,
           height: height,
-          backgroundColor: 'rgba(0,0,0,0.12)',
+          backgroundColor: 'rgba(0,0,0,0.10)',
           overflow: 'hidden',
         },
         style,

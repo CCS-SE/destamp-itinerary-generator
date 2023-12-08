@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import Skeleton from './Skeleton';
 
-const ProfileScreenSkeleton = () => {
+const BusinessProfileScreenSkeleton = () => {
   const cardWidth = Dimensions.get('window').width * 0.88;
   return (
     <View className="flex-1 items-center">
@@ -13,7 +13,6 @@ const ProfileScreenSkeleton = () => {
         height={Dimensions.get('window').height * 0.3}
         style={{ borderRadius: 16, marginBottom: 15 }}
       />
-      <Skeleton width={cardWidth} height={180} style={{ borderRadius: 16 }} />
       <Skeleton
         width={cardWidth}
         height={60}
@@ -24,13 +23,8 @@ const ProfileScreenSkeleton = () => {
         height={60}
         style={{ borderRadius: 16, marginBottom: 15 }}
       />
-      <Skeleton
-        width={cardWidth}
-        height={60}
-        style={{ borderRadius: 16, marginBottom: 15 }}
-      />
     </View>
   );
 };
 
-export default ProfileScreenSkeleton;
+export default BusinessProfileScreenSkeleton;

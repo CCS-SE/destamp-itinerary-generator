@@ -63,8 +63,8 @@ export interface BasicInfoData {
 
 export interface OpeningHoursData {
   openingHours: OpeningHour[];
-  hour: string;
-  minute: string;
+  hour: number;
+  minute: number;
 }
 
 export interface EstablishmentTypeData {
@@ -91,5 +91,5 @@ export interface AttractionFacilitesData {
 
 export interface BusinessImagesData {
   urls: string[];
-  permitUrl: string;
+  permitUrl: string | null;
 }

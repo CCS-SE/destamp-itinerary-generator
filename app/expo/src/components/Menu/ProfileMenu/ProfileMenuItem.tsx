@@ -25,7 +25,7 @@ function ProfileMenuItem({ onPress, item }: ProfileMenuItemProps) {
       }}
     >
       <View testID="profile-menu-item" style={{ width: cardWidth }}>
-        <View className="mt-5 flex-row items-center rounded-xl bg-white px-3 py-3 ">
+        <View className="mt-5 flex-row items-center rounded-xl bg-gray-100 px-3 py-3 ">
           {item?.icon}
           <Text
             style={{ color: item?.color }}
