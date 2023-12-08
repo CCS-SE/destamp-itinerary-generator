@@ -1,8 +1,9 @@
 import { Text, View } from 'react-native';
 import { Tabs } from 'expo-router';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { TabBarIcon } from '~/components/Icon/TabBarIcon';
-import Logo from '../../../assets/images/destampp-logo.svg';
+import Logo from '../../../../assets/images/destampp-logo.svg';
 
 export default function TabLayout() {
   return (
@@ -10,7 +11,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'My Trips',
+          title: 'My Business',
           headerTitleStyle: {
             fontSize: 25,
             fontFamily: 'Poppins',
@@ -25,7 +26,7 @@ export default function TabLayout() {
           },
           tabBarActiveTintColor: '#FC6873',
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="cursor" color={color} size={24} />
+            <MaterialIcons name="storefront" size={24} color={color} />
           ),
           tabBarLabel: ({ focused }) => (
             <Text
@@ -35,7 +36,7 @@ export default function TabLayout() {
                 fontSize: 10,
               }}
             >
-              My Trips
+              My Business
             </Text>
           ),
         }}

@@ -1,22 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
-import { useQuery } from '@apollo/client';
 
-import { AuthContext } from '~/context/AuthProvider';
-import { GetUserInfoDocument } from '~/graphql/generated';
 import NoTripIcon from '../../../assets/images/empty-trip.svg';
 
 export default function MyTripEmptyState() {
-  const { user } = useContext(AuthContext);
-  const { data } = useQuery(GetUserInfoDocument, {
-    variables: {
-      userId: user ? user.id : '',
-    },
-  });
-
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     router.push('/traveler/trip/create/');
@@ -27,13 +17,7 @@ export default function MyTripEmptyState() {
       <View className="my-7">
         <NoTripIcon height={300} width={500} />
       </View>
-      <View className="text-center">
-        {data && (
-          <Text className="font-poppins text-xl font-normal text-slate-700">
-            Welcome, {data.user.firstName}!
-          </Text>
-        )}
-      </View>
+      <View className="text-center"></View>
       <Text
         testID="empty-state-title"
         className="pt-3 font-poppins text-lg font-normal text-slate-600"

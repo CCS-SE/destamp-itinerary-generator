@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
-import { supabase } from 'config/initSupabase';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import BusinessCard from '~/components/Card/owner/BusinessCard';
@@ -19,11 +18,6 @@ const BusinessListScreen = () => {
       userId: user ? user.id : '',
     },
   });
-
-  const handleLogout = async () => {
-    // added temp logout button
-    return await supabase.auth.signOut();
-  };
 
   if (error) {
     return <Text>Error: {error.message}</Text>;
@@ -61,12 +55,9 @@ const BusinessListScreen = () => {
           showsVerticalScrollIndicator={false}
         />
       )}
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
       <AbsoluteButton
         title="+"
-        onPress={() => router.push('/business/create/overview')}
+        onPress={() => router.push('/business/create/basicInformation')}
         style={{ bottom: 40 }}
       />
     </View>
