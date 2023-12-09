@@ -140,7 +140,7 @@ export default function ReviewTripScreen() {
             'Itinerary generated successfully',
             ToastAndroid.SHORT,
           );
-          router.push('/(tabs)');
+          router.push('/traveler/(tabs)');
           reset();
         },
         refetchQueries: [
