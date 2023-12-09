@@ -31,7 +31,7 @@ export default function MapScreen() {
   const CARD_WIDTH = width * 0.7;
   const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
-  const edgePadding = { top: 100, right: 130, bottom: 200, left: 130 };
+  const edgePadding = { top: 100, right: 50, bottom: 200, left: 50 };
 
   const googleMapsKey = Constants.expoConfig?.extra
     ?.GOOGLE_MAPS_API_KEY as string;
@@ -47,35 +47,35 @@ export default function MapScreen() {
   });
 
   const selectedDailyItinerary =
-    data?.trip.dailyItineraries[parseInt(selectedDay as string)];
+    data && data.trip.dailyItineraries[parseInt(selectedDay as string)];
 
   const startingLocation = {
-    ...selectedDailyItinerary?.dailyItineraryPois[0]?.poi,
+    ...selectedDailyItinerary!.dailyItineraryPois[0]!.poi,
     id: '',
     latitude: data?.trip.startingLocation.center[1],
     longitude: data?.trip.startingLocation.center[0],
     name: data?.trip.startingLocation.name,
   };
 
-  const dailyItineraryPois = data?.trip.isAccommodationIncluded
-    ? selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi)
-    : [startingLocation].concat(
-        selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi) ||
-          [],
-      );
+  const dailyItineraryPois =
+    data && data.trip.isAccommodationIncluded
+      ? selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi)
+      : [startingLocation].concat(
+          selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi) ||
+            [],
+        );
   const mapAnimation = new Animated.Value(0);
 
   useEffect(() => {
     let mapIndex = 0;
     mapAnimation.addListener(({ value }) => {
       let index = Math.floor(value / CARD_WIDTH + 0.3);
-      const destinations = data!.trip.dailyItineraries[
-        parseInt(selectedDay as string)
-      ]!.dailyItineraryPois.map((item) => item.poi);
-      if (index >= destinations.length) {
+      const destinations = dailyItineraryPois!.map((item) => item);
+
+      if (index > destinations.length) {
         index = destinations.length - 1;
       }
-      if (index <= 0) {
+      if (index < 0) {
         index = 0;
       }
 
@@ -83,8 +83,8 @@ export default function MapScreen() {
         if (mapIndex !== index) {
           mapIndex = index;
           setCurrentPlaceIndex(index);
-          const firstLocation = destinations[index];
-          const secondLocation = destinations[index + 1];
+          const firstLocation = destinations[index - 1];
+          const secondLocation = destinations[index];
           mapRef?.current?.fitToCoordinates(
             [
               {
@@ -142,7 +142,7 @@ export default function MapScreen() {
         onMapReady={() => {
           const firstLocation = dailyItineraryPois![0];
           const secondLocation = dailyItineraryPois![1];
-          if (dailyItineraryPois![0] && mapRef.current) {
+          if (firstLocation && mapRef.current) {
             mapRef?.current?.fitToCoordinates(
               [
                 {
@@ -150,9 +150,8 @@ export default function MapScreen() {
                   longitude: firstLocation?.longitude,
                 },
                 {
-                  latitude: secondLocation?.latitude || firstLocation?.latitude,
-                  longitude:
-                    secondLocation?.longitude || firstLocation?.longitude,
+                  latitude: secondLocation?.latitude,
+                  longitude: secondLocation?.longitude,
                 },
               ],
               {
@@ -172,7 +171,6 @@ export default function MapScreen() {
                 },
               ],
             };
-
             return (
               <Marker
                 key={i}
@@ -197,20 +195,16 @@ export default function MapScreen() {
           <MapViewDirections
             key={currentPlaceIndex}
             origin={{
-              latitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex - 1
-              ]?.poi.latitude as number,
-              longitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex - 1
-              ]?.poi.longitude as number,
+              latitude: dailyItineraryPois![currentPlaceIndex - 1]
+                ?.latitude as number,
+              longitude: dailyItineraryPois![currentPlaceIndex - 1]
+                ?.longitude as number,
             }}
             destination={{
-              latitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex
-              ]?.poi.latitude as number,
-              longitude: selectedDailyItinerary?.dailyItineraryPois[
-                currentPlaceIndex
-              ]?.poi.longitude as number,
+              latitude: dailyItineraryPois![currentPlaceIndex]
+                ?.latitude as number,
+              longitude: dailyItineraryPois![currentPlaceIndex]
+                ?.longitude as number,
             }}
             apikey={googleMapsKey}
             strokeColor="#F65A82"
