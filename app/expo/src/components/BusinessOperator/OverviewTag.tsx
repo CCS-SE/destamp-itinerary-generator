@@ -4,14 +4,15 @@ import { Text, View } from 'react-native';
 const OverviewTag = ({
   content,
   icon,
+  width,
 }: {
   content: string;
   icon: React.ReactElement;
+  width?: number;
 }) => {
   return (
     <View
       style={{
-        flexDirection: 'row',
         borderRadius: 10,
         alignItems: 'center',
         borderWidth: 2,
@@ -25,7 +26,7 @@ const OverviewTag = ({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        width: 170,
+        width: width || 170,
         padding: 5,
       }}
     >

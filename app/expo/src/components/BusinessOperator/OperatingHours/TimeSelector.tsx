@@ -11,17 +11,19 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 
-const BusinessTimeSelector = () => {
-  const initialOpeningTime = new Date();
-  initialOpeningTime.setHours(8, 0, 0, 0); // Set initial opening time to 8 AM
+interface BusinessTimeSelectorProps {
+  startTime: Date;
+  endTime: Date;
+}
 
-  const initialClosingTime = new Date();
-  initialClosingTime.setHours(21, 0, 0, 0); // Set initial closing time to 5 PM
-
+const BusinessTimeSelector = ({
+  startTime,
+  endTime,
+}: BusinessTimeSelectorProps) => {
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
-  const [startHour, setStartHour] = useState<Date>(initialOpeningTime);
-  const [endHour, setEndHour] = useState<Date>(initialClosingTime);
+  const [startHour, setStartHour] = useState(startTime);
+  const [endHour, setEndHour] = useState(endTime);
 
   const handleStartChange = (
     _event: DateTimePickerEvent,
@@ -83,8 +85,8 @@ const BusinessTimeSelector = () => {
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowRadius: 1.84,
+    elevation: 2,
     borderRadius: 10,
     padding: 10,
     justifyContent: 'space-between',
@@ -98,21 +100,15 @@ const BusinessTimeSelector = () => {
         >
           <View style={{ padding: 10, marginRight: 10 }}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
-              OPENING HOUR:
+              Opening hour:
             </Text>
             <View style={containerStyles}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins',
-                  fontSize: 15,
-                  color: 'green',
-                }}
-              >
+              <Text className="font-poppins-medium text-base text-[#FA8E56]">
                 {' '}
                 <MaterialCommunityIcons
                   name="clock-edit-outline"
-                  size={24}
-                  color="black"
+                  size={23}
+                  color="#FA8E56"
                 />
                 {' \t'}
                 {formatTime(startHour)}
@@ -136,21 +132,15 @@ const BusinessTimeSelector = () => {
           >
             <View style={{ padding: 10, marginLeft: 10 }}>
               <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
-                CLOSING HOUR:
+                Closing hour:
               </Text>
               <View style={containerStyles}>
-                <Text
-                  style={{
-                    fontFamily: 'Poppins',
-                    fontSize: 15,
-                    color: 'green',
-                  }}
-                >
+                <Text className="font-poppins-medium text-base text-[#FA8E56]">
                   {' '}
                   <MaterialCommunityIcons
                     name="clock-edit-outline"
-                    size={24}
-                    color="black"
+                    size={23}
+                    color="#FA8E56"
                   />
                   {' \t'}
                   {formatTime(endHour)}
@@ -158,7 +148,6 @@ const BusinessTimeSelector = () => {
               </View>
             </View>
           </TouchableWithoutFeedback>
-
           {showEndPicker && (
             <View>
               <DateTimePicker

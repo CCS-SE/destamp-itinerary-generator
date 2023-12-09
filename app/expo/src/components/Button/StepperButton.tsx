@@ -1,6 +1,6 @@
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
-interface StepperButtonProps {
+interface StepperButtonProps extends TouchableOpacityProps {
   onPress: () => void;
   label: string;
   disabled?: boolean;
@@ -10,9 +10,11 @@ export default function StepperButton({
   onPress,
   label,
   disabled = false,
+  ...touchableOpacityProps
 }: StepperButtonProps) {
   return (
     <TouchableOpacity
+      {...touchableOpacityProps}
       onPress={onPress}
       activeOpacity={0.9}
       disabled={disabled}

@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import { router, Stack } from 'expo-router';
 
 import Back from '../../../assets/images/back-btn.svg';
-import Logo from '../../../assets/images/destampp-logo.svg';
 
 const handleBack = () => {
   router.back();
@@ -16,7 +15,7 @@ const CreateBusinessHeader = ({ title }: { title: string }) => {
         options={{
           title: title,
           headerTitleStyle: {
-            color: '#FF8439',
+            color: '#504D4D',
             fontSize: 20,
             fontFamily: 'Poppins',
           },
@@ -26,13 +25,6 @@ const CreateBusinessHeader = ({ title }: { title: string }) => {
             </View>
           ),
           headerBackVisible: false,
-          headerRight: () => {
-            return (
-              <View className="rounded-full p-0.5">
-                <Logo height={45} width={45} />
-              </View>
-            );
-          },
         }}
       />
     </View>
