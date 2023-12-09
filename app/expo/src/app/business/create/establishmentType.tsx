@@ -1,62 +1,101 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import * as Haptics from 'expo-haptics';
+import { router, Stack } from 'expo-router';
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import Questions from '~/components/BusinessOperator/Question';
 import EstablishmentTypeButton from '~/components/Button/EstablishmentTypeButton';
 import StepperButton from '~/components/Button/StepperButton';
+import addBusinessFormStore from '~/store/addBusinessFormStore';
+import { confirmationAlert } from '~/utils/utils';
+import Back from '../../../../assets/images/back-btn.svg';
 
 const EstablishmentType = () => {
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const { establishment, setData, reset } = addBusinessFormStore();
 
-  const handleTypeSelection = (type: string) => {
-    setSelectedType(type);
+  const handleNext = () => {
+    router.push('/business/create/basicInformation');
   };
-  const handleContinue = () => {
-    if (!selectedType) {
-      return;
-    }
 
-    if (selectedType === 'Accommodation') {
-      router.push('/business/create/accommodationFacilities');
-      console.log('Redirect to accommodation facilities');
-    } else if (selectedType === 'Attraction') {
-      router.push('/business/create/attractionActivities');
-      console.log('Redirect to attraction activities');
-    } else if (selectedType === 'Restaurant') {
-      router.push('/business/create/restaurantFacilities');
-      console.log('Redirect to restaurant facilities');
-    }
+  const handleBack = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    confirmationAlert(
+      'Discard changes',
+      'Are you sure you want to discard your changes?',
+      'Discard',
+      'Cancel',
+      () => {
+        reset();
+        router.back();
+      },
+    );
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }}>
-      <CreateBusinessHeader title={'Establishment Type'} />
-      <View style={{ alignItems: 'center', marginBottom: 70 }}>
-        <SafeAreaView>
-          <View style={{ marginBottom: 150 }}>
-            <Questions question={'What type of place is this?'} />
-            <EstablishmentTypeButton
-              label="Accommodation"
-              onSelect={() => handleTypeSelection('Accommodation')}
-              isSelected={selectedType === 'Accommodation'}
-            />
-            <EstablishmentTypeButton
-              label="Attraction"
-              onSelect={() => handleTypeSelection('Attraction')}
-              isSelected={selectedType === 'Attraction'}
-            />
-            <EstablishmentTypeButton
-              label="Restaurant"
-              onSelect={() => handleTypeSelection('Restaurant')}
-              isSelected={selectedType === 'Restaurant'}
-            />
-          </View>
-        </SafeAreaView>
-      </View>
-      <StepperButton onPress={handleContinue} label={'Continue'} />
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: 'white',
+        alignItems: 'center',
+      }}
+    >
+      <Stack.Screen
+        options={{
+          title: 'Create Business',
+          headerTitleStyle: {
+            color: '#504D4D',
+            fontSize: 20,
+            fontFamily: 'Poppins',
+          },
+          headerLeft: () => (
+            <View style={{ paddingRight: 10 }}>
+              <Back height={30} width={30} onPress={handleBack} />
+            </View>
+          ),
+          headerBackVisible: false,
+        }}
+      />
+      <SafeAreaView className="flex-1">
+        <Questions question={'What type of place is this?'} />
+        <EstablishmentTypeButton
+          label="Accommodation"
+          icon={<FontAwesome name="hotel" size={24} color="#EB4586" />}
+          onSelect={() =>
+            setData({
+              step: 3,
+              data: { ...establishment, type: 'Accommodation' },
+            })
+          }
+          isSelected={establishment.type === 'Accommodation'}
+        />
+        <EstablishmentTypeButton
+          label="Attraction"
+          icon={
+            <MaterialIcons name="local-attraction" size={24} color="#EB4586" />
+          }
+          onSelect={() =>
+            setData({
+              step: 3,
+              data: { ...establishment, type: 'Attraction' },
+            })
+          }
+          isSelected={establishment.type === 'Attraction'}
+        />
+        <EstablishmentTypeButton
+          label="Restaurant"
+          icon={<Ionicons name="restaurant" size={24} color="#EB4586" />}
+          onSelect={() =>
+            setData({
+              step: 3,
+              data: { ...establishment, type: 'Restaurant' },
+            })
+          }
+          isSelected={establishment.type === 'Restaurant'}
+        />
+      </SafeAreaView>
+      <StepperButton onPress={handleNext} label={'Next'} className="-top-6" />
     </View>
   );
 };
