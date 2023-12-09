@@ -4,15 +4,18 @@ import { router } from 'expo-router';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import BusinessDayItem from '~/components/BusinessOperator/OperatingHours/BusinessDayItem';
-import TimePicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
+import TimeDurationPicker from '~/components/BusinessOperator/OperatingHours/TimeDurationPicker';
 import Question from '~/components/BusinessOperator/Question';
 import StepperButton from '~/components/Button/StepperButton';
 import addBusinessFormStore from '~/store/addBusinessFormStore';
 
 const BusinessOpeningHours: React.FC = () => {
-  const { openingHours } = addBusinessFormStore();
+  const { openingHours, establishment } = addBusinessFormStore();
 
-  const handleNext = () => router.push('/business/create/establishmentType');
+  const handleNext = () =>
+    router.push(
+      `/business/create/${establishment.type.toLowerCase()}Facilities`,
+    );
 
   return (
     <View
@@ -23,7 +26,7 @@ const BusinessOpeningHours: React.FC = () => {
         padding: 20,
       }}
     >
-      <CreateBusinessHeader title={'Add Business'} />
+      <CreateBusinessHeader title={'Create Business'} />
       <ScrollView showsVerticalScrollIndicator={false}>
         {openingHours.openingHours.map((item) => (
           <View
@@ -44,9 +47,9 @@ const BusinessOpeningHours: React.FC = () => {
             />
           </View>
         ))}
-        <View className="mt-6">
+        <View className="p-4">
           <Question question={'Recommended Visit Duration'} />
-          <TimePicker />
+          <TimeDurationPicker />
         </View>
       </ScrollView>
       <StepperButton onPress={handleNext} label={'Next'} />
