@@ -47,14 +47,27 @@ export default function shortestPath(
     }
   }
 
-  const orderedPOIs: PointOfInterest[] = visitedPois.sort(
-    (a, b) =>
-      distances[visitedPois.indexOf(a)] - distances[visitedPois.indexOf(b)],
+  const poisWithDurationsDistances = pois.map((poi, index) => ({
+    poi,
+    duration: durations[index],
+    distance: distances[index],
+  }));
+
+  // Sort the array based on the distance
+  poisWithDurationsDistances.sort((a, b) => a.distance - b.distance);
+
+  // Extract the sorted POIs and their corresponding distances and durations
+  const orderedPOIs = poisWithDurationsDistances.map(({ poi }) => poi);
+  const orderedDistances = poisWithDurationsDistances.map(
+    ({ distance }) => distance,
+  );
+  const orderedDurations = poisWithDurationsDistances.map(
+    ({ duration }) => duration,
   );
 
   return {
-    distances,
-    durations,
+    distances: orderedDistances,
+    durations: orderedDurations,
     orderedPOIs,
   };
 }
