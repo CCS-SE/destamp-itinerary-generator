@@ -48,11 +48,6 @@ export default function TripPreferenceScreen() {
           {
             title: 'Choose accommodation type',
           },
-        ]
-      : []),
-    ...(tripData.budgetInclusions &&
-    tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
-      ? [
           {
             title: 'Choose amenities',
           },

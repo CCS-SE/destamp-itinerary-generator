@@ -120,11 +120,28 @@ export default function ReviewTripScreen() {
           startingLocation: tripData.startingLocation,
         },
         tripPreferenceInput: {
-          accommodationType: preferenceData.accommodationType,
+          accommodationType: isIncluded(
+            ExpenseCategory.Accommodation,
+            tripData.budgetInclusions,
+          )
+            ? preferenceData.accommodationType
+            : '',
           activities: preferenceData.activities,
-          amenities: preferenceData.amenities,
-          cuisines: preferenceData.cuisines,
-          diningStyles: preferenceData.diningStyles,
+          amenities: isIncluded(
+            ExpenseCategory.Accommodation,
+            tripData.budgetInclusions,
+          )
+            ? preferenceData.amenities
+            : [],
+          cuisines: isIncluded(ExpenseCategory.Food, tripData.budgetInclusions)
+            ? preferenceData.cuisines
+            : [],
+          diningStyles: isIncluded(
+            ExpenseCategory.Food,
+            tripData.budgetInclusions,
+          )
+            ? preferenceData.diningStyles
+            : [],
         },
       };
 
