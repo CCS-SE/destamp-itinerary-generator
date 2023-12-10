@@ -11,15 +11,20 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 
+import addBusinessFormStore from '~/store/addBusinessFormStore';
+
 interface BusinessTimeSelectorProps {
+  day: number;
   startTime: Date;
   endTime: Date;
 }
 
 const BusinessTimeSelector = ({
+  day,
   startTime,
   endTime,
 }: BusinessTimeSelectorProps) => {
+  const { openingHours, setData } = addBusinessFormStore();
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [startHour, setStartHour] = useState(startTime);
@@ -36,6 +41,24 @@ const BusinessTimeSelector = ({
       // Check if the closing time is at least 1 hour after the opening time
       if (!endHour || endTime <= endHour) {
         setStartHour(selected);
+
+        const updatedOpeningHours = openingHours.openingHours.map((oh) => {
+          if (oh.day === day) {
+            return {
+              ...oh,
+              openingTime: new Date(selected),
+            };
+          }
+          return oh;
+        });
+
+        setData({
+          step: 2,
+          data: {
+            ...openingHours,
+            openingHours: updatedOpeningHours,
+          },
+        });
       } else {
         Alert.alert(
           'Invalid Opening Hour',
@@ -57,6 +80,23 @@ const BusinessTimeSelector = ({
       // Check if the opening time is at least 1 hour before the closing time
       if (!startHour || startHour <= startTime) {
         setEndHour(selected);
+        const updatedOpeningHours = openingHours.openingHours.map((oh) => {
+          if (oh.day === day) {
+            return {
+              ...oh,
+              closingTime: new Date(selected),
+            };
+          }
+          return oh;
+        });
+
+        setData({
+          step: 2,
+          data: {
+            ...openingHours,
+            openingHours: updatedOpeningHours,
+          },
+        });
       } else {
         Alert.alert(
           'Invalid Closing Hour',
@@ -73,23 +113,6 @@ const BusinessTimeSelector = ({
       minute: '2-digit',
       hour12: true,
     });
-  };
-
-  const containerStyles: ViewStyle = {
-    borderWidth: 1,
-    borderColor: 'transparent',
-    shadowColor: '#000',
-    backgroundColor: 'white',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 1.84,
-    elevation: 2,
-    borderRadius: 10,
-    padding: 10,
-    justifyContent: 'space-between',
   };
 
   return (
@@ -164,3 +187,20 @@ const BusinessTimeSelector = ({
 };
 
 export default BusinessTimeSelector;
+
+const containerStyles: ViewStyle = {
+  borderWidth: 1,
+  borderColor: 'transparent',
+  shadowColor: '#000',
+  backgroundColor: 'white',
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 1.84,
+  elevation: 2,
+  borderRadius: 10,
+  padding: 10,
+  justifyContent: 'space-between',
+};

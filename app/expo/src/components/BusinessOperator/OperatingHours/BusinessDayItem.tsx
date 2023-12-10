@@ -33,7 +33,11 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
           {days[day as DayValue]}
         </Text>
         {!is24Hours && !isClosed && (
-          <BusinessHourSelector endTime={endTime} startTime={startTime} />
+          <BusinessHourSelector
+            day={day}
+            endTime={endTime}
+            startTime={startTime}
+          />
         )}
         <OpeningHourCheckbox
           day={day}

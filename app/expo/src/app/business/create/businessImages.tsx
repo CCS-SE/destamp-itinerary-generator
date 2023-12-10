@@ -59,6 +59,7 @@ const BusinessPhotos: React.FC = () => {
     const updatedImages = [...businessImages.businessImages];
     const updatedImageUrls = [...businessImages.urls];
     updatedImages.splice(index, 1);
+    updatedImageUrls.splice(index, 1);
     setData({
       step: 7,
       data: {
@@ -123,6 +124,9 @@ const BusinessPhotos: React.FC = () => {
         })}
       </ScrollView>
       <View className="absolute bottom-[180] left-16 flex-1 items-center">
+        <Text style={{ fontFamily: 'Poppins', fontSize: 15, color: 'gray' }}>
+          Please upload images of your business
+        </Text>
         <BasicButton
           onPress={pickImages}
           title={'Select Images'}
