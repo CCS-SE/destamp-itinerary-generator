@@ -14,8 +14,10 @@ import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { GetTripItineraryDocument } from '~/graphql/generated';
+import { getTravelDistance, getTravelDuration } from '~/utils/utils';
 import Back from '../../../../../assets/images/back-icon.svg';
 import Mark from '../../../../../assets/images/marker.svg';
 
@@ -279,6 +281,43 @@ export default function MapScreen() {
                       source={{ uri: poi.id ? poi.images![0]!.image.url : '' }}
                       className="mt-2 h-16 w-28 rounded-md"
                     />
+                    {index !== 0 ? (
+                      <View className="item-center ml-3 justify-center ">
+                        <View className="flex-row items-center justify-center rounded-xl bg-pink-100 px-1">
+                          <MaterialCommunityIcons
+                            name="map-marker-distance"
+                            size={15}
+                            color="#DE4D6C"
+                          />
+                          <Text className=" ml-0.5 font-poppins text-gray-600">
+                            {getTravelDistance(
+                              data.trip.dailyItineraries[
+                                parseInt(selectedDay as string)
+                              ]?.dailyItineraryPois[index - 1]
+                                ?.distance as number,
+                            )}{' '}
+                            km
+                          </Text>
+                        </View>
+                        <View className="mt-1 flex-row items-center justify-center rounded-xl bg-pink-100 px-1">
+                          <Ionicons
+                            name="time-outline"
+                            size={15}
+                            color="#DE4D6C"
+                          />
+                          <Text className="ml-0.5 font-poppins text-gray-600">
+                            {getTravelDuration(
+                              data.trip.dailyItineraries[
+                                parseInt(selectedDay as string)
+                              ]?.dailyItineraryPois[index - 1]
+                                ?.duration as number,
+                            )}
+                          </Text>
+                        </View>
+                      </View>
+                    ) : (
+                      <></>
+                    )}
                   </View>
                   <View className="w-12 self-end rounded-md bg-blue-200 p-0.5 text-center">
                     <Text className="text-center font-poppins-medium text-xs text-blue-600">
