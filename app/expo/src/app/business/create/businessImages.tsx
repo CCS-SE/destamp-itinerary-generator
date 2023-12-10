@@ -78,7 +78,7 @@ const BusinessPhotos: React.FC = () => {
         flex: 1,
         backgroundColor: 'white',
         padding: 30,
-        paddingBottom: 130,
+        paddingBottom: 80,
       }}
     >
       <CreateBusinessHeader title={'Create Business'} />
@@ -123,7 +123,7 @@ const BusinessPhotos: React.FC = () => {
           );
         })}
       </ScrollView>
-      <View className="absolute bottom-[180] left-16 flex-1 items-center">
+      <View className="absolute bottom-[130] left-16 flex-1 items-center">
         <Text style={{ fontFamily: 'Poppins', fontSize: 15, color: 'gray' }}>
           Please upload images of your business
         </Text>
@@ -136,7 +136,7 @@ const BusinessPhotos: React.FC = () => {
       <StepperButton
         label="Next"
         onPress={handleNext}
-        className="top-24"
+        className="top-14"
         disabled={businessImages.urls.length === 0}
       />
     </View>

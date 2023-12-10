@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@apollo/client';
 
 import StampCard from '~/components/Card/traveler/StampCard';

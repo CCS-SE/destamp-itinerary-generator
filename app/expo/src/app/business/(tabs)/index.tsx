@@ -44,12 +44,15 @@ const BusinessListScreen = () => {
         <FlatList
           testID="my-business-list"
           data={data.pois}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <BusinessCard
               businessId={item.id}
               businessName={item.name}
               businessImages={item.images.map((item) => item.image.url)}
               businessAddress={item.address}
+              businessIsVerified={
+                data.pois[index]?.businessPermit?.isVerified || false
+              }
             />
           )}
           showsVerticalScrollIndicator={false}
