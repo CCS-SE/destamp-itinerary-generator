@@ -134,6 +134,8 @@ export const initialFormState = {
     maxPrice: '400',
   } as RestaurantFacilitesData,
   businessImages: {
+    businessImages: [],
+    permit: null,
     permitUrl: null,
     urls: [],
   } as BusinessImagesData,

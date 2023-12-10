@@ -1,16 +1,17 @@
 import { objectType } from 'nexus';
 
-const Stamp = objectType({
-  name: 'Stamp',
+const BusinessPermit = objectType({
+  name: 'BusinessPermit',
   definition(t) {
-    t.int('id');
-    t.string('title');
-    t.field('createdAt', { type: 'DateTime' });
-    t.field('updatedAt', { type: 'DateTime' });
+    t.string('id');
+    t.string('userId');
+    t.string('imageId');
+    t.string('poiId');
+    t.boolean('isVerified');
     t.field('image', {
       type: 'Image',
       resolve: ({ id }, _, ctx) => {
-        return ctx.prisma.stamp
+        return ctx.prisma.businessPermit
           .findUniqueOrThrow({
             where: {
               id: id,
@@ -22,4 +23,4 @@ const Stamp = objectType({
   },
 });
 
-export default Stamp;
+export default BusinessPermit;

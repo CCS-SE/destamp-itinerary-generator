@@ -1,3 +1,4 @@
+import { ImagePickerAsset } from 'expo-image-picker';
 import { Moment } from 'moment';
 
 import { DayValue } from '~/constant/constant';
@@ -90,6 +91,8 @@ export interface AttractionFacilitesData {
 }
 
 export interface BusinessImagesData {
+  businessImages: ImagePickerAsset[];
+  permit: ImagePickerAsset | null;
   urls: string[];
   permitUrl: string | null;
 }

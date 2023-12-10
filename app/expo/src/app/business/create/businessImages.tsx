@@ -36,6 +36,10 @@ const BusinessPhotos: React.FC = () => {
             step: 7,
             data: {
               ...businessImages,
+              businessImages: [
+                ...businessImages.businessImages,
+                ...result.assets,
+              ],
               urls: [
                 ...businessImages.urls,
                 ...result.assets.map((asset) => asset.uri),
@@ -52,13 +56,15 @@ const BusinessPhotos: React.FC = () => {
   };
 
   const deleteImage = (index: number) => {
-    const updatedImages = [...businessImages.urls];
+    const updatedImages = [...businessImages.businessImages];
+    const updatedImageUrls = [...businessImages.urls];
     updatedImages.splice(index, 1);
     setData({
       step: 7,
       data: {
         ...businessImages,
-        urls: updatedImages,
+        businessImages: updatedImages,
+        urls: updatedImageUrls,
       },
     });
   };

@@ -77,6 +77,18 @@ const PointOfInterest = objectType({
           .accommodation();
       },
     });
+    t.nullable.field('businessPermit', {
+      type: 'BusinessPermit',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.pointOfInterest
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .businessPermit();
+      },
+    });
   },
 });
 

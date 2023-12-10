@@ -85,6 +85,7 @@ export interface NexusGenInputs {
     longitude: number; // Float!
     name: string; // String!
     operatingHours: NexusGenInputs['OperatingHoursInput'][]; // [OperatingHoursInput!]!
+    permitUrl: string; // String!
     price: string; // String!
     visitDuration: number; // Int!
   };
@@ -177,6 +178,14 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   };
+  BusinessPermit: {
+    // root type
+    id: string; // String!
+    imageId: string; // String!
+    isVerified: boolean; // Boolean!
+    poiId: string; // String!
+    userId: string; // String!
+  };
   Category: {
     // root type
     id: number; // Int!
@@ -260,7 +269,6 @@ export interface NexusGenObjects {
   Stamp: {
     // root type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dateCollected: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     title: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
@@ -328,6 +336,15 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   };
+  BusinessPermit: {
+    // field return type
+    id: string; // String!
+    image: NexusGenRootTypes['Image']; // Image!
+    imageId: string; // String!
+    isVerified: boolean; // Boolean!
+    poiId: string; // String!
+    userId: string; // String!
+  };
   Category: {
     // field return type
     id: number; // Int!
@@ -375,7 +392,7 @@ export interface NexusGenFieldTypes {
     // field return type
     claimStamp: NexusGenRootTypes['User']; // User!
     createExpense: NexusGenRootTypes['Expense']; // Expense!
-    createMutation: NexusGenRootTypes['Poi']; // Poi!
+    createPoi: NexusGenRootTypes['Poi']; // Poi!
     createTrip: NexusGenRootTypes['Trip']; // Trip!
     createUser: NexusGenRootTypes['User']; // User!
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
@@ -398,6 +415,7 @@ export interface NexusGenFieldTypes {
     // field return type
     accommodation: NexusGenRootTypes['Accommodation'] | null; // Accommodation
     address: string; // String!
+    businessPermit: NexusGenRootTypes['BusinessPermit'] | null; // BusinessPermit
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -446,7 +464,6 @@ export interface NexusGenFieldTypes {
   Stamp: {
     // field return type
     createdAt: NexusGenScalars['DateTime']; // DateTime!
-    dateCollected: NexusGenScalars['DateTime']; // DateTime!
     id: number; // Int!
     image: NexusGenRootTypes['Image']; // Image!
     title: string; // String!
@@ -511,6 +528,15 @@ export interface NexusGenFieldTypeNames {
     id: 'Int';
     name: 'String';
   };
+  BusinessPermit: {
+    // field return type name
+    id: 'String';
+    image: 'Image';
+    imageId: 'String';
+    isVerified: 'Boolean';
+    poiId: 'String';
+    userId: 'String';
+  };
   Category: {
     // field return type name
     id: 'Int';
@@ -558,7 +584,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     claimStamp: 'User';
     createExpense: 'Expense';
-    createMutation: 'Poi';
+    createPoi: 'Poi';
     createTrip: 'Trip';
     createUser: 'User';
     deleteExpense: 'Expense';
@@ -581,6 +607,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     accommodation: 'Accommodation';
     address: 'String';
+    businessPermit: 'BusinessPermit';
     categories: 'Category';
     contactNumber: 'String';
     createdAt: 'DateTime';
@@ -629,7 +656,6 @@ export interface NexusGenFieldTypeNames {
   Stamp: {
     // field return type name
     createdAt: 'DateTime';
-    dateCollected: 'DateTime';
     id: 'Int';
     image: 'Image';
     title: 'String';
@@ -694,9 +720,10 @@ export interface NexusGenArgTypes {
       data: NexusGenInputs['CreateExpenseInput']; // CreateExpenseInput!
       tripId: number; // Int!
     };
-    createMutation: {
+    createPoi: {
       // args
       input: NexusGenInputs['CreatePoiInput']; // CreatePoiInput!
+      type: string; // String!
       userId: string; // String!
     };
     createTrip: {

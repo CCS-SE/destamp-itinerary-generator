@@ -4,6 +4,7 @@ import { NexusGenInputs } from '../../../generated/nexus';
 type CreatePoiInput = NexusGenInputs['CreatePoiInput'];
 
 export const createPoi = async (
+  type: string,
   userId: string,
   input: CreatePoiInput,
   ctx: Context,
@@ -12,7 +13,7 @@ export const createPoi = async (
     data: {
       address: input.address,
       name: input.name,
-      visitDuration: input.visitDuration,
+      visitDuration: type === 'Accommodation' ? 60 * 24 : input.visitDuration,
       contactNumber: input.contactNumber,
       description: input.description || '',
       price: input.price,
@@ -39,18 +40,26 @@ export const createPoi = async (
       operatingHours: {
         createMany: {
           data: input.operatingHours.map((openingHour) => {
-            return {
-              day: openingHour.day,
-              closeTime: new Date(openingHour.closeTime),
-              is24Hours: openingHour.is24hours,
-              isClosed: openingHour.isClosed,
-              openTime: new Date(openingHour.openTime),
-            };
+            return type !== 'Accommodation'
+              ? {
+                  day: openingHour.day,
+                  closeTime: new Date(openingHour.closeTime),
+                  is24Hours: openingHour.is24hours,
+                  isClosed: openingHour.isClosed,
+                  openTime: new Date(openingHour.openTime),
+                }
+              : {
+                  day: openingHour.day,
+                  closeTime: null,
+                  is24Hours: true,
+                  isClosed: false,
+                  openTime: null,
+                };
           }),
         },
       },
       accommodation:
-        input.amenities || []
+        type === 'Accommodation'
           ? {
               create: {
                 amenities: {
@@ -63,7 +72,7 @@ export const createPoi = async (
             }
           : undefined,
       restaurant:
-        input.atmospheres || []
+        type === 'Restaurant'
           ? {
               create: {
                 atmospheres: {
@@ -77,11 +86,30 @@ export const createPoi = async (
           id: userId,
         },
       },
+      businessPermit: {
+        create: {
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          image: {
+            create: {
+              url: input.permitUrl,
+            },
+          },
+        },
+      },
     },
   });
 };
 
 export const deletePoi = async (poiId: string, ctx: Context) => {
+  await ctx.prisma.businessPermit.delete({
+    where: {
+      poiId: poiId,
+    },
+  });
   await ctx.prisma.operatingHour.deleteMany({
     where: {
       poiId: poiId,

@@ -18,6 +18,15 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
+type BusinessPermit {
+  id: String!
+  image: Image!
+  imageId: String!
+  isVerified: Boolean!
+  poiId: String!
+  userId: String!
+}
+
 type Category {
   id: Int!
   name: String!
@@ -43,6 +52,7 @@ input CreatePoiInput {
   longitude: Float!
   name: String!
   operatingHours: [OperatingHoursInput!]!
+  permitUrl: String!
   price: String!
   visitDuration: Int!
 }
@@ -145,7 +155,7 @@ scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/fi
 type Mutation {
   claimStamp(stampId: Int!, userId: String!): User!
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
-  createMutation(input: CreatePoiInput!, userId: String!): Poi!
+  createPoi(input: CreatePoiInput!, type: String!, userId: String!): Poi!
   createTrip(tripInput: CreateTripInput!, tripPreferenceInput: CreateTripPreferenceInput!, userId: String!): Trip!
   createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
@@ -176,6 +186,7 @@ input OperatingHoursInput {
 type Poi {
   accommodation: Accommodation
   address: String!
+  businessPermit: BusinessPermit
   categories: [Category!]!
   contactNumber: String!
   createdAt: DateTime!
@@ -224,7 +235,6 @@ type Restaurant {
 
 type Stamp {
   createdAt: DateTime!
-  dateCollected: DateTime!
   id: Int!
   image: Image!
   title: String!

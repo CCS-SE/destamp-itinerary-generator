@@ -12,6 +12,10 @@ export const GetBusinessesQuery = gql(
           url
         }
       }
+      businessPermit {
+        id
+        isVerified
+      }
     }
   }
   `,

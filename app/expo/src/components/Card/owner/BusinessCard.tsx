@@ -49,7 +49,7 @@ function BusinessCard({
         >
           <Image
             testID="trip-destination-img"
-            source={businessImages[businessImages.length - 2]}
+            source={businessImages[0]}
             className="h-44 rounded-2xl"
             placeholder={blurhash}
             transition={1_500}
