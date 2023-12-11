@@ -130,8 +130,8 @@ export default function MyTrip() {
         title="+"
         onPress={
           data &&
-          (data?.travelerAccount.user?.tripCount as number) >= 3 &&
-          !data.travelerAccount.isPremium
+          !data.travelerAccount.isPremium &&
+          (data?.travelerAccount.user?.tripCount as number) >= 3
             ? premiumModalOpen
             : handleCreateTrip
         }
