@@ -14,6 +14,7 @@ model User {
   firstName String   @map("first_name") @db.VarChar(255)
   lastName  String   @map("last_name") @db.VarChar(255)
   type      UserType @default(TRAVELER)
+  tripCount Int      @default(0) @map("trip_count")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -22,8 +23,25 @@ model User {
   stamps          Stamp[]
   pois            PointOfInterest[]
   businessPermits BusinessPermit[]
+  subscription    Subscription?
 
   @@map("users")
+}
+
+model Subscription {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @map("user_id")
+
+  startDate DateTime           @default(now()) @map("start_date")
+  endDate   DateTime           @map("end_date")
+  status    SubscriptionStatus @default(ACTIVE)
+  amount    Float
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("subscriptions")
 }
 
 model Trip {
@@ -250,7 +268,7 @@ model Stamp {
   image   Image  @relation(fields: [imageId], references: [id])
   imageId String @unique @map("image_id")
 
-  title         String   @db.VarChar(255)
+  title String @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -286,4 +304,10 @@ enum ExpenseCategory {
   OTHER
 
   @@map("expense_category")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
 }
