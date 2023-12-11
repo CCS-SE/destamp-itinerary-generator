@@ -1,6 +1,10 @@
 import { list, nonNull, queryField, stringArg } from 'nexus';
 
-import { queryUnclaimedStamps, queryUser } from './user.resolver';
+import {
+  queryTravelerAccount,
+  queryUnclaimedStamps,
+  queryUser,
+} from './user.resolver';
 
 const User = queryField('user', {
   type: 'User',
@@ -18,4 +22,12 @@ const UnclaimedStamps = queryField('unclaimedStamps', {
   resolve: (_, args, ctx) => queryUnclaimedStamps(args.userId, ctx),
 });
 
-export default [User, UnclaimedStamps];
+const Account = queryField('travelerAccount', {
+  type: 'Account',
+  args: {
+    id: nonNull(stringArg()),
+  },
+  resolve: (_, args, ctx, info) => queryTravelerAccount(args.id, ctx, info),
+});
+
+export default [User, UnclaimedStamps, Account];
