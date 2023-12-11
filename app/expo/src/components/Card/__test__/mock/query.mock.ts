@@ -12,6 +12,7 @@ export const tripCardData = {
   totalTravellers: 10,
   stampId: 1,
   stampUrl: 'test',
+  isPremium: false,
   stampTitle: 'Iloilo City',
   isStampClaimed: true,
   setRegenerating: () => {},
