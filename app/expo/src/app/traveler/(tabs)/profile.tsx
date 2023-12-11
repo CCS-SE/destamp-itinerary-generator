@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import { Dimensions, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useQuery } from '@apollo/client';
 
 import StampCard from '~/components/Card/traveler/StampCard';
@@ -25,25 +24,28 @@ export default function Profile() {
     return <ProfileScreenSkeleton />;
   }
 
-  const width = Dimensions.get('window').width * 0.88;
+  const width = Dimensions.get('window').width;
+  const height = Dimensions.get('window').height * 0.3;
 
   return (
-    <View className="flex-1 items-center bg-gray-50 pt-7">
-      <SafeAreaView className="flex-0 mb-5 self-start ">
+    <View className="flex-1 items-center bg-gray-50">
+      <View className=" mb-5 self-start ">
         <View
-          className="mx-5 flex-row items-center rounded-2xl bg-gray-100 p-4"
-          style={{ width: width }}
+          className="items-center rounded-3xl bg-gray-100 p-4"
+          style={{ width: width, height: height }}
         >
-          {data && (
-            <TouchableOpacity>
-              <ProfileIcon
-                firstName={data.user.firstName}
-                lastName={data.user.lastName}
-              />
-            </TouchableOpacity>
-          )}
-          <View className="mx-5">
-            <Text className="font-poppins text-xl text-gray-500">{`Hi, ${data?.user.firstName}`}</Text>
+          <View className="mt-14">
+            {data && (
+              <TouchableOpacity>
+                <ProfileIcon
+                  firstName={data.user.firstName}
+                  lastName={data.user.lastName}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+          <View className="mx-5 mt-5 items-center">
+            <Text className="font-poppins-medium text-2xl text-gray-500">{`${data?.user.firstName} ${data?.user.lastName}`}</Text>
             {data && (
               <Text className="font-poppins text-xs text-gray-500">
                 {data.user.email}
@@ -51,7 +53,7 @@ export default function Profile() {
             )}
           </View>
         </View>
-      </SafeAreaView>
+      </View>
       {data && data.user.stamps.length !== 0 ? (
         <StampCard url={data?.user.stamps[0]?.image.url || ''} />
       ) : (

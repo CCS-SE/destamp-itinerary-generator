@@ -3,15 +3,17 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const BasicButton = ({
   title,
+  color,
   onPress,
 }: {
   title: string;
+  color?: string;
   onPress: () => void;
 }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={styles.button}
+        style={[styles.button, { backgroundColor: color || '#FC8040' }]}
         onPress={onPress}
         activeOpacity={0.9}
       >
@@ -27,7 +29,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
-    backgroundColor: '#FC8040',
     borderRadius: 10,
     width: 229,
     height: 44,

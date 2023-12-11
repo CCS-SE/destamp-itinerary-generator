@@ -1,199 +1,155 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Constants from 'expo-constants';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
-import axios from 'axios';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import Map from '~/components/BusinessOperator/Map';
 import Question from '~/components/BusinessOperator/Question';
 import StepperButton from '~/components/Button/StepperButton';
 import CustomContainer from '~/components/Container/CustomContainer';
-
-// Define the form data structure
-interface FormData {
-  latitude: string;
-  longitude: string;
-  address: string;
-  businessName: string;
-  description: string;
-  contactNumber: string;
-}
+import {
+  BusinessInfoSchema,
+  businessInfoSchema,
+} from '~/components/Forms/schema/addBusinessProfileSchema';
+import addBusinessFormStore from '~/store/addBusinessFormStore';
 
 const BusinessBasicInformation: React.FC = () => {
-  // State for form data and validation errors
-  const [formData, setFormData] = useState<FormData>({
-    latitude: '',
-    longitude: '',
-    address: '',
-    businessName: '',
-    description: '',
-    contactNumber: '',
+  const { basicInfo, setData, establishment } = addBusinessFormStore();
+  const [isTelSelected, setIsTelSelected] = useState(false);
+
+  const { control, handleSubmit } = useForm<BusinessInfoSchema>({
+    mode: 'onChange',
+    resolver: zodResolver(businessInfoSchema),
   });
 
-  const [validationErrors, setValidationErrors] = useState<Partial<FormData>>(
-    {},
-  );
+  const onSubmit: SubmitHandler<BusinessInfoSchema> = async (data) => {
+    setData({
+      step: 1,
+      data: {
+        ...basicInfo,
+        contactNumber: data.contactNumber,
+        name: data.name,
+        description: data.description,
+      },
+    });
 
-  // Google Maps API key from Constants
-  const googleMapsKey = Constants.expoConfig?.extra
-    ?.GOOGLE_MAPS_API_KEY as string;
-
-  // Handle input changes in the form
-  const handleInputChange = async (
-    field: keyof FormData,
-    value: string,
-  ): Promise<void> => {
-    // Trim value for all fields except businessName and description
-    const trimmedValue = value;
-
-    // Validation checks for businessName and description
-    if (field === 'businessName' && trimmedValue.split(/\s+/).length > 10) {
-      setValidationErrors({
-        ...validationErrors,
-        [field]: 'Exceeded maximum word limit (10 words).',
-      });
-    } else if (field === 'description' && value.length > 1500) {
-      setValidationErrors({
-        ...validationErrors,
-        [field]: 'Exceeded maximum character limit (1500 characters).',
-      });
+    if (establishment.type === 'Accommodation') {
+      router.push('/business/create/accommodationFacilities');
     } else {
-      // Update form data and reset validation errors
-      setFormData({ ...formData, [field]: trimmedValue });
-      setValidationErrors({ ...validationErrors, [field]: '' });
-
-      // Additional logic for handling address (e.g., geocoding)
-      if (field === 'address') {
-        console.log('Address before API call:', trimmedValue);
-
-        try {
-          const response = await axios.get(
-            `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
-              trimmedValue,
-            )}&key=${googleMapsKey}`,
-          );
-
-          console.log('Geocoding API Response:', response);
-
-          const { results } = response.data;
-
-          if (results.length > 0) {
-            const { lat, lng } = results[0].geometry.location;
-            setFormData({
-              ...formData,
-              latitude: lat.toString(),
-              longitude: lng.toString(),
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching geocoding data:', error);
-        }
-      }
-    }
-  };
-
-  // Validate the entire form
-  const validateForm = (): boolean => {
-    const errors: Partial<FormData> = {};
-
-    if (!formData.businessName.trim()) {
-      errors.businessName = 'Business Name is required';
-    } else if (formData.businessName.trim().split(/\s+/).length > 10) {
-      errors.businessName = 'Business Name cannot exceed 10 words';
-    }
-
-    if (formData.description.trim().length > 1500) {
-      errors.description = 'Description cannot exceed 1500 characters';
-    }
-
-    if (!formData.contactNumber.trim()) {
-      errors.contactNumber = 'Phone Number is required';
-    } else if (!validatePhoneNumber(formData.contactNumber.trim())) {
-      errors.contactNumber = 'Invalid phone number format';
-    }
-
-    // Update validation errors state
-    setValidationErrors(errors);
-
-    // Return true if there are no errors, indicating the form is valid
-    return Object.keys(errors).length === 0;
-  };
-
-  // Validate phone number format
-  const validatePhoneNumber = (phoneNumber: string): boolean => {
-    const phoneNumberRegex = /^(09|\+?639)\d{9}$/;
-    return phoneNumberRegex.test(phoneNumber);
-  };
-
-  // Handle the "Next" button click
-  const handleNext = (): void => {
-    // If the form is valid, navigate to the next step
-    if (validateForm()) {
       router.push('/business/create/openingHours');
     }
   };
 
-  // Render the component
   return (
-    <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
-      <CreateBusinessHeader title={'Basic Information'} />
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {/* Render form sections */}
-          <Question question={'About'} />
-          <CustomContainer
-            placeholder={'Business Name'}
-            width={300}
-            value={formData.businessName}
-            onChangeText={(text) => handleInputChange('businessName', text)}
-            multiline={true}
+    <View
+      style={{
+        alignItems: 'center',
+        backgroundColor: 'white',
+        flex: 1,
+        padding: 25,
+      }}
+    >
+      <CreateBusinessHeader title={'Create Business'} />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
+        <Question question={'About'} />
+        <Controller
+          control={control}
+          name="name"
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => {
+            return (
+              <CustomContainer
+                placeholder={'Business Name'}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                errorMessage={error?.message}
+                maxLength={255}
+              />
+            );
+          }}
+        />
+        <Controller
+          control={control}
+          name="description"
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => {
+            return (
+              <CustomContainer
+                placeholder={'Description'}
+                value={value}
+                onChangeText={onChange}
+                onBlur={onBlur}
+                errorMessage={error?.message}
+                multiline={true}
+                inputMode="text"
+                maxLength={255}
+              />
+            );
+          }}
+        />
+        <Question question={'Contact Information'} />
+        <View className="flex-row ">
+          <Controller
+            control={control}
+            name="contactNumber"
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => {
+              return (
+                <CustomContainer
+                  prefix={
+                    !isTelSelected ? (
+                      <Text className="mr-2 justify-center text-center font-poppins-medium text-lg text-orange-500">
+                        {'+63'}
+                      </Text>
+                    ) : (
+                      <></>
+                    )
+                  }
+                  placeholder="Contact Number"
+                  value={value}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={error?.message}
+                  keyboardType="phone-pad"
+                  width={300}
+                  errorWidth={220}
+                  maxLength={10}
+                />
+              );
+            }}
           />
-          {validationErrors.businessName && (
-            <Text style={{ color: 'red', marginBottom: 10 }}>
-              {validationErrors.businessName}
-            </Text>
-          )}
-          <CustomContainer
-            placeholder={'Description'}
-            width={300}
-            value={formData.description}
-            onChangeText={(text) => handleInputChange('description', text)}
-            multiline={true}
-          />
-          {validationErrors.description && (
-            <Text style={{ color: 'red', marginBottom: 10 }}>
-              {validationErrors.description}
-            </Text>
-          )}
-          <Question question={'Contact Information'} />
-          <CustomContainer
-            placeholder={'Contact Number'}
-            width={300}
-            value={formData.contactNumber}
-            onChangeText={(text) => handleInputChange('contactNumber', text)}
-            numeric={true}
-          />
-          <Text style={{ color: 'red', marginBottom: 10 }}>
-            {validationErrors.contactNumber}
-          </Text>
-          <Question question={'Address'} />
-          <CustomContainer
-            placeholder={'Address (Province, City, Street)'}
-            width={300}
-            value={formData.address}
-            onChangeText={(text) => handleInputChange('address', text)}
-          />
-          <Map
-            latitude={formData.latitude}
-            longitude={formData.longitude}
-            businessName={formData.businessName}
-            address={formData.address}
-          />
-          <StepperButton onPress={handleNext} label={'Next'} />
-        </ScrollView>
-      </SafeAreaView>
+          <View className="mt-1.5 flex-row">
+            <TouchableOpacity
+              className="ml-1"
+              activeOpacity={0.9}
+              onPress={() => setIsTelSelected(!isTelSelected)}
+            >
+              <View className="h-5 w-5 items-center justify-center rounded-md border">
+                <Text>{isTelSelected ? '✓' : ''}</Text>
+              </View>
+            </TouchableOpacity>
+            <Text className="ml-1 font-poppins text-sm">Tel</Text>
+          </View>
+        </View>
+        <Question question={'Address'} />
+        <View className="p-2">
+          <Text className="font-poppins">{basicInfo.address}</Text>
+        </View>
+        <Map />
+      </ScrollView>
+      <StepperButton onPress={handleSubmit(onSubmit)} label={'Next'} />
     </View>
   );
 };

@@ -3,31 +3,16 @@ import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, Stack } from 'expo-router';
 
-import GradientButton from '~/components/Button/GradientButton';
-import Logo from '../../../../assets/images/destampp-logo.svg';
+import BasicButton from '~/components/Button/BasicButton';
 
-const RestaurantFacilities = () => {
+const SuccessScreen = () => {
   return (
     <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
       <View style={{ alignContent: 'center' }}>
         <Stack.Screen
           options={{
-            title: '',
-            headerTitleStyle: {
-              color: '#FF8439',
-              fontSize: 20,
-              fontFamily: 'Poppins',
-            },
             headerShown: false,
-
             headerBackVisible: false,
-            headerRight: () => {
-              return (
-                <View className="rounded-full p-0.5">
-                  <Logo height={45} width={45} />
-                </View>
-              );
-            },
           }}
         />
       </View>
@@ -58,14 +43,10 @@ const RestaurantFacilities = () => {
             Please allow 2 to 5 business days for us to verify your business.
           </Text>
         </View>
-        <GradientButton
-          onPress={() => router.push('/business/')}
-          title={'Done'}
-          isSubmitting={false}
-        />
+        <BasicButton title="Done" onPress={() => router.push('/business/')} />
       </SafeAreaView>
     </View>
   );
 };
 
-export default RestaurantFacilities;
+export default SuccessScreen;

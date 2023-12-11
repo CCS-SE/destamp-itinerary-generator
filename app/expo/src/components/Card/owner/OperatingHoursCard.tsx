@@ -29,7 +29,7 @@ const formatOperatingHours = (
         hour12: false,
       });
 
-      return { dayName, openTime, closeTime };
+      return { dayName, openTime, closeTime, isClosed, is24Hours };
     } else {
       return { dayName, isClosed, is24Hours };
     }
@@ -56,17 +56,17 @@ const OperatingHourCard = ({
         Opening Hours
       </Text>
       {formattedOperatingHours.map((operatingHour, index) => {
-        return operatingHours[index]!.day === new Date().getDay() ? (
+        return operatingHours[index]?.day === new Date().getDay() ? (
           <View className="flex-row" key={index}>
             <Text className="w-24 font-poppins-semibold text-base text-orange-500">
               {operatingHour.dayName}
             </Text>
             {operatingHour.isClosed ? (
-              <Text className="font-poppins-semibold text-base text-orange-500">
+              <Text className="ml-2 font-poppins-semibold text-base text-orange-500">
                 Closed
               </Text>
             ) : operatingHour.is24Hours ? (
-              <Text className="font-poppins-semibold text-base text-orange-500">
+              <Text className="ml-2 font-poppins-semibold text-base text-orange-500">
                 Open 24 hours
               </Text>
             ) : (
@@ -88,11 +88,11 @@ const OperatingHourCard = ({
               {operatingHour.dayName}
             </Text>
             {operatingHour.isClosed ? (
-              <Text className=" font-poppins text-sm text-gray-500">
+              <Text className=" ml-2 font-poppins text-sm text-gray-700">
                 Closed
               </Text>
             ) : operatingHour.is24Hours ? (
-              <Text className="font-poppins text-sm text-gray-500">
+              <Text className="ml-2 font-poppins text-sm text-gray-700">
                 Open 24 hours
               </Text>
             ) : (

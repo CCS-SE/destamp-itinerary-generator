@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Alert, TouchableOpacity, View } from 'react-native';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import Constants from 'expo-constants';
 import { useFonts } from 'expo-font';
@@ -11,10 +10,8 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 import { ClerkProvider } from '@clerk/clerk-expo';
-import { AntDesign } from '@expo/vector-icons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { supabase } from 'config/initSupabase';
 import { fetch } from 'cross-fetch';
 
 import { AuthProvider } from '~/context/AuthProvider';
@@ -54,16 +51,6 @@ const client = new ApolloClient({
     },
   }),
 });
-
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
-
-const handleLogout = async () => {
-  // added temp logout button
-  return await supabase.auth.signOut();
-};
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -111,43 +98,13 @@ function RootLayoutNav() {
             <ApolloProvider client={client}>
               <Stack>
                 <Stack.Screen
-                  name="business/index"
+                  name="business/(tabs)"
                   options={{
-                    title: 'My Business',
-                    headerTitleStyle: {
-                      fontSize: 25,
-                      fontFamily: 'Poppins',
-                    },
-                    headerBackVisible: false,
-                    headerRight: () => {
-                      return (
-                        <View className="rounded-full p-0.5">
-                          <TouchableOpacity
-                            onPress={() => {
-                              Alert.alert(
-                                'Logout',
-                                'Are you sure you want to logout?',
-                                [
-                                  {
-                                    text: 'Cancel',
-                                    onPress: () =>
-                                      console.log('Cancel Pressed'),
-                                    style: 'cancel',
-                                  },
-                                  { text: 'Yes', onPress: handleLogout },
-                                ],
-                              );
-                            }}
-                          >
-                            <AntDesign name="logout" size={24} color="black" />
-                          </TouchableOpacity>
-                        </View>
-                      );
-                    },
+                    headerShown: false,
                   }}
                 />
                 <Stack.Screen
-                  name="(tabs)"
+                  name="traveler/(tabs)"
                   options={{
                     headerShown: false,
                   }}

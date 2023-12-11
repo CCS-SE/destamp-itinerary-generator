@@ -10,7 +10,6 @@ export const GetUserInfoQuery = gql(
       stamps {
         id
         title
-        dateCollected
         image {
           url
         }

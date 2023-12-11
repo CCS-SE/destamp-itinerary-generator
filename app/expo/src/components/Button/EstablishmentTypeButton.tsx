@@ -1,43 +1,41 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 
 const EstablishmentTypeButton = ({
   label,
+  icon,
   onSelect,
   isSelected,
 }: {
   label: string;
+  icon: ReactNode;
   onSelect: () => void;
   isSelected: boolean;
 }) => {
-  const buttonColor = isSelected ? '#EB4586' : 'white';
-  const textColor = isSelected ? 'white' : 'black';
+  const borderColor = isSelected ? '#EB4586' : '#D3D3D3';
+  const textColor = isSelected ? '#EB4586' : '#EB4586';
 
   return (
     <TouchableOpacity
+      activeOpacity={0.9}
+      className="mt-5 items-center justify-center border-2"
       style={[
         {
-          height: 50,
+          height: 60,
           width: 300,
           borderRadius: 8,
-          marginVertical: 10,
-          justifyContent: 'center',
-          alignItems: 'center',
-          shadowColor: '#000',
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
+          flexDirection: 'row',
         },
-        { backgroundColor: buttonColor },
+        { borderColor: borderColor },
       ]}
       onPress={onSelect}
     >
+      {icon}
       <Text
-        style={[{ fontSize: 15, fontFamily: 'Poppins' }, { color: textColor }]}
+        className={`ml-3 text-base ${
+          isSelected ? 'font-poppins-medium' : 'font-poppins'
+        }`}
+        style={[{ color: textColor }]}
       >
         {label}
       </Text>

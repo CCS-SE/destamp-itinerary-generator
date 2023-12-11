@@ -48,8 +48,8 @@ export default function AtmosphereSelection({
 
 const atmospheres = [
   {
-    title: 'Upscale',
-    keyword: 'Upscale',
+    title: 'Upscaled',
+    keyword: 'Upscaled',
   },
   {
     title: 'Romantic',

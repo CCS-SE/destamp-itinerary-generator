@@ -18,9 +18,10 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  trips  Trip[]
-  stamps Stamp[]
-  pois   PointOfInterest[]
+  trips           Trip[]
+  stamps          Stamp[]
+  pois            PointOfInterest[]
+  businessPermits BusinessPermit[]
 
   @@map("users")
 }
@@ -77,8 +78,26 @@ model PointOfInterest {
   dailyItineraryPois DailyItineraryPoi[]
   accommodation      Accommodation?
   restaurant         Restaurant?
+  businessPermit     BusinessPermit?
 
   @@map("point_of_interests")
+}
+
+model BusinessPermit {
+  id      String          @id @default(cuid())
+  user    User            @relation(fields: [userId], references: [id])
+  userId  String          @map("user_id")
+  image   Image           @relation(fields: [imageId], references: [id])
+  imageId String          @unique @map("image_id")
+  poi     PointOfInterest @relation(fields: [poiId], references: [id])
+  poiId   String          @unique @map("poi_id")
+
+  isVerified Boolean @default(false) @map("is_verified")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("business_permits")
 }
 
 model TripPreference {
@@ -209,8 +228,9 @@ model Image {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  stamp    Stamp?
-  poiImage PoiImage?
+  stamp          Stamp?
+  poiImage       PoiImage?
+  businessPermit BusinessPermit?
 
   @@map("images")
 }
@@ -231,7 +251,6 @@ model Stamp {
   imageId String @unique @map("image_id")
 
   title         String   @db.VarChar(255)
-  dateCollected DateTime @map("date_collected")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

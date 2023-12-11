@@ -5,14 +5,19 @@ import Modal from 'react-native-modal';
 interface FancyModalProps {
   isVisible: boolean;
   children: string | JSX.Element | JSX.Element[];
+  bgColor?: string;
 }
 
-export default function FancyModal({ isVisible, children }: FancyModalProps) {
+export default function FancyModal({
+  isVisible,
+  children,
+  bgColor,
+}: FancyModalProps) {
   return (
     <Modal
       testID={'fancy-modal'}
       isVisible={isVisible}
-      backdropColor="#f5dfc8"
+      backdropColor={bgColor || '#f5dfc8'}
       backdropOpacity={0.8}
       animationIn="zoomInDown"
       animationOut="zoomOutUp"

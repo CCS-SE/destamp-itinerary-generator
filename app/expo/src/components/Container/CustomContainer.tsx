@@ -1,53 +1,67 @@
 import React, { useState } from 'react';
-import { KeyboardTypeOptions, TextInput, View } from 'react-native';
+import {
+  Dimensions,
+  Text,
+  TextInput,
+  TextInputProps,
+  View,
+} from 'react-native';
 
-interface CustomContainerProps {
-  placeholder: string;
-  width: number;
-  value: string;
-  onChangeText: (text: string) => void;
-  numeric?: boolean;
-  multiline?: boolean; // Make multiline optional
+interface CustomContainerProps extends TextInputProps {
+  errorMessage?: string;
+  errorWidth?: number;
+  width?: number;
+  prefix?: string | JSX.Element | JSX.Element[];
 }
 
 const CustomContainer: React.FC<CustomContainerProps> = ({
-  placeholder,
+  errorMessage,
+  errorWidth,
   width,
-  value,
-  onChangeText,
-  numeric = false,
-  multiline = false, // Default to false if not provided
-}) => {
-  const keyboardType: KeyboardTypeOptions = numeric ? 'numeric' : 'default';
+  prefix,
+  ...textInputProps
+}: CustomContainerProps) => {
+  const inputWidth = Dimensions.get('window').width * 0.85;
+
   const [contentHeight, setContentHeight] = useState(0);
 
   return (
-    <View
-      style={{
-        borderWidth: 1,
-        borderColor: '#5A5A5A',
-        borderRadius: 10,
-        padding: 10,
-        margin: 10,
-        minHeight: 50,
-        width,
-      }}
-    >
-      <TextInput
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
-        keyboardType={keyboardType}
+    <View>
+      <View
+        className="items-center"
         style={{
-          fontFamily: 'Poppins',
-          fontSize: 15,
-          height: Math.max(35, contentHeight),
+          borderWidth: 1,
+          borderColor: '#5A5A5A',
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderRadius: 10,
+          padding: 10,
+          marginVertical: 5,
+          minHeight: 50,
+          width: width || inputWidth,
         }}
-        multiline={multiline} // Conditionally apply multiline based on the prop value
-        onContentSizeChange={(e) => {
-          setContentHeight(e.nativeEvent.contentSize.height);
-        }}
-      />
+      >
+        {prefix}
+        <TextInput
+          className="w-full font-poppins text-lg text-gray-600 "
+          {...textInputProps}
+          style={{
+            height: Math.max(35, contentHeight),
+          }}
+          onContentSizeChange={(e) => {
+            setContentHeight(e.nativeEvent.contentSize.height);
+          }}
+        />
+      </View>
+      {!!errorMessage && (
+        <Text
+          testID={textInputProps.testID + '-error'}
+          className=" font-poppins text-xs text-red-500"
+          style={{ width: errorWidth || inputWidth }}
+        >
+          {errorMessage}
+        </Text>
+      )}
     </View>
   );
 };

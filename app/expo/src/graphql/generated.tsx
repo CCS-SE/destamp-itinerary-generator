@@ -53,6 +53,16 @@ export type Amenity = {
   name: Scalars['String']['output'];
 };
 
+export type BusinessPermit = {
+  __typename?: 'BusinessPermit';
+  id: Scalars['String']['output'];
+  image: Image;
+  imageId: Scalars['String']['output'];
+  isVerified: Scalars['Boolean']['output'];
+  poiId: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
+};
+
 export type Category = {
   __typename?: 'Category';
   id: Scalars['Int']['output'];
@@ -79,6 +89,7 @@ export type CreatePoiInput = {
   longitude: Scalars['Float']['input'];
   name: Scalars['String']['input'];
   operatingHours: Array<OperatingHoursInput>;
+  permitUrl: Scalars['String']['input'];
   price: Scalars['String']['input'];
   visitDuration: Scalars['Int']['input'];
 };
@@ -176,7 +187,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   claimStamp: User;
   createExpense: Expense;
-  createMutation: Poi;
+  createPoi: Poi;
   createTrip: Trip;
   createUser: User;
   deleteExpense: Expense;
@@ -197,8 +208,9 @@ export type MutationCreateExpenseArgs = {
   tripId: Scalars['Int']['input'];
 };
 
-export type MutationCreateMutationArgs = {
+export type MutationCreatePoiArgs = {
   input: CreatePoiInput;
+  type: Scalars['String']['input'];
   userId: Scalars['String']['input'];
 };
 
@@ -260,6 +272,7 @@ export type Poi = {
   __typename?: 'Poi';
   accommodation?: Maybe<Accommodation>;
   address: Scalars['String']['output'];
+  businessPermit?: Maybe<BusinessPermit>;
   categories: Array<Category>;
   contactNumber: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -336,7 +349,6 @@ export type Restaurant = {
 export type Stamp = {
   __typename?: 'Stamp';
   createdAt: Scalars['DateTime']['output'];
-  dateCollected: Scalars['DateTime']['output'];
   id: Scalars['Int']['output'];
   image: Image;
   title: Scalars['String']['output'];
@@ -521,6 +533,7 @@ export type ResolversTypes = {
   Amenity: ResolverTypeWrapper<Amenity>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  BusinessPermit: ResolverTypeWrapper<BusinessPermit>;
   Category: ResolverTypeWrapper<Category>;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
@@ -560,6 +573,7 @@ export type ResolversParentTypes = {
   Amenity: Amenity;
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
+  BusinessPermit: BusinessPermit;
   Category: Category;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
@@ -619,6 +633,20 @@ export interface BigIntScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
   name: 'BigInt';
 }
+
+export type BusinessPermitResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['BusinessPermit'] = ResolversParentTypes['BusinessPermit'],
+> = {
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  image?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  imageId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  poiId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type CategoryResolvers<
   ContextType = any,
@@ -731,11 +759,11 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationCreateExpenseArgs, 'data' | 'tripId'>
   >;
-  createMutation?: Resolver<
+  createPoi?: Resolver<
     ResolversTypes['Poi'],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateMutationArgs, 'input' | 'userId'>
+    RequireFields<MutationCreatePoiArgs, 'input' | 'type' | 'userId'>
   >;
   createTrip?: Resolver<
     ResolversTypes['Trip'],
@@ -822,6 +850,11 @@ export type PoiResolvers<
     ContextType
   >;
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  businessPermit?: Resolver<
+    Maybe<ResolversTypes['BusinessPermit']>,
+    ParentType,
+    ContextType
+  >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
     ParentType,
@@ -963,7 +996,6 @@ export type StampResolvers<
     ResolversParentTypes['Stamp'] = ResolversParentTypes['Stamp'],
 > = {
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  dateCollected?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   image?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1067,6 +1099,7 @@ export type Resolvers<ContextType = any> = {
   Accommodation?: AccommodationResolvers<ContextType>;
   Amenity?: AmenityResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
+  BusinessPermit?: BusinessPermitResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DailyItinerary?: DailyItineraryResolvers<ContextType>;
   DailyItineraryPoi?: DailyItineraryPoiResolvers<ContextType>;
@@ -1113,6 +1146,17 @@ export type DeleteExpenseMutationVariables = Exact<{
 export type DeleteExpenseMutation = {
   __typename?: 'Mutation';
   deleteExpense: { __typename?: 'Expense'; id: number };
+};
+
+export type CreatePoiMutationVariables = Exact<{
+  type: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+  input: CreatePoiInput;
+}>;
+
+export type CreatePoiMutation = {
+  __typename?: 'Mutation';
+  createPoi: { __typename?: 'Poi'; id: string };
 };
 
 export type DeletePoiMutationVariables = Exact<{
@@ -1197,6 +1241,11 @@ export type GetBusinessesQuery = {
       __typename?: 'PoiImage';
       image: { __typename?: 'Image'; id: string; url: string };
     }>;
+    businessPermit?: {
+      __typename?: 'BusinessPermit';
+      id: string;
+      isVerified: boolean;
+    } | null;
   }>;
 };
 
@@ -1423,7 +1472,6 @@ export type GetUserInfoQuery = {
       __typename?: 'Stamp';
       id: number;
       title: string;
-      dateCollected: any;
       image: { __typename?: 'Image'; url: string };
     }>;
   };
@@ -1634,6 +1682,98 @@ export const DeleteExpenseDocument = {
   DeleteExpenseMutation,
   DeleteExpenseMutationVariables
 >;
+export const CreatePoiDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CreatePoi' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreatePoiInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createPoi' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'type' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreatePoiMutation, CreatePoiMutationVariables>;
 export const DeletePoiDocument = {
   kind: 'Document',
   definitions: [
@@ -2140,6 +2280,20 @@ export const GetBusinessesDocument = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'businessPermit' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'isVerified' },
                       },
                     ],
                   },
@@ -2974,10 +3128,6 @@ export const GetUserInfoDocument = {
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'dateCollected' },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'image' },

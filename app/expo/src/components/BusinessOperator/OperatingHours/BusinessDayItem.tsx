@@ -1,53 +1,50 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 
-import TimeSelector from '~/components/BusinessOperator/OperatingHours/TimeSelector';
+import BusinessHourSelector from '~/components/BusinessOperator/OperatingHours/TimeSelector';
+import { days, DayValue } from '~/constant/constant';
 import OpeningHourCheckbox from './OpeningHourCheckBox';
 
 interface BusinessDayItemProps {
-  day: string;
-  id: number;
-  onAddDay: () => void;
+  day: number;
+  startTime: Date;
+  endTime: Date;
+  isClosed: boolean;
+  is24Hours: boolean;
 }
 
-const BusinessDayItem: React.FC<BusinessDayItemProps> = ({ day }) => {
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-
-  const handleStatusSelect = (status: string | null) => {
-    console.log('Selected Status:', status);
-    setSelectedStatus(status);
-  };
-
+const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
+  day,
+  startTime,
+  endTime,
+  isClosed,
+  is24Hours,
+}) => {
   return (
-    <View
-      style={{
-        margin: 5,
-        backgroundColor: '#f5f5f5',
-        padding: 15,
-        borderRadius: 20,
-      }}
-    >
+    <View className="mb-3 rounded-2xl bg-gray-100 p-2">
       <View style={{ justifyContent: 'space-between' }}>
         <Text
           style={{
             fontFamily: 'Poppins',
-            fontSize: 18,
-            color: '#FF8439',
-            paddingBottom: 8,
+            fontSize: 20,
+            color: '#FA8E56',
           }}
         >
-          {day}
+          {days[day as DayValue]}
         </Text>
+        {!is24Hours && !isClosed && (
+          <BusinessHourSelector
+            day={day}
+            endTime={endTime}
+            startTime={startTime}
+          />
+        )}
+        <OpeningHourCheckbox
+          day={day}
+          option={`${isClosed ? 'CLOSED' : is24Hours ? '24 HOURS OPEN' : null}`}
+          options={['24 HOURS OPEN', 'CLOSED']}
+        />
       </View>
-
-      <OpeningHourCheckbox
-        options={['24 HOURS OPEN', 'CLOSED']}
-        onSelect={handleStatusSelect}
-      />
-
-      {selectedStatus !== '24 HOURS OPEN' && selectedStatus !== 'CLOSED' && (
-        <TimeSelector />
-      )}
     </View>
   );
 };

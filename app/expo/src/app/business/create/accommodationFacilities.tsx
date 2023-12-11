@@ -1,94 +1,133 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
+import React from 'react';
+import { Alert, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
-import PriceRange from '~/components/BusinessOperator/PriceRange/PriceRange';
 import Question from '~/components/BusinessOperator/Question';
-import BasicButton from '~/components/Button/BasicButton';
+import StepperButton from '~/components/Button/StepperButton';
+import CustomContainer from '~/components/Container/CustomContainer';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';
-import AmenitiesSelection from '~/components/FormField/AmenitiesSelection';
-import { GetPoiFeaturesDocument } from '~/graphql/generated';
-import useFormstore from '~/store/useFormStore';
+import MultiSelection from '~/components/FormField/MultiSelection';
+import {
+  AccommodationSchema,
+  accommodationSchema,
+} from '~/components/Forms/schema/addBusinessProfileSchema';
+import { GetPoiFacilitiesDocument } from '~/graphql/generated';
+import addBusinessFormStore from '~/store/addBusinessFormStore';
 
 const AccommodationFacilities = () => {
-  const [selectedAccommodation, setSelectedAccommodation] =
-    useState<string>('');
-  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
+  const { accommodationFacilities, setData } = addBusinessFormStore();
+  const { data } = useQuery(GetPoiFacilitiesDocument);
 
-  const [minPrice] = useState<number>(0);
-  const [maxPrice] = useState<number>(0);
+  const { control, handleSubmit } = useForm<AccommodationSchema>({
+    mode: 'onChange',
+    resolver: zodResolver(accommodationSchema),
+  });
 
-  const handleSave = () => {
-    console.log('minPrice:', minPrice);
-    console.log('maxPrice:', maxPrice);
+  const onSubmit: SubmitHandler<AccommodationSchema> = async (data) => {
+    setData({
+      step: 4,
+      data: {
+        ...accommodationFacilities,
+        category: accommodationFacilities.category,
+        amenities: accommodationFacilities.amenities,
+        price: data.hotelPrice,
+      },
+    });
 
-    if (!selectedAccommodation && selectedAmenities.length === 0) {
-      Alert.alert(
-        'Incomplete',
-        'Please select at least one option for Accommodation or Amenities.',
-      );
-    } else if (minPrice > maxPrice) {
-      console.log('Invalid Price Range');
-      window.alert(
-        'Invalid Price Range: Minimum price should be lower than the maximum price.',
-      );
-    } else {
-      console.log(amenities);
-      router.push('/business/create/uploadPhotos');
+    if (accommodationFacilities.amenities.length === 0) {
+      Alert.alert('Please select at least one amenity.');
+      return;
     }
+    router.push('/business/create/businessImages');
   };
 
-  const [amenities, setAmenities] = useState<{ key: number; value: string }[]>(
-    [],
-  );
-
-  const { preferenceData } = useFormstore();
-
-  const { data } = useQuery(GetPoiFeaturesDocument);
-  useEffect(() => {
-    if (data) {
-      setAmenities(
-        data.amenities.map((amenity) => ({
-          key: amenity.id,
-          value: amenity.name,
-        })),
-      );
-    }
-  }, [data]);
-
   return (
-    <View style={{ backgroundColor: 'white', flex: 1 }}>
-      <CreateBusinessHeader title={'Accommodation'} />
-      <SafeAreaView>
-        <View
-          style={{ marginLeft: 25, marginRight: 10, alignContent: 'center' }}
-        >
-          <ScrollView>
+    <View style={{ alignItems: 'center', backgroundColor: 'white', flex: 1 }}>
+      <CreateBusinessHeader title={'Create Business'} />
+      <SafeAreaView className="flex-1 ">
+        <ScrollView>
+          <View style={{ marginHorizontal: 40, alignContent: 'center' }}>
             <Question question={'Select Category'} />
-            <View style={{ alignItems: 'center', marginBottom: 30 }}>
+            <View style={{ marginBottom: 30 }}>
               <AccommodationSelection
-                onOptionChange={(option) => setSelectedAccommodation(option)}
-                initialSelectedOption={selectedAccommodation}
+                onOptionChange={(option) =>
+                  setData({
+                    data: { ...accommodationFacilities, category: option },
+                    step: 4,
+                  })
+                }
+                initialSelectedOption={accommodationFacilities.category}
               />
             </View>
-
             <Question question={'Amenities'} />
-            <View style={{ justifyContent: 'center', margin: 10 }}>
-              <AmenitiesSelection
-                onOptionChange={(options) => setSelectedAmenities(options)}
-                initialSelectedOptions={preferenceData.amenities}
-                data={[]}
+            <View
+              style={{
+                marginHorizontal: 10,
+                alignContent: 'center',
+                marginLeft: -2,
+              }}
+            >
+              <MultiSelection
+                onOptionChange={(options) =>
+                  setData({
+                    step: 4,
+                    data: { ...accommodationFacilities, amenities: options },
+                  })
+                }
+                initialSelectedOptions={[]}
+                data={
+                  (data &&
+                    data.amenities.map((amenity) => ({
+                      key: amenity.id,
+                      value: amenity.name,
+                    }))) ||
+                  []
+                }
+                placeholder={'Amenities'}
               />
             </View>
-            <PriceRange title={'Average price of rooms'} />
-
-            <BasicButton title={'Save'} onPress={handleSave} />
-          </ScrollView>
-        </View>
+            <Question question={'Room price per night'} />
+            <Controller
+              control={control}
+              name="hotelPrice"
+              defaultValue={accommodationFacilities.price}
+              render={({
+                field: { onChange, onBlur, value },
+                fieldState: { error },
+              }) => {
+                return (
+                  <CustomContainer
+                    prefix={
+                      <Text className="mr-1.5 justify-center text-center font-poppins-medium text-2xl text-orange-500">
+                        {'₱'}
+                      </Text>
+                    }
+                    placeholder={''}
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    errorMessage={error?.message}
+                    multiline={true}
+                    inputMode="numeric"
+                    width={315}
+                    maxLength={9}
+                  />
+                );
+              }}
+            />
+          </View>
+        </ScrollView>
+        <StepperButton
+          label={'Next'}
+          onPress={handleSubmit(onSubmit)}
+          className="-top-6"
+        />
       </SafeAreaView>
     </View>
   );

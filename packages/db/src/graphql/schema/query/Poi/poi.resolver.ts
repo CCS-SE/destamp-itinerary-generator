@@ -30,7 +30,7 @@ export const queryPoi = async (
       },
     });
   } catch (error) {
-    throw new Error('An error occurred while fetching point interest.');
+    throw new Error('An error occurred while fetching point of interest.');
   }
 };
 
@@ -51,6 +51,16 @@ export const queryPois = async (
       },
       include: {
         ...includedFields,
+        user: {
+          include: {
+            businessPermits: {
+              where: {},
+              select: {
+                isVerified: true,
+              },
+            },
+          },
+        },
       },
     });
   } catch (error) {

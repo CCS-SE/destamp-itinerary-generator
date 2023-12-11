@@ -12,6 +12,7 @@ export const CreatePoiInput = inputObjectType({
     t.float('longitude');
     t.int('visitDuration');
     t.boolean('isAttraction');
+    t.string('permitUrl');
     t.list.field('operatingHours', { type: 'OperatingHoursInput' });
     t.list.string('categories');
     t.list.string('imageUrls');

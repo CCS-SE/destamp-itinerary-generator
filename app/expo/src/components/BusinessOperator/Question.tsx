@@ -3,11 +3,11 @@ import { Text, View } from 'react-native';
 
 const Question = ({ question }: { question: string }) => {
   return (
-    <View style={{ marginBottom: 10 }}>
+    <View style={{ marginVertical: 6 }}>
       <Text
         style={{
           fontFamily: 'Poppins',
-          fontSize: 18,
+          fontSize: 20,
           color: '#FF8439',
           fontWeight: '600',
         }}

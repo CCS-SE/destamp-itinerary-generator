@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
-import { FlatList, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { useQuery } from '@apollo/client';
-import { supabase } from 'config/initSupabase';
 
 import AbsoluteButton from '~/components/Button/AbsoluteButton';
 import BusinessCard from '~/components/Card/owner/BusinessCard';
@@ -19,11 +18,6 @@ const BusinessListScreen = () => {
       userId: user ? user.id : '',
     },
   });
-
-  const handleLogout = async () => {
-    // added temp logout button
-    return await supabase.auth.signOut();
-  };
 
   if (error) {
     return <Text>Error: {error.message}</Text>;
@@ -50,23 +44,23 @@ const BusinessListScreen = () => {
         <FlatList
           testID="my-business-list"
           data={data.pois}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <BusinessCard
               businessId={item.id}
               businessName={item.name}
               businessImages={item.images.map((item) => item.image.url)}
               businessAddress={item.address}
+              businessIsVerified={
+                data.pois[index]?.businessPermit?.isVerified || false
+              }
             />
           )}
           showsVerticalScrollIndicator={false}
         />
       )}
-      <TouchableOpacity onPress={handleLogout}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
       <AbsoluteButton
         title="+"
-        onPress={() => router.push('/business/create/overview')}
+        onPress={() => router.push('/business/create/establishmentType')}
         style={{ bottom: 40 }}
       />
     </View>
