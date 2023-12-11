@@ -2,7 +2,7 @@ import { useContext, type ReactNode } from 'react';
 import { FlatList, ToastAndroid } from 'react-native';
 import { router } from 'expo-router';
 import { useMutation } from '@apollo/client';
-import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome5, Ionicons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
 import {
@@ -18,11 +18,14 @@ interface TripMenu {
   icon: ReactNode;
   title: string;
   color: string;
+  isPremium?: boolean;
+  premiumIcon?: ReactNode;
   onClick: () => void;
 }
 
 interface TripMenuListProps {
   id: number;
+  isPremium: boolean;
   setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
   onModalClose: () => void;
@@ -31,6 +34,7 @@ interface TripMenuListProps {
 function TripMenuList({
   onModalClose,
   id,
+  isPremium,
   setDeleting,
   setRegenerating,
 }: TripMenuListProps) {
@@ -112,6 +116,11 @@ function TripMenuList({
     });
   };
 
+  const showPremiumFeat = () => {
+    onModalClose();
+    router.push('/traveler/subscription/');
+  };
+
   const showRegenerateTripAlert = () => {
     confirmationAlert(
       'Regenerate trip',
@@ -139,7 +148,10 @@ function TripMenuList({
       icon: <Feather name="repeat" color={'#403f3f'} size={21.5} />,
       title: 'Regenerate trip',
       color: '#403f3f',
-      onClick: () => showRegenerateTripAlert(),
+      isPremium: isPremium,
+      premiumIcon: <FontAwesome5 name="crown" size={18} color="#FECF29" />,
+      onClick: () =>
+        isPremium ? showRegenerateTripAlert() : showPremiumFeat(),
     },
     {
       icon: <AntDesign name="delete" color={'#FB2E53'} size={22} />,
