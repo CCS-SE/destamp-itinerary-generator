@@ -47,6 +47,12 @@ export type Accommodation = {
   poiId: Scalars['String']['output'];
 };
 
+export type Account = {
+  __typename?: 'Account';
+  isPremium: Scalars['Boolean']['output'];
+  user?: Maybe<User>;
+};
+
 export type Amenity = {
   __typename?: 'Amenity';
   id: Scalars['Int']['output'];
@@ -309,6 +315,7 @@ export type Query = {
   pois: Array<Poi>;
   restaurantCategoires: Array<Category>;
   restaurantCategoriesMoreThanFive: Array<Category>;
+  travelerAccount: Account;
   trip: Trip;
   trips: Array<Trip>;
   unclaimedStamps: Array<Stamp>;
@@ -321,6 +328,10 @@ export type QueryPoiArgs = {
 
 export type QueryPoisArgs = {
   userId: Scalars['String']['input'];
+};
+
+export type QueryTravelerAccountArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type QueryTripArgs = {
@@ -354,6 +365,22 @@ export type Stamp = {
   title: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
 };
+
+export type Subscription = {
+  __typename?: 'Subscription';
+  amount: Scalars['Float']['output'];
+  endDate: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  startDate: Scalars['DateTime']['output'];
+  status: SubscriptionStatus;
+  userId: Scalars['String']['output'];
+};
+
+export enum SubscriptionStatus {
+  Active = 'ACTIVE',
+  Cancelled = 'CANCELLED',
+  Expired = 'EXPIRED',
+}
 
 export enum TravelSize {
   Couple = 'COUPLE',
@@ -412,6 +439,8 @@ export type User = {
   password: Scalars['String']['output'];
   pois: Array<Poi>;
   stamps: Array<Stamp>;
+  subscription?: Maybe<Subscription>;
+  tripCount: Scalars['Int']['output'];
   trips: Array<Trip>;
   type: UserType;
   updatedAt: Scalars['DateTime']['output'];
@@ -530,6 +559,7 @@ export type DirectiveResolverFn<
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Accommodation: ResolverTypeWrapper<Accommodation>;
+  Account: ResolverTypeWrapper<Account>;
   Amenity: ResolverTypeWrapper<Amenity>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
@@ -559,6 +589,8 @@ export type ResolversTypes = {
   Restaurant: ResolverTypeWrapper<Restaurant>;
   Stamp: ResolverTypeWrapper<Stamp>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Subscription: ResolverTypeWrapper<{}>;
+  SubscriptionStatus: SubscriptionStatus;
   TravelSize: TravelSize;
   Trip: ResolverTypeWrapper<Trip>;
   TripPreference: ResolverTypeWrapper<TripPreference>;
@@ -570,6 +602,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Accommodation: Accommodation;
+  Account: Account;
   Amenity: Amenity;
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
@@ -598,6 +631,7 @@ export type ResolversParentTypes = {
   Restaurant: Restaurant;
   Stamp: Stamp;
   String: Scalars['String']['output'];
+  Subscription: {};
   Trip: Trip;
   TripPreference: TripPreference;
   UpdateExpenseInput: UpdateExpenseInput;
@@ -616,6 +650,16 @@ export type AccommodationResolvers<
   >;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   poiId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AccountResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Account'] = ResolversParentTypes['Account'],
+> = {
+  isPremium?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -949,6 +993,12 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  travelerAccount?: Resolver<
+    ResolversTypes['Account'],
+    ParentType,
+    ContextType,
+    RequireFields<QueryTravelerAccountArgs, 'id'>
+  >;
   trip?: Resolver<
     ResolversTypes['Trip'],
     ParentType,
@@ -1001,6 +1051,49 @@ export type StampResolvers<
   title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type SubscriptionResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
+> = {
+  amount?: SubscriptionResolver<
+    ResolversTypes['Float'],
+    'amount',
+    ParentType,
+    ContextType
+  >;
+  endDate?: SubscriptionResolver<
+    ResolversTypes['DateTime'],
+    'endDate',
+    ParentType,
+    ContextType
+  >;
+  id?: SubscriptionResolver<
+    ResolversTypes['String'],
+    'id',
+    ParentType,
+    ContextType
+  >;
+  startDate?: SubscriptionResolver<
+    ResolversTypes['DateTime'],
+    'startDate',
+    ParentType,
+    ContextType
+  >;
+  status?: SubscriptionResolver<
+    ResolversTypes['SubscriptionStatus'],
+    'status',
+    ParentType,
+    ContextType
+  >;
+  userId?: SubscriptionResolver<
+    ResolversTypes['String'],
+    'userId',
+    ParentType,
+    ContextType
+  >;
 };
 
 export type TripResolvers<
@@ -1089,6 +1182,12 @@ export type UserResolvers<
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   pois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
   stamps?: Resolver<Array<ResolversTypes['Stamp']>, ParentType, ContextType>;
+  subscription?: Resolver<
+    Maybe<ResolversTypes['Subscription']>,
+    ParentType,
+    ContextType
+  >;
+  tripCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   trips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType>;
   type?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
@@ -1097,6 +1196,7 @@ export type UserResolvers<
 
 export type Resolvers<ContextType = any> = {
   Accommodation?: AccommodationResolvers<ContextType>;
+  Account?: AccountResolvers<ContextType>;
   Amenity?: AmenityResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
   BusinessPermit?: BusinessPermitResolvers<ContextType>;
@@ -1114,6 +1214,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   Restaurant?: RestaurantResolvers<ContextType>;
   Stamp?: StampResolvers<ContextType>;
+  Subscription?: SubscriptionResolvers<ContextType>;
   Trip?: TripResolvers<ContextType>;
   TripPreference?: TripPreferenceResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
@@ -1334,17 +1435,25 @@ export type GetTripsQueryVariables = Exact<{
 
 export type GetTripsQuery = {
   __typename?: 'Query';
-  trips: Array<{
-    __typename?: 'Trip';
-    id: number;
-    budget: number;
-    endDate: any;
-    startDate: any;
-    title: string;
-    destination: string;
-    travelerCount: number;
-    travelSize: TravelSize;
-  }>;
+  travelerAccount: {
+    __typename?: 'Account';
+    isPremium: boolean;
+    user?: {
+      __typename?: 'User';
+      tripCount: number;
+      trips: Array<{
+        __typename?: 'Trip';
+        id: number;
+        budget: number;
+        endDate: any;
+        startDate: any;
+        title: string;
+        destination: string;
+        travelerCount: number;
+        travelSize: TravelSize;
+      }>;
+    } | null;
+  };
 };
 
 export type GetTripExpensesQueryVariables = Exact<{
@@ -2602,11 +2711,11 @@ export const GetTripsDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'trips' },
+            name: { kind: 'Name', value: 'travelerAccount' },
             arguments: [
               {
                 kind: 'Argument',
-                name: { kind: 'Name', value: 'userId' },
+                name: { kind: 'Name', value: 'id' },
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'userId' },
@@ -2616,17 +2725,61 @@ export const GetTripsDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'budget' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'destination' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'travelerCount' },
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'tripCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'trips' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'budget' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'endDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'startDate' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'destination' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'travelerCount' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'travelSize' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
                 },
-                { kind: 'Field', name: { kind: 'Name', value: 'travelSize' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'isPremium' } },
               ],
             },
           },

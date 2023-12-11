@@ -5,10 +5,12 @@ interface TripMenu {
   icon: ReactNode;
   title: string;
   color: string;
+  isPremium?: boolean;
+  premiumIcon?: ReactNode;
 }
 
 interface TripMenuItemProps {
-  onClick: () => void; // function of each menu
+  onClick: () => void;
   item: TripMenu;
 }
 
@@ -32,6 +34,9 @@ function TripMenuItem({ onClick, item }: TripMenuItemProps) {
           >
             {item?.title}
           </Text>
+          <View className="-mt-1 ml-2">
+            {!item.isPremium ? item.premiumIcon : null}
+          </View>
         </View>
       </View>
     </TouchableOpacity>

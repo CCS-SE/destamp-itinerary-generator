@@ -23,4 +23,9 @@ export const ExpenseCategory = enumType({
   ],
 });
 
-export default [UserType, TravelSize, ExpenseCategory];
+export const SubscriptionStatus = enumType({
+  name: 'SubscriptionStatus',
+  members: ['ACTIVE', 'EXPIRED', 'CANCELLED'],
+});
+
+export default [UserType, TravelSize, ExpenseCategory, SubscriptionStatus];

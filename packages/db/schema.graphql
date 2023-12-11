@@ -8,6 +8,11 @@ type Accommodation {
   poiId: String!
 }
 
+type Account {
+  isPremium: Boolean!
+  user: User
+}
+
 type Amenity {
   id: Int!
   name: String!
@@ -221,6 +226,7 @@ type Query {
   pois(userId: String!): [Poi!]!
   restaurantCategoires: [Category!]!
   restaurantCategoriesMoreThanFive: [Category!]!
+  travelerAccount(id: String!): Account!
   trip(id: Int!): Trip!
   trips(userId: String!): [Trip!]!
   unclaimedStamps(userId: String!): [Stamp!]!
@@ -239,6 +245,21 @@ type Stamp {
   image: Image!
   title: String!
   updatedAt: DateTime!
+}
+
+type Subscription {
+  amount: Float!
+  endDate: DateTime!
+  id: String!
+  startDate: DateTime!
+  status: SubscriptionStatus!
+  userId: String!
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
 }
 
 enum TravelSize {
@@ -295,6 +316,8 @@ type User {
   password: String!
   pois: [Poi!]!
   stamps: [Stamp!]!
+  subscription: Subscription
+  tripCount: Int!
   trips: [Trip!]!
   type: UserType!
   updatedAt: DateTime!

@@ -88,7 +88,7 @@ export const createTrip = async (
       }),
     );
 
-    return await ctx.prisma.trip.create({
+    const trip = await ctx.prisma.trip.create({
       data: {
         budget: budget,
         endDate: new Date(tripInput.endDate),
@@ -143,6 +143,21 @@ export const createTrip = async (
         },
       },
     });
+
+    if (trip) {
+      await ctx.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          tripCount: {
+            increment: 1,
+          },
+        },
+      });
+    }
+
+    return trip;
   } catch (error) {
     console.error('Error creating trip:', error);
     throw error;

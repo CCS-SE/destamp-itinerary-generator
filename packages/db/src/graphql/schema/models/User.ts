@@ -8,6 +8,7 @@ const User = objectType({
     t.string('password');
     t.string('firstName');
     t.string('lastName');
+    t.int('tripCount');
     t.field('type', { type: 'UserType' });
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
@@ -45,6 +46,18 @@ const User = objectType({
             },
           })
           .stamps();
+      },
+    });
+    t.nullable.field('subscription', {
+      type: 'Subscription',
+      resolve: ({ id }, _, ctx) => {
+        return ctx.prisma.user
+          .findUniqueOrThrow({
+            where: {
+              id: id,
+            },
+          })
+          .subscription();
       },
     });
   },

@@ -2,20 +2,24 @@ import { gql } from '@apollo/client';
 
 export const GetTripsQuery = gql(
   `query GetTrips($userId: String!) {
-    trips(userId: $userId) {
-      id
-      budget
-      endDate
-      startDate
-      title
-      destination
-      travelerCount
-      travelSize
+    travelerAccount(id: $userId) {
+      user {
+        tripCount
+        trips {
+          id
+          budget
+          endDate
+          startDate
+          title
+          destination
+          travelerCount
+          travelSize
+        }
+      }
+      isPremium
     }
-  }
-  `,
+  }`,
 );
-
 export const GetTripExpensesQuery = gql(
   `query GetTripExpenses($tripId: Int!) {
     trip(id: $tripId) {

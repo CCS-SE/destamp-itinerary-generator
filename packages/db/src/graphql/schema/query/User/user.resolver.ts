@@ -1,3 +1,4 @@
+import { SubscriptionStatus } from '@prisma/client';
 import { GraphQLResolveInfo } from 'graphql';
 import moment from 'moment';
 
@@ -33,6 +34,42 @@ export const queryUser = (
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while fetching user.');
+  }
+};
+
+export const queryTravelerAccount = async (
+  id: string,
+  ctx: Context,
+  info: GraphQLResolveInfo,
+) => {
+  const includedFields = getFieldsFromInfo(info);
+
+  try {
+    if (!isValidId(id)) {
+      throw new Error('Invalid User ID');
+    }
+    const user = await ctx.prisma.user.findUniqueOrThrow({
+      where: {
+        id: id,
+        type: 'TRAVELER',
+      },
+      ...includedFields,
+      include: {
+        subscription: true,
+      },
+    });
+
+    if (user) {
+      const isPremium =
+        user.subscription !== null &&
+        user.subscription.status === SubscriptionStatus.ACTIVE;
+
+      return { user: user, isPremium: isPremium };
+    }
+    return { user: null, isPremium: false };
+  } catch (error) {
+    console.error(error);
+    return { user: null, isPremium: false };
   }
 };
 

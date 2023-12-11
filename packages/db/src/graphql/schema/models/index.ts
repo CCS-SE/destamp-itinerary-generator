@@ -1,4 +1,5 @@
 import Accommodation from './Accommodation';
+import Account from './Account';
 import Amenity from './Amenity';
 import BusinessPermit from './BusinessPermit';
 import Category from './Category';
@@ -11,6 +12,7 @@ import PoiImage from './PoiImage';
 import PointOfInterest from './PointOfInterest';
 import Restaurant from './Restaurant';
 import Stamp from './Stamp';
+import Subscription from './Subscription';
 import Trip from './Trip';
 import TripPreference from './TripPreference';
 import User from './User';
@@ -32,6 +34,8 @@ const Models = [
   OperatingHour,
   TripPreference,
   BusinessPermit,
+  Subscription,
+  Account,
 ];
 
 export default Models;

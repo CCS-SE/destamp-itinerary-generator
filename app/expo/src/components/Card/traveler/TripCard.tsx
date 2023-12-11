@@ -25,6 +25,7 @@ interface TripCardProps {
   budget: number;
   travelSize: string;
   totalTravellers: number;
+  isPremium: boolean;
   setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -37,6 +38,7 @@ function TripCard({
   budget,
   travelSize,
   totalTravellers,
+  isPremium,
   setRegenerating,
   setDeleting,
 }: TripCardProps) {
@@ -91,6 +93,7 @@ function TripCard({
           <BottomHalfModal isVisible={isModalVisible} onClose={onModalClose}>
             <TripMenuList
               id={id}
+              isPremium={isPremium}
               onModalClose={onModalClose}
               setRegenerating={setRegenerating}
               setDeleting={setDeleting}
