@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import {
   Alert,
+  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -33,6 +34,8 @@ const MAX_IMAGES = 1;
 const BusinessVerificationScreen: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const height = Dimensions.get('window').height;
 
   const businessImagesUploadedUrls: string[] = [];
   let businessPermitUploadedUrl = '';
@@ -207,13 +210,13 @@ const BusinessVerificationScreen: React.FC = () => {
         flex: 1,
         backgroundColor: 'white',
         padding: 20,
-        paddingBottom: 150,
+        alignItems: 'center',
       }}
     >
       <CreateBusinessHeader title={'Create Business'} />
-      <ScrollView
-        className="h-2 rounded-xl bg-gray-100  p-2"
-        contentContainerStyle={styles.imageContainer}
+      <View
+        className="items-center rounded-xl bg-gray-100  p-2"
+        style={[styles.imageContainer]}
       >
         {businessImages.permitUrl ? (
           <TouchableOpacity style={styles.imageWrapper} activeOpacity={0.9}>
@@ -240,23 +243,24 @@ const BusinessVerificationScreen: React.FC = () => {
             </View>
           </TouchableOpacity>
         )}
-      </ScrollView>
-      <View className="absolute bottom-52 left-16 mb-7 flex-1 items-center">
-        <Text style={{ fontFamily: 'Poppins', fontSize: 15, color: 'gray' }}>
-          Please upload a business permit
-        </Text>
-        <BasicButton
-          onPress={pickImage}
-          title={'Select Image'}
-          color="#F65A82"
-        />
       </View>
+      <Text
+        style={{
+          fontFamily: 'Poppins',
+          textAlign: 'center',
+          fontSize: 15,
+          color: 'gray',
+        }}
+      >
+        Please upload a business permit
+      </Text>
+      <BasicButton onPress={pickImage} title={'Select Image'} color="#F65A82" />
       <GradientButton
         onPress={handleCreateBusiness}
         title={'Create Business'}
         isSubmitting={isSubmitting}
         disabled={businessImages.permitUrl ? false : true}
-        className="top-28"
+        className="top-40"
       />
     </View>
   );
@@ -264,14 +268,11 @@ const BusinessVerificationScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
     alignContent: 'center',
     padding: 10,
   },
   imageWrapper: {
     width: '48%',
-    marginBottom: 10,
     position: 'relative',
     padding: 4,
   },
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
   deleteButton: {
     position: 'absolute',
     top: 15,
-    right: -160,
+    right: 13,
     backgroundColor: 'transparent',
   },
 });

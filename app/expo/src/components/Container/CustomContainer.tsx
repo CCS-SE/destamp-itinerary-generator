@@ -21,7 +21,7 @@ const CustomContainer: React.FC<CustomContainerProps> = ({
   prefix,
   ...textInputProps
 }: CustomContainerProps) => {
-  const inputWidth = Dimensions.get('window').width * 0.85;
+  const inputWidth = Dimensions.get('window').width * 0.83;
 
   const [contentHeight, setContentHeight] = useState(0);
 

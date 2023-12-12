@@ -77,14 +77,13 @@ const BusinessPhotos: React.FC = () => {
       style={{
         flex: 1,
         backgroundColor: 'white',
-        padding: 30,
-        paddingBottom: 80,
+        padding: 20,
       }}
     >
       <CreateBusinessHeader title={'Create Business'} />
-      <ScrollView
-        className="h-2 rounded-xl bg-gray-100 p-5"
-        contentContainerStyle={styles.imageContainer}
+      <View
+        className="rounded-xl bg-gray-100 p-5"
+        style={styles.imageContainer}
       >
         {Array.from(Array(5).keys()).map((index) => {
           const image = businessImages.urls[index]!;
@@ -114,7 +113,7 @@ const BusinessPhotos: React.FC = () => {
                 businessImages.urls?.length === MAX_IMAGES ? true : false
               }
             >
-              <View className="mb-2 h-[140] w-[148] items-center justify-center rounded-sm border border-gray-400">
+              <View className="mb-2 h-[130] w-[140] items-center justify-center rounded-sm border border-gray-400">
                 <Text className="font-poppins text-xs text-gray-400">
                   Select image
                 </Text>
@@ -122,22 +121,28 @@ const BusinessPhotos: React.FC = () => {
             </TouchableOpacity>
           );
         })}
-      </ScrollView>
-      <View className="absolute bottom-[130] left-16 flex-1 items-center">
-        <Text style={{ fontFamily: 'Poppins', fontSize: 15, color: 'gray' }}>
-          Please upload images of your business
-        </Text>
-        <BasicButton
-          onPress={pickImages}
-          title={'Select Images'}
-          color="#F65A82"
-        />
       </View>
+      <Text
+        style={{
+          fontFamily: 'Poppins',
+          textAlign: 'center',
+          fontSize: 15,
+          color: 'gray',
+          marginBottom: -5,
+        }}
+      >
+        Please upload images of your business
+      </Text>
+      <BasicButton
+        onPress={pickImages}
+        title={'Select Images'}
+        color="#F65A82"
+      />
       <StepperButton
         label="Next"
         onPress={handleNext}
-        className="top-14"
         disabled={businessImages.urls.length === 0}
+        className="top-24"
       />
     </View>
   );
@@ -150,13 +155,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   imageWrapper: {
-    width: '47%',
+    width: '42%',
     marginBottom: 10,
     position: 'relative',
   },
   image: {
     width: '100%',
-    height: 140,
+    height: 130,
     borderRadius: 2,
   },
   deleteButton: {

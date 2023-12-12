@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { router } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -25,6 +25,11 @@ const BusinessBasicInformation: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<BusinessInfoSchema> = async (data) => {
+    if (!basicInfo.latitude || !basicInfo.longitude) {
+      Alert.alert('Please provide address.');
+      return;
+    }
+
     setData({
       step: 1,
       data: {
@@ -123,30 +128,14 @@ const BusinessBasicInformation: React.FC = () => {
                   onBlur={onBlur}
                   errorMessage={error?.message}
                   keyboardType="phone-pad"
-                  width={300}
                   errorWidth={220}
                   maxLength={10}
                 />
               );
             }}
           />
-          <View className="mt-1.5 flex-row">
-            <TouchableOpacity
-              className="ml-1"
-              activeOpacity={0.9}
-              onPress={() => setIsTelSelected(!isTelSelected)}
-            >
-              <View className="h-5 w-5 items-center justify-center rounded-md border">
-                <Text>{isTelSelected ? '✓' : ''}</Text>
-              </View>
-            </TouchableOpacity>
-            <Text className="ml-1 font-poppins text-sm">Tel</Text>
-          </View>
         </View>
         <Question question={'Address'} />
-        <View className="p-2">
-          <Text className="font-poppins">{basicInfo.address}</Text>
-        </View>
         <Map />
       </ScrollView>
       <StepperButton onPress={handleSubmit(onSubmit)} label={'Next'} />
