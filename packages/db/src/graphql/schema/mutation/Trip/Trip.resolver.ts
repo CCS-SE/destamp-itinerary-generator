@@ -32,6 +32,7 @@ const selectedFields = {
 };
 
 export const createTrip = async (
+  isPremium: boolean,
   userId: string,
   tripInput: CreateTripInput,
   tripPreferenceInput: CreateTripPreferenceInput,
@@ -49,6 +50,26 @@ export const createTrip = async (
   } = tripInput;
   try {
     const pois = await ctx.prisma.pointOfInterest.findMany({
+      where: {
+        OR: [
+          {
+            user: {
+              isNot: null,
+            },
+            businessPermit: {
+              isVerified: true,
+            },
+          }, // newly added place that is not yet verified must not be included
+          {
+            user: {
+              is: null,
+            },
+            businessPermit: {
+              is: null,
+            },
+          }, // include all scraped data
+        ],
+      },
       select: {
         ...selectedFields,
         accommodation: {
@@ -65,13 +86,16 @@ export const createTrip = async (
       (time: [number, number]) => getDesiredTravelHour(time),
     ) as number[];
 
-    const filteredPois = contentBasedFiltering(pois, tripPreferenceInput);
+    const pointOfInterests = isPremium
+      ? contentBasedFiltering(pois, tripPreferenceInput)
+      : pois;
 
-    console.log(filteredPois.length);
+    console.log(pointOfInterests.length);
 
     const suggestedItineraries = await generateItinerary(
+      isPremium,
       tripInput,
-      filteredPois,
+      pointOfInterests,
       duration,
       desiredTravelHours,
     );
@@ -80,10 +104,14 @@ export const createTrip = async (
       assignAccommodation(
         suggestedItineraries,
         tripInput,
-        filteredPois,
+        pointOfInterests,
         duration,
       ).map(async (itinerary) => {
-        const dailyItinerary = await createDailyItinerary(itinerary, tripInput);
+        const dailyItinerary = await createDailyItinerary(
+          isPremium,
+          itinerary,
+          tripInput,
+        );
         return dailyItinerary;
       }),
     );
@@ -102,15 +130,17 @@ export const createTrip = async (
         isTransportationIncluded: isTransportationIncluded,
         startingLocation: tripInput.startingLocation,
         timeSlots: tripInput.timeSlots as [number, number][],
-        tripPreference: {
-          create: {
-            accommodationType: tripPreferenceInput.accommodationType,
-            activities: tripPreferenceInput.activities,
-            amenities: tripPreferenceInput.amenities,
-            cuisines: tripPreferenceInput.cuisines,
-            diningStyles: tripPreferenceInput.diningStyles,
-          },
-        },
+        tripPreference: isPremium
+          ? {
+              create: {
+                accommodationType: tripPreferenceInput.accommodationType,
+                activities: tripPreferenceInput.activities,
+                amenities: tripPreferenceInput.amenities,
+                cuisines: tripPreferenceInput.cuisines,
+                diningStyles: tripPreferenceInput.diningStyles,
+              },
+            }
+          : undefined,
         dailyItineraries: {
           create: dailyItineraries.map((dailyItinerary, index) => ({
             dayIndex: index,
@@ -144,7 +174,7 @@ export const createTrip = async (
       },
     });
 
-    if (trip) {
+    if (trip && !isPremium) {
       await ctx.prisma.user.update({
         where: {
           id: userId,
@@ -198,7 +228,11 @@ export const deleteTrip = async (id: number, ctx: Context) => {
   });
 };
 
-export const regenerateTrip = async (id: number, ctx: Context) => {
+export const regenerateTrip = async (
+  isPremium: boolean,
+  id: number,
+  ctx: Context,
+) => {
   try {
     const pois = await ctx.prisma.pointOfInterest.findMany({
       select: {
@@ -240,6 +274,7 @@ export const regenerateTrip = async (id: number, ctx: Context) => {
     console.log(filteredPois.length);
 
     const suggestedItineraries = await generateItinerary(
+      isPremium,
       trip,
       filteredPois,
       duration,
@@ -253,7 +288,11 @@ export const regenerateTrip = async (id: number, ctx: Context) => {
         filteredPois,
         duration,
       ).map(async (itinerary) => {
-        const dailyItinerary = await createDailyItinerary(itinerary, trip);
+        const dailyItinerary = await createDailyItinerary(
+          isPremium,
+          itinerary,
+          trip,
+        );
         return dailyItinerary;
       }),
     );

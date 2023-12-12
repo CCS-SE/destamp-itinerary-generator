@@ -11,6 +11,7 @@ const POPULATION_SIZE = 2;
 const MAX_ITERATIONS = 15; // max number of iterations
 
 export function generatePopulation(
+  isPremium: boolean,
   input: CreateTripInput,
   pois: PointOfInterest[],
   duration: number,
@@ -33,17 +34,12 @@ export function generatePopulation(
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
-  const restaurants = pois
-    .filter((poi) => poi.restaurant)
-    .map((poi) => ({ ...poi, averagePrice: calculateAveragePrice(poi.price) }));
+  const restaurants = pois.filter((poi) => poi.restaurant);
   const attractions = pois.filter((poi) => poi.isAttraction);
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
     let totalCost = 0;
-
-    let attractionIndex = 0;
-    let restaurantIndex = 0;
 
     const chromosome: PointOfInterest[] = []; // list of destinations within budget and timeframe
 
@@ -52,8 +48,8 @@ export function generatePopulation(
       totalCost <= targetCost &&
       chromosome.length < MAX_ITERATIONS
     ) {
-      const attraction = attractions[attractionIndex];
-      const restaurant = restaurants[restaurantIndex];
+      const attraction = pickPOI(attractions, isPremium);
+      const restaurant = pickPOI(restaurants, isPremium);
 
       if (!restaurant && !attraction) {
         break;
@@ -61,12 +57,12 @@ export function generatePopulation(
 
       if (restaurant) {
         if (isFoodIncluded) {
-          const foodCost = restaurant.averagePrice * travelerCount;
+          const foodCost =
+            calculateAveragePrice(restaurant.price) * travelerCount;
           const poiDuration = restaurant.visitDuration / 60;
 
           totalCost += foodCost;
           totalDuration += poiDuration;
-          restaurantIndex++;
           chromosome.push(restaurant);
         }
       }
@@ -77,7 +73,6 @@ export function generatePopulation(
 
         totalCost += attractionCost;
         totalDuration += poiDuration;
-        attractionIndex++;
         chromosome.push(attraction);
       }
 
@@ -97,8 +92,16 @@ export function generatePopulation(
 
     totalDuration = 0;
     totalCost = 0;
-    attractionIndex = 0;
-    restaurantIndex = 0;
   }
   return newPopulation;
+}
+
+function pickPOI(pois: PointOfInterest[], isPremium: boolean): PointOfInterest {
+  const poisCopy = [...pois];
+  if (isPremium) {
+    return poisCopy.shift()!; // for premium users, always get the first element and remove it from the list
+  } else {
+    const randomIndex = Math.floor(Math.random() * pois.length);
+    return poisCopy.splice(randomIndex, 1)[0]!; // for free users, pick a random element and remove it from the list
+  }
 }

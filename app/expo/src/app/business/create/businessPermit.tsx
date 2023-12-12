@@ -1,9 +1,7 @@
 import React, { useContext, useState } from 'react';
 import {
   Alert,
-  Dimensions,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
   ToastAndroid,
@@ -34,8 +32,6 @@ const MAX_IMAGES = 1;
 const BusinessVerificationScreen: React.FC = () => {
   const { user } = useContext(AuthContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const height = Dimensions.get('window').height;
 
   const businessImagesUploadedUrls: string[] = [];
   let businessPermitUploadedUrl = '';

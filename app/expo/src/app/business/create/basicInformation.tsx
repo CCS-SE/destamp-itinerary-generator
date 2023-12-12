@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -17,7 +17,6 @@ import addBusinessFormStore from '~/store/addBusinessFormStore';
 
 const BusinessBasicInformation: React.FC = () => {
   const { basicInfo, setData, establishment } = addBusinessFormStore();
-  const [isTelSelected, setIsTelSelected] = useState(false);
 
   const { control, handleSubmit } = useForm<BusinessInfoSchema>({
     mode: 'onChange',
@@ -114,13 +113,9 @@ const BusinessBasicInformation: React.FC = () => {
               return (
                 <CustomContainer
                   prefix={
-                    !isTelSelected ? (
-                      <Text className="mr-2 justify-center text-center font-poppins-medium text-lg text-orange-500">
-                        {'+63'}
-                      </Text>
-                    ) : (
-                      <></>
-                    )
+                    <Text className="mr-2 justify-center text-center font-poppins-medium text-lg text-orange-500">
+                      {'+63'}
+                    </Text>
                   }
                   placeholder="Contact Number"
                   value={value}
