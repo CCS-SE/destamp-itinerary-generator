@@ -46,7 +46,13 @@ export default function MyTrip() {
     setShowPremiumModal(false);
   };
 
-  const handleCreateTrip = () => router.push('/traveler/trip/create');
+  const handleCreateTrip = () =>
+    router.push({
+      pathname: '/traveler/trip/create',
+      params: {
+        isPremium: JSON.stringify(data?.travelerAccount.isPremium),
+      },
+    });
 
   const isUnclaimedStampsInclude = (destination: string) => {
     return (

@@ -31,6 +31,7 @@ interface Section {
 }
 
 export default function CreateTripScreen() {
+  const { isPremium } = useLocalSearchParams();
   const router = useRouter();
   const { tripData, setData, reset } = useFormstore();
   const { section } = useLocalSearchParams();
@@ -290,6 +291,7 @@ export default function CreateTripScreen() {
     />,
     <DateRangePicker
       key={4}
+      maxDuration={JSON.parse(isPremium as string) ? 4 : 2}
       onDateChange={(sd, ed) => handleDateChange(sd, ed)}
     />,
     <TimeslotSelection

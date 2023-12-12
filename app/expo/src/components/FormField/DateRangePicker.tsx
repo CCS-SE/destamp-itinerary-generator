@@ -7,9 +7,11 @@ import { dateFormmater } from '~/utils/utils';
 
 interface DateRangePickerProps {
   onDateChange: (startDate: Moment | null, endDate: Moment | null) => void;
+  maxDuration: number;
 }
 
 export default function DateRangePicker({
+  maxDuration,
   onDateChange,
 }: DateRangePickerProps) {
   const [startDate, setStartDate] = useState<Moment | null>(null);
@@ -37,7 +39,7 @@ export default function DateRangePicker({
       <View className="mr-10 flex-1" style={{ height: screenWidth / 1.2 }}>
         <CalendarPicker
           minDate={minDate}
-          maxRangeDuration={4}
+          maxRangeDuration={maxDuration}
           allowRangeSelection={true}
           onDateChange={handleChange}
           todayBackgroundColor="#F6CAD4"
