@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  FlatList,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import Constants from 'expo-constants';
+import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 
 import addBusinessFormStore from '~/store/addBusinessFormStore';
@@ -12,14 +20,71 @@ interface MapProps {
   address?: string;
 }
 
+type Coordinate = [number, number];
+
+interface MapboxLocation {
+  place_name: string;
+  name: string;
+  center: Coordinate;
+}
+
 const Map: React.FC<MapProps> = () => {
   const { basicInfo, setData } = addBusinessFormStore();
+  const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState({
     latitude: basicInfo.latitude,
     longitude: basicInfo.longitude,
   });
-
+  const [search, setSearch] = useState('');
+  const [selectedValue, setSelectedValue] = useState<MapboxLocation>({
+    name: '',
+    center: [0, 0],
+    place_name: '',
+  });
+  const [results, setResults] = useState<MapboxLocation[]>([]);
   const [address, setAddress] = useState(basicInfo.address);
+
+  const handleQueryChange = async (searchText: string) => {
+    setSearch(searchText);
+
+    const bbox =
+      '122.49387407547306%2C10.678857423038792%2C122.60062156657557%2C10.757309505422896'; // boundary of search result
+
+    const MAPBOX_API_KEY = Constants.expoConfig?.extra
+      ?.MAPBOX_API_KEY as string;
+
+    try {
+      const response = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          searchText,
+        )}.json?country=ph&bbox=${bbox}&access_token=${MAPBOX_API_KEY}`,
+      );
+
+      const data = await response.data;
+      setResults(data.features);
+    } catch (error) {
+      console.error('Error geocoding:', error);
+    }
+  };
+
+  const handlOnClearPress = () => {
+    setSearch('');
+    setSelectedValue({
+      name: '',
+      center: [0, 0],
+      place_name: '',
+    });
+    setResults([]);
+    setData({
+      step: 1,
+      data: {
+        ...basicInfo,
+        address: '',
+        latitude: undefined,
+        longitude: undefined,
+      },
+    });
+  };
 
   const getAddress = async (latitude: number, longitude: number) => {
     const res = await axios.get(
@@ -28,8 +93,56 @@ const Map: React.FC<MapProps> = () => {
 
     if (res.data) {
       setAddress(res.data.display_name);
+      setSearch(res.data.display_name);
+      setData({
+        step: 1,
+        data: {
+          ...basicInfo,
+          address: res.data.display_name,
+        },
+      });
       return res.data.display_name as string;
     }
+  };
+
+  const ItemView = ({ name, center, place_name }: MapboxLocation) => {
+    const handleItemPress = () => {
+      setSearch(name);
+      setSelectedValue({
+        name: name,
+        center: center,
+        place_name: place_name,
+      });
+      setData({
+        step: 1,
+        data: {
+          ...basicInfo,
+          address: place_name,
+          latitude: center[1],
+          longitude: center[0],
+        },
+      });
+      if (mapRef.current) {
+        mapRef.current.animateToRegion(
+          {
+            latitude: center[1],
+            longitude: center[0],
+            latitudeDelta: 0.0122,
+            longitudeDelta: 0.0121,
+          },
+          500,
+        );
+      }
+      setResults([]);
+    };
+
+    return (
+      <TouchableOpacity onPress={handleItemPress}>
+        <View className="my-2">
+          <Text className="font-poppins text-base text-gray-600">{name}</Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   useEffect(() => {
@@ -40,13 +153,41 @@ const Map: React.FC<MapProps> = () => {
 
   return (
     <View>
+      <View className="mb-2 h-10 rounded-md border">
+        <TextInput
+          onChangeText={handleQueryChange}
+          placeholder={search ? selectedValue.place_name : ''}
+          value={search}
+          className="ml-2 flex-1 pb-0.5 font-poppins text-base text-gray-500"
+        />
+        {search ? (
+          <TouchableOpacity
+            onPress={handlOnClearPress}
+            className="absolute right-3 top-2 rounded-full  bg-orange-400"
+          >
+            <MaterialIcons name="clear" size={20} color="white" />
+          </TouchableOpacity>
+        ) : null}
+      </View>
+      <FlatList
+        scrollEnabled={false}
+        data={results}
+        renderItem={({ item }) => (
+          <ItemView
+            name={item.place_name}
+            place_name={item.place_name}
+            center={item.center}
+          />
+        )}
+      />
       <MapView
+        ref={mapRef}
         style={{ flex: 1, height: 200 }}
         initialRegion={{
-          latitude: basicInfo.latitude as number,
-          longitude: basicInfo.longitude as number,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitude: 10.7201501,
+          longitude: 122.5621063,
+          latitudeDelta: 0.0122,
+          longitudeDelta: 0.0121,
         }}
         onPress={(event) => {
           setLocation(event.nativeEvent.coordinate);
@@ -59,6 +200,17 @@ const Map: React.FC<MapProps> = () => {
               longitude: event.nativeEvent.coordinate.longitude,
             },
           });
+          if (mapRef.current) {
+            mapRef.current.animateToRegion(
+              {
+                latitude: event.nativeEvent.coordinate.latitude,
+                longitude: event.nativeEvent.coordinate.longitude,
+                latitudeDelta: 0.0122,
+                longitudeDelta: 0.0121,
+              },
+              500,
+            );
+          }
         }}
       >
         {location && (
