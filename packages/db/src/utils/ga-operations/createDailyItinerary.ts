@@ -9,6 +9,7 @@ import {
   findPoiWithNearestPrice,
   getCoordinates,
   getCoordinatesParam,
+  getMatrixAvg,
 } from './utils';
 
 type CreateTripInput = NexusGenInputs['CreateTripInput'];
@@ -55,6 +56,7 @@ export const assignAccommodation = (
 };
 
 export const createDailyItinerary = async (
+  isPremium: boolean,
   chromosome: Chrom,
   input: CreateTripInput,
 ) => {
@@ -86,43 +88,91 @@ export const createDailyItinerary = async (
     ? genes
     : [startingLocation].concat(genes);
 
+  const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
+  const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
+
   console.log(pois.length);
 
   if (pois.length > 1) {
-    const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
-    const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
+    if (isPremium) {
+      const { distances, durations, orderedPOIs } = shortestPath(
+        pois,
+        matrix.distances,
+        matrix.durations,
+        pois[0]!,
+      );
 
-    const { distances, durations, orderedPOIs } = shortestPath(
-      pois,
-      matrix.distances,
-      matrix.durations,
-      pois[0]!,
-    );
+      // removed initialized 0 distance / duration
+      distances.push(distances.shift());
+      durations.push(durations.shift());
 
-    // removed initialized 0 distance / duration
-    distances.push(distances.shift());
-    durations.push(durations.shift());
+      // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
+      const orderedGenes = input.isAccommodationIncluded
+        ? orderedPOIs
+        : orderedPOIs.slice(1);
 
-    // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
-    const orderedGenes = input.isAccommodationIncluded
-      ? orderedPOIs
-      : orderedPOIs.slice(1);
+      // update the chrosome with ordered genes
+      const updatedChoromosome: Chrom = {
+        ...chromosome,
+        travelExpenses: input.isTransportationIncluded
+          ? calculateTravelExpenses(distances, durations, input.travelerCount)
+          : 0,
+        travelDurations: durations as number[],
+        travelDistances: distances as number[],
+      };
 
-    // update the chrosome with ordered genes
-    const updatedChoromosome: Chrom = {
-      ...chromosome,
-      travelExpenses: input.isTransportationIncluded
-        ? calculateTravelExpenses(distances, durations, input.travelerCount)
-        : 0,
-      travelDurations: durations as number[],
-      travelDistances: distances as number[],
-    };
+      updatedChoromosome.chrom.genes = orderedGenes;
 
-    updatedChoromosome.chrom.genes = orderedGenes;
+      return updatedChoromosome;
+    } else {
+      const travelDistances = [];
+      const travelDurations = [];
 
-    return updatedChoromosome;
+      const avgDistance = getMatrixAvg(matrix.distances);
+      const avgDuration = getMatrixAvg(matrix.durations);
+
+      for (let i = 0; i < pois.length; i++) {
+        const placeDistance = matrix.distances[i]![i + 1];
+        const placeDuration = matrix.durations[i]![i + 1];
+
+        if (placeDistance == null || placeDistance <= 0) {
+          travelDistances.push(avgDistance);
+        } else {
+          travelDistances.push(placeDistance);
+        }
+        if (placeDuration == null || placeDuration <= 0) {
+          travelDurations.push(avgDuration);
+        } else {
+          travelDurations.push(placeDuration);
+        }
+      }
+
+      const validDistances = travelDistances.slice(0, -1);
+      const validDurations = travelDurations.slice(0, -1);
+
+      // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
+      const genes = input.isAccommodationIncluded ? pois : pois.slice(1);
+
+      // update the chrosome with ordered genes
+      const updatedChoromosome: Chrom = {
+        ...chromosome,
+        travelExpenses: input.isTransportationIncluded
+          ? calculateTravelExpenses(
+              validDistances,
+              validDurations,
+              input.travelerCount,
+            )
+          : 0,
+        travelDurations: validDurations as number[],
+        travelDistances: validDistances as number[],
+      };
+
+      updatedChoromosome.chrom.genes = genes;
+
+      return updatedChoromosome;
+    }
   } else {
-    const orderedGenes = input.isAccommodationIncluded ? pois : pois.slice(1);
+    const onlyPoi = input.isAccommodationIncluded ? pois : pois.slice(1);
 
     const updatedChoromosome: Chrom = {
       ...chromosome,
@@ -130,9 +180,9 @@ export const createDailyItinerary = async (
       travelDurations: [0],
     };
 
-    updatedChoromosome.chrom.genes = orderedGenes;
+    updatedChoromosome.chrom.genes = onlyPoi;
 
-    const gene = orderedGenes[0];
+    const gene = onlyPoi[0];
 
     updatedChoromosome.chrom.accommodationCost = () =>
       gene?.accommodation ? parseFloat(gene.price) : 0;

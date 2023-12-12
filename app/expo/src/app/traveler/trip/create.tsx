@@ -226,7 +226,6 @@ export default function CreateTripScreen() {
         },
       });
 
-      // router.push('/traveler/trip/preference');
       if (isPremium) {
         router.push('/traveler/trip/preference');
       } else {

@@ -778,6 +778,7 @@ export interface NexusGenArgTypes {
     };
     createTrip: {
       // args
+      isPremium: boolean; // Boolean!
       tripInput: NexusGenInputs['CreateTripInput']; // CreateTripInput!
       tripPreferenceInput: NexusGenInputs['CreateTripPreferenceInput']; // CreateTripPreferenceInput!
       userId: string; // String!
@@ -806,6 +807,7 @@ export interface NexusGenArgTypes {
     regenerateTrip: {
       // args
       id: number; // Int!
+      isPremium: boolean; // Boolean!
     };
     updateExpense: {
       // args
