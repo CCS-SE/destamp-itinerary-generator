@@ -34,8 +34,8 @@ export function generatePopulation(
 
   const newPopulation: Chrom[] = []; // placeholder for initialized population
 
-  const restaurants = pois.filter((poi) => poi.restaurant);
-  const attractions = pois.filter((poi) => poi.isAttraction);
+  let restaurants = pois.filter((poi) => poi.restaurant);
+  let attractions = pois.filter((poi) => poi.isAttraction);
 
   for (let i = 0; i < POPULATION_SIZE; i++) {
     let totalDuration = 0;
@@ -48,8 +48,11 @@ export function generatePopulation(
       totalCost <= targetCost &&
       chromosome.length < MAX_ITERATIONS
     ) {
-      const attraction = pickPOI(attractions, isPremium);
-      const restaurant = pickPOI(restaurants, isPremium);
+      const attraction = pickPOI(attractions, isPremium).pickedPOI;
+      const restaurant = pickPOI(restaurants, isPremium).pickedPOI;
+
+      attractions = pickPOI(attractions, isPremium).remainingPOIs;
+      restaurants = pickPOI(restaurants, isPremium).remainingPOIs;
 
       if (!restaurant && !attraction) {
         break;
@@ -96,12 +99,15 @@ export function generatePopulation(
   return newPopulation;
 }
 
-function pickPOI(pois: PointOfInterest[], isPremium: boolean): PointOfInterest {
+function pickPOI(pois: PointOfInterest[], isPremium: boolean) {
   const poisCopy = [...pois];
+  let pickedPOI;
   if (isPremium) {
-    return poisCopy.shift()!; // for premium users, always get the first element and remove it from the list
+    pickedPOI = poisCopy[0];
+    poisCopy.splice(0, 1);
   } else {
     const randomIndex = Math.floor(Math.random() * pois.length);
-    return poisCopy.splice(randomIndex, 1)[0]!; // for free users, pick a random element and remove it from the list
+    pickedPOI = poisCopy.splice(randomIndex, 1)[0];
   }
+  return { pickedPOI, remainingPOIs: poisCopy };
 }
