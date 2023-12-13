@@ -195,37 +195,52 @@ export const createTrip = async (
 };
 
 export const deleteTrip = async (id: number, ctx: Context) => {
-  await ctx.prisma.tripPreference.delete({
-    where: {
-      tripId: id,
-    },
-  });
+  try {
+    const trip = await ctx.prisma.trip.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        tripPreference: true,
+      },
+    });
 
-  await ctx.prisma.expense.deleteMany({
-    where: {
-      tripId: id,
-    },
-  });
+    if (trip?.tripPreference) {
+      await ctx.prisma.tripPreference.delete({
+        where: {
+          tripId: id,
+        },
+      });
+    }
 
-  await ctx.prisma.dailyItineraryPoi.deleteMany({
-    where: {
-      dailyItinerary: {
+    await ctx.prisma.expense.deleteMany({
+      where: {
         tripId: id,
       },
-    },
-  });
+    });
 
-  await ctx.prisma.dailyItinerary.deleteMany({
-    where: {
-      tripId: id,
-    },
-  });
+    await ctx.prisma.dailyItineraryPoi.deleteMany({
+      where: {
+        dailyItinerary: {
+          tripId: id,
+        },
+      },
+    });
 
-  return await ctx.prisma.trip.delete({
-    where: {
-      id: id,
-    },
-  });
+    await ctx.prisma.dailyItinerary.deleteMany({
+      where: {
+        tripId: id,
+      },
+    });
+
+    return await ctx.prisma.trip.delete({
+      where: {
+        id: id,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const regenerateTrip = async (

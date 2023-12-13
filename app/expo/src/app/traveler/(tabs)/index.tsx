@@ -41,7 +41,7 @@ export default function MyTrip() {
         userId: user?.id || '',
       });
     }
-  }, []);
+  }, [data?.travelerAccount.isPremium]);
 
   const unclaimedStampsQuery = useQuery(GetUnclaimedStampsDocument, {
     variables: {
