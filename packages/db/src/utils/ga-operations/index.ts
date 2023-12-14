@@ -28,6 +28,7 @@ export type PointOfInterest = {
 
 export async function generateItinerary(
   isPremium: boolean,
+  hasPreference: boolean,
   input: CreateTripInput,
   pois: PointOfInterest[],
   duration: number,
@@ -44,6 +45,7 @@ export async function generateItinerary(
   for (let cluster = 0; cluster < clusteredPois.length; cluster++) {
     const population: Chromosome[] = generatePopulation(
       isPremium,
+      hasPreference,
       input,
       clusteredPois[cluster]!.genes,
       duration,

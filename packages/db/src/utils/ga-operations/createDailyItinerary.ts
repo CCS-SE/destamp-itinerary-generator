@@ -91,8 +91,6 @@ export const createDailyItinerary = async (
   const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
   const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);
 
-  console.log(pois.length);
-
   if (pois.length > 1) {
     if (isPremium) {
       const { distances, durations, orderedPOIs } = shortestPath(
@@ -102,14 +100,10 @@ export const createDailyItinerary = async (
         pois[0]!,
       );
 
-      // removed initialized 0 distance / duration
-      distances.push(distances.shift());
-      durations.push(durations.shift());
-
-      // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
-      const orderedGenes = input.isAccommodationIncluded
-        ? orderedPOIs
-        : orderedPOIs.slice(1);
+      if (distances[0] === 0 && durations[0] === 0) {
+        distances.push(distances.shift());
+        durations.push(durations.shift());
+      }
 
       // update the chrosome with ordered genes
       const updatedChoromosome: Chrom = {
@@ -121,7 +115,7 @@ export const createDailyItinerary = async (
         travelDistances: distances as number[],
       };
 
-      updatedChoromosome.chrom.genes = orderedGenes;
+      updatedChoromosome.chrom.genes = orderedPOIs;
 
       return updatedChoromosome;
     } else {
