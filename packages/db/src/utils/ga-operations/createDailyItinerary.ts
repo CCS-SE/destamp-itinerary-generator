@@ -147,8 +147,12 @@ export const createDailyItinerary = async (
         }
       }
 
-      const validDistances = travelDistances.slice(0, -1);
-      const validDurations = travelDurations.slice(0, -1);
+      const validDistances = input.isAccommodationIncluded
+        ? travelDistances
+        : travelDistances.slice(0, -1);
+      const validDurations = input.isAccommodationIncluded
+        ? travelDurations
+        : travelDurations.slice(0, -1);
 
       // return the sorted genes if accommodation is included remove the starting location from the genes otherwise
       const genes = input.isAccommodationIncluded ? pois : pois.slice(1);
