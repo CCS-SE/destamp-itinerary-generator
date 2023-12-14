@@ -26,6 +26,7 @@ import {
   TravelSize,
 } from '~/graphql/generated';
 import useFormstore from '~/store/useFormStore';
+import userStore from '~/store/userStore';
 import {
   amountFormatter,
   dateFormmater,
@@ -47,10 +48,11 @@ const isIncluded = (
 };
 
 export default function ReviewTripScreen() {
+  const { user } = useContext(AuthContext);
   const router = useRouter();
+  const { isPremium } = userStore();
   const { preferenceData, tripData, reviewData, setData, reset } =
     useFormstore();
-  const { user } = useContext(AuthContext);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -75,7 +77,11 @@ export default function ReviewTripScreen() {
   };
 
   const handleBackButtonPress = () => {
-    router.back();
+    if (isPremium) {
+      router.push('/traveler/trip/preference');
+    } else {
+      router.push('/traveler/trip/create');
+    }
   };
 
   const [createTrip] = useMutation(CreateTripDocument);
@@ -88,7 +94,8 @@ export default function ReviewTripScreen() {
       setIsSubmitting(false);
     } else {
       const CreateTripInput: MutationCreateTripArgs = {
-        userId: user?.id || '',
+        isPremium: isPremium,
+        userId: user ? user.id : '',
         tripInput: {
           budget: parseFloat(tripData.budget),
           destination: JSON.parse(JSON.stringify(tripData.destination)),
@@ -147,7 +154,8 @@ export default function ReviewTripScreen() {
 
       await createTrip({
         variables: {
-          userId: user?.id || '',
+          isPremium: CreateTripInput.isPremium,
+          userId: CreateTripInput.userId,
           tripInput: CreateTripInput.tripInput,
           tripPreferenceInput: CreateTripInput.tripPreferenceInput,
         },
@@ -262,65 +270,71 @@ export default function ReviewTripScreen() {
             section="6"
           />
         </View>
-        <View className="mt-7">
-          <Text className="font-poppins text-xl text-gray-600">Preference</Text>
-          {/* Accommodation Type */}
-          {tripData.budgetInclusions &&
-            tripData.budgetInclusions.includes(
-              ExpenseCategory.Accommodation,
-            ) && (
-              <ReviewCard
-                title="Accommodation Type"
-                value={separateWords(preferenceData.accommodationType)}
-                section="0"
-                isPreference
-                isEditabble
-              />
-            )}
-          {/* Amenities */}
-          {tripData.budgetInclusions &&
-            tripData.budgetInclusions.includes(
-              ExpenseCategory.Accommodation,
-            ) && (
-              <ReviewCard
-                title="Amenities"
-                amenities={preferenceData.amenities}
-                section="1"
-                isEditabble
-                isArray
-              />
-            )}
-          {/* Activities */}
-          <ReviewCard
-            title="Activities"
-            activities={preferenceData.activities}
-            section="2"
-            isEditabble
-            isArray
-          />
-          {/* Dining Styles */}
-          {tripData.budgetInclusions &&
-            tripData.budgetInclusions.includes(ExpenseCategory.Food) && (
-              <ReviewCard
-                title="Dining Styles"
-                diningStyles={preferenceData.diningStyles}
-                section="3"
-                isEditabble
-                isArray
-              />
-            )}
-          {/* Cuisines */}
-          {tripData.budgetInclusions &&
-            tripData.budgetInclusions.includes(ExpenseCategory.Food) && (
-              <ReviewCard
-                title="Cuisines"
-                cuisines={preferenceData.cuisines}
-                section="4"
-                isEditabble
-                isArray
-              />
-            )}
-        </View>
+        {isPremium ? (
+          <View className="mt-7">
+            <Text className="font-poppins text-xl text-gray-600">
+              Preference
+            </Text>
+            {/* Accommodation Type */}
+            {tripData.budgetInclusions &&
+              tripData.budgetInclusions.includes(
+                ExpenseCategory.Accommodation,
+              ) && (
+                <ReviewCard
+                  title="Accommodation Type"
+                  value={separateWords(preferenceData.accommodationType)}
+                  section="0"
+                  isPreference
+                  isEditabble
+                />
+              )}
+            {/* Amenities */}
+            {tripData.budgetInclusions &&
+              tripData.budgetInclusions.includes(
+                ExpenseCategory.Accommodation,
+              ) && (
+                <ReviewCard
+                  title="Amenities"
+                  amenities={preferenceData.amenities}
+                  section="1"
+                  isEditabble
+                  isArray
+                />
+              )}
+            {/* Activities */}
+            <ReviewCard
+              title="Activities"
+              activities={preferenceData.activities}
+              section="2"
+              isEditabble
+              isArray
+            />
+            {/* Dining Styles */}
+            {tripData.budgetInclusions &&
+              tripData.budgetInclusions.includes(ExpenseCategory.Food) && (
+                <ReviewCard
+                  title="Dining Styles"
+                  diningStyles={preferenceData.diningStyles}
+                  section="3"
+                  isEditabble
+                  isArray
+                />
+              )}
+            {/* Cuisines */}
+            {tripData.budgetInclusions &&
+              tripData.budgetInclusions.includes(ExpenseCategory.Food) && (
+                <ReviewCard
+                  title="Cuisines"
+                  cuisines={preferenceData.cuisines}
+                  section="4"
+                  isEditabble
+                  isArray
+                />
+              )}
+          </View>
+        ) : (
+          <></>
+        )}
       </ScrollView>
       <View className="self-center">
         <TouchableOpacity

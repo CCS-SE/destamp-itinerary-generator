@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Alert, ScrollView, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -17,7 +17,6 @@ import addBusinessFormStore from '~/store/addBusinessFormStore';
 
 const BusinessBasicInformation: React.FC = () => {
   const { basicInfo, setData, establishment } = addBusinessFormStore();
-  const [isTelSelected, setIsTelSelected] = useState(false);
 
   const { control, handleSubmit } = useForm<BusinessInfoSchema>({
     mode: 'onChange',
@@ -25,6 +24,11 @@ const BusinessBasicInformation: React.FC = () => {
   });
 
   const onSubmit: SubmitHandler<BusinessInfoSchema> = async (data) => {
+    if (!basicInfo.latitude || !basicInfo.longitude) {
+      Alert.alert('Please provide address.');
+      return;
+    }
+
     setData({
       step: 1,
       data: {
@@ -109,13 +113,9 @@ const BusinessBasicInformation: React.FC = () => {
               return (
                 <CustomContainer
                   prefix={
-                    !isTelSelected ? (
-                      <Text className="mr-2 justify-center text-center font-poppins-medium text-lg text-orange-500">
-                        {'+63'}
-                      </Text>
-                    ) : (
-                      <></>
-                    )
+                    <Text className="mr-2 justify-center text-center font-poppins-medium text-lg text-orange-500">
+                      {'+63'}
+                    </Text>
                   }
                   placeholder="Contact Number"
                   value={value}
@@ -123,30 +123,14 @@ const BusinessBasicInformation: React.FC = () => {
                   onBlur={onBlur}
                   errorMessage={error?.message}
                   keyboardType="phone-pad"
-                  width={300}
                   errorWidth={220}
                   maxLength={10}
                 />
               );
             }}
           />
-          <View className="mt-1.5 flex-row">
-            <TouchableOpacity
-              className="ml-1"
-              activeOpacity={0.9}
-              onPress={() => setIsTelSelected(!isTelSelected)}
-            >
-              <View className="h-5 w-5 items-center justify-center rounded-md border">
-                <Text>{isTelSelected ? '✓' : ''}</Text>
-              </View>
-            </TouchableOpacity>
-            <Text className="ml-1 font-poppins text-sm">Tel</Text>
-          </View>
         </View>
         <Question question={'Address'} />
-        <View className="p-2">
-          <Text className="font-poppins">{basicInfo.address}</Text>
-        </View>
         <Map />
       </ScrollView>
       <StepperButton onPress={handleSubmit(onSubmit)} label={'Next'} />

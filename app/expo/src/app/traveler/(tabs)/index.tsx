@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { router } from 'expo-router';
@@ -18,9 +18,11 @@ import {
   GetTripsDocument,
   GetUnclaimedStampsDocument,
 } from '~/graphql/generated';
+import userStore from '~/store/userStore';
 
 export default function MyTrip() {
   const { user } = useContext(AuthContext);
+  const { setUser } = userStore();
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRegenerating, setIsRegenerating] = useState(false);
@@ -31,6 +33,15 @@ export default function MyTrip() {
       userId: user ? user.id : '',
     },
   });
+
+  useEffect(() => {
+    if (data && data.travelerAccount) {
+      setUser({
+        isPremium: data.travelerAccount.isPremium || false,
+        userId: user?.id || '',
+      });
+    }
+  }, [data?.travelerAccount.isPremium]);
 
   const unclaimedStampsQuery = useQuery(GetUnclaimedStampsDocument, {
     variables: {

@@ -161,13 +161,13 @@ type Mutation {
   claimStamp(stampId: Int!, userId: String!): User!
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
   createPoi(input: CreatePoiInput!, type: String!, userId: String!): Poi!
-  createTrip(tripInput: CreateTripInput!, tripPreferenceInput: CreateTripPreferenceInput!, userId: String!): Trip!
+  createTrip(isPremium: Boolean!, tripInput: CreateTripInput!, tripPreferenceInput: CreateTripPreferenceInput!, userId: String!): Trip!
   createUser(input: CreateUserInput!): User!
   deleteExpense(id: Int!): Expense!
   deletePoi(poiId: String!): Poi!
   deleteTrip(id: Int!): Trip!
   editUser(input: EditUserInput!, userId: String!): User!
-  regenerateTrip(id: Int!): Trip!
+  regenerateTrip(id: Int!, isPremium: Boolean!): Trip!
   updateExpense(data: UpdateExpenseInput!, id: Int!): Expense!
 }
 

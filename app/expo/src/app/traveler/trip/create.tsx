@@ -19,6 +19,7 @@ import Stepper from '~/components/Stepper/Stepper';
 import { TravelSize } from '~/graphql/generated';
 import { CreateTripData } from '~/store/types';
 import useFormstore, { initialFormState } from '~/store/useFormStore';
+import userStore from '~/store/userStore';
 import {
   confirmationAlert,
   formatDateToString,
@@ -31,6 +32,7 @@ interface Section {
 }
 
 export default function CreateTripScreen() {
+  const { isPremium } = userStore();
   const router = useRouter();
   const { tripData, setData, reset } = useFormstore();
   const { section } = useLocalSearchParams();
@@ -223,7 +225,12 @@ export default function CreateTripScreen() {
           ...tripData,
         },
       });
-      router.push('/traveler/trip/preference');
+
+      if (isPremium) {
+        router.push('/traveler/trip/preference');
+      } else {
+        router.push('/traveler/trip/review');
+      }
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
@@ -290,6 +297,7 @@ export default function CreateTripScreen() {
     />,
     <DateRangePicker
       key={4}
+      maxDuration={isPremium ? 4 : 2}
       onDateChange={(sd, ed) => handleDateChange(sd, ed)}
     />,
     <TimeslotSelection

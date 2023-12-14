@@ -221,6 +221,7 @@ export type MutationCreatePoiArgs = {
 };
 
 export type MutationCreateTripArgs = {
+  isPremium: Scalars['Boolean']['input'];
   tripInput: CreateTripInput;
   tripPreferenceInput: CreateTripPreferenceInput;
   userId: Scalars['String']['input'];
@@ -249,6 +250,7 @@ export type MutationEditUserArgs = {
 
 export type MutationRegenerateTripArgs = {
   id: Scalars['Int']['input'];
+  isPremium: Scalars['Boolean']['input'];
 };
 
 export type MutationUpdateExpenseArgs = {
@@ -815,7 +817,7 @@ export type MutationResolvers<
     ContextType,
     RequireFields<
       MutationCreateTripArgs,
-      'tripInput' | 'tripPreferenceInput' | 'userId'
+      'isPremium' | 'tripInput' | 'tripPreferenceInput' | 'userId'
     >
   >;
   createUser?: Resolver<
@@ -852,7 +854,7 @@ export type MutationResolvers<
     ResolversTypes['Trip'],
     ParentType,
     ContextType,
-    RequireFields<MutationRegenerateTripArgs, 'id'>
+    RequireFields<MutationRegenerateTripArgs, 'id' | 'isPremium'>
   >;
   updateExpense?: Resolver<
     ResolversTypes['Expense'],
@@ -1270,6 +1272,7 @@ export type DeletePoiMutation = {
 };
 
 export type CreateTripMutationVariables = Exact<{
+  isPremium: Scalars['Boolean']['input'];
   userId: Scalars['String']['input'];
   tripInput: CreateTripInput;
   tripPreferenceInput: CreateTripPreferenceInput;
@@ -1290,6 +1293,7 @@ export type DeleteTripMutation = {
 };
 
 export type RegenerateTripMutationVariables = Exact<{
+  isPremium: Scalars['Boolean']['input'];
   regenerateTripId: Scalars['Int']['input'];
 }>;
 
@@ -1946,6 +1950,20 @@ export const CreateTripDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'isPremium' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Boolean' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'userId' },
           },
           type: {
@@ -1992,6 +2010,14 @@ export const CreateTripDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'createTrip' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'isPremium' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'isPremium' },
+                },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'userId' },
@@ -2089,6 +2115,20 @@ export const RegenerateTripDocument = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'isPremium' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'Boolean' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'regenerateTripId' },
           },
           type: {
@@ -2104,6 +2144,14 @@ export const RegenerateTripDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'regenerateTrip' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'isPremium' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'isPremium' },
+                },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'id' },

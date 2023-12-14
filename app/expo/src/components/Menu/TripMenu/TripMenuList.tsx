@@ -89,6 +89,7 @@ function TripMenuList({
     setRegenerating(true);
     await regenerateTrip({
       variables: {
+        isPremium: isPremium,
         regenerateTripId: id,
       },
       refetchQueries: [
