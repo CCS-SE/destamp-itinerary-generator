@@ -121,6 +121,22 @@ export interface NexusGenInputs {
     password: string; // String!
     type: NexusGenEnums['UserType']; // UserType!
   };
+  EditPoiInput: {
+    // input type
+    address?: string | null; // String
+    amenities?: string[] | null; // [String!]
+    atmospheres?: string[] | null; // [String!]
+    categories?: string[] | null; // [String!]
+    contactNumber?: string | null; // String
+    description?: string | null; // String
+    imageUrls?: string[] | null; // [String!]
+    latitude?: number | null; // Float
+    longitude?: number | null; // Float
+    name?: string | null; // String
+    operatingHours?: NexusGenInputs['OperatingHoursInput'][] | null; // [OperatingHoursInput!]
+    price?: string | null; // String
+    visitDuration?: number | null; // Int
+  };
   EditUserInput: {
     // input type
     firstName: string; // String!
@@ -419,6 +435,7 @@ export interface NexusGenFieldTypes {
     deleteExpense: NexusGenRootTypes['Expense']; // Expense!
     deletePoi: NexusGenRootTypes['Poi']; // Poi!
     deleteTrip: NexusGenRootTypes['Trip']; // Trip!
+    editPoi: NexusGenRootTypes['Poi']; // Poi!
     editUser: NexusGenRootTypes['User']; // User!
     regenerateTrip: NexusGenRootTypes['Trip']; // Trip!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
@@ -628,6 +645,7 @@ export interface NexusGenFieldTypeNames {
     deleteExpense: 'Expense';
     deletePoi: 'Poi';
     deleteTrip: 'Trip';
+    editPoi: 'Poi';
     editUser: 'User';
     regenerateTrip: 'Trip';
     updateExpense: 'Expense';
@@ -798,6 +816,12 @@ export interface NexusGenArgTypes {
     deleteTrip: {
       // args
       id: number; // Int!
+    };
+    editPoi: {
+      // args
+      input: NexusGenInputs['EditPoiInput']; // EditPoiInput!
+      poiId: string; // String!
+      type: string; // String!
     };
     editUser: {
       // args

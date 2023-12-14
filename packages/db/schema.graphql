@@ -120,6 +120,22 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
+input EditPoiInput {
+  address: String
+  amenities: [String!]
+  atmospheres: [String!]
+  categories: [String!]
+  contactNumber: String
+  description: String
+  imageUrls: [String!]
+  latitude: Float
+  longitude: Float
+  name: String
+  operatingHours: [OperatingHoursInput!]
+  price: String
+  visitDuration: Int
+}
+
 input EditUserInput {
   firstName: String!
   lastName: String!
@@ -166,6 +182,7 @@ type Mutation {
   deleteExpense(id: Int!): Expense!
   deletePoi(poiId: String!): Poi!
   deleteTrip(id: Int!): Trip!
+  editPoi(input: EditPoiInput!, poiId: String!, type: String!): Poi!
   editUser(input: EditUserInput!, userId: String!): User!
   regenerateTrip(id: Int!, isPremium: Boolean!): Trip!
   updateExpense(data: UpdateExpenseInput!, id: Int!): Expense!
