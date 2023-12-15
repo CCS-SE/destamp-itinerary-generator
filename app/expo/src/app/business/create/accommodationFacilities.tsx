@@ -52,7 +52,13 @@ const AccommodationFacilities = () => {
       <CreateBusinessHeader title={'Create Business'} />
       <SafeAreaView className="flex-1 ">
         <ScrollView>
-          <View style={{ marginHorizontal: 40, alignContent: 'center' }}>
+          <View
+            style={{
+              marginHorizontal: 40,
+              alignContent: 'center',
+              marginBottom: 50,
+            }}
+          >
             <Question question={'Select Category'} />
             <View style={{ marginBottom: 30 }}>
               <AccommodationSelection
@@ -115,19 +121,19 @@ const AccommodationFacilities = () => {
                     errorMessage={error?.message}
                     multiline={true}
                     inputMode="numeric"
-                    width={315}
+                    width={300}
                     maxLength={9}
                   />
                 );
               }}
             />
           </View>
+          <StepperButton
+            label={'Next'}
+            onPress={handleSubmit(onSubmit)}
+            className="-top-6"
+          />
         </ScrollView>
-        <StepperButton
-          label={'Next'}
-          onPress={handleSubmit(onSubmit)}
-          className="-top-6"
-        />
       </SafeAreaView>
     </View>
   );
