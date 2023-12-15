@@ -60,12 +60,12 @@ export default function DiningStyleSelection({
 const diningStyles = [
   {
     title: 'Fine dining',
-    url: 'https://www.brandsandbranches.com/upload/blog/blog-1604145412.jpg',
+    url: 'https://www.richmondehoteliloilo.com.ph/wp-content/uploads/2020/06/dinning-the-Granary-0001.jpg',
     keyword: 'Fine',
   },
   {
     title: 'Casual dining',
-    url: 'https://cdn.phonebooky.com/blog/wp-content/uploads/2023/06/06172529/juanita1_11zon.jpg',
+    url: 'https://www.brandsandbranches.com/upload/blog/blog-1604145412.jpg',
     keyword: 'Casual',
   },
 ];
