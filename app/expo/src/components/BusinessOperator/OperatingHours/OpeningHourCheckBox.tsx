@@ -53,7 +53,15 @@ const OpeningHourCheckbox = ({
   }, [selectedOption]);
 
   return (
-    <View style={{ flexDirection: 'row', marginLeft: 15, marginBottom: 10 }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        marginBottom: 10,
+        justifyContent: 'space-between',
+        marginLeft: 15,
+        marginRight: 40,
+      }}
+    >
       {options.map((option, index) => (
         <TouchableOpacity
           key={option}
@@ -61,19 +69,25 @@ const OpeningHourCheckbox = ({
           style={{ marginRight: index < options.length - 1 ? 10 : 0 }}
           activeOpacity={0.9}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignSelf: 'center',
+            }}
+          >
             <View
-              className="items-center justify-center"
               style={{
                 width: 22,
                 height: 22,
                 borderRadius: 5,
                 borderWidth: 1,
                 borderColor: 'grey',
+                justifyContent: 'space-between',
                 backgroundColor:
                   selectedOption === option
                     ? option === 'CLOSED'
-                      ? '#FB2E53'
+                      ? '#800020'
                       : 'green'
                     : 'white',
               }}
@@ -84,6 +98,7 @@ const OpeningHourCheckbox = ({
                     fontFamily: 'Poppins',
                     fontSize: 14,
                     color: 'white',
+                    textAlign: 'center',
                   }}
                 >
                   ✓
@@ -94,8 +109,10 @@ const OpeningHourCheckbox = ({
               style={{
                 fontFamily: 'Poppins',
                 marginLeft: 5,
-                fontSize: 14,
+                fontSize: 12,
                 color: 'black',
+                textAlign: 'center',
+                marginTop: 2,
               }}
             >
               {option}
