@@ -240,17 +240,25 @@ const BusinessVerificationScreen: React.FC = () => {
           </TouchableOpacity>
         )}
       </View>
-      <Text
-        style={{
-          fontFamily: 'Poppins',
-          textAlign: 'center',
-          fontSize: 15,
-          color: 'gray',
-        }}
-      >
-        Please upload a business permit
-      </Text>
-      <BasicButton onPress={pickImage} title={'Select Image'} color="#F65A82" />
+      <View style={{ marginTop: 20 }}>
+        <Text
+          style={{
+            fontFamily: 'Poppins',
+            textAlign: 'center',
+            fontSize: 15,
+            color: 'gray',
+            marginBottom: -25,
+          }}
+        >
+          Please upload a business permit
+        </Text>
+        <BasicButton
+          onPress={pickImage}
+          title={'Select Image'}
+          color="#F65A82"
+        />
+      </View>
+
       <GradientButton
         onPress={handleCreateBusiness}
         title={'Create Business'}
