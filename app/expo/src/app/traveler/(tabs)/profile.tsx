@@ -36,7 +36,7 @@ export default function Profile() {
         >
           <View className="mt-14">
             {data && (
-              <TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.9}>
                 <ProfileIcon
                   firstName={data.user.firstName}
                   lastName={data.user.lastName}

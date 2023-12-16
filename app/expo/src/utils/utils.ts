@@ -110,7 +110,7 @@ export const calculateTravelExpense = (
   duration: number,
   travelerCount: number,
 ) => {
-  const travelDistanceInKilometers = Math.floor(distance / 1_000);
+  const travelDistanceInKilometers = parseFloat(getTravelDistance(distance));
   const flagDown = 40;
   const additionalCostPerKm = 13.5;
   const durationMinutes = Math.floor(duration / 60);
