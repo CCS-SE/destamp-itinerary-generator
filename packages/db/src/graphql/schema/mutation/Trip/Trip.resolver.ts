@@ -90,10 +90,13 @@ export const createTrip = async (
       ? contentBasedFiltering(pois, tripPreferenceInput)
       : pois;
 
+    const hasPreference = isPremium ? true : false;
+
     console.log(pointOfInterests.length);
 
     const suggestedItineraries = await generateItinerary(
       isPremium,
+      hasPreference,
       tripInput,
       pointOfInterests,
       duration,
@@ -250,6 +253,26 @@ export const regenerateTrip = async (
 ) => {
   try {
     const pois = await ctx.prisma.pointOfInterest.findMany({
+      where: {
+        OR: [
+          {
+            user: {
+              isNot: null,
+            },
+            businessPermit: {
+              isVerified: true,
+            },
+          },
+          {
+            user: {
+              is: null,
+            },
+            businessPermit: {
+              is: null,
+            },
+          },
+        ],
+      },
       select: {
         ...selectedFields,
         accommodation: {
@@ -280,18 +303,19 @@ export const regenerateTrip = async (
       (time: [number, number]) => getDesiredTravelHour(time),
     ) as number[];
 
-    const filteredPois = contentBasedFiltering(
-      pois,
-      trip.tripPreference as Preference,
-      true,
-    );
+    const pointOfInterests = trip.tripPreference
+      ? contentBasedFiltering(pois, trip.tripPreference as Preference, true)
+      : pois;
 
-    console.log(filteredPois.length);
+    const hasPreference = trip.tripPreference ? true : false;
+
+    console.log(pointOfInterests.length);
 
     const suggestedItineraries = await generateItinerary(
       isPremium,
+      hasPreference,
       trip,
-      filteredPois,
+      pointOfInterests,
       duration,
       desiredTravelHours,
     );
@@ -300,7 +324,7 @@ export const regenerateTrip = async (
       assignAccommodation(
         suggestedItineraries,
         trip,
-        filteredPois,
+        pointOfInterests,
         duration,
       ).map(async (itinerary) => {
         const dailyItinerary = await createDailyItinerary(

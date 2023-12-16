@@ -12,6 +12,7 @@ const MAX_ITERATIONS = 15; // max number of iterations
 
 export function generatePopulation(
   isPremium: boolean,
+  hasPreference: boolean,
   input: CreateTripInput,
   pois: PointOfInterest[],
   duration: number,
@@ -48,11 +49,27 @@ export function generatePopulation(
       totalCost <= targetCost &&
       chromosome.length < MAX_ITERATIONS
     ) {
-      const attraction = pickPOI(attractions, isPremium).pickedPOI;
-      const restaurant = pickPOI(restaurants, isPremium).pickedPOI;
+      const attraction = pickPOI(
+        attractions,
+        isPremium,
+        hasPreference,
+      ).pickedPOI;
+      const restaurant = pickPOI(
+        restaurants,
+        isPremium,
+        hasPreference,
+      ).pickedPOI;
 
-      attractions = pickPOI(attractions, isPremium).remainingPOIs;
-      restaurants = pickPOI(restaurants, isPremium).remainingPOIs;
+      attractions = pickPOI(
+        attractions,
+        isPremium,
+        hasPreference,
+      ).remainingPOIs;
+      restaurants = pickPOI(
+        restaurants,
+        isPremium,
+        hasPreference,
+      ).remainingPOIs;
 
       if (!restaurant && !attraction) {
         break;
@@ -99,10 +116,14 @@ export function generatePopulation(
   return newPopulation;
 }
 
-function pickPOI(pois: PointOfInterest[], isPremium: boolean) {
+function pickPOI(
+  pois: PointOfInterest[],
+  isPremium: boolean,
+  hasPreference: boolean,
+) {
   const poisCopy = [...pois];
   let pickedPOI;
-  if (isPremium) {
+  if (isPremium && hasPreference) {
     pickedPOI = poisCopy[0];
     poisCopy.splice(0, 1);
   } else {

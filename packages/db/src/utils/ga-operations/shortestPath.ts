@@ -29,29 +29,28 @@ export default function shortestPath(
     visited[currentIndex] = true;
 
     for (let poiIndex = 0; poiIndex < pois.length; poiIndex++) {
-      const distance = distanceMatrix[currentIndex]![poiIndex];
+      const distance = distanceMatrix[currentIndex]![poiIndex]!;
       const duration = duractionMatrix[currentIndex]![poiIndex];
-
-      const newDistance = (distances[currentIndex] + distance) as number;
-      const newDuration = (durations[currentIndex] + duration) as number;
 
       if (
         distance != 0 && // distance is not equal to itself
         distances[currentIndex] != Infinity && // distance is unvisited
-        newDistance < distances[poiIndex]
+        distance < distances[poiIndex]
       ) {
-        distances[poiIndex] = newDistance;
-        durations[poiIndex] = newDuration;
+        distances[poiIndex] = distance;
+        durations[poiIndex] = duration;
         visitedPois[poiIndex] = pois[poiIndex];
       }
     }
   }
 
-  const poisWithDurationsDistances = pois.map((poi, index) => ({
-    poi,
-    duration: durations[index],
-    distance: distances[index],
-  }));
+  const poisWithDurationsDistances = pois
+    .map((poi, index) => ({
+      poi,
+      duration: durations[index],
+      distance: distances[index],
+    }))
+    .filter((item) => item.poi.id !== 'start');
 
   // Sort the array based on the distance
   poisWithDurationsDistances.sort((a, b) => a.distance - b.distance);
