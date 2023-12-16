@@ -10,7 +10,6 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';
 import Question from '~/components/BusinessOperator/Question';
 import GradientButton from '~/components/Button/GradientButton';
-import StepperButton from '~/components/Button/StepperButton';
 import CustomContainer from '~/components/Container/CustomContainer';
 import AccommodationSelection from '~/components/FormField/AccommodationSelection';
 import MultiSelection from '~/components/FormField/MultiSelection';
@@ -54,7 +53,7 @@ const AccommodationFacilities = () => {
     resolver: zodResolver(accommodationSchema),
   });
 
-  const onSubmit: SubmitHandler<AccommodationSchema> = async (data) => {
+  const onSubmit: SubmitHandler<AccommodationSchema> = async () => {
     setIsSubmitting(true);
     if (amenities.length === 0) {
       Alert.alert('Please select at least one amenity.');

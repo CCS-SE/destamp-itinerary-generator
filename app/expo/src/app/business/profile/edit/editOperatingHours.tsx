@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, ScrollView, Text, ToastAndroid, View } from 'react-native';
+import { Alert, ScrollView, ToastAndroid, View } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMutation, useQuery } from '@apollo/client';
 
@@ -97,7 +97,7 @@ const BusinessOpeningHours: React.FC = () => {
     >
       <CreateBusinessHeader title={'Edit Business'} />
       <ScrollView showsVerticalScrollIndicator={false}>
-        {openingHours.map((item, i) => (
+        {openingHours.map((item) => (
           <View
             key={item.day}
             style={{

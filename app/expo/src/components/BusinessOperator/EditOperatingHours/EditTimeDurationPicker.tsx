@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
 import ScrollPicker from 'react-native-wheel-scrollview-picker';
-import { visit } from 'graphql';
 
 interface EditTimeDurationPickerProps {
   setVisitDuration: React.Dispatch<React.SetStateAction<number>>;

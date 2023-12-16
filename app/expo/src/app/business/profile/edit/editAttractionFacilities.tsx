@@ -32,6 +32,10 @@ const AttractionFacilities = () => {
     },
   });
 
+  if (error) {
+    Alert.alert('Error', error.message);
+  }
+
   const [chosenCategories, setChosenCategories] = useState(
     data?.poi.categories.map((c) => c.name) || [],
   );
@@ -46,7 +50,7 @@ const AttractionFacilities = () => {
 
   const [editPoi] = useMutation(EditPoiDocument);
 
-  const onSubmit: SubmitHandler<AttractionSchema> = async (data) => {
+  const onSubmit: SubmitHandler<AttractionSchema> = async () => {
     setIsSubmitting(true);
 
     if (chosenCategories.length === 0) {

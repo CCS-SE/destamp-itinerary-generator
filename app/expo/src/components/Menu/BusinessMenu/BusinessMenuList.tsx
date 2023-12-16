@@ -2,7 +2,7 @@ import { useContext, type ReactNode } from 'react';
 import { FlatList, ToastAndroid } from 'react-native';
 import { router } from 'expo-router';
 import { useMutation } from '@apollo/client';
-import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
 import { DeletePoiDocument, GetBusinessesDocument } from '~/graphql/generated';

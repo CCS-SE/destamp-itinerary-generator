@@ -101,7 +101,7 @@ const BusinessPhotos: React.FC = () => {
       ],
       onCompleted: () => {
         setTimeout(() => {
-          router.push(`/business/(tabs)`);
+          router.push('/business/(tabs)');
           setIsSubmitting(false);
           ToastAndroid.show('Successfully edited.', 2000);
         }, 3000);

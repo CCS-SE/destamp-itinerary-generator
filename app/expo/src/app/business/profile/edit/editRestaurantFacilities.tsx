@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useMutation, useQuery } from '@apollo/client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Controller, set, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import AtmosphereSelection from '~/components/BusinessOperator/EstablishmentTypes/AtmosphereSelection';
 import CreateBusinessHeader from '~/components/BusinessOperator/Header';

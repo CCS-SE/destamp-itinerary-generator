@@ -152,7 +152,7 @@ const BusinessBasicInformation: React.FC = () => {
             name="contactNumber"
             defaultValue={contactNumber}
             render={({
-              field: { onChange, onBlur, value },
+              field: { onChange, onBlur },
               fieldState: { error },
             }) => {
               return (
