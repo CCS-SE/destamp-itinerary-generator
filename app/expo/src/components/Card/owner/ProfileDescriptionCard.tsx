@@ -15,6 +15,7 @@ const ProfileDescription = ({
   poiId,
   placeType,
   setEditing,
+  imageList,
 }: {
   businessName: string;
   businessCategories: string[];
@@ -25,6 +26,7 @@ const ProfileDescription = ({
   poiId: string;
   placeType: string;
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  imageList: string;
 }) => {
   const screenWidth = Dimensions.get('window').width;
 
@@ -35,6 +37,7 @@ const ProfileDescription = ({
       params: {
         poiId: poiId as string,
         placeType: placeType as string,
+        imageList: imageList as string,
       },
     });
   };
@@ -46,6 +49,7 @@ const ProfileDescription = ({
       params: {
         poiId: poiId as string,
         placeType: placeType as string,
+        imageList: imageList as string,
       },
     });
   };
@@ -57,6 +61,7 @@ const ProfileDescription = ({
       params: {
         poiId: poiId as string,
         placeType: placeType as string,
+        imageList: imageList as string,
       },
     });
   };
@@ -68,6 +73,7 @@ const ProfileDescription = ({
       params: {
         poiId: poiId as string,
         placeType: placeType as string,
+        imageList: imageList as string,
       },
     });
   };

@@ -23,7 +23,7 @@ import {
 } from '~/graphql/generated';
 
 const RestaurantFacilities = () => {
-  const { poiId, placeType } = useLocalSearchParams();
+  const { poiId, placeType, imageList } = useLocalSearchParams();
 
   const { error, data } = useQuery(GetBusinessDetailsDocument, {
     variables: {
@@ -90,7 +90,14 @@ const RestaurantFacilities = () => {
       ],
       onCompleted: () => {
         setTimeout(() => {
-          router.push(`/business/profile/${poiId}`);
+          router.push({
+            pathname: `/business/profile/${poiId}`,
+            params: {
+              poiId: poiId as string,
+              placeType: placeType as string,
+              imageList: imageList as string,
+            },
+          });
           setIsSubmitting(false);
           ToastAndroid.show('Successfully edited.', 2000);
         }, 5000);

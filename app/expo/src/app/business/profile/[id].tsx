@@ -73,6 +73,7 @@ const BusinessProfile = () => {
       params: {
         poiId: id as string,
         placeType: getPlaceType() as string,
+        imageList: imageList as string,
       },
     });
   };
@@ -84,6 +85,7 @@ const BusinessProfile = () => {
       params: {
         poiId: id as string,
         placeType: getPlaceType() as string,
+        imageList: imageList as string,
       },
     });
   };
@@ -114,6 +116,7 @@ const BusinessProfile = () => {
             params: {
               poiId: id as string,
               placeType: getPlaceType() as string,
+              imageList: imageList as string,
             },
           });
         };
@@ -214,6 +217,7 @@ const BusinessProfile = () => {
               poiId={id as string}
               placeType={getPlaceType()}
               setEditing={setEditing}
+              imageList={imageList as string}
             />
             {!data.poi.accommodation ? (
               <OperatingHourCard
@@ -222,6 +226,7 @@ const BusinessProfile = () => {
                 poiId={id as string}
                 setEditing={setEditing}
                 placeType={getPlaceType()}
+                imageList={imageList as string}
               />
             ) : (
               <></>

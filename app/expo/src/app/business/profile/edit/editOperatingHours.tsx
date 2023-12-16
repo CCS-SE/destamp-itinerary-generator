@@ -16,7 +16,7 @@ import {
 } from '~/graphql/generated';
 
 const BusinessOpeningHours: React.FC = () => {
-  const { poiId, placeType } = useLocalSearchParams();
+  const { poiId, placeType, imageList } = useLocalSearchParams();
   const [editPoi] = useMutation(EditPoiDocument);
 
   const { data, error } = useQuery(GetBusinessDetailsDocument, {
@@ -63,7 +63,14 @@ const BusinessOpeningHours: React.FC = () => {
 
       onCompleted: () => {
         setTimeout(() => {
-          router.push(`/business/profile/${poiId}`);
+          router.push({
+            pathname: `/business/profile/${poiId}`,
+            params: {
+              poiId: poiId as string,
+              placeType: placeType as string,
+              imageList: imageList as string,
+            },
+          });
           setIsSubmitting(false);
           ToastAndroid.show('Successfully edited.', 2000);
         }, 5000);

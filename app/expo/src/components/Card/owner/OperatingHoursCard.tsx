@@ -50,6 +50,7 @@ const OperatingHourCard = ({
   poiId,
   setEditing,
   placeType,
+  imageList,
 }: {
   operatingHours: {
     day: number;
@@ -62,6 +63,7 @@ const OperatingHourCard = ({
   poiId: string;
   setEditing: React.Dispatch<React.SetStateAction<boolean>>;
   placeType: string;
+  imageList: string;
 }) => {
   const formattedOperatingHours = formatOperatingHours(operatingHours);
   const screenWidth = Dimensions.get('window').width;
@@ -73,6 +75,7 @@ const OperatingHourCard = ({
       params: {
         poiId: poiId as string,
         placeType: placeType as string,
+        imageList: imageList as string,
       },
     });
   };
