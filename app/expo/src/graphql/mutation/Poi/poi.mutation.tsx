@@ -15,3 +15,11 @@ export const deletePoi = gql(
         }
       }`,
 );
+
+export const editPoi = gql(
+  `mutation EditPoi($type: String!, $poiId: String!, $input: EditPoiInput!) {
+    editPoi(type: $type, poiId: $poiId, input: $input) {
+      id
+    }
+  }`,
+);

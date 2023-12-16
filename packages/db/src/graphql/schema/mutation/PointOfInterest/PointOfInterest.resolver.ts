@@ -161,25 +161,23 @@ export const editPoi = async (
         input.operatingHours != null
           ? {
               deleteMany: {},
-              createMany: {
-                data: input.operatingHours!.map((openingHour) => {
-                  return type !== 'Accommodation'
-                    ? {
-                        day: openingHour.day,
-                        closeTime: new Date(openingHour.closeTime),
-                        is24Hours: openingHour.is24hours,
-                        isClosed: openingHour.isClosed,
-                        openTime: new Date(openingHour.openTime),
-                      }
-                    : {
-                        day: openingHour.day,
-                        closeTime: null,
-                        is24Hours: true,
-                        isClosed: false,
-                        openTime: null,
-                      };
-                }),
-              },
+              create: input.operatingHours!.map((openingHour) => {
+                return type !== 'Accommodation'
+                  ? {
+                      day: openingHour.day,
+                      closeTime: new Date(openingHour.closeTime),
+                      is24Hours: openingHour.is24hours,
+                      isClosed: openingHour.isClosed,
+                      openTime: new Date(openingHour.openTime),
+                    }
+                  : {
+                      day: openingHour.day,
+                      closeTime: null,
+                      is24Hours: true,
+                      isClosed: false,
+                      openTime: null,
+                    };
+              }),
             }
           : undefined,
       accommodation:

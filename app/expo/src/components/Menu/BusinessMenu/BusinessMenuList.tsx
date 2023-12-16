@@ -88,12 +88,6 @@ function BusinessMenuList({
       onPress: handleViewDetails,
     },
     {
-      icon: <Feather name="edit" size={24} color="#727272" />,
-      title: 'Edit Business',
-      color: '#727272',
-      onPress: () => undefined,
-    },
-    {
       icon: <MaterialIcons name="delete" color={'#FB2E53'} size={24} />,
       title: 'Delete Business',
       color: '#FB2E53',

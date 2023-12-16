@@ -29,7 +29,7 @@ export default function MultiSelection({
 
   const handleOptionChange = (options: string[]) => {
     setSelectedOptions(options);
-    onOptionChange(options);
+    onOptionChange(selectedOptions);
   };
 
   return (
