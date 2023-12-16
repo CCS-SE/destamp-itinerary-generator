@@ -74,18 +74,18 @@ export default function MapScreen() {
   const selectedDailyItinerary =
     data && data.trip.dailyItineraries[parseInt(selectedDay as string)];
 
-  const startingLocation = {
-    ...selectedDailyItinerary!.dailyItineraryPois[0]!.poi,
-    id: '',
-    latitude: data?.trip.startingLocation.center[1],
-    longitude: data?.trip.startingLocation.center[0],
-    name: data?.trip.startingLocation.name,
-  };
-
   const dailyItineraryPois =
     data && data.trip.isAccommodationIncluded
       ? selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi)
-      : [startingLocation].concat(
+      : [
+          {
+            ...selectedDailyItinerary!.dailyItineraryPois[0]!.poi,
+            id: '',
+            latitude: data?.trip.startingLocation.center[1],
+            longitude: data?.trip.startingLocation.center[0],
+            name: data?.trip.startingLocation.name,
+          },
+        ].concat(
           selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi) ||
             [],
         );
