@@ -28,6 +28,7 @@ const OverviewTag = ({
         elevation: 5,
         width: width || 170,
         padding: 5,
+        flexDirection: 'row',
       }}
     >
       <Text style={{ paddingRight: 10, paddingLeft: 5 }}>{icon}</Text>

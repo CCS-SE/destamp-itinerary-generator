@@ -168,6 +168,15 @@ const Map: React.FC<MapProps> = (props: MapProps) => {
           placeholder={search ? selectedValue.place_name : ''}
           value={search}
           className="ml-2 flex-1 pb-0.5 font-poppins text-base text-gray-500"
+          multiline={true}
+          style={{
+            minHeight: 40,
+            width: 260,
+            paddingHorizontal: 8,
+            paddingTop: 8,
+            paddingBottom: 8,
+            fontSize: 16,
+          }}
         />
         {search ? (
           <TouchableOpacity
@@ -191,7 +200,7 @@ const Map: React.FC<MapProps> = (props: MapProps) => {
       />
       <MapView
         ref={mapRef}
-        style={{ flex: 1, height: 200 }}
+        style={{ flex: 1, height: 300 }}
         initialRegion={{
           latitude: location.latitude as number,
           longitude: location.longitude as number,

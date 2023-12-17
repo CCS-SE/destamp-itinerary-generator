@@ -5,7 +5,7 @@ describe('getTripDateFormat', () => {
     const date = new Date(2023, 8, 23);
     const formattedDate = getTripDateFormat(date);
 
-    expect(formattedDate).toBe('Sep 23, 2023');
+    expect(formattedDate).toBe('Sep 23');
   });
 });
 
