@@ -193,7 +193,7 @@ export interface NexusGenObjects {
   Account: {
     // root type
     isPremium: boolean; // Boolean!
-    user?: NexusGenRootTypes['User'] | null; // User
+    user: NexusGenRootTypes['User']; // User!
   };
   Amenity: {
     // root type
@@ -366,7 +366,7 @@ export interface NexusGenFieldTypes {
   Account: {
     // field return type
     isPremium: boolean; // Boolean!
-    user: NexusGenRootTypes['User'] | null; // User
+    user: NexusGenRootTypes['User']; // User!
   };
   Amenity: {
     // field return type

@@ -10,7 +10,7 @@ type Accommodation {
 
 type Account {
   isPremium: Boolean!
-  user: User
+  user: User!
 }
 
 type Amenity {
