@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
   contentBasedFiltering,
   Preference,
@@ -87,7 +88,7 @@ export const createTrip = async (
     ) as number[];
 
     const pointOfInterests = isPremium
-      ? contentBasedFiltering(pois, tripPreferenceInput)
+      ? contentBasedFiltering(pois, tripPreferenceInput, false, travelSize)
       : pois;
 
     const hasPreference = isPremium ? true : false;
@@ -304,7 +305,12 @@ export const regenerateTrip = async (
     ) as number[];
 
     const pointOfInterests = trip.tripPreference
-      ? contentBasedFiltering(pois, trip.tripPreference as Preference, true)
+      ? contentBasedFiltering(
+          pois,
+          trip.tripPreference as Preference,
+          true,
+          trip.travelSize,
+        )
       : pois;
 
     const hasPreference = trip.tripPreference ? true : false;

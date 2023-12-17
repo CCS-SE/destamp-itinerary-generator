@@ -45,7 +45,7 @@ const EditTimeDurationPicker = ({
             <ScrollPicker
               style={{ height: 10 }}
               dataSource={minutes}
-              selectedIndex={minute}
+              selectedIndex={minute / 5}
               wrapperHeight={150}
               wrapperBackground="#FFFFFF"
               onValueChange={(min) => {
