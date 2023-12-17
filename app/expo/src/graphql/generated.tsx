@@ -50,7 +50,7 @@ export type Accommodation = {
 export type Account = {
   __typename?: 'Account';
   isPremium: Scalars['Boolean']['output'];
-  user?: Maybe<User>;
+  user: User;
 };
 
 export type Amenity = {
@@ -686,7 +686,7 @@ export type AccountResolvers<
     ResolversParentTypes['Account'] = ResolversParentTypes['Account'],
 > = {
   isPremium?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1502,7 +1502,7 @@ export type GetTripsQuery = {
   travelerAccount: {
     __typename?: 'Account';
     isPremium: boolean;
-    user?: {
+    user: {
       __typename?: 'User';
       tripCount: number;
       trips: Array<{
@@ -1516,7 +1516,7 @@ export type GetTripsQuery = {
         travelerCount: number;
         travelSize: TravelSize;
       }>;
-    } | null;
+    };
   };
 };
 

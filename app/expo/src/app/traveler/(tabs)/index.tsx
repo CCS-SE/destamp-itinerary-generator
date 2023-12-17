@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FlatList, Text, View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { router } from 'expo-router';
@@ -32,16 +32,16 @@ export default function MyTrip() {
     variables: {
       userId: user ? user.id : '',
     },
+    onCompleted(data) {
+      if (data && data.travelerAccount.user) {
+        setUser({
+          isPremium: data.travelerAccount.isPremium || false,
+          userId: user ? user.id : '',
+          tripCount: data.travelerAccount.user.tripCount,
+        });
+      }
+    },
   });
-
-  useEffect(() => {
-    if (data && data.travelerAccount) {
-      setUser({
-        isPremium: data.travelerAccount.isPremium || false,
-        userId: user?.id || '',
-      });
-    }
-  }, [data?.travelerAccount.isPremium]);
 
   const unclaimedStampsQuery = useQuery(GetUnclaimedStampsDocument, {
     variables: {
@@ -77,12 +77,12 @@ export default function MyTrip() {
     );
   };
 
-  if (error)
+  if (data?.travelerAccount.user && error)
     return (
       <Text testID="my-trip-error">{`Error! ${error.message.toString()}`}</Text>
     );
 
-  if (loading && !data && !unclaimedStampsQuery.data)
+  if (loading && !data?.travelerAccount.user)
     return (
       <View className="flex-1 items-center" testID="my-trip-loading">
         <TripScreenSkeleton />

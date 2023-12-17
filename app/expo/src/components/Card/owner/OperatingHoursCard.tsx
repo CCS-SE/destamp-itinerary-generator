@@ -29,12 +29,12 @@ const formatOperatingHours = (
       const openTime = new Date(hours.openTime).toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: 'numeric',
-        hour12: false,
+        hour12: true,
       });
       const closeTime = new Date(hours.closeTime).toLocaleTimeString('en-US', {
         hour: 'numeric',
         minute: 'numeric',
-        hour12: false,
+        hour12: true,
       });
 
       return { dayName, openTime, closeTime, isClosed, is24Hours };
@@ -117,7 +117,7 @@ const OperatingHourCard = ({
                 </Text>
                 <Text className="ml-3 font-poppins-semibold text-base text-orange-500">
                   {operatingHour.closeTime
-                    ? `-   ${operatingHour.closeTime}`
+                    ? `- ${operatingHour.closeTime}`
                     : ''}
                 </Text>
               </>
@@ -143,7 +143,7 @@ const OperatingHourCard = ({
                 </Text>
                 <Text className="ml-3 font-poppins text-sm text-gray-700">
                   {operatingHour.closeTime
-                    ? `-   ${operatingHour.closeTime}`
+                    ? `-  ${operatingHour.closeTime}`
                     : ''}
                 </Text>
               </>

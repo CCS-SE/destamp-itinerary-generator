@@ -27,7 +27,7 @@ const Account = queryField('travelerAccount', {
   args: {
     id: nonNull(stringArg()),
   },
-  resolve: (_, args, ctx, info) => queryTravelerAccount(args.id, ctx, info),
+  resolve: (_, args, ctx) => queryTravelerAccount(args.id, ctx),
 });
 
 export default [User, UnclaimedStamps, Account];
