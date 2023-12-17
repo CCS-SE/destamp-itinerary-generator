@@ -17,11 +17,13 @@ import { useQuery } from '@apollo/client';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { GetTripItineraryDocument } from '~/graphql/generated';
+import userStore from '~/store/userStore';
 import { getTravelDistance, getTravelDuration } from '~/utils/utils';
 import Back from '../../../../../assets/images/back-icon.svg';
 import Mark from '../../../../../assets/images/marker.svg';
 
 export default function MapScreen() {
+  const { isPremium } = userStore();
   const { id, selectedDay } = useLocalSearchParams();
   const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0);
   const mapRef = useRef<MapView>(null);
@@ -42,6 +44,27 @@ export default function MapScreen() {
     return router.back();
   };
 
+  const scale = new Animated.Value(0.95);
+
+  Animated.loop(
+    Animated.sequence([
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: 1000,
+        useNativeDriver: false,
+      }),
+      Animated.timing(scale, {
+        toValue: 0.95,
+        duration: 1000,
+        useNativeDriver: false,
+      }),
+    ]),
+  ).start();
+
+  const animatedStyle = {
+    transform: [{ scale }],
+  };
+
   const { data } = useQuery(GetTripItineraryDocument, {
     variables: {
       tripId: parseInt(id as string),
@@ -51,18 +74,18 @@ export default function MapScreen() {
   const selectedDailyItinerary =
     data && data.trip.dailyItineraries[parseInt(selectedDay as string)];
 
-  const startingLocation = {
-    ...selectedDailyItinerary!.dailyItineraryPois[0]!.poi,
-    id: '',
-    latitude: data?.trip.startingLocation.center[1],
-    longitude: data?.trip.startingLocation.center[0],
-    name: data?.trip.startingLocation.name,
-  };
-
   const dailyItineraryPois =
     data && data.trip.isAccommodationIncluded
       ? selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi)
-      : [startingLocation].concat(
+      : [
+          {
+            ...selectedDailyItinerary!.dailyItineraryPois[0]!.poi,
+            id: '',
+            latitude: data?.trip.startingLocation.center[1],
+            longitude: data?.trip.startingLocation.center[0],
+            name: data?.trip.startingLocation.name,
+          },
+        ].concat(
           selectedDailyItinerary?.dailyItineraryPois.map((item) => item.poi) ||
             [],
         );
@@ -132,10 +155,30 @@ export default function MapScreen() {
     <View>
       <Stack.Screen options={{ headerShown: false }} />
       <View
-        className="mx-4 mt-14"
+        className="mx-4 mt-14 flex-row items-center justify-between"
         style={{ position: 'absolute', top: 0, left: 0, right: 0, zIndex: 1 }}
       >
         <Back height={45} width={45} onPress={handleBack} />
+        {!isPremium ? (
+          <Animated.View style={animatedStyle}>
+            <TouchableOpacity
+              className="flex-row items-center rounded-xl bg-blue-200 px-2.5 py-1.5"
+              onPress={() => router.push('/traveler/subscription/')}
+              activeOpacity={0.9}
+            >
+              <MaterialCommunityIcons
+                name="check-decagram-outline"
+                size={26}
+                color="#1A7DF1"
+              />
+              <Text className="ml-1 font-poppins-medium text-base text-[#1A7DF1] ">
+                Optimize Route
+              </Text>
+            </TouchableOpacity>
+          </Animated.View>
+        ) : (
+          <></>
+        )}
       </View>
       <MapView
         ref={mapRef}

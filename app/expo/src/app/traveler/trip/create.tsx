@@ -16,7 +16,7 @@ import GeocoderSearch from '~/components/FormField/MapboxGeocoder';
 import TimeslotSelection from '~/components/FormField/TimeslotSelection';
 import TravelSizeCategorySelection from '~/components/FormField/TravelSizeCategorySelection';
 import Stepper from '~/components/Stepper/Stepper';
-import { TravelSize } from '~/graphql/generated';
+import { ExpenseCategory, TravelSize } from '~/graphql/generated';
 import { CreateTripData } from '~/store/types';
 import useFormstore, { initialFormState } from '~/store/useFormStore';
 import userStore from '~/store/userStore';
@@ -44,6 +44,44 @@ export default function CreateTripScreen() {
   const [visitedSteps, setVisitedSteps] = useState<number[]>([0]);
   const [tripDurationDays, setTripDurationDays] = useState<number>(1);
   const [budgetError, setBudgetError] = useState('');
+
+  const Sections = [
+    {
+      title: 'Where do you want to travel?',
+    },
+    {
+      title: 'Whom are you traveling with?',
+    },
+    {
+      title: 'When is your trip?',
+    },
+    {
+      title: 'When is your free time?',
+    },
+    {
+      title: 'What should be included in your budget?',
+    },
+    {
+      title: 'How much is your budget?',
+    },
+    ...(tripData.budgetInclusions.includes(ExpenseCategory.Accommodation)
+      ? []
+      : [
+          {
+            title: 'Where do you want to start your trip?',
+          },
+        ]),
+  ];
+
+  const stepperProperty: (keyof CreateTripData)[] = [
+    'destination',
+    'travelSize',
+    'startDate',
+    'timeslots',
+    'budgetInclusions',
+    'budget',
+    'startingLocation',
+  ];
 
   const isStartingDateSelected = () => {
     return tripData.startDate !== null;
@@ -198,9 +236,12 @@ export default function CreateTripScreen() {
 
     const missingDataSection = !tripData[currentStepIndex];
 
-    if (tripData.startingLocation?.name === '') {
-      setActiveSection(1);
-      setSections([1]);
+    if (
+      !tripData.budgetInclusions.includes(ExpenseCategory.Accommodation) &&
+      tripData.startingLocation?.name === ''
+    ) {
+      setActiveSection(6);
+      setSections([6]);
       alert('Please select starting location.');
       return;
     }
@@ -279,11 +320,6 @@ export default function CreateTripScreen() {
       data={destinations}
       onChange={(value) => handleTripDataChange('destination', value)}
     />,
-    <GeocoderSearch
-      key={2}
-      placeholder="Search Starting Location"
-      onChange={(value) => handleTripDataChange('startingLocation', value)}
-    />,
     <TravelSizeCategorySelection
       key={3}
       initialTravelSize={tripData.travelSize}
@@ -325,6 +361,11 @@ export default function CreateTripScreen() {
       }
       onChangeText={(value) => handleTripDataChange('budget', value)}
       onBudgetError={(value) => setBudgetError(value)}
+    />,
+    <GeocoderSearch
+      key={2}
+      placeholder="Search Starting Location"
+      onChange={(value) => handleTripDataChange('startingLocation', value)}
     />,
   ];
 
@@ -384,40 +425,6 @@ export default function CreateTripScreen() {
     </SafeAreaView>
   );
 }
-
-const stepperProperty: (keyof CreateTripData)[] = [
-  'destination',
-  'startingLocation',
-  'travelSize',
-  'startDate',
-  'timeslots',
-  'budgetInclusions',
-  'budget',
-];
-
-const Sections = [
-  {
-    title: 'Where do you want to travel?',
-  },
-  {
-    title: 'Where do you want to start your trip?',
-  },
-  {
-    title: 'Whom are you traveling with?',
-  },
-  {
-    title: 'When is your trip?',
-  },
-  {
-    title: 'When is your free time?',
-  },
-  {
-    title: 'What should be included in your budget?',
-  },
-  {
-    title: 'How much is your budget?',
-  },
-];
 
 const destinations = [
   {
