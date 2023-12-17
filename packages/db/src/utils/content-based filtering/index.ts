@@ -1,5 +1,7 @@
 /* eslint-disable quotes */
 /* eslint-disable indent */
+import { TravelSize } from '@prisma/client';
+
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
 import { shuffleArray } from '../utils';
@@ -82,6 +84,11 @@ const notRestaurants: string[] = [
   'Cake shop',
 ];
 
+const travelSizeRestaurantCategories: { [K in TravelSize]?: string[] } = {
+  FAMILY: ['Family restaurant'],
+  COUPLE: ['Romantic restaurant'],
+};
+
 export function calculateSimilarityScore(
   userFeatures: string[],
   placeFeatures: string[],
@@ -119,6 +126,7 @@ export function contentBasedFiltering(
   places: PointOfInterest[],
   preference: Preference,
   forRegenerate: boolean = false,
+  travelSize: TravelSize,
 ): PointOfInterestWithScore[] {
   const nonZeroActivities: string[] = Object.entries(preference.activities)
     .filter(([, value]) => value !== undefined && value !== 0)
@@ -134,6 +142,7 @@ export function contentBasedFiltering(
       formatDiningStyleName(preference.diningStyles),
       [preference.accommodationType],
       nonZeroActivitiesCategories,
+      travelSizeRestaurantCategories[travelSize] || [],
     );
 
     const placeFeatures: string[] = place.categories
