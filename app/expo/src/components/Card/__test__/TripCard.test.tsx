@@ -32,7 +32,13 @@ describe('Trip Card', () => {
     expect(bugdetElement.children[0]).toBe(
       amountFormatter(tripCardData.budget),
     );
-    expect(dateElement.children[0]).toBe('Jun 9, 2023  •  4 days');
+
+    if (tripCardData.daysDifference > 1) {
+      expect(dateElement.children[0]).toContain('Jun 9 - Jun 12, 2023');
+    } else {
+      expect(dateElement.children[0]).toContain('Jun 9, 2023');
+    }
+
     expect(travelSizeElement.children[0]).toBe(
       toSentenceCase(tripCardData.travelSize) +
         ' (' +

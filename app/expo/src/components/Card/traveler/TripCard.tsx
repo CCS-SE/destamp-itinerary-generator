@@ -29,6 +29,7 @@ interface TripCardProps {
   isPremium: boolean;
   setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
+  daysDifference: number;
 }
 
 function TripCard({
