@@ -353,13 +353,18 @@ function formatTime(timeSlot: TimeSlot): TimeSlot {
   const endMin = splitEnd[1] as string;
 
   const newStartTime =
-    parseInt(startHour) <= 12
-      ? timeSlot.start + ' AM'
-      : parseInt(startHour) - 12 + ':' + startMin + ' PM';
+    parseInt(startHour) === 12
+      ? `12:${startMin} PM`
+      : `${parseInt(startHour) % 12 || 12}:${startMin} ${
+          parseInt(startHour) < 12 ? 'AM' : 'PM'
+        }`;
+
   const newEndTime =
-    parseInt(endHour) <= 12
-      ? timeSlot.end + ' AM'
-      : parseInt(endHour) - 12 + ':' + endMin + ' PM';
+    parseInt(endHour) === 12
+      ? `12:${endMin} PM`
+      : `${parseInt(endHour) % 12 || 12}:${endMin} ${
+          parseInt(endHour) < 12 ? 'AM' : 'PM'
+        }`;
 
   return { start: newStartTime, end: newEndTime };
 }
