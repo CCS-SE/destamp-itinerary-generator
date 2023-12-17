@@ -38,8 +38,8 @@ export default function GradientButton({
         end={{ x: 0.8, y: 0 }}
         style={{ width: buttonWidth, alignSelf: 'center' }}
         className={`m-5 items-center rounded-xl py-4 ${
-          isSubmitting ? 'opacity-40' : ''
-        }`}
+          touchableOpacityProps.disabled ? 'opacity-40' : ''
+        } ${isSubmitting ? 'opacity-40' : ''}`}
       >
         {isSubmitting ? (
           <ActivityIndicator

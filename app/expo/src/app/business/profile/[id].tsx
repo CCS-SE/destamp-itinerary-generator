@@ -4,6 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Swiper from 'react-native-swiper';
 import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
+import { Entypo, Feather } from '@expo/vector-icons';
 import { Model } from 'react-model';
 
 import OperatingHourCard from '~/components/Card/owner/OperatingHoursCard';
@@ -19,6 +20,8 @@ import Back from '../../../../assets/images/back-icon.svg';
 const BusinessProfile = () => {
   const { id, imageList } = useLocalSearchParams();
 
+  const [editing, setEditing] = useState(false);
+
   const cardWidth = Dimensions.get('window').width * 0.9;
 
   const { loading, error, data } = useQuery(GetBusinessDetailsDocument, {
@@ -26,6 +29,16 @@ const BusinessProfile = () => {
       poiId: id as string,
     },
   });
+
+  const getPlaceType = () => {
+    if (data?.poi.accommodation) {
+      return 'Accommodation';
+    } else if (data?.poi.restaurant) {
+      return 'Restaurant';
+    } else {
+      return 'Attraction';
+    }
+  };
 
   const [{ useStore }] = useState(() =>
     Model(createSlideSchema(JSON.parse(imageList as string))),
@@ -53,6 +66,63 @@ const BusinessProfile = () => {
     );
   }
 
+  const toEditRestaurantFacilities = () => {
+    setEditing(false);
+    return router.push({
+      pathname: '/business/profile/edit/editRestaurantFacilities',
+      params: {
+        poiId: id as string,
+        placeType: getPlaceType() as string,
+        imageList: imageList as string,
+      },
+    });
+  };
+
+  const toEditAccommodationFacilities = () => {
+    setEditing(false);
+    return router.push({
+      pathname: '/business/profile/edit/editAccommodationFacilities',
+      params: {
+        poiId: id as string,
+        placeType: getPlaceType() as string,
+        imageList: imageList as string,
+      },
+    });
+  };
+
+  const toEditBusinessImages = () => {
+    setEditing(false);
+    return router.push({
+      pathname: '/business/profile/edit/editBusinessImages',
+      params: {
+        poiId: id as string,
+        placeType: getPlaceType() as string,
+        imageList: imageList as string,
+      },
+    });
+  };
+
+  const getPlaceTypeRoute = (placeType: string) => {
+    switch (placeType) {
+      case 'Restaurant':
+        return toEditRestaurantFacilities;
+      case 'Accommodation':
+        return toEditAccommodationFacilities;
+      default:
+        return () => {
+          setEditing(false);
+          router.push({
+            pathname: '/business/profile/edit/editAttractionFacilities',
+            params: {
+              poiId: id as string,
+              placeType: getPlaceType() as string,
+              imageList: imageList as string,
+            },
+          });
+        };
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -69,14 +139,27 @@ const BusinessProfile = () => {
                 style={{ width: cardWidth }}
               >
                 <Back height={43} width={43} onPress={handleBack} />
-                <TouchableOpacity
-                  className="-mr-3 rounded-xl  bg-gray-300"
-                  activeOpacity={0.9}
-                >
-                  <Text className="px-5 py-1.5 font-poppins-medium text-base text-slate-700">
-                    Edit
-                  </Text>
-                </TouchableOpacity>
+                {editing ? (
+                  <TouchableOpacity
+                    className="-mr-3 rounded-xl  bg-gray-300"
+                    activeOpacity={0.9}
+                    onPress={() => setEditing(false)}
+                  >
+                    <Text className="px-1.5 py-1.5 font-poppins-medium text-base text-slate-700">
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    className="-mr-3 rounded-xl  bg-gray-300"
+                    activeOpacity={0.9}
+                    onPress={() => setEditing(true)}
+                  >
+                    <Text className="px-5 py-1.5 font-poppins-medium text-base text-slate-700">
+                      Edit
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
               <Swiper
                 loadMinimal
@@ -94,11 +177,31 @@ const BusinessProfile = () => {
                   />
                 ))}
               </Swiper>
+              {editing && (
+                <View className="absolute bottom-3 left-2 w-auto flex-row items-center space-x-2 rounded-xl bg-pink-100 px-3.5 py-1.5 shadow-md">
+                  <Entypo name="images" size={16} color="black" />
+                  <TouchableOpacity onPress={toEditBusinessImages}>
+                    <Feather name="edit" size={16} color="#F97316" />
+                  </TouchableOpacity>
+                </View>
+              )}
               {data.poi.price !== '0' ? (
-                <View className="absolute bottom-3 right-2 w-auto items-center rounded-xl bg-pink-100 px-3.5 py-1.5 shadow-md">
+                <View className="absolute bottom-3 right-2 w-auto flex-row items-center rounded-xl bg-pink-100 px-3.5 py-1.5 shadow-md">
                   <Text className="font-poppins-semibold text-lg text-[#DE4D6C] ">
                     ₱{data.poi.price}
                   </Text>
+                  {editing && (
+                    <TouchableOpacity
+                      onPress={getPlaceTypeRoute(getPlaceType())}
+                    >
+                      <Feather
+                        name="edit"
+                        size={16}
+                        color="#F97316"
+                        style={{ marginLeft: 5 }}
+                      />
+                    </TouchableOpacity>
+                  )}
                 </View>
               ) : (
                 <></>
@@ -110,9 +213,21 @@ const BusinessProfile = () => {
               businessAddress={data.poi.address}
               businessContactNumber={data.poi.contactNumber}
               businessDescription={data.poi.description || ''}
+              editing={editing}
+              poiId={id as string}
+              placeType={getPlaceType()}
+              setEditing={setEditing}
+              imageList={imageList as string}
             />
             {!data.poi.accommodation ? (
-              <OperatingHourCard operatingHours={data.poi.operatingHours} />
+              <OperatingHourCard
+                operatingHours={data.poi.operatingHours}
+                editing={editing}
+                poiId={id as string}
+                setEditing={setEditing}
+                placeType={getPlaceType()}
+                imageList={imageList as string}
+              />
             ) : (
               <></>
             )}
@@ -123,9 +238,21 @@ const BusinessProfile = () => {
                   width: cardWidth,
                 }}
               >
-                <Text className="mb-2 mt-3 text-lg text-gray-600">
-                  Dining Atmosphere
-                </Text>
+                <View className="mb-2 mt-3 flex-row items-center">
+                  <Text className="text-lg text-gray-600">
+                    Dining Atmosphere
+                  </Text>
+                  {editing && (
+                    <TouchableOpacity onPress={toEditRestaurantFacilities}>
+                      <Feather
+                        name="edit"
+                        size={16}
+                        color="#F97316"
+                        style={{ marginLeft: 5 }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
                 <View className="flex flex-row flex-wrap">
                   {data.poi.restaurant.atmospheres.map((atmosphere) => (
                     <Text
@@ -148,9 +275,19 @@ const BusinessProfile = () => {
                   width: cardWidth,
                 }}
               >
-                <Text className="mb-2 mt-3 text-lg text-gray-600">
-                  Amenities
-                </Text>
+                <View className="mb-2 mt-3 flex-row items-center">
+                  <Text className="text-lg text-gray-600">Amenities</Text>
+                  {editing && (
+                    <TouchableOpacity onPress={toEditAccommodationFacilities}>
+                      <Feather
+                        name="edit"
+                        size={16}
+                        color="#F97316"
+                        style={{ marginLeft: 5 }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                </View>
                 <View className="flex flex-row flex-wrap">
                   {data.poi.accommodation.amenities.map((amenity) => (
                     <Text

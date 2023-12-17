@@ -46,11 +46,12 @@ export default function DestinationDetailScreen() {
 
   const handleBack = () => router.back();
 
-  const getTime = (time: string) => {
-    const hour = new Date(time).getHours();
-    const min = new Date(time).getMinutes();
-
-    return `${hour}:${min != 0 ? min : `${min}0`}`;
+  const formatTime = (time: Date) => {
+    return new Date(time).toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    });
   };
 
   const displayCategories = (items: Category[]) => {
@@ -237,8 +238,11 @@ export default function DestinationDetailScreen() {
                               : 'font-poppins text-base text-gray-500'
                           }  `}
                         >
-                          {oh.openTime ? getTime(oh.openTime) : ''} -{' '}
-                          {oh.closeTime ? getTime(oh.closeTime) : ''}
+                          {oh.openTime ? formatTime(new Date(oh.openTime)) : ''}{' '}
+                          -{' '}
+                          {oh.closeTime
+                            ? formatTime(new Date(oh.closeTime))
+                            : ''}
                         </Text>
                       )}
                     </View>

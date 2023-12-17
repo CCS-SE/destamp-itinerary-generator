@@ -32,10 +32,12 @@ export default function shortestPath(
       const distance = distanceMatrix[currentIndex]![poiIndex]!;
       const duration = duractionMatrix[currentIndex]![poiIndex];
 
+      const newDistance = (distances[currentIndex] + distance) as number;
+
       if (
         distance != 0 && // distance is not equal to itself
         distances[currentIndex] != Infinity && // distance is unvisited
-        distance < distances[poiIndex]
+        newDistance < distances[poiIndex]
       ) {
         distances[poiIndex] = distance;
         durations[poiIndex] = duration;

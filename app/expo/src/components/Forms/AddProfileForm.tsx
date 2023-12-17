@@ -8,6 +8,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import {
   CreateUserDocument,
+  GetTripsDocument,
   MutationCreateUserArgs,
   UserType,
 } from '~/graphql/generated';
@@ -61,6 +62,14 @@ export default function AddProfileForm() {
         onError: (err) => {
           Alert.alert('Error', err.message);
         },
+        refetchQueries: [
+          {
+            query: GetTripsDocument,
+            variables: {
+              userId: data.user.id,
+            },
+          },
+        ],
       });
     }
   };

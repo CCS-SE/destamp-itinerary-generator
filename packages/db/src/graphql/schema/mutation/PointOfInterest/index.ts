@@ -1,5 +1,5 @@
-import { CreatePoi, DeletePoi } from './PointOfInterest.mutation';
+import { CreatePoi, DeletePoi, EditPoi } from './PointOfInterest.mutation';
 
-const Mutations = [CreatePoi, DeletePoi];
+const Mutations = [CreatePoi, DeletePoi, EditPoi];
 
 export default Mutations;

@@ -31,6 +31,8 @@ export const GetBusinessDetailsQuery = gql(
       description
       price
       visitDuration
+      latitude
+      longitude
       accommodation {
         id
         amenities {
@@ -54,6 +56,20 @@ export const GetBusinessDetailsQuery = gql(
       }
     }
   }  
+  `,
+);
+
+export const GetPoiImagesQuery = gql(
+  `query GetPoiImages($poiId: String!) {
+    poi(poiId: $poiId) {
+      images {
+        image {
+          url
+        }
+      }
+      id
+    }
+  }
   `,
 );
 
