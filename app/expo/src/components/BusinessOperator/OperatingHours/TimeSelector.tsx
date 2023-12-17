@@ -123,7 +123,7 @@ const BusinessTimeSelector = ({
         >
           <View style={{ padding: 10, marginRight: 10 }}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
-              Opening hour:
+              OPENING HOUR:
             </Text>
             <View style={containerStyles}>
               <Text className="font-poppins-medium text-base text-[#FA8E56]">
@@ -155,7 +155,7 @@ const BusinessTimeSelector = ({
           >
             <View style={{ padding: 10, marginLeft: 10 }}>
               <Text style={{ fontFamily: 'Poppins', fontSize: 13 }}>
-                Closing hour:
+                CLOSING HOUR:
               </Text>
               <View style={containerStyles}>
                 <Text className="font-poppins-medium text-base text-[#FA8E56]">

@@ -81,7 +81,7 @@ const BusinessPhotos: React.FC = () => {
     >
       <CreateBusinessHeader title={'Create Business'} />
       <View
-        className="rounded-xl bg-gray-100 p-5"
+        className="mb-5 rounded-xl bg-gray-100 p-5"
         style={styles.imageContainer}
       >
         {Array.from(Array(5).keys()).map((index) => {
@@ -121,22 +121,25 @@ const BusinessPhotos: React.FC = () => {
           );
         })}
       </View>
-      <Text
-        style={{
-          fontFamily: 'Poppins',
-          textAlign: 'center',
-          fontSize: 15,
-          color: 'gray',
-          marginBottom: -5,
-        }}
-      >
-        Please upload images of your business
-      </Text>
-      <BasicButton
-        onPress={pickImages}
-        title={'Select Images'}
-        color="#F65A82"
-      />
+      <View style={{ marginBottom: 50 }}>
+        <Text
+          style={{
+            fontFamily: 'Poppins',
+            textAlign: 'center',
+            fontSize: 15,
+            color: 'gray',
+            marginBottom: -20,
+          }}
+        >
+          Please upload images of your business
+        </Text>
+        <BasicButton
+          onPress={pickImages}
+          title={'Select Images'}
+          color="#F65A82"
+        />
+      </View>
+
       <StepperButton
         label="Next"
         onPress={handleNext}

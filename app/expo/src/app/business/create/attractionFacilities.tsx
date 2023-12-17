@@ -96,7 +96,7 @@ const AttractionFacilities = () => {
                   errorMessage={error?.message}
                   multiline={true}
                   inputMode="numeric"
-                  width={315}
+                  width={280}
                   maxLength={9}
                 />
               );

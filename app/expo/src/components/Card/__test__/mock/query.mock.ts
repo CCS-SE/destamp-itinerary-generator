@@ -1,5 +1,12 @@
 import { DeleteTripDocument, TravelSize } from '~/graphql/generated';
 
+// Calculate the days difference
+const startDate = new Date(2023, 5, 9);
+const endDate = new Date(2023, 5, 12);
+const daysDifference = Math.ceil(
+  (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+);
+
 export const tripCardData = {
   budget: 10_000,
   title: 'Iloilo City',
@@ -15,10 +22,10 @@ export const tripCardData = {
   isPremium: false,
   stampTitle: 'Iloilo City',
   isStampClaimed: true,
+  daysDifference, // Assign the calculated value
   setRegenerating: () => {},
   setDeleting: () => {},
 };
-
 const id = 123;
 
 export const TripsQueryMock = [

@@ -131,7 +131,7 @@ const OverviewPage = () => {
               </View>
             </View>
             <GradientButton
-              onPress={() => router.push('/business/create/basicInformation')}
+              onPress={() => router.push('/business/create/establishmentType')}
               title={'Get Started'}
               isSubmitting={false}
             />

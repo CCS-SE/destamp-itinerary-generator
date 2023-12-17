@@ -51,8 +51,8 @@ const BusinessOpeningHours: React.FC = () => {
           <Question question={'Recommended Visit Duration'} />
           <TimeDurationPicker />
         </View>
+        <StepperButton onPress={handleNext} label={'Next'} />
       </ScrollView>
-      <StepperButton onPress={handleNext} label={'Next'} />
     </View>
   );
 };

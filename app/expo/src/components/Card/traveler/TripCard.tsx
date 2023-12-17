@@ -10,6 +10,7 @@ import { blurhash } from '~/constant/constant';
 import {
   amountFormatter,
   getTripDateFormat,
+  getTripDateWithYearFormat,
   toSentenceCase,
   tripDuration,
 } from '~/utils/utils';
@@ -28,6 +29,7 @@ interface TripCardProps {
   isPremium: boolean;
   setRegenerating: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleting: React.Dispatch<React.SetStateAction<boolean>>;
+  daysDifference: number;
 }
 
 function TripCard({
@@ -113,9 +115,18 @@ function TripCard({
                 testID="trip-date"
                 className="pl-2 text-center font-poppins-medium text-lg text-gray-500"
               >
-                {`${getTripDateFormat(startDate)}  •  ${daysDifference} ${
-                  daysDifference > 1 ? 'days' : 'day'
-                }`}
+                {(() => {
+                  if (daysDifference > 1) {
+                    return `${getTripDateFormat(
+                      startDate,
+                    )} - ${getTripDateWithYearFormat(endDate)}`;
+                  } else if (daysDifference === 1) {
+                    return `${getTripDateWithYearFormat(startDate)}`;
+                  } else {
+                    return '';
+                  }
+                })()}{' '}
+                • {daysDifference} {daysDifference > 1 ? 'days' : 'day'}
               </Text>
             </View>
           </View>

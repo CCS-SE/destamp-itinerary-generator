@@ -21,7 +21,7 @@ const BusinessDayItem: React.FC<BusinessDayItemProps> = ({
   is24Hours,
 }) => {
   return (
-    <View className="mb-3 rounded-2xl bg-gray-100 p-2">
+    <View className="mb-3 rounded-2xl bg-gray-100 p-3">
       <View style={{ justifyContent: 'space-between' }}>
         <Text
           style={{

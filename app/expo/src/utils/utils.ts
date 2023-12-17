@@ -207,6 +207,13 @@ export function getTripDateFormat(date: Date) {
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
+  });
+}
+
+export function getTripDateWithYearFormat(date: Date) {
+  return new Date(date).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
     year: 'numeric',
   });
 }
