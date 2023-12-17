@@ -16,10 +16,10 @@ afterEach(() => {
 });
 
 describe('createPoi mutation', () => {
-  it('should delete POI', async () => {
+  it('should create POI', async () => {
     const poi = {
       id: 'test',
-      userId: 'user1',
+      businessOperatorId: 'user1',
       name: 'Baliwag',
       description: '',
       address: 'Jaro Iloilo City',
@@ -36,6 +36,14 @@ describe('createPoi mutation', () => {
       createdAt: new Date('2023-11-25'),
       updatedAt: new Date('2023-11-25'),
     };
+
+    mockContext.prisma.businessOperator.findFirstOrThrow.mockImplementation(
+      () => {
+        return {
+          id: 'test',
+        };
+      },
+    );
 
     mockContext.prisma.pointOfInterest.create.mockResolvedValue(poi);
 
@@ -74,7 +82,7 @@ describe('createPoi mutation', () => {
 
 describe('deletePoi mutation', () => {
   it('should delete POI', async () => {
-    const poi = pointOfInterests[0]!;
+    const poi = pointOfInterests[1]!;
 
     mockContext.prisma.pointOfInterest.delete.mockResolvedValue(poi);
 

@@ -4,7 +4,7 @@ const PointOfInterest = objectType({
   name: 'Poi',
   definition(t) {
     t.string('id');
-    t.nullable.string('userId');
+    t.nullable.string('businessOperatorId');
     t.string('name');
     t.string('address');
     t.nullable.string('description');
