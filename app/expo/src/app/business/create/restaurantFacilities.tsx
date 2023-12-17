@@ -150,7 +150,7 @@ const RestaurantFacilities = () => {
           <StepperButton
             label={'Next'}
             onPress={handleSubmit(onSubmit)}
-            className="mb-5 mt-7"
+            className="mt-10"
           />
         </ScrollView>
       </SafeAreaView>

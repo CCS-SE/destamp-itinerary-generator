@@ -76,7 +76,8 @@ const BusinessBasicInformation: React.FC = () => {
                   onChangeText={onChange}
                   onBlur={onBlur}
                   errorMessage={error?.message}
-                  maxLength={255}
+                  maxLength={100}
+                  multiline={true}
                 />
               );
             }}
@@ -97,7 +98,7 @@ const BusinessBasicInformation: React.FC = () => {
                   errorMessage={error?.message}
                   multiline={true}
                   inputMode="text"
-                  maxLength={255}
+                  maxLength={500}
                 />
               );
             }}
