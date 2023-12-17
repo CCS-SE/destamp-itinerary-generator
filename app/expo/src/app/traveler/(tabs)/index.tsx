@@ -82,7 +82,7 @@ export default function MyTrip() {
       <Text testID="my-trip-error">{`Error! ${error.message.toString()}`}</Text>
     );
 
-  if (loading && !data)
+  if (loading && !data?.travelerAccount.user)
     return (
       <View className="flex-1 items-center" testID="my-trip-loading">
         <TripScreenSkeleton />
