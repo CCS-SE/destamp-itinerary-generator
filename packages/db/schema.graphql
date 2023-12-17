@@ -23,13 +23,27 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
+type BusinessOperator {
+  business_permits: [BusinessPermit!]!
+  businesses: [Poi!]!
+  createdAt: DateTime!
+  id: String!
+  updatedAt: DateTime!
+  userId: String!
+}
+
+type BusinessOperatorBusiness {
+  isVerified: Boolean!
+  poi: Poi!
+}
+
 type BusinessPermit {
+  businessOperatorId: String!
   id: String!
   image: Image!
   imageId: String!
   isVerified: Boolean!
   poiId: String!
-  userId: String!
 }
 
 type Category {
@@ -91,7 +105,6 @@ input CreateUserInput {
   id: String!
   lastName: String!
   password: String!
-  type: UserType!
 }
 
 type DailyItinerary {
@@ -178,7 +191,7 @@ type Mutation {
   createExpense(data: CreateExpenseInput!, tripId: Int!): Expense!
   createPoi(input: CreatePoiInput!, type: String!, userId: String!): Poi!
   createTrip(isPremium: Boolean!, tripInput: CreateTripInput!, tripPreferenceInput: CreateTripPreferenceInput!, userId: String!): Trip!
-  createUser(input: CreateUserInput!): User!
+  createUser(input: CreateUserInput!, type: String!): User!
   deleteExpense(id: Int!): Expense!
   deletePoi(poiId: String!): Poi!
   deleteTrip(id: Int!): Trip!
@@ -238,9 +251,9 @@ type Query {
   accommodationCategoires: [Category!]!
   amenities: [Amenity!]!
   attractionCategoires: [Category!]!
+  businessOperatorBusiness(userId: String!): [BusinessOperatorBusiness!]!
   categories: [Category!]!
   poi(poiId: String!): Poi!
-  pois(userId: String!): [Poi!]!
   restaurantCategoires: [Category!]!
   restaurantCategoriesMoreThanFive: [Category!]!
   travelerAccount(id: String!): Account!
@@ -270,7 +283,7 @@ type Subscription {
   id: String!
   startDate: DateTime!
   status: SubscriptionStatus!
-  userId: String!
+  travelerId: String!
 }
 
 enum SubscriptionStatus {
@@ -284,6 +297,17 @@ enum TravelSize {
   FAMILY
   GROUP
   SOLO
+}
+
+type Traveler {
+  createdAt: DateTime!
+  id: String!
+  stamps: [Stamp!]!
+  subscription: Subscription
+  tripCount: Int!
+  trips: [Trip!]!
+  updatedAt: DateTime!
+  userId: String!
 }
 
 type Trip {
@@ -325,18 +349,14 @@ input UpdateExpenseInput {
 }
 
 type User {
+  businessOperator: BusinessOperator
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: String!
   lastName: String!
   password: String!
-  pois: [Poi!]!
-  stamps: [Stamp!]!
-  subscription: Subscription
-  tripCount: Int!
-  trips: [Trip!]!
-  type: UserType!
+  traveler: Traveler
   updatedAt: DateTime!
 }
 

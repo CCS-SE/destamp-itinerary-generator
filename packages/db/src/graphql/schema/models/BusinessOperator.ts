@@ -1,40 +1,37 @@
 import { objectType } from 'nexus';
 
-const User = objectType({
-  name: 'User',
+const BusinessOperator = objectType({
+  name: 'BusinessOperator',
   definition(t) {
     t.string('id');
-    t.string('email');
-    t.string('password');
-    t.string('firstName');
-    t.string('lastName');
+    t.string('userId');
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
-    t.nullable.field('traveler', {
-      type: 'Traveler',
+    t.list.field('businesses', {
+      type: 'Poi',
       resolve: ({ id }, _, ctx) => {
-        return ctx.prisma.user
+        return ctx.prisma.businessOperator
           .findUniqueOrThrow({
             where: {
               id: id,
             },
           })
-          .traveler();
+          .businesses();
       },
     });
-    t.nullable.field('businessOperator', {
-      type: 'BusinessOperator',
+    t.list.field('business_permits', {
+      type: 'BusinessPermit',
       resolve: ({ id }, _, ctx) => {
-        return ctx.prisma.user
+        return ctx.prisma.businessOperator
           .findUniqueOrThrow({
             where: {
               id: id,
             },
           })
-          .businessOperator();
+          .businessPermits();
       },
     });
   },
 });
 
-export default User;
+export default BusinessOperator;
