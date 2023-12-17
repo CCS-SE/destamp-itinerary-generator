@@ -83,6 +83,34 @@ const BusinessPhotos: React.FC = () => {
         }
       }
     }
+
+    const { data: files, error } = await supabase.storage
+      .from('poi_images')
+      .list(`${user?.id}`, {
+        limit: 100,
+        offset: 0,
+        sortBy: { column: 'name', order: 'asc' },
+      });
+    if (error) {
+      console.error('Error getting files:', error);
+      return;
+    }
+
+    const uploadedPaths = uploadedUrls.map((url) => url.slice(77));
+
+    const filesToDelete = files.filter(
+      (file) => !uploadedPaths.includes(`${user?.id}/` + file.name),
+    );
+
+    if (filesToDelete.length > 0) {
+      const { error: deleteError } = await supabase.storage
+        .from('poi_images')
+        .remove(filesToDelete.map((file) => `${user?.id}/` + file.name));
+      if (deleteError) {
+        console.error('Error deleting files:', deleteError);
+      }
+    }
+
     await editPoi({
       variables: {
         poiId: poiId as string,
@@ -103,6 +131,7 @@ const BusinessPhotos: React.FC = () => {
         setTimeout(() => {
           router.push('/business/(tabs)');
           setIsSubmitting(false);
+          console.log(uploadedUrls);
           ToastAndroid.show('Successfully edited.', 2000);
         }, 3000);
       },
