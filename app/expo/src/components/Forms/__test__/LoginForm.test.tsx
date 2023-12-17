@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import { act } from 'react-test-renderer';
 
 import { mockSupabaseClient } from '../__mock__/mockSupabaseClient';
@@ -10,6 +10,10 @@ jest.mock('@supabase/supabase-js', () => {
     createClient: jest.fn(() => mockSupabaseClient),
     error: null,
   };
+});
+
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe('Login Form', () => {
@@ -60,20 +64,47 @@ describe('Login Form', () => {
     expect(passwordInput.props.secureTextEntry).toBe(true);
   });
 
-  // it('logins a user', async () => {
-  //   const { getByTestId, getByRole } = render(<LoginForm />);
-  //   const loginBtn = getByRole('button', { name: 'Login' });
-  //   const emailInput = getByTestId('email-input');
-  //   const passwordInput = getByTestId('password-input');
-  //   await act(async () => {
-  //     fireEvent.changeText(emailInput, 'shemjehrojondanero@gmail.com');
-  //     fireEvent.changeText(passwordInput, 'shemjehro');
-  //     fireEvent.press(loginBtn);
-  //   });
-  //
-  //     expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
-  //       email: 'shemjehrojondanero@gmail.com',
-  //       password: 'shemjehro',
-  //     });
-  // });
+  it('should login a user with correct credentials', async () => {
+    const { getByTestId, getByRole } = render(<LoginForm />);
+    const loginBtn = getByRole('button', { name: 'Login' });
+    const emailInput = getByTestId('email-input');
+    const passwordInput = getByTestId('password-input');
+
+    fireEvent.changeText(emailInput, 'shemjehrojondanero@gmail.com');
+    fireEvent.changeText(passwordInput, 'shemjehro');
+    fireEvent.press(loginBtn);
+
+    await waitFor(() => {
+      expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
+        email: 'shemjehrojondanero@gmail.com',
+        password: 'shemjehro',
+      });
+    });
+  });
+
+  it('should not login a user with incorrect credentials', async () => {
+    const { getByTestId, getByRole } = render(<LoginForm />);
+    const loginBtn = getByRole('button', { name: 'Login' });
+    const emailInput = getByTestId('email-input');
+    const passwordInput = getByTestId('password-input');
+
+    fireEvent.changeText(emailInput, 'shemjehro@gmail.com');
+    fireEvent.changeText(emailInput, 'invalid@email.com');
+    fireEvent.changeText(passwordInput, 'wrongpassword');
+    fireEvent.press(loginBtn);
+
+    await waitFor(() => {
+      expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
+        email: 'invalid@email.com',
+        password: 'wrongpassword',
+      });
+    });
+
+    const error = mockSupabaseClient.auth.signInWithPassword(
+      'invalid@email.com',
+      'wrongpassword',
+    );
+
+    expect(error.error).toHaveProperty('name', 'AuthApiError');
+  });
 });

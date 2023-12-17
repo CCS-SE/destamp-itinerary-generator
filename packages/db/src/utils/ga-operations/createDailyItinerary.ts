@@ -62,31 +62,23 @@ export const createDailyItinerary = async (
 ) => {
   const { genes } = chromosome.chrom;
 
-  const startingLocation: PointOfInterest = {
-    id: 'start',
-    name: 'Starting Location',
-    price: '0',
-    isAttraction: false,
-    visitDuration: 0,
-    latitude: input.startingLocation.center[1] as number,
-    longitude: input.startingLocation.center[0] as number,
-    restaurant: {
-      id: 0,
-      atmospheres: [],
-      poiId: '',
-    },
-    accommodation: {
-      id: 0,
-      amenities: [],
-      poiId: '',
-    },
-    categories: [],
-  };
-
   // add starting location to matrix if accommodation is not included
-  const pois = input.isAccommodationIncluded
+  const pois: PointOfInterest[] = input.isAccommodationIncluded
     ? genes
-    : [startingLocation].concat(genes);
+    : [
+        {
+          id: 'start',
+          name: 'Starting Location',
+          price: '0',
+          isAttraction: true,
+          visitDuration: 0,
+          latitude: input.startingLocation.center[1] as number,
+          longitude: input.startingLocation.center[0] as number,
+          restaurant: null,
+          accommodation: null,
+          categories: [],
+        } as PointOfInterest,
+      ].concat(genes);
 
   const coordinatePairs = getCoordinatesParam(getCoordinates(pois));
   const matrix = await fetchMapboxMatrix('mapbox/driving', coordinatePairs);

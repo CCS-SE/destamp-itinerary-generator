@@ -37,6 +37,7 @@ describe('createUser mutation', () => {
       type: UserType.TRAVELER,
       createdAt: new Date('2022-10-12'),
       updatedAt: new Date('2022-10-12'),
+      tripCount: 0,
     };
 
     const saltRounds = 10;

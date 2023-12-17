@@ -124,7 +124,11 @@ export default function ReviewTripScreen() {
               ? tripData.adultCount + tripData.childCount
               : tripData.adultCount,
           timeSlots: tripData.timeslots,
-          startingLocation: tripData.startingLocation,
+          startingLocation: !tripData.budgetInclusions.includes(
+            ExpenseCategory.Accommodation,
+          )
+            ? tripData.startingLocation
+            : '',
         },
         tripPreferenceInput: {
           accommodationType: isIncluded(
@@ -232,13 +236,17 @@ export default function ReviewTripScreen() {
           </View>
         </View>
         <View>
-          <ReviewCard
-            icon={<Destination height={25} width={25} />}
-            title={tripData.startingLocation?.name}
-            className="mb-6"
-            isEditabble
-            section="1"
-          />
+          {!tripData.budgetInclusions.includes(
+            ExpenseCategory.Accommodation,
+          ) && (
+            <ReviewCard
+              icon={<Destination height={25} width={25} />}
+              title={tripData.startingLocation?.name}
+              className="mb-6"
+              isEditabble
+              section="6"
+            />
+          )}
           <ReviewCard
             icon={<Calendar height={25} width={25} />}
             title={
@@ -249,7 +257,7 @@ export default function ReviewTripScreen() {
                 : `${dateFormmater(tripData.startDate!.toISOString())}`
             }
             isEditabble
-            section="3"
+            section="2"
           />
           <ReviewCard
             icon={<TravelGroupSize height={23} width={23} />}
@@ -260,14 +268,14 @@ export default function ReviewTripScreen() {
             adultCount={tripData.adultCount}
             isTravelSize
             isEditabble
-            section="2"
+            section="1"
           />
           <ReviewCard
             icon={<Peso height={20} width={20} />}
             title={amountFormatter(parseInt(tripData.budget))}
             budgetInclusion={tripData.budgetInclusions}
             isEditabble
-            section="6"
+            section="5"
           />
         </View>
         {isPremium ? (
