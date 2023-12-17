@@ -9,12 +9,12 @@ import ProfileIcon from '~/components/Icon/ProfileIcon';
 import ProfileMenuList from '~/components/Menu/ProfileMenu/ProfileMenuList';
 import ProfileScreenSkeleton from '~/components/Skeleton/ProfileScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetUserInfoDocument } from '~/graphql/generated';
+import { GetTravelerInfoDocument } from '~/graphql/generated';
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
 
-  const { data, loading } = useQuery(GetUserInfoDocument, {
+  const { data, loading } = useQuery(GetTravelerInfoDocument, {
     variables: {
       userId: user ? user.id : '',
     },
@@ -54,8 +54,8 @@ export default function Profile() {
           </View>
         </View>
       </View>
-      {data && data.user.stamps.length !== 0 ? (
-        <StampCard url={data?.user.stamps[0]?.image.url || ''} />
+      {data && data.user.traveler?.stamps.length !== 0 ? (
+        <StampCard url={data?.user.traveler?.stamps[0]?.image.url || ''} />
       ) : (
         <StampDisplayEmptyState />
       )}

@@ -5,13 +5,13 @@ import { useQuery } from '@apollo/client';
 
 import { FlipCardComponent } from '~/components/Card/traveler/FlipCard';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetUserInfoDocument } from '~/graphql/generated';
+import { GetTravelerInfoDocument } from '~/graphql/generated';
 import Back from '../../../assets/images/back-btn.svg';
 
 export default function StampScreen() {
   const { user } = useContext(AuthContext);
 
-  const { data } = useQuery(GetUserInfoDocument, {
+  const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
       userId: user ? user.id : '',
     },
@@ -39,7 +39,7 @@ export default function StampScreen() {
         }}
       />
       {data &&
-        data.user.stamps.map((stamp) => (
+        data.user.traveler?.stamps.map((stamp) => (
           <View key={stamp.id} className="flex-row p-5">
             <FlipCardComponent url={stamp.image.url} title={stamp.title} />
           </View>

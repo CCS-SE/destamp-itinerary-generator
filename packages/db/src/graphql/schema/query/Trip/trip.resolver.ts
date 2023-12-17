@@ -25,23 +25,13 @@ export const queryTrip = (
   }
 };
 
-export const queryTrips = (
-  userId: string,
-  ctx: Context,
-  info: GraphQLResolveInfo,
-) => {
-  const includedFields = getFieldsFromInfo(info);
-
+export const queryTrips = (userId: string, ctx: Context) => {
   try {
     return ctx.prisma.trip.findMany({
       where: {
-        userId: userId,
-      },
-      include: {
-        ...includedFields,
-      },
-      orderBy: {
-        startDate: 'asc',
+        traveler: {
+          userId: userId,
+        },
       },
     });
   } catch (error) {

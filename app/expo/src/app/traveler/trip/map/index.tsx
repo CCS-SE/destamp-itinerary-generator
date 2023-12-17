@@ -16,7 +16,7 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { GetTripItineraryDocument } from '~/graphql/generated';
+import { GetTripMapItineraryDocument } from '~/graphql/generated';
 import userStore from '~/store/userStore';
 import { getTravelDistance, getTravelDuration } from '~/utils/utils';
 import Back from '../../../../../assets/images/back-icon.svg';
@@ -65,7 +65,7 @@ export default function MapScreen() {
     transform: [{ scale }],
   };
 
-  const { data } = useQuery(GetTripItineraryDocument, {
+  const { data } = useQuery(GetTripMapItineraryDocument, {
     variables: {
       tripId: parseInt(id as string),
     },

@@ -7,12 +7,12 @@ import ProfileIcon from '~/components/Icon/ProfileIcon';
 import BusinessProfileMenuList from '~/components/Menu/ProfileMenu/BusinessProfileMenuList';
 import BusinessProfileScreenSkeleton from '~/components/Skeleton/BusinessProfileScreenSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetUserInfoDocument } from '~/graphql/generated';
+import { GetOperatorInfoDocument } from '~/graphql/generated';
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
 
-  const { data, loading } = useQuery(GetUserInfoDocument, {
+  const { data, loading } = useQuery(GetOperatorInfoDocument, {
     variables: {
       userId: user ? user.id : '',
     },

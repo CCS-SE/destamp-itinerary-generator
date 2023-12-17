@@ -21,6 +21,7 @@ import {
 import userStore from '~/store/userStore';
 
 export default function MyTrip() {
+  const MAX_TRIP_LIMIT = 3;
   const { user } = useContext(AuthContext);
   const { setUser } = userStore();
 
@@ -37,7 +38,7 @@ export default function MyTrip() {
         setUser({
           isPremium: data.travelerAccount.isPremium || false,
           userId: user ? user.id : '',
-          tripCount: data.travelerAccount.user.tripCount,
+          tripCount: data.travelerAccount.user?.traveler?.tripCount as number,
         });
       }
     },
@@ -77,6 +78,10 @@ export default function MyTrip() {
     );
   };
 
+  const aboveTripLimit =
+    (data?.travelerAccount.user?.traveler?.tripCount as number) >=
+    MAX_TRIP_LIMIT;
+
   if (data?.travelerAccount.user && error)
     return (
       <Text testID="my-trip-error">{`Error! ${error.message.toString()}`}</Text>
@@ -89,7 +94,7 @@ export default function MyTrip() {
       </View>
     );
 
-  if (!loading && data?.travelerAccount.user?.trips.length === 0) {
+  if (!loading && data?.travelerAccount.user?.traveler?.trips.length === 0) {
     return <MyTripEmptyState />;
   }
 
@@ -110,7 +115,7 @@ export default function MyTrip() {
       {data && (
         <FlatList
           testID="my-trip-list"
-          data={data.travelerAccount.user?.trips}
+          data={data.travelerAccount.user?.traveler?.trips}
           renderItem={({ item }) => {
             return isUnclaimedStampsInclude(item.destination) &&
               isBefore(item.endDate) ? (
@@ -140,9 +145,7 @@ export default function MyTrip() {
       <AbsoluteButton
         title="+"
         onPress={
-          data &&
-          !data.travelerAccount.isPremium &&
-          (data?.travelerAccount.user?.tripCount as number) >= 3
+          data && !data.travelerAccount.isPremium && aboveTripLimit
             ? premiumModalOpen
             : handleCreateTrip
         }

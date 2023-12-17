@@ -1,21 +1,36 @@
 import { gql } from '@apollo/client';
 
-export const GetUserInfoQuery = gql(
-  `query GetUserInfo($userId: String!) {
+export const GetOperatorInfoQuery = gql(
+  `query GetOperatorInfo($userId: String!) {
     user(id: $userId) {
       id
       email
       firstName
       lastName
-      stamps {
-        id
-        title
-        image {
-          url
+    }
+  }
+   `,
+);
+
+export const GetTravelerInfoQuery = gql(
+  `query GetTravelerInfo($userId: String!) {
+    user(id: $userId) {
+      id
+      email
+      firstName
+      lastName
+      traveler {
+        stamps {
+          id
+          title
+          image {
+            url
+          }
         }
       }
     }
-  } `,
+  }
+   `,
 );
 
 export const GetUnclaimedStampsQuery = gql(
@@ -28,5 +43,6 @@ export const GetUnclaimedStampsQuery = gql(
         url
       }
     }
-  }`,
+  }
+  `,
 );

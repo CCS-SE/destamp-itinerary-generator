@@ -8,16 +8,19 @@ import BusinessCard from '~/components/Card/owner/BusinessCard';
 import MyBusinessEmptyState from '~/components/EmptyState/MyBusinessEmptyState';
 import BusinessScreenSkeleton from '~/components/Skeleton/BusinessListSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetBusinessesDocument } from '~/graphql/generated';
+import { GetBusinessOperatorBusinessDocument } from '~/graphql/generated';
 
 const BusinessListScreen = () => {
   const { user } = useContext(AuthContext);
 
-  const { loading, error, data } = useQuery(GetBusinessesDocument, {
-    variables: {
-      userId: user ? user.id : '',
+  const { loading, error, data } = useQuery(
+    GetBusinessOperatorBusinessDocument,
+    {
+      variables: {
+        userId: user ? user.id : '',
+      },
     },
-  });
+  );
 
   if (error) {
     return <Text>Error: {error.message}</Text>;
@@ -34,7 +37,11 @@ const BusinessListScreen = () => {
     );
   }
 
-  if (!loading && data && data.pois.length <= 0) {
+  if (
+    !loading &&
+    data &&
+    data.businessOperatorBusiness.map((op) => op.poi).length <= 0
+  ) {
     return <MyBusinessEmptyState />;
   }
 
@@ -43,7 +50,7 @@ const BusinessListScreen = () => {
       {data && (
         <FlatList
           testID="my-business-list"
-          data={data.pois}
+          data={data.businessOperatorBusiness.map((op) => op.poi)}
           renderItem={({ item, index }) => (
             <BusinessCard
               businessId={item.id}
@@ -51,7 +58,7 @@ const BusinessListScreen = () => {
               businessImages={item.images.map((item) => item.image.url)}
               businessAddress={item.address}
               businessIsVerified={
-                data.pois[index]?.businessPermit?.isVerified || false
+                data.businessOperatorBusiness[index]?.isVerified || false
               }
             />
           )}

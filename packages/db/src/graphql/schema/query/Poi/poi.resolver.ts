@@ -34,38 +34,39 @@ export const queryPoi = async (
   }
 };
 
-export const queryPois = async (
+export const queryBusinessOperatorBusiness = async (
   userId: string,
   ctx: Context,
-  info: GraphQLResolveInfo,
 ) => {
-  const includedFields = getFieldsFromInfo(info);
-  try {
-    if (!isValidId(userId)) {
-      throw new Error('Invalid User ID');
-    }
-
-    return await ctx.prisma.pointOfInterest.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        ...includedFields,
-        user: {
-          include: {
-            businessPermits: {
-              where: {},
-              select: {
-                isVerified: true,
-              },
+  const user = await ctx.prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    include: {
+      businessOperator: {
+        include: {
+          businesses: {
+            include: {
+              businessOperator: true,
             },
           },
+          businessPermits: true,
         },
       },
-    });
-  } catch (error) {
-    throw new Error('An error occurred while fetching point of interests.');
-  }
+    },
+  });
+
+  const businessVerificationList =
+    user &&
+    user.businessOperator!.businesses.map((business) => ({
+      poi: business,
+      isVerified: user.businessOperator!.businessPermits.some(
+        (businessPermit) =>
+          businessPermit.poiId === business.id && businessPermit.isVerified,
+      ),
+    }));
+
+  return businessVerificationList;
 };
 
 export const queryAllCategories = (ctx: Context) => {

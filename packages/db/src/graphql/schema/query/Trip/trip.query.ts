@@ -15,7 +15,7 @@ const Trips = queryField('trips', {
   args: {
     userId: nonNull(stringArg()),
   },
-  resolve: (_, args, ctx, info) => queryTrips(args.userId, ctx, info),
+  resolve: (_, args, ctx) => queryTrips(args.userId, ctx),
 });
 
 export default [Trip, Trips];
