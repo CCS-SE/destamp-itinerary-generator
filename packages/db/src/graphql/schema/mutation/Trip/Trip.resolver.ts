@@ -49,12 +49,19 @@ export const createTrip = async (
     travelSize,
     travelerCount,
   } = tripInput;
+
+  const traveler = await ctx.prisma.traveler.findFirstOrThrow({
+    where: {
+      userId: userId,
+    },
+  });
+
   try {
     const pois = await ctx.prisma.pointOfInterest.findMany({
       where: {
         OR: [
           {
-            user: {
+            businessOperator: {
               isNot: null,
             },
             businessPermit: {
@@ -62,7 +69,7 @@ export const createTrip = async (
             },
           }, // newly added place that is not yet verified must not be included
           {
-            user: {
+            businessOperator: {
               is: null,
             },
             businessPermit: {
@@ -170,18 +177,18 @@ export const createTrip = async (
             },
           })),
         },
-        user: {
+        traveler: {
           connect: {
-            id: userId,
+            id: traveler.id,
           },
         },
       },
     });
 
     if (trip && !isPremium) {
-      await ctx.prisma.user.update({
+      await ctx.prisma.traveler.update({
         where: {
-          id: userId,
+          id: traveler.id,
         },
         data: {
           tripCount: {
@@ -199,52 +206,48 @@ export const createTrip = async (
 };
 
 export const deleteTrip = async (id: number, ctx: Context) => {
-  try {
-    const trip = await ctx.prisma.trip.findUnique({
-      where: {
-        id: id,
-      },
-      include: {
-        tripPreference: true,
-      },
-    });
+  const trip = await ctx.prisma.trip.findUnique({
+    where: {
+      id: id,
+    },
+    include: {
+      tripPreference: true,
+    },
+  });
 
-    if (trip?.tripPreference) {
-      await ctx.prisma.tripPreference.delete({
-        where: {
-          tripId: id,
-        },
-      });
-    }
-
-    await ctx.prisma.expense.deleteMany({
+  if (trip && trip.tripPreference) {
+    await ctx.prisma.tripPreference.delete({
       where: {
         tripId: id,
       },
     });
-
-    await ctx.prisma.dailyItineraryPoi.deleteMany({
-      where: {
-        dailyItinerary: {
-          tripId: id,
-        },
-      },
-    });
-
-    await ctx.prisma.dailyItinerary.deleteMany({
-      where: {
-        tripId: id,
-      },
-    });
-
-    return await ctx.prisma.trip.delete({
-      where: {
-        id: id,
-      },
-    });
-  } catch (error) {
-    console.log(error);
   }
+
+  await ctx.prisma.expense.deleteMany({
+    where: {
+      tripId: id,
+    },
+  });
+
+  await ctx.prisma.dailyItineraryPoi.deleteMany({
+    where: {
+      dailyItinerary: {
+        tripId: id,
+      },
+    },
+  });
+
+  await ctx.prisma.dailyItinerary.deleteMany({
+    where: {
+      tripId: id,
+    },
+  });
+
+  return await ctx.prisma.trip.delete({
+    where: {
+      id: id,
+    },
+  });
 };
 
 export const regenerateTrip = async (
@@ -257,7 +260,7 @@ export const regenerateTrip = async (
       where: {
         OR: [
           {
-            user: {
+            businessOperator: {
               isNot: null,
             },
             businessPermit: {
@@ -265,7 +268,7 @@ export const regenerateTrip = async (
             },
           },
           {
-            user: {
+            businessOperator: {
               is: null,
             },
             businessPermit: {

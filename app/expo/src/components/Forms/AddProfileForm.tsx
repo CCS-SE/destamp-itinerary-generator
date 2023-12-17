@@ -10,7 +10,6 @@ import {
   CreateUserDocument,
   GetTripsDocument,
   MutationCreateUserArgs,
-  UserType,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
 import { CustomTextInput } from '../FormField/CustomTextInput';
@@ -35,7 +34,7 @@ export default function AddProfileForm() {
       password: password as string,
       options: {
         data: {
-          userType: type as UserType,
+          userType: type as string,
           firstName: input.firstName,
           lastName: input.lastName,
         },
@@ -45,9 +44,9 @@ export default function AddProfileForm() {
     if (error) Alert.alert('Sign Up Error', error.message);
     else if (data && data.user) {
       const createUserInput: MutationCreateUserArgs = {
+        type: type as string,
         input: {
           id: data!.user.id,
-          type: type as UserType,
           email: email as string,
           password: password as string,
           firstName: input.firstName,
@@ -57,6 +56,7 @@ export default function AddProfileForm() {
 
       await createUser({
         variables: {
+          type: createUserInput.type,
           input: createUserInput.input,
         },
         onError: (err) => {
