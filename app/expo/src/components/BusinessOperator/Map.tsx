@@ -18,6 +18,9 @@ interface MapProps {
   longitude?: number;
   businessName?: string;
   address?: string;
+  setEditAddress?: React.Dispatch<React.SetStateAction<string>>;
+  setLongitude?: React.Dispatch<React.SetStateAction<number>>;
+  setLatitude?: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type Coordinate = [number, number];
@@ -28,12 +31,12 @@ interface MapboxLocation {
   center: Coordinate;
 }
 
-const Map: React.FC<MapProps> = () => {
+const Map: React.FC<MapProps> = (props: MapProps) => {
   const { basicInfo, setData } = addBusinessFormStore();
   const mapRef = useRef<MapView | null>(null);
   const [location, setLocation] = useState({
-    latitude: basicInfo.latitude,
-    longitude: basicInfo.longitude,
+    latitude: props.latitude ? props.latitude : basicInfo.latitude,
+    longitude: props.longitude ? props.longitude : basicInfo.longitude,
   });
   const [search, setSearch] = useState('');
   const [selectedValue, setSelectedValue] = useState<MapboxLocation>({
@@ -42,7 +45,9 @@ const Map: React.FC<MapProps> = () => {
     place_name: '',
   });
   const [results, setResults] = useState<MapboxLocation[]>([]);
-  const [address, setAddress] = useState(basicInfo.address);
+  const [address, setAddress] = useState(
+    props.address ? props.address : basicInfo.address,
+  );
 
   const handleQueryChange = async (searchText: string) => {
     setSearch(searchText);
@@ -94,13 +99,17 @@ const Map: React.FC<MapProps> = () => {
     if (res.data) {
       setAddress(res.data.display_name);
       setSearch(res.data.display_name);
-      setData({
-        step: 1,
-        data: {
-          ...basicInfo,
-          address: res.data.display_name,
-        },
-      });
+      if (props.setEditAddress) {
+        props.setEditAddress(res.data.display_name);
+      } else {
+        setData({
+          step: 1,
+          data: {
+            ...basicInfo,
+            address: res.data.display_name,
+          },
+        });
+      }
       return res.data.display_name as string;
     }
   };
@@ -184,22 +193,27 @@ const Map: React.FC<MapProps> = () => {
         ref={mapRef}
         style={{ flex: 1, height: 200 }}
         initialRegion={{
-          latitude: 10.7201501,
-          longitude: 122.5621063,
+          latitude: location.latitude as number,
+          longitude: location.longitude as number,
           latitudeDelta: 0.0122,
           longitudeDelta: 0.0121,
         }}
         onPress={(event) => {
           setLocation(event.nativeEvent.coordinate);
-          setData({
-            step: 1,
-            data: {
-              ...basicInfo,
-              address: address,
-              latitude: event.nativeEvent.coordinate.latitude,
-              longitude: event.nativeEvent.coordinate.longitude,
-            },
-          });
+          if (props.setLatitude && props.setLongitude) {
+            props.setLatitude(event.nativeEvent.coordinate.latitude);
+            props.setLongitude(event.nativeEvent.coordinate.longitude);
+          } else {
+            setData({
+              step: 1,
+              data: {
+                ...basicInfo,
+                address: address,
+                latitude: event.nativeEvent.coordinate.latitude,
+                longitude: event.nativeEvent.coordinate.longitude,
+              },
+            });
+          }
           if (mapRef.current) {
             mapRef.current.animateToRegion(
               {
@@ -216,8 +230,8 @@ const Map: React.FC<MapProps> = () => {
         {location && (
           <Marker
             coordinate={{
-              latitude: basicInfo.latitude as number,
-              longitude: basicInfo.longitude as number,
+              latitude: location.latitude as number,
+              longitude: location.longitude as number,
             }}
           />
         )}

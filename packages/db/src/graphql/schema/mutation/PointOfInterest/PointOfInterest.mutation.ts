@@ -1,6 +1,6 @@
 import { mutationField, nonNull, stringArg } from 'nexus';
 
-import { createPoi, deletePoi } from './PointOfInterest.resolver';
+import { createPoi, deletePoi, editPoi } from './PointOfInterest.resolver';
 
 export const CreatePoi = mutationField('createPoi', {
   type: 'Poi',
@@ -10,6 +10,16 @@ export const CreatePoi = mutationField('createPoi', {
     input: nonNull('CreatePoiInput'),
   },
   resolve: (_, args, ctx) => createPoi(args.type, args.userId, args.input, ctx),
+});
+
+export const EditPoi = mutationField('editPoi', {
+  type: 'Poi',
+  args: {
+    type: nonNull(stringArg()),
+    poiId: nonNull(stringArg()),
+    input: nonNull('EditPoiInput'),
+  },
+  resolve: (_, args, ctx) => editPoi(args.type, args.poiId, args.input, ctx),
 });
 
 export const DeletePoi = mutationField('deletePoi', {

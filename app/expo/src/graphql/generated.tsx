@@ -155,6 +155,22 @@ export type DailyItineraryPoi = {
   poi: Poi;
 };
 
+export type EditPoiInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  amenities?: InputMaybe<Array<Scalars['String']['input']>>;
+  atmospheres?: InputMaybe<Array<Scalars['String']['input']>>;
+  categories?: InputMaybe<Array<Scalars['String']['input']>>;
+  contactNumber?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  imageUrls?: InputMaybe<Array<Scalars['String']['input']>>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  operatingHours?: InputMaybe<Array<OperatingHoursInput>>;
+  price?: InputMaybe<Scalars['String']['input']>;
+  visitDuration?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type EditUserInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
@@ -199,6 +215,7 @@ export type Mutation = {
   deleteExpense: Expense;
   deletePoi: Poi;
   deleteTrip: Trip;
+  editPoi: Poi;
   editUser: User;
   regenerateTrip: Trip;
   updateExpense: Expense;
@@ -241,6 +258,12 @@ export type MutationDeletePoiArgs = {
 
 export type MutationDeleteTripArgs = {
   id: Scalars['Int']['input'];
+};
+
+export type MutationEditPoiArgs = {
+  input: EditPoiInput;
+  poiId: Scalars['String']['input'];
+  type: Scalars['String']['input'];
 };
 
 export type MutationEditUserArgs = {
@@ -575,6 +598,7 @@ export type ResolversTypes = {
   DailyItinerary: ResolverTypeWrapper<DailyItinerary>;
   DailyItineraryPoi: ResolverTypeWrapper<DailyItineraryPoi>;
   DateTime: ResolverTypeWrapper<Scalars['DateTime']['output']>;
+  EditPoiInput: EditPoiInput;
   EditUserInput: EditUserInput;
   Expense: ResolverTypeWrapper<Expense>;
   ExpenseCategory: ExpenseCategory;
@@ -618,6 +642,7 @@ export type ResolversParentTypes = {
   DailyItinerary: DailyItinerary;
   DailyItineraryPoi: DailyItineraryPoi;
   DateTime: Scalars['DateTime']['output'];
+  EditPoiInput: EditPoiInput;
   EditUserInput: EditUserInput;
   Expense: Expense;
   Float: Scalars['Float']['output'];
@@ -843,6 +868,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationDeleteTripArgs, 'id'>
+  >;
+  editPoi?: Resolver<
+    ResolversTypes['Poi'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditPoiArgs, 'input' | 'poiId' | 'type'>
   >;
   editUser?: Resolver<
     ResolversTypes['User'],
@@ -1271,6 +1302,17 @@ export type DeletePoiMutation = {
   deletePoi: { __typename?: 'Poi'; id: string };
 };
 
+export type EditPoiMutationVariables = Exact<{
+  type: Scalars['String']['input'];
+  poiId: Scalars['String']['input'];
+  input: EditPoiInput;
+}>;
+
+export type EditPoiMutation = {
+  __typename?: 'Mutation';
+  editPoi: { __typename?: 'Poi'; id: string };
+};
+
 export type CreateTripMutationVariables = Exact<{
   isPremium: Scalars['Boolean']['input'];
   userId: Scalars['String']['input'];
@@ -1369,6 +1411,8 @@ export type GetBusinessDetailsQuery = {
     description?: string | null;
     price: string;
     visitDuration: number;
+    latitude: number;
+    longitude: number;
     accommodation?: {
       __typename?: 'Accommodation';
       id: number;
@@ -1388,6 +1432,22 @@ export type GetBusinessDetailsQuery = {
       openTime?: any | null;
       isClosed: boolean;
       is24Hours: boolean;
+    }>;
+  };
+};
+
+export type GetPoiImagesQueryVariables = Exact<{
+  poiId: Scalars['String']['input'];
+}>;
+
+export type GetPoiImagesQuery = {
+  __typename?: 'Query';
+  poi: {
+    __typename?: 'Poi';
+    id: string;
+    images: Array<{
+      __typename?: 'PoiImage';
+      image: { __typename?: 'Image'; url: string };
     }>;
   };
 };
@@ -1938,6 +1998,98 @@ export const DeletePoiDocument = {
     },
   ],
 } as unknown as DocumentNode<DeletePoiMutation, DeletePoiMutationVariables>;
+export const EditPoiDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'EditPoi' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'poiId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'EditPoiInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'editPoi' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'type' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'poiId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'poiId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<EditPoiMutation, EditPoiMutationVariables>;
 export const CreateTripDocument = {
   kind: 'Document',
   definitions: [
@@ -2518,6 +2670,8 @@ export const GetBusinessDetailsDocument = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'visitDuration' },
                 },
+                { kind: 'Field', name: { kind: 'Name', value: 'latitude' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'longitude' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'accommodation' },
@@ -2603,6 +2757,79 @@ export const GetBusinessDetailsDocument = {
   GetBusinessDetailsQuery,
   GetBusinessDetailsQueryVariables
 >;
+export const GetPoiImagesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetPoiImages' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'poiId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'poi' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'poiId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'poiId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'images' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'image' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetPoiImagesQuery, GetPoiImagesQueryVariables>;
 export const GetAllCategoriesDocument = {
   kind: 'Document',
   definitions: [

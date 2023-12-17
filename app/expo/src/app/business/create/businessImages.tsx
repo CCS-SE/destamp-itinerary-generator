@@ -141,7 +141,7 @@ const BusinessPhotos: React.FC = () => {
         label="Next"
         onPress={handleNext}
         disabled={businessImages.urls.length === 0}
-        className="top-24"
+        className="top-2"
       />
     </View>
   );

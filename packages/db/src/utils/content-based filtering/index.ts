@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable indent */
 import { NexusGenFieldTypes } from '../../graphql/generated/nexus';
 import { PointOfInterest } from '../ga-operations';
@@ -38,6 +39,49 @@ export interface PointOfInterestWithScore {
   score: number;
 }
 
+const categoriesPerType: { [key: string]: string[] } = {
+  Sightseeing: [
+    'Park',
+    'Tourist attraction',
+    'City park',
+    'Business center',
+    'Condominium complex',
+    'Garden',
+    'Historic city center',
+  ],
+  Shopping: ['Shopping mall', 'Department store', 'Gift shop'],
+  Arts: ['Art museum', 'Art gallery', 'Art studio'],
+  Outdoor: ['Skateboard park', 'Kids Park', 'Park'],
+  Museum: ['National museum', 'History museum', 'Museum', 'Art museum'],
+  Landmarks: [
+    'Cultural landmark',
+    'Historical landmark',
+    'Architecture',
+    'Historic city center',
+    'Bridge',
+    'Shrine',
+    'Monument',
+    'Historical place',
+    'Chapel',
+    'Christian church',
+    'Church',
+    'Baptist church',
+    'Catholic church',
+    'Catholic cathedral',
+  ],
+};
+
+const notRestaurants: string[] = [
+  'Bar',
+  "Local's Best",
+  'Cafe',
+  'Coffee shop',
+  'Bakery',
+  'Restaurant',
+  'Bar & grill',
+  'Cake shop',
+];
+
 export function calculateSimilarityScore(
   userFeatures: string[],
   placeFeatures: string[],
@@ -53,8 +97,7 @@ export function calculateSimilarityScore(
 
 const formatCuisineName = (cuisines: string[]) => {
   return cuisines.map((cuisine) =>
-    // eslint-disable-next-line quotes
-    cuisine != "Local's Best" ? cuisine + ' restaurant' : cuisine,
+    !notRestaurants.includes(cuisine) ? cuisine + ' restaurant' : cuisine,
   );
 };
 
@@ -131,35 +174,3 @@ export function contentBasedFiltering(
   }
   return placesFilteredByAccommodationType;
 }
-
-const categoriesPerType: { [key: string]: string[] } = {
-  Sightseeing: [
-    'Park',
-    'Tourist attraction',
-    'City park',
-    'Business center',
-    'Condominium complex',
-    'Garden',
-    'Historic city center',
-  ],
-  Shopping: ['Shopping mall', 'Department store', 'Gift shop'],
-  Arts: ['Art museum', 'Art gallery', 'Art studio'],
-  Outdoor: ['Skateboard park', 'Kids Park', 'Park'],
-  Museum: ['National museum', 'History museum', 'Museum', 'Art museum'],
-  Landmarks: [
-    'Cultural landmark',
-    'Historical landmark',
-    'Architecture',
-    'Historic city center',
-    'Bridge',
-    'Shrine',
-    'Monument',
-    'Historical place',
-    'Chapel',
-    'Christian church',
-    'Church',
-    'Baptist church',
-    'Catholic church',
-    'Catholic cathedral',
-  ],
-};

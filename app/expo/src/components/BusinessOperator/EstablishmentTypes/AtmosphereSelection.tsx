@@ -64,7 +64,7 @@ const atmospheres = [
     keyword: 'Casual',
   },
   {
-    title: 'Cosy',
-    keyword: 'Cosy',
+    title: 'Cozy',
+    keyword: 'Cozy',
   },
 ];
