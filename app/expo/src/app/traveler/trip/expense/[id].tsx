@@ -45,8 +45,12 @@ const ExpensePage = () => {
   });
 
   const handleBack = () => {
-    return router.back();
+    return router.replace({
+      pathname: `/traveler/trip/itinerary/${id}`,
+      params: { id: id as string },
+    });
   };
+
   const onButtonPress = () => {
     setAddModal(true);
   };
