@@ -1,15 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
+import { AntDesign } from '@expo/vector-icons';
 
+import userStore from '~/store/userStore';
 import NoTripIcon from '../../../assets/images/empty-trip.svg';
+import BasicButton from '../Button/BasicButton';
+import FancyModal from '../Modal/FancyModal';
 
 export default function MyTripEmptyState() {
+  const { isPremium, tripCount } = userStore();
+  const [showPremiummodal, setShowPremiumModal] = useState(false);
+
+  const premiumModalOpen = () => {
+    setShowPremiumModal(true);
+  };
+
+  const premiumModalClose = () => {
+    setShowPremiumModal(false);
+  };
+
   const onPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    router.push('/traveler/trip/create/');
+    if (!isPremium && tripCount >= 3) {
+      premiumModalOpen();
+    } else {
+      router.push('/traveler/trip/create/');
+    }
   };
 
   return (
@@ -49,6 +68,32 @@ export default function MyTripEmptyState() {
           </Text>
         </LinearGradient>
       </TouchableOpacity>
+      <FancyModal isVisible={showPremiummodal} bgColor="#DCDCDC">
+        <View className="items-center ">
+          <AntDesign
+            name="closecircleo"
+            size={22}
+            color="#263238"
+            style={{ alignSelf: 'flex-end', marginRight: 7 }}
+            onPress={premiumModalClose}
+          />
+          <Text className="mt-2 text-center font-poppins-medium text-lg text-gray-600">
+            Oops! You've Reached Your Limit!
+          </Text>
+          <Text className="p-3 text-center font-poppins text-sm text-gray-500">
+            You've reached the maximum number of trips. Don't worry, though! You
+            can upgrade to our premium feature for unlimited trip creation.
+          </Text>
+          <BasicButton
+            title="Upgrade Now"
+            color="#FECF29"
+            onPress={() => {
+              premiumModalClose();
+              router.push('/traveler/subscription/');
+            }}
+          />
+        </View>
+      </FancyModal>
     </View>
   );
 }
