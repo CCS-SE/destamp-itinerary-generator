@@ -3,7 +3,10 @@ import { GraphQLResolveInfo } from 'graphql';
 import moment from 'moment';
 
 import { Context } from '../../../context';
+import { NexusGenObjects } from '../../../generated/nexus';
 import getFieldsFromInfo from '../../../info';
+
+type User = NexusGenObjects['User'];
 
 const isValidId = (userId: string) => {
   if (typeof userId !== 'string') {
@@ -37,40 +40,27 @@ export const queryUser = (
   }
 };
 
-export const queryTravelerAccount = async (
-  id: string,
-  ctx: Context,
-  info: GraphQLResolveInfo,
-) => {
-  const includedFields = getFieldsFromInfo(info);
-
-  try {
-    if (!isValidId(id)) {
-      throw new Error('Invalid User ID');
-    }
-    const user = await ctx.prisma.user.findUniqueOrThrow({
+export const queryTravelerAccount = async (id: string, ctx: Context) => {
+  return await ctx.prisma.user
+    .findUniqueOrThrow({
       where: {
         id: id,
         type: 'TRAVELER',
       },
-      ...includedFields,
       include: {
         subscription: true,
       },
+    })
+    .then((user) => {
+      if (user) {
+        const isPremium =
+          user.subscription !== null &&
+          user.subscription.status === SubscriptionStatus.ACTIVE;
+
+        return { user: user, isPremium: isPremium };
+      }
+      return { user: user as User, isPremium: false };
     });
-
-    if (user) {
-      const isPremium =
-        user.subscription !== null &&
-        user.subscription.status === SubscriptionStatus.ACTIVE;
-
-      return { user: user, isPremium: isPremium };
-    }
-    return { user: null, isPremium: false };
-  } catch (error) {
-    console.error(error);
-    return { user: null, isPremium: false };
-  }
 };
 
 export const queryUnclaimedStamps = async (userId: string, ctx: Context) => {
