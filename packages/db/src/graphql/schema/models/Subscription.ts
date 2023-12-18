@@ -4,7 +4,7 @@ const Subscription = objectType({
   name: 'Subscription',
   definition(t) {
     t.string('id');
-    t.string('userId');
+    t.string('travelerId');
     t.float('amount');
     t.field('status', { type: 'SubscriptionStatus' });
     t.field('startDate', { type: 'DateTime' });

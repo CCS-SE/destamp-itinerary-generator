@@ -89,6 +89,12 @@ export interface NexusGenInputs {
     price: string; // String!
     visitDuration: number; // Int!
   };
+  CreateSubscriptionInput: {
+    // input type
+    amount: number; // Float!
+    endDate: NexusGenScalars['DateTime']; // DateTime!
+    startDate: NexusGenScalars['DateTime']; // DateTime!
+  };
   CreateTripInput: {
     // input type
     budget: number; // Float!
@@ -119,7 +125,6 @@ export interface NexusGenInputs {
     id: string; // String!
     lastName: string; // String!
     password: string; // String!
-    type: NexusGenEnums['UserType']; // UserType!
   };
   EditPoiInput: {
     // input type
@@ -200,13 +205,25 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   };
+  BusinessOperator: {
+    // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
+  };
+  BusinessOperatorBusiness: {
+    // root type
+    isVerified: boolean; // Boolean!
+    poi: NexusGenRootTypes['Poi']; // Poi!
+  };
   BusinessPermit: {
     // root type
+    businessOperatorId: string; // String!
     id: string; // String!
     imageId: string; // String!
     isVerified: boolean; // Boolean!
     poiId: string; // String!
-    userId: string; // String!
   };
   Category: {
     // root type
@@ -262,6 +279,7 @@ export interface NexusGenObjects {
   Poi: {
     // root type
     address: string; // String!
+    businessOperatorId?: string | null; // String
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description?: string | null; // String
@@ -272,7 +290,6 @@ export interface NexusGenObjects {
     name: string; // String!
     price: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    userId?: string | null; // String
     visitDuration: number; // Float!
   };
   PoiImage: {
@@ -302,6 +319,14 @@ export interface NexusGenObjects {
     id: string; // String!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     status: NexusGenEnums['SubscriptionStatus']; // SubscriptionStatus!
+    travelerId: string; // String!
+  };
+  Traveler: {
+    // root type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // String!
+    tripCount: number; // Int!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string; // String!
   };
   Trip: {
@@ -340,8 +365,6 @@ export interface NexusGenObjects {
     id: string; // String!
     lastName: string; // String!
     password: string; // String!
-    tripCount: number; // Int!
-    type: NexusGenEnums['UserType']; // UserType!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
 }
@@ -373,14 +396,28 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   };
+  BusinessOperator: {
+    // field return type
+    business_permits: NexusGenRootTypes['BusinessPermit'][]; // [BusinessPermit!]!
+    businesses: NexusGenRootTypes['Poi'][]; // [Poi!]!
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // String!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
+    userId: string; // String!
+  };
+  BusinessOperatorBusiness: {
+    // field return type
+    isVerified: boolean; // Boolean!
+    poi: NexusGenRootTypes['Poi']; // Poi!
+  };
   BusinessPermit: {
     // field return type
+    businessOperatorId: string; // String!
     id: string; // String!
     image: NexusGenRootTypes['Image']; // Image!
     imageId: string; // String!
     isVerified: boolean; // Boolean!
     poiId: string; // String!
-    userId: string; // String!
   };
   Category: {
     // field return type
@@ -427,6 +464,7 @@ export interface NexusGenFieldTypes {
   };
   Mutation: {
     // field return type
+    cancelSubscription: NexusGenRootTypes['Subscription']; // Subscription!
     claimStamp: NexusGenRootTypes['User']; // User!
     createExpense: NexusGenRootTypes['Expense']; // Expense!
     createPoi: NexusGenRootTypes['Poi']; // Poi!
@@ -438,6 +476,7 @@ export interface NexusGenFieldTypes {
     editPoi: NexusGenRootTypes['Poi']; // Poi!
     editUser: NexusGenRootTypes['User']; // User!
     regenerateTrip: NexusGenRootTypes['Trip']; // Trip!
+    subscribeToPremium: NexusGenRootTypes['Subscription']; // Subscription!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
   OperatingHour: {
@@ -453,6 +492,7 @@ export interface NexusGenFieldTypes {
     // field return type
     accommodation: NexusGenRootTypes['Accommodation'] | null; // Accommodation
     address: string; // String!
+    businessOperatorId: string | null; // String
     businessPermit: NexusGenRootTypes['BusinessPermit'] | null; // BusinessPermit
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     contactNumber: string; // String!
@@ -468,7 +508,6 @@ export interface NexusGenFieldTypes {
     price: string; // String!
     restaurant: NexusGenRootTypes['Restaurant'] | null; // Restaurant
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    userId: string | null; // String
     visitDuration: number; // Float!
   };
   PoiImage: {
@@ -483,9 +522,9 @@ export interface NexusGenFieldTypes {
     accommodationCategoires: NexusGenRootTypes['Category'][]; // [Category!]!
     amenities: NexusGenRootTypes['Amenity'][]; // [Amenity!]!
     attractionCategoires: NexusGenRootTypes['Category'][]; // [Category!]!
+    businessOperatorBusiness: NexusGenRootTypes['BusinessOperatorBusiness'][]; // [BusinessOperatorBusiness!]!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     poi: NexusGenRootTypes['Poi']; // Poi!
-    pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
     restaurantCategoires: NexusGenRootTypes['Category'][]; // [Category!]!
     restaurantCategoriesMoreThanFive: NexusGenRootTypes['Category'][]; // [Category!]!
     travelerAccount: NexusGenRootTypes['Account']; // Account!
@@ -515,6 +554,17 @@ export interface NexusGenFieldTypes {
     id: string; // String!
     startDate: NexusGenScalars['DateTime']; // DateTime!
     status: NexusGenEnums['SubscriptionStatus']; // SubscriptionStatus!
+    travelerId: string; // String!
+  };
+  Traveler: {
+    // field return type
+    createdAt: NexusGenScalars['DateTime']; // DateTime!
+    id: string; // String!
+    stamps: NexusGenRootTypes['Stamp'][]; // [Stamp!]!
+    subscription: NexusGenRootTypes['Subscription'] | null; // Subscription
+    tripCount: number; // Int!
+    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
+    updatedAt: NexusGenScalars['DateTime']; // DateTime!
     userId: string; // String!
   };
   Trip: {
@@ -550,18 +600,14 @@ export interface NexusGenFieldTypes {
   };
   User: {
     // field return type
+    businessOperator: NexusGenRootTypes['BusinessOperator'] | null; // BusinessOperator
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     email: string; // String!
     firstName: string; // String!
     id: string; // String!
     lastName: string; // String!
     password: string; // String!
-    pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
-    stamps: NexusGenRootTypes['Stamp'][]; // [Stamp!]!
-    subscription: NexusGenRootTypes['Subscription'] | null; // Subscription
-    tripCount: number; // Int!
-    trips: NexusGenRootTypes['Trip'][]; // [Trip!]!
-    type: NexusGenEnums['UserType']; // UserType!
+    traveler: NexusGenRootTypes['Traveler'] | null; // Traveler
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
 }
@@ -583,14 +629,28 @@ export interface NexusGenFieldTypeNames {
     id: 'Int';
     name: 'String';
   };
+  BusinessOperator: {
+    // field return type name
+    business_permits: 'BusinessPermit';
+    businesses: 'Poi';
+    createdAt: 'DateTime';
+    id: 'String';
+    updatedAt: 'DateTime';
+    userId: 'String';
+  };
+  BusinessOperatorBusiness: {
+    // field return type name
+    isVerified: 'Boolean';
+    poi: 'Poi';
+  };
   BusinessPermit: {
     // field return type name
+    businessOperatorId: 'String';
     id: 'String';
     image: 'Image';
     imageId: 'String';
     isVerified: 'Boolean';
     poiId: 'String';
-    userId: 'String';
   };
   Category: {
     // field return type name
@@ -637,6 +697,7 @@ export interface NexusGenFieldTypeNames {
   };
   Mutation: {
     // field return type name
+    cancelSubscription: 'Subscription';
     claimStamp: 'User';
     createExpense: 'Expense';
     createPoi: 'Poi';
@@ -648,6 +709,7 @@ export interface NexusGenFieldTypeNames {
     editPoi: 'Poi';
     editUser: 'User';
     regenerateTrip: 'Trip';
+    subscribeToPremium: 'Subscription';
     updateExpense: 'Expense';
   };
   OperatingHour: {
@@ -663,6 +725,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     accommodation: 'Accommodation';
     address: 'String';
+    businessOperatorId: 'String';
     businessPermit: 'BusinessPermit';
     categories: 'Category';
     contactNumber: 'String';
@@ -678,7 +741,6 @@ export interface NexusGenFieldTypeNames {
     price: 'String';
     restaurant: 'Restaurant';
     updatedAt: 'DateTime';
-    userId: 'String';
     visitDuration: 'Float';
   };
   PoiImage: {
@@ -693,9 +755,9 @@ export interface NexusGenFieldTypeNames {
     accommodationCategoires: 'Category';
     amenities: 'Amenity';
     attractionCategoires: 'Category';
+    businessOperatorBusiness: 'BusinessOperatorBusiness';
     categories: 'Category';
     poi: 'Poi';
-    pois: 'Poi';
     restaurantCategoires: 'Category';
     restaurantCategoriesMoreThanFive: 'Category';
     travelerAccount: 'Account';
@@ -725,6 +787,17 @@ export interface NexusGenFieldTypeNames {
     id: 'String';
     startDate: 'DateTime';
     status: 'SubscriptionStatus';
+    travelerId: 'String';
+  };
+  Traveler: {
+    // field return type name
+    createdAt: 'DateTime';
+    id: 'String';
+    stamps: 'Stamp';
+    subscription: 'Subscription';
+    tripCount: 'Int';
+    trips: 'Trip';
+    updatedAt: 'DateTime';
     userId: 'String';
   };
   Trip: {
@@ -760,24 +833,24 @@ export interface NexusGenFieldTypeNames {
   };
   User: {
     // field return type name
+    businessOperator: 'BusinessOperator';
     createdAt: 'DateTime';
     email: 'String';
     firstName: 'String';
     id: 'String';
     lastName: 'String';
     password: 'String';
-    pois: 'Poi';
-    stamps: 'Stamp';
-    subscription: 'Subscription';
-    tripCount: 'Int';
-    trips: 'Trip';
-    type: 'UserType';
+    traveler: 'Traveler';
     updatedAt: 'DateTime';
   };
 }
 
 export interface NexusGenArgTypes {
   Mutation: {
+    cancelSubscription: {
+      // args
+      userId: string; // String!
+    };
     claimStamp: {
       // args
       stampId: number; // Int!
@@ -804,6 +877,7 @@ export interface NexusGenArgTypes {
     createUser: {
       // args
       input: NexusGenInputs['CreateUserInput']; // CreateUserInput!
+      type: string; // String!
     };
     deleteExpense: {
       // args
@@ -833,6 +907,11 @@ export interface NexusGenArgTypes {
       id: number; // Int!
       isPremium: boolean; // Boolean!
     };
+    subscribeToPremium: {
+      // args
+      input: NexusGenInputs['CreateSubscriptionInput']; // CreateSubscriptionInput!
+      userId: string; // String!
+    };
     updateExpense: {
       // args
       data: NexusGenInputs['UpdateExpenseInput']; // UpdateExpenseInput!
@@ -840,13 +919,13 @@ export interface NexusGenArgTypes {
     };
   };
   Query: {
+    businessOperatorBusiness: {
+      // args
+      userId: string; // String!
+    };
     poi: {
       // args
       poiId: string; // String!
-    };
-    pois: {
-      // args
-      userId: string; // String!
     };
     travelerAccount: {
       // args

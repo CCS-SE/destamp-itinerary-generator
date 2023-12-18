@@ -4,7 +4,7 @@ const BusinessPermit = objectType({
   name: 'BusinessPermit',
   definition(t) {
     t.string('id');
-    t.string('userId');
+    t.string('businessOperatorId');
     t.string('imageId');
     t.string('poiId');
     t.boolean('isVerified');

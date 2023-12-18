@@ -8,30 +8,54 @@ generator client {
 }
 
 model User {
-  id        String   @id
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  firstName String   @map("first_name") @db.VarChar(255)
-  lastName  String   @map("last_name") @db.VarChar(255)
-  type      UserType @default(TRAVELER)
-  tripCount Int      @default(0) @map("trip_count")
+  id        String @id
+  email     String @unique @db.VarChar(255)
+  password  String @db.VarChar(255)
+  firstName String @map("first_name") @db.VarChar(255)
+  lastName  String @map("last_name") @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  trips           Trip[]
-  stamps          Stamp[]
-  pois            PointOfInterest[]
-  businessPermits BusinessPermit[]
-  subscription    Subscription?
+  traveler         Traveler?
+  businessOperator BusinessOperator?
 
   @@map("users")
 }
 
-model Subscription {
+model Traveler {
   id     String @id @default(cuid())
   user   User   @relation(fields: [userId], references: [id])
   userId String @unique @map("user_id")
+
+  tripCount Int @default(0) @map("trip_count")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  trips        Trip[]
+  stamps       Stamp[]
+  subscription Subscription?
+
+  @@map("travelers")
+}
+
+model BusinessOperator {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @map("user_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  businesses      PointOfInterest[]
+  businessPermits BusinessPermit[]
+
+  @@map("business_operators")
+}
+
+model Subscription {
+  id String @id @default(cuid())
 
   startDate DateTime           @default(now()) @map("start_date")
   endDate   DateTime           @map("end_date")
@@ -41,13 +65,16 @@ model Subscription {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  traveler   Traveler @relation(fields: [travelerId], references: [id])
+  travelerId String   @unique @map("traveler_id")
+
   @@map("subscriptions")
 }
 
 model Trip {
-  id     Int    @id @default(autoincrement())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @map("user_id")
+  id         Int      @id @default(autoincrement())
+  traveler   Traveler @relation(fields: [travelerId], references: [id])
+  travelerId String   @map("traveler_id")
 
   title                    String     @db.VarChar(255)
   budget                   Float
@@ -73,9 +100,9 @@ model Trip {
 }
 
 model PointOfInterest {
-  id     String  @id @default(cuid())
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  id                 String            @id @default(cuid())
+  businessOperator   BusinessOperator? @relation(fields: [businessOperatorId], references: [id])
+  businessOperatorId String?           @map("business_operator_id")
 
   name          String  @db.VarChar(255)
   description   String?
@@ -102,9 +129,10 @@ model PointOfInterest {
 }
 
 model BusinessPermit {
-  id      String          @id @default(cuid())
-  user    User            @relation(fields: [userId], references: [id])
-  userId  String          @map("user_id")
+  id                 String           @id @default(cuid())
+  businessOperator   BusinessOperator @relation(fields: [businessOperatorId], references: [id])
+  businessOperatorId String           @map("business_operator_id")
+
   image   Image           @relation(fields: [imageId], references: [id])
   imageId String          @unique @map("image_id")
   poi     PointOfInterest @relation(fields: [poiId], references: [id])
@@ -273,16 +301,9 @@ model Stamp {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  users User[]
+  travelers Traveler[]
 
   @@map("stamps")
-}
-
-enum UserType {
-  TRAVELER
-  BUSINESS_OPERATOR
-
-  @@map("user_type")
 }
 
 enum TravelSize {

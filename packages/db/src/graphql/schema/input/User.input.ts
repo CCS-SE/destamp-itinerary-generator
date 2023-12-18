@@ -8,7 +8,6 @@ export const CreateUserInput = inputObjectType({
     t.string('password');
     t.string('firstName');
     t.string('lastName');
-    t.field('type', { type: 'UserType' });
   },
 });
 

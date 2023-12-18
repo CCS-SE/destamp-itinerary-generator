@@ -7,9 +7,10 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import {
   EditUserDocument,
-  GetUserInfoDocument,
+  GetOperatorInfoDocument,
   MutationEditUserArgs,
 } from '~/graphql/generated';
+import { GetTravelerInfoQuery } from '~/graphql/query/User/user.query';
 import GradientButton from '../Button/GradientButton';
 import { CustomTextInput } from '../FormField/CustomTextInput';
 import {
@@ -60,7 +61,13 @@ export default function EditProfileForm({
       },
       refetchQueries: [
         {
-          query: GetUserInfoDocument,
+          query: GetOperatorInfoDocument,
+          variables: {
+            userId: id,
+          },
+        },
+        {
+          query: GetTravelerInfoQuery,
           variables: {
             userId: id,
           },

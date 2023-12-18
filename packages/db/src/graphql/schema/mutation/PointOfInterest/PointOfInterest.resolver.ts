@@ -11,6 +11,12 @@ export const createPoi = async (
   input: CreatePoiInput,
   ctx: Context,
 ) => {
+  const operator = await ctx.prisma.businessOperator.findFirstOrThrow({
+    where: {
+      userId: userId,
+    },
+  });
+
   return await ctx.prisma.pointOfInterest.create({
     data: {
       address: input.address,
@@ -83,16 +89,16 @@ export const createPoi = async (
               },
             }
           : undefined,
-      user: {
+      businessOperator: {
         connect: {
-          id: userId,
+          id: operator.id,
         },
       },
       businessPermit: {
         create: {
-          user: {
+          businessOperator: {
             connect: {
-              id: userId,
+              id: operator.id,
             },
           },
           image: {
@@ -215,11 +221,11 @@ export const editPoi = async (
 };
 
 export const deletePoi = async (poiId: string, ctx: Context) => {
-  await ctx.prisma.businessPermit.delete({
-    where: {
-      poiId: poiId,
-    },
-  });
+  // await ctx.prisma.businessPermit.delete({
+  //   where: {
+  //     poiId: poiId,
+  //   },
+  // });
   await ctx.prisma.operatingHour.deleteMany({
     where: {
       poiId: poiId,

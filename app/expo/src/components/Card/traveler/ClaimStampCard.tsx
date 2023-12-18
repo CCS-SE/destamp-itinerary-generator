@@ -10,8 +10,8 @@ import FancyModal from '~/components/Modal/FancyModal';
 import { AuthContext } from '~/context/AuthProvider';
 import {
   ClaimStampDocument,
+  GetTravelerInfoDocument,
   GetTripsDocument,
-  GetUserInfoDocument,
 } from '~/graphql/generated';
 
 interface ClaimStampCardProps {
@@ -56,7 +56,7 @@ function ClaimStampCard({ id, url, title }: ClaimStampCardProps) {
           },
         },
         {
-          query: GetUserInfoDocument,
+          query: GetTravelerInfoDocument,
           variables: {
             userId: user ? user.id : '',
           },

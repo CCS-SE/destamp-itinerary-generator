@@ -3,13 +3,13 @@ import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useQuery } from '@apollo/client';
 
 import EditProfileForm from '~/components/Forms/EditProfileForm';
-import { GetUserInfoDocument } from '~/graphql/generated';
+import { GetTravelerInfoDocument } from '~/graphql/generated';
 import Back from '../../../assets/images/back-btn.svg';
 
 export default function EditProfileScreen() {
   const { id } = useLocalSearchParams();
 
-  const { data } = useQuery(GetUserInfoDocument, {
+  const { data } = useQuery(GetTravelerInfoDocument, {
     variables: {
       userId: id as string,
     },

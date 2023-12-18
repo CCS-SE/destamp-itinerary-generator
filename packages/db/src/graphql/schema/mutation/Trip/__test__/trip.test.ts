@@ -59,8 +59,14 @@ describe('createTrip mutation', () => {
       },
       timeSlots: [[10, 15]],
       updatedAt: new Date('2022-10-12'),
-      userId: 'test',
+      travelerId: 'test',
     };
+
+    mockContext.prisma.traveler.findFirstOrThrow.mockImplementation(() => {
+      return {
+        id: 'test',
+      };
+    });
 
     mockContext.prisma.pointOfInterest.findMany.mockResolvedValue(
       pointOfInterests,
@@ -95,15 +101,9 @@ describe('createTrip mutation', () => {
       diningStyles: ['Casual'],
     };
 
-    const result = createTrip(
-      true,
-      'test',
-      tripInput,
-      tripPreferenceInput,
-      context,
-    );
-
-    await expect(result).resolves.toEqual(trip);
+    await expect(
+      createTrip(true, 'user1', tripInput, tripPreferenceInput, context),
+    ).resolves.toEqual(trip);
   });
 });
 
@@ -129,13 +129,13 @@ describe('deleteTrip mutation', () => {
       },
       timeSlots: [[10, 15]],
       updatedAt: new Date('2022-10-12'),
-      userId: 'test',
+      travelerId: 'test',
     };
 
     mockContext.prisma.trip.delete.mockResolvedValue(trip);
 
-    const result = deleteTrip(trip.id, context);
+    const result = await deleteTrip(trip.id, context);
 
-    await expect(result).resolves.toEqual(trip);
+    expect(result).toEqual(trip);
   });
 });

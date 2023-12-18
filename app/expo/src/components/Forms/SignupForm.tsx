@@ -6,7 +6,6 @@ import { useSignUp } from '@clerk/clerk-expo';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
-import { UserType } from '~/graphql/generated';
 import UnselectedBusinessOwner from '../../../assets/images/businessman-unselected.svg';
 import BusinessOwner from '../../../assets/images/businessman.svg';
 import UnselectedTraveler from '../../../assets/images/traveler-unselected.svg';
@@ -40,9 +39,9 @@ export default function SignUpForm() {
   const [code, setCode] = useState('');
   const [verifying, setVerifying] = useState(false);
 
-  const [userType, setUserType] = useState<UserType>(UserType.Traveler);
+  const [userType, setUserType] = useState<string>('TRAVELER');
 
-  const handleUserTypeChange = (value: UserType) => {
+  const handleUserTypeChange = (value: string) => {
     setUserType(value);
   };
 
@@ -121,16 +120,16 @@ export default function SignUpForm() {
           <UserTypeCard
             selectedIcon={<Traveler height={40} width={30} />}
             unselectedIcon={<UnselectedTraveler height={40} width={30} />}
-            isSelected={userType === UserType.Traveler}
+            isSelected={userType === 'TRAVELER'}
             title="Traveler"
-            onPress={() => handleUserTypeChange(UserType.Traveler)}
+            onPress={() => handleUserTypeChange('TRAVELER')}
           />
           <UserTypeCard
             selectedIcon={<BusinessOwner height={33} width={25} />}
             unselectedIcon={<UnselectedBusinessOwner height={33} width={25} />}
-            isSelected={userType === UserType.BusinessOperator}
+            isSelected={userType === 'BUSINESS_OPERATOR'}
             title="Business Operator"
-            onPress={() => handleUserTypeChange(UserType.BusinessOperator)}
+            onPress={() => handleUserTypeChange('BUSINESS_OPERATOR')}
           />
         </View>
       </View>

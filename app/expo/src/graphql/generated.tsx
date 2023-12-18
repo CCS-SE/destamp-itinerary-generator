@@ -59,14 +59,30 @@ export type Amenity = {
   name: Scalars['String']['output'];
 };
 
+export type BusinessOperator = {
+  __typename?: 'BusinessOperator';
+  business_permits: Array<BusinessPermit>;
+  businesses: Array<Poi>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  userId: Scalars['String']['output'];
+};
+
+export type BusinessOperatorBusiness = {
+  __typename?: 'BusinessOperatorBusiness';
+  isVerified: Scalars['Boolean']['output'];
+  poi: Poi;
+};
+
 export type BusinessPermit = {
   __typename?: 'BusinessPermit';
+  businessOperatorId: Scalars['String']['output'];
   id: Scalars['String']['output'];
   image: Image;
   imageId: Scalars['String']['output'];
   isVerified: Scalars['Boolean']['output'];
   poiId: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
 };
 
 export type Category = {
@@ -100,6 +116,12 @@ export type CreatePoiInput = {
   visitDuration: Scalars['Int']['input'];
 };
 
+export type CreateSubscriptionInput = {
+  amount: Scalars['Float']['input'];
+  endDate: Scalars['DateTime']['input'];
+  startDate: Scalars['DateTime']['input'];
+};
+
 export type CreateTripInput = {
   budget: Scalars['Float']['input'];
   destination: Scalars['String']['input'];
@@ -129,7 +151,6 @@ export type CreateUserInput = {
   id: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   password: Scalars['String']['input'];
-  type: UserType;
 };
 
 export type DailyItinerary = {
@@ -207,6 +228,7 @@ export type Image = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  cancelSubscription: Subscription;
   claimStamp: User;
   createExpense: Expense;
   createPoi: Poi;
@@ -218,7 +240,12 @@ export type Mutation = {
   editPoi: Poi;
   editUser: User;
   regenerateTrip: Trip;
+  subscribeToPremium: Subscription;
   updateExpense: Expense;
+};
+
+export type MutationCancelSubscriptionArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export type MutationClaimStampArgs = {
@@ -246,6 +273,7 @@ export type MutationCreateTripArgs = {
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+  type: Scalars['String']['input'];
 };
 
 export type MutationDeleteExpenseArgs = {
@@ -276,6 +304,11 @@ export type MutationRegenerateTripArgs = {
   isPremium: Scalars['Boolean']['input'];
 };
 
+export type MutationSubscribeToPremiumArgs = {
+  input: CreateSubscriptionInput;
+  userId: Scalars['String']['input'];
+};
+
 export type MutationUpdateExpenseArgs = {
   data: UpdateExpenseInput;
   id: Scalars['Int']['input'];
@@ -303,6 +336,7 @@ export type Poi = {
   __typename?: 'Poi';
   accommodation?: Maybe<Accommodation>;
   address: Scalars['String']['output'];
+  businessOperatorId?: Maybe<Scalars['String']['output']>;
   businessPermit?: Maybe<BusinessPermit>;
   categories: Array<Category>;
   contactNumber: Scalars['String']['output'];
@@ -318,7 +352,6 @@ export type Poi = {
   price: Scalars['String']['output'];
   restaurant?: Maybe<Restaurant>;
   updatedAt: Scalars['DateTime']['output'];
-  userId?: Maybe<Scalars['String']['output']>;
   visitDuration: Scalars['Float']['output'];
 };
 
@@ -335,9 +368,9 @@ export type Query = {
   accommodationCategoires: Array<Category>;
   amenities: Array<Amenity>;
   attractionCategoires: Array<Category>;
+  businessOperatorBusiness: Array<BusinessOperatorBusiness>;
   categories: Array<Category>;
   poi: Poi;
-  pois: Array<Poi>;
   restaurantCategoires: Array<Category>;
   restaurantCategoriesMoreThanFive: Array<Category>;
   travelerAccount: Account;
@@ -347,12 +380,12 @@ export type Query = {
   user: User;
 };
 
-export type QueryPoiArgs = {
-  poiId: Scalars['String']['input'];
+export type QueryBusinessOperatorBusinessArgs = {
+  userId: Scalars['String']['input'];
 };
 
-export type QueryPoisArgs = {
-  userId: Scalars['String']['input'];
+export type QueryPoiArgs = {
+  poiId: Scalars['String']['input'];
 };
 
 export type QueryTravelerAccountArgs = {
@@ -398,7 +431,7 @@ export type Subscription = {
   id: Scalars['String']['output'];
   startDate: Scalars['DateTime']['output'];
   status: SubscriptionStatus;
-  userId: Scalars['String']['output'];
+  travelerId: Scalars['String']['output'];
 };
 
 export enum SubscriptionStatus {
@@ -413,6 +446,18 @@ export enum TravelSize {
   Group = 'GROUP',
   Solo = 'SOLO',
 }
+
+export type Traveler = {
+  __typename?: 'Traveler';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['String']['output'];
+  stamps: Array<Stamp>;
+  subscription?: Maybe<Subscription>;
+  tripCount: Scalars['Int']['output'];
+  trips: Array<Trip>;
+  updatedAt: Scalars['DateTime']['output'];
+  userId: Scalars['String']['output'];
+};
 
 export type Trip = {
   __typename?: 'Trip';
@@ -456,18 +501,14 @@ export type UpdateExpenseInput = {
 
 export type User = {
   __typename?: 'User';
+  businessOperator?: Maybe<BusinessOperator>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['String']['output'];
   lastName: Scalars['String']['output'];
   password: Scalars['String']['output'];
-  pois: Array<Poi>;
-  stamps: Array<Stamp>;
-  subscription?: Maybe<Subscription>;
-  tripCount: Scalars['Int']['output'];
-  trips: Array<Trip>;
-  type: UserType;
+  traveler?: Maybe<Traveler>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -588,10 +629,13 @@ export type ResolversTypes = {
   Amenity: ResolverTypeWrapper<Amenity>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  BusinessOperator: ResolverTypeWrapper<BusinessOperator>;
+  BusinessOperatorBusiness: ResolverTypeWrapper<BusinessOperatorBusiness>;
   BusinessPermit: ResolverTypeWrapper<BusinessPermit>;
   Category: ResolverTypeWrapper<Category>;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
+  CreateSubscriptionInput: CreateSubscriptionInput;
   CreateTripInput: CreateTripInput;
   CreateTripPreferenceInput: CreateTripPreferenceInput;
   CreateUserInput: CreateUserInput;
@@ -618,6 +662,7 @@ export type ResolversTypes = {
   Subscription: ResolverTypeWrapper<{}>;
   SubscriptionStatus: SubscriptionStatus;
   TravelSize: TravelSize;
+  Traveler: ResolverTypeWrapper<Traveler>;
   Trip: ResolverTypeWrapper<Trip>;
   TripPreference: ResolverTypeWrapper<TripPreference>;
   UpdateExpenseInput: UpdateExpenseInput;
@@ -632,10 +677,13 @@ export type ResolversParentTypes = {
   Amenity: Amenity;
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
+  BusinessOperator: BusinessOperator;
+  BusinessOperatorBusiness: BusinessOperatorBusiness;
   BusinessPermit: BusinessPermit;
   Category: Category;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
+  CreateSubscriptionInput: CreateSubscriptionInput;
   CreateTripInput: CreateTripInput;
   CreateTripPreferenceInput: CreateTripPreferenceInput;
   CreateUserInput: CreateUserInput;
@@ -659,6 +707,7 @@ export type ResolversParentTypes = {
   Stamp: Stamp;
   String: Scalars['String']['output'];
   Subscription: {};
+  Traveler: Traveler;
   Trip: Trip;
   TripPreference: TripPreference;
   UpdateExpenseInput: UpdateExpenseInput;
@@ -705,17 +754,49 @@ export interface BigIntScalarConfig
   name: 'BigInt';
 }
 
+export type BusinessOperatorResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['BusinessOperator'] = ResolversParentTypes['BusinessOperator'],
+> = {
+  business_permits?: Resolver<
+    Array<ResolversTypes['BusinessPermit']>,
+    ParentType,
+    ContextType
+  >;
+  businesses?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type BusinessOperatorBusinessResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['BusinessOperatorBusiness'] = ResolversParentTypes['BusinessOperatorBusiness'],
+> = {
+  isVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  poi?: Resolver<ResolversTypes['Poi'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type BusinessPermitResolvers<
   ContextType = any,
   ParentType extends
     ResolversParentTypes['BusinessPermit'] = ResolversParentTypes['BusinessPermit'],
 > = {
+  businessOperatorId?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType
+  >;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   image?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
   imageId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   poiId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -818,6 +899,12 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  cancelSubscription?: Resolver<
+    ResolversTypes['Subscription'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCancelSubscriptionArgs, 'userId'>
+  >;
   claimStamp?: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -849,7 +936,7 @@ export type MutationResolvers<
     ResolversTypes['User'],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateUserArgs, 'input'>
+    RequireFields<MutationCreateUserArgs, 'input' | 'type'>
   >;
   deleteExpense?: Resolver<
     ResolversTypes['Expense'],
@@ -886,6 +973,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationRegenerateTripArgs, 'id' | 'isPremium'>
+  >;
+  subscribeToPremium?: Resolver<
+    ResolversTypes['Subscription'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSubscribeToPremiumArgs, 'input' | 'userId'>
   >;
   updateExpense?: Resolver<
     ResolversTypes['Expense'],
@@ -927,6 +1020,11 @@ export type PoiResolvers<
     ContextType
   >;
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  businessOperatorId?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   businessPermit?: Resolver<
     Maybe<ResolversTypes['BusinessPermit']>,
     ParentType,
@@ -962,7 +1060,6 @@ export type PoiResolvers<
     ContextType
   >;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   visitDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -999,6 +1096,12 @@ export type QueryResolvers<
     ParentType,
     ContextType
   >;
+  businessOperatorBusiness?: Resolver<
+    Array<ResolversTypes['BusinessOperatorBusiness']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryBusinessOperatorBusinessArgs, 'userId'>
+  >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
     ParentType,
@@ -1009,12 +1112,6 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryPoiArgs, 'poiId'>
-  >;
-  pois?: Resolver<
-    Array<ResolversTypes['Poi']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryPoisArgs, 'userId'>
   >;
   restaurantCategoires?: Resolver<
     Array<ResolversTypes['Category']>,
@@ -1121,12 +1218,32 @@ export type SubscriptionResolvers<
     ParentType,
     ContextType
   >;
-  userId?: SubscriptionResolver<
+  travelerId?: SubscriptionResolver<
     ResolversTypes['String'],
-    'userId',
+    'travelerId',
     ParentType,
     ContextType
   >;
+};
+
+export type TravelerResolvers<
+  ContextType = any,
+  ParentType extends
+    ResolversParentTypes['Traveler'] = ResolversParentTypes['Traveler'],
+> = {
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  stamps?: Resolver<Array<ResolversTypes['Stamp']>, ParentType, ContextType>;
+  subscription?: Resolver<
+    Maybe<ResolversTypes['Subscription']>,
+    ParentType,
+    ContextType
+  >;
+  tripCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  trips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType>;
+  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TripResolvers<
@@ -1207,22 +1324,22 @@ export type UserResolvers<
   ParentType extends
     ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
+  businessOperator?: Resolver<
+    Maybe<ResolversTypes['BusinessOperator']>,
+    ParentType,
+    ContextType
+  >;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  pois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
-  stamps?: Resolver<Array<ResolversTypes['Stamp']>, ParentType, ContextType>;
-  subscription?: Resolver<
-    Maybe<ResolversTypes['Subscription']>,
+  traveler?: Resolver<
+    Maybe<ResolversTypes['Traveler']>,
     ParentType,
     ContextType
   >;
-  tripCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  trips?: Resolver<Array<ResolversTypes['Trip']>, ParentType, ContextType>;
-  type?: Resolver<ResolversTypes['UserType'], ParentType, ContextType>;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1232,6 +1349,8 @@ export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
   Amenity?: AmenityResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
+  BusinessOperator?: BusinessOperatorResolvers<ContextType>;
+  BusinessOperatorBusiness?: BusinessOperatorBusinessResolvers<ContextType>;
   BusinessPermit?: BusinessPermitResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DailyItinerary?: DailyItineraryResolvers<ContextType>;
@@ -1248,6 +1367,7 @@ export type Resolvers<ContextType = any> = {
   Restaurant?: RestaurantResolvers<ContextType>;
   Stamp?: StampResolvers<ContextType>;
   Subscription?: SubscriptionResolvers<ContextType>;
+  Traveler?: TravelerResolvers<ContextType>;
   Trip?: TripResolvers<ContextType>;
   TripPreference?: TripPreferenceResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
@@ -1345,6 +1465,7 @@ export type RegenerateTripMutation = {
 };
 
 export type CreateUserMutationVariables = Exact<{
+  type: Scalars['String']['input'];
   input: CreateUserInput;
 }>;
 
@@ -1373,26 +1494,44 @@ export type ClaimStampMutation = {
   claimStamp: { __typename?: 'User'; id: string };
 };
 
-export type GetBusinessesQueryVariables = Exact<{
+export type SubscribeToPremiumMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+  input: CreateSubscriptionInput;
+}>;
+
+export type SubscribeToPremiumMutation = {
+  __typename?: 'Mutation';
+  subscribeToPremium: { __typename?: 'Subscription'; id: string };
+};
+
+export type CancelSubscriptionMutationVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
-export type GetBusinessesQuery = {
+export type CancelSubscriptionMutation = {
+  __typename?: 'Mutation';
+  cancelSubscription: { __typename?: 'Subscription'; id: string };
+};
+
+export type GetBusinessOperatorBusinessQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+export type GetBusinessOperatorBusinessQuery = {
   __typename?: 'Query';
-  pois: Array<{
-    __typename?: 'Poi';
-    id: string;
-    name: string;
-    address: string;
-    images: Array<{
-      __typename?: 'PoiImage';
-      image: { __typename?: 'Image'; id: string; url: string };
-    }>;
-    businessPermit?: {
-      __typename?: 'BusinessPermit';
+  businessOperatorBusiness: Array<{
+    __typename?: 'BusinessOperatorBusiness';
+    isVerified: boolean;
+    poi: {
+      __typename?: 'Poi';
       id: string;
-      isVerified: boolean;
-    } | null;
+      name: string;
+      address: string;
+      images: Array<{
+        __typename?: 'PoiImage';
+        image: { __typename?: 'Image'; id: string; url: string };
+      }>;
+    };
   }>;
 };
 
@@ -1504,18 +1643,21 @@ export type GetTripsQuery = {
     isPremium: boolean;
     user: {
       __typename?: 'User';
-      tripCount: number;
-      trips: Array<{
-        __typename?: 'Trip';
-        id: number;
-        budget: number;
-        endDate: any;
-        startDate: any;
-        title: string;
-        destination: string;
-        travelerCount: number;
-        travelSize: TravelSize;
-      }>;
+      traveler?: {
+        __typename?: 'Traveler';
+        tripCount: number;
+        trips: Array<{
+          __typename?: 'Trip';
+          id: number;
+          budget: number;
+          endDate: any;
+          startDate: any;
+          title: string;
+          destination: string;
+          travelerCount: number;
+          travelSize: TravelSize;
+        }>;
+      } | null;
     };
   };
 };
@@ -1551,7 +1693,6 @@ export type GetTripItineraryQuery = {
   __typename?: 'Query';
   trip: {
     __typename?: 'Trip';
-    budget: number;
     startDate: any;
     endDate: any;
     isAccommodationIncluded: boolean;
@@ -1584,6 +1725,42 @@ export type GetTripItineraryQuery = {
           isAttraction: boolean;
           restaurant?: { __typename?: 'Restaurant'; id: number } | null;
           accommodation?: { __typename?: 'Accommodation'; id: number } | null;
+          images: Array<{
+            __typename?: 'PoiImage';
+            image: { __typename?: 'Image'; url: string };
+          }>;
+        };
+      }>;
+    }>;
+  };
+};
+
+export type GetTripMapItineraryQueryVariables = Exact<{
+  tripId: Scalars['Int']['input'];
+}>;
+
+export type GetTripMapItineraryQuery = {
+  __typename?: 'Query';
+  trip: {
+    __typename?: 'Trip';
+    isAccommodationIncluded: boolean;
+    startingLocation: any;
+    dailyItineraries: Array<{
+      __typename?: 'DailyItinerary';
+      id: number;
+      dayIndex: number;
+      dailyItineraryPois: Array<{
+        __typename?: 'DailyItineraryPoi';
+        id: number;
+        order: number;
+        distance: number;
+        duration: number;
+        poi: {
+          __typename?: 'Poi';
+          id: string;
+          name: string;
+          longitude: number;
+          latitude: number;
           images: Array<{
             __typename?: 'PoiImage';
             image: { __typename?: 'Image'; url: string };
@@ -1629,11 +1806,11 @@ export type GetDailyItineraryPoiDetailsQuery = {
   };
 };
 
-export type GetUserInfoQueryVariables = Exact<{
+export type GetOperatorInfoQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
-export type GetUserInfoQuery = {
+export type GetOperatorInfoQuery = {
   __typename?: 'Query';
   user: {
     __typename?: 'User';
@@ -1641,12 +1818,30 @@ export type GetUserInfoQuery = {
     email: string;
     firstName: string;
     lastName: string;
-    stamps: Array<{
-      __typename?: 'Stamp';
-      id: number;
-      title: string;
-      image: { __typename?: 'Image'; url: string };
-    }>;
+  };
+};
+
+export type GetTravelerInfoQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+export type GetTravelerInfoQuery = {
+  __typename?: 'Query';
+  user: {
+    __typename?: 'User';
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    traveler?: {
+      __typename?: 'Traveler';
+      stamps: Array<{
+        __typename?: 'Stamp';
+        id: number;
+        title: string;
+        image: { __typename?: 'Image'; url: string };
+      }>;
+    } | null;
   };
 };
 
@@ -2338,6 +2533,17 @@ export const CreateUserDocument = {
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'type' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
             name: { kind: 'Name', value: 'input' },
@@ -2358,6 +2564,14 @@ export const CreateUserDocument = {
             kind: 'Field',
             name: { kind: 'Name', value: 'createUser' },
             arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'type' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'type' },
+                },
+              },
               {
                 kind: 'Argument',
                 name: { kind: 'Name', value: 'input' },
@@ -2522,13 +2736,89 @@ export const ClaimStampDocument = {
     },
   ],
 } as unknown as DocumentNode<ClaimStampMutation, ClaimStampMutationVariables>;
-export const GetBusinessesDocument = {
+export const SubscribeToPremiumDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetBusinesses' },
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SubscribeToPremium' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateSubscriptionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'subscribeToPremium' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SubscribeToPremiumMutation,
+  SubscribeToPremiumMutationVariables
+>;
+export const CancelSubscriptionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CancelSubscription' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -2550,7 +2840,7 @@ export const GetBusinessesDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'pois' },
+            name: { kind: 'Name', value: 'cancelSubscription' },
             arguments: [
               {
                 kind: 'Argument',
@@ -2565,44 +2855,97 @@ export const GetBusinessesDocument = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CancelSubscriptionMutation,
+  CancelSubscriptionMutationVariables
+>;
+export const GetBusinessOperatorBusinessDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetBusinessOperatorBusiness' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'businessOperatorBusiness' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'isVerified' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'images' },
+                  name: { kind: 'Name', value: 'poi' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
+                        name: { kind: 'Name', value: 'address' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'images' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
+                              name: { kind: 'Name', value: 'image' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
-                      },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'businessPermit' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'isVerified' },
                       },
                     ],
                   },
@@ -2614,7 +2957,10 @@ export const GetBusinessesDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetBusinessesQuery, GetBusinessesQueryVariables>;
+} as unknown as DocumentNode<
+  GetBusinessOperatorBusinessQuery,
+  GetBusinessOperatorBusinessQueryVariables
+>;
 export const GetBusinessDetailsDocument = {
   kind: 'Document',
   definitions: [
@@ -3008,45 +3354,60 @@ export const GetTripsDocument = {
                     selections: [
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'tripCount' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'trips' },
+                        name: { kind: 'Name', value: 'traveler' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
+                              name: { kind: 'Name', value: 'tripCount' },
                             },
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'budget' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'endDate' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'startDate' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'title' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'destination' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'travelerCount' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'travelSize' },
+                              name: { kind: 'Name', value: 'trips' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'budget' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'endDate' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'startDate' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'title' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'destination',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'travelerCount',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'travelSize' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -3179,7 +3540,6 @@ export const GetTripItineraryDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'budget' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
                 {
@@ -3365,6 +3725,156 @@ export const GetTripItineraryDocument = {
   GetTripItineraryQuery,
   GetTripItineraryQueryVariables
 >;
+export const GetTripMapItineraryDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTripMapItinerary' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'trip' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tripId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'isAccommodationIncluded' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'startingLocation' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'dailyItineraries' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'dayIndex' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'dailyItineraryPois' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'order' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'distance' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'duration' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'poi' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'name' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'longitude' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'latitude' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'images' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'url',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetTripMapItineraryQuery,
+  GetTripMapItineraryQueryVariables
+>;
 export const GetDailyItineraryPoiDetailsDocument = {
   kind: 'Document',
   definitions: [
@@ -3502,13 +4012,70 @@ export const GetDailyItineraryPoiDetailsDocument = {
   GetDailyItineraryPoiDetailsQuery,
   GetDailyItineraryPoiDetailsQueryVariables
 >;
-export const GetUserInfoDocument = {
+export const GetOperatorInfoDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetUserInfo' },
+      name: { kind: 'Name', value: 'GetOperatorInfo' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'firstName' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetOperatorInfoQuery,
+  GetOperatorInfoQueryVariables
+>;
+export const GetTravelerInfoDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTravelerInfo' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -3550,21 +4117,36 @@ export const GetUserInfoDocument = {
                 { kind: 'Field', name: { kind: 'Name', value: 'lastName' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'stamps' },
+                  name: { kind: 'Name', value: 'traveler' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'image' },
+                        name: { kind: 'Name', value: 'stamps' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'url' },
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'title' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'url' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -3579,7 +4161,10 @@ export const GetUserInfoDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<GetUserInfoQuery, GetUserInfoQueryVariables>;
+} as unknown as DocumentNode<
+  GetTravelerInfoQuery,
+  GetTravelerInfoQueryVariables
+>;
 export const GetUnclaimedStampsDocument = {
   kind: 'Document',
   definitions: [

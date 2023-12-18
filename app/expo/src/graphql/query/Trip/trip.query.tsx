@@ -4,21 +4,24 @@ export const GetTripsQuery = gql(
   `query GetTrips($userId: String!) {
     travelerAccount(id: $userId) {
       user {
-        tripCount
-        trips {
-          id
-          budget
-          endDate
-          startDate
-          title
-          destination
-          travelerCount
-          travelSize
+        traveler {
+          tripCount
+          trips {
+            id
+            budget
+            endDate
+            startDate
+            title
+            destination
+            travelerCount
+            travelSize
+          }
         }
       }
       isPremium
     }
-  }`,
+  }
+  `,
 );
 export const GetTripExpensesQuery = gql(
   `query GetTripExpenses($tripId: Int!) {
@@ -42,7 +45,6 @@ export const GetTripExpensesQuery = gql(
 export const GetTripItineraryQuery = gql(
   `query GetTripItinerary($tripId: Int!) {
     trip(id: $tripId) {
-      budget
       startDate
       endDate
       isAccommodationIncluded
@@ -76,6 +78,37 @@ export const GetTripItineraryQuery = gql(
             accommodation {
               id
             }
+            images {
+              image {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  `,
+);
+
+export const GetTripMapItineraryQuery = gql(
+  `query GetTripMapItinerary($tripId: Int!) {
+    trip(id: $tripId) {
+      isAccommodationIncluded
+      startingLocation
+      dailyItineraries {
+        id
+        dayIndex
+        dailyItineraryPois {
+          id
+          order
+          distance
+          duration
+          poi {
+            id
+            name     
+            longitude
+            latitude
             images {
               image {
                 url

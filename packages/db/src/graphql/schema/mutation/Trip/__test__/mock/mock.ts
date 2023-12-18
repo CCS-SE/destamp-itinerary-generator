@@ -31,7 +31,7 @@ export const pointOfInterests = [
     price: '660',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:43.911Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
   {
@@ -70,7 +70,7 @@ export const pointOfInterests = [
     price: '880',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:54.242Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
   {
@@ -105,7 +105,7 @@ export const pointOfInterests = [
     price: '1045',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:03.121Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
   {
@@ -132,7 +132,7 @@ export const pointOfInterests = [
     price: '1485',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:12.749Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
 
@@ -159,7 +159,7 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:49.724Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 60,
   },
   {
@@ -211,7 +211,7 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:54.185Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 60,
   },
   {
@@ -260,7 +260,7 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:17.284Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 90,
   },
   {
@@ -309,7 +309,7 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:23.196Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 45,
   },
   {
@@ -344,7 +344,7 @@ export const pointOfInterests = [
     price: '660',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:43.911Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
   {
@@ -383,7 +383,7 @@ export const pointOfInterests = [
     price: '880',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:54.242Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
   {
@@ -418,7 +418,7 @@ export const pointOfInterests = [
     price: '1045',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:03.121Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
   {
@@ -445,7 +445,7 @@ export const pointOfInterests = [
     price: '1485',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:12.749Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 1440,
   },
 
@@ -472,7 +472,7 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:49.724Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 60,
   },
   {
@@ -524,7 +524,7 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:54.185Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 60,
   },
   {
@@ -573,7 +573,7 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:17.284Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 90,
   },
   {
@@ -622,7 +622,7 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:23.196Z'),
-    userId: null,
+    businessOperatorId: null,
     visitDuration: 45,
   },
 ];

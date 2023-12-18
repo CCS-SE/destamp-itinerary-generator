@@ -1,4 +1,3 @@
-import { UserType } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 import { MockContext } from '../../../../../types/types';
@@ -25,7 +24,6 @@ describe('createUser mutation', () => {
       password: 'testing',
       firstName: 'Juan',
       lastName: 'Dela Cruz',
-      type: UserType.TRAVELER,
     };
 
     const user = {
@@ -34,7 +32,6 @@ describe('createUser mutation', () => {
       password: 'testing',
       firstName: 'Juan',
       lastName: 'Dela Cruz',
-      type: UserType.TRAVELER,
       createdAt: new Date('2022-10-12'),
       updatedAt: new Date('2022-10-12'),
       tripCount: 0,
@@ -53,7 +50,7 @@ describe('createUser mutation', () => {
       ...user,
     };
 
-    const result = await createUser(userInput, context);
+    const result = await createUser('TRAVELER', userInput, context);
 
     expect(bcrypt.hash).toHaveBeenCalledWith(userInput.password, saltRounds);
 
