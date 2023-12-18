@@ -23,3 +23,19 @@ export const ClaimStamp = gql(
     }
   }`,
 );
+
+export const SubscribeToPremium = gql(
+  `mutation SubscribeToPremium($userId: String!, $input: CreateSubscriptionInput!) {
+    subscribeToPremium(userId: $userId, input: $input) {
+      id
+    }
+  }`,
+);
+
+export const CancelSubscription = gql(
+  `mutation CancelSubscription($userId: String!) {
+    cancelSubscription(userId: $userId) {
+      id
+    }
+  }`,
+);

@@ -1,5 +1,9 @@
-import { ClaimStamp } from './Traveler.mutation';
+import {
+  CancelSubscription,
+  ClaimStamp,
+  SubscribeToPremium,
+} from './Traveler.mutation';
 
-const Mutations = [ClaimStamp];
+const Mutations = [ClaimStamp, SubscribeToPremium, CancelSubscription];
 
 export default Mutations;

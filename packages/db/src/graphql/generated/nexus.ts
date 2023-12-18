@@ -89,6 +89,12 @@ export interface NexusGenInputs {
     price: string; // String!
     visitDuration: number; // Int!
   };
+  CreateSubscriptionInput: {
+    // input type
+    amount: number; // Float!
+    endDate: NexusGenScalars['DateTime']; // DateTime!
+    startDate: NexusGenScalars['DateTime']; // DateTime!
+  };
   CreateTripInput: {
     // input type
     budget: number; // Float!
@@ -273,6 +279,7 @@ export interface NexusGenObjects {
   Poi: {
     // root type
     address: string; // String!
+    businessOperatorId?: string | null; // String
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description?: string | null; // String
@@ -283,7 +290,6 @@ export interface NexusGenObjects {
     name: string; // String!
     price: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    userId?: string | null; // String
     visitDuration: number; // Float!
   };
   PoiImage: {
@@ -458,6 +464,7 @@ export interface NexusGenFieldTypes {
   };
   Mutation: {
     // field return type
+    cancelSubscription: NexusGenRootTypes['Subscription']; // Subscription!
     claimStamp: NexusGenRootTypes['User']; // User!
     createExpense: NexusGenRootTypes['Expense']; // Expense!
     createPoi: NexusGenRootTypes['Poi']; // Poi!
@@ -469,6 +476,7 @@ export interface NexusGenFieldTypes {
     editPoi: NexusGenRootTypes['Poi']; // Poi!
     editUser: NexusGenRootTypes['User']; // User!
     regenerateTrip: NexusGenRootTypes['Trip']; // Trip!
+    subscribeToPremium: NexusGenRootTypes['Subscription']; // Subscription!
     updateExpense: NexusGenRootTypes['Expense']; // Expense!
   };
   OperatingHour: {
@@ -484,6 +492,7 @@ export interface NexusGenFieldTypes {
     // field return type
     accommodation: NexusGenRootTypes['Accommodation'] | null; // Accommodation
     address: string; // String!
+    businessOperatorId: string | null; // String
     businessPermit: NexusGenRootTypes['BusinessPermit'] | null; // BusinessPermit
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     contactNumber: string; // String!
@@ -499,7 +508,6 @@ export interface NexusGenFieldTypes {
     price: string; // String!
     restaurant: NexusGenRootTypes['Restaurant'] | null; // Restaurant
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    userId: string | null; // String
     visitDuration: number; // Float!
   };
   PoiImage: {
@@ -689,6 +697,7 @@ export interface NexusGenFieldTypeNames {
   };
   Mutation: {
     // field return type name
+    cancelSubscription: 'Subscription';
     claimStamp: 'User';
     createExpense: 'Expense';
     createPoi: 'Poi';
@@ -700,6 +709,7 @@ export interface NexusGenFieldTypeNames {
     editPoi: 'Poi';
     editUser: 'User';
     regenerateTrip: 'Trip';
+    subscribeToPremium: 'Subscription';
     updateExpense: 'Expense';
   };
   OperatingHour: {
@@ -715,6 +725,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     accommodation: 'Accommodation';
     address: 'String';
+    businessOperatorId: 'String';
     businessPermit: 'BusinessPermit';
     categories: 'Category';
     contactNumber: 'String';
@@ -730,7 +741,6 @@ export interface NexusGenFieldTypeNames {
     price: 'String';
     restaurant: 'Restaurant';
     updatedAt: 'DateTime';
-    userId: 'String';
     visitDuration: 'Float';
   };
   PoiImage: {
@@ -837,6 +847,10 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    cancelSubscription: {
+      // args
+      userId: string; // String!
+    };
     claimStamp: {
       // args
       stampId: number; // Int!
@@ -892,6 +906,11 @@ export interface NexusGenArgTypes {
       // args
       id: number; // Int!
       isPremium: boolean; // Boolean!
+    };
+    subscribeToPremium: {
+      // args
+      input: NexusGenInputs['CreateSubscriptionInput']; // CreateSubscriptionInput!
+      userId: string; // String!
     };
     updateExpense: {
       // args

@@ -116,6 +116,12 @@ export type CreatePoiInput = {
   visitDuration: Scalars['Int']['input'];
 };
 
+export type CreateSubscriptionInput = {
+  amount: Scalars['Float']['input'];
+  endDate: Scalars['DateTime']['input'];
+  startDate: Scalars['DateTime']['input'];
+};
+
 export type CreateTripInput = {
   budget: Scalars['Float']['input'];
   destination: Scalars['String']['input'];
@@ -222,6 +228,7 @@ export type Image = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  cancelSubscription: Subscription;
   claimStamp: User;
   createExpense: Expense;
   createPoi: Poi;
@@ -233,7 +240,12 @@ export type Mutation = {
   editPoi: Poi;
   editUser: User;
   regenerateTrip: Trip;
+  subscribeToPremium: Subscription;
   updateExpense: Expense;
+};
+
+export type MutationCancelSubscriptionArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export type MutationClaimStampArgs = {
@@ -292,6 +304,11 @@ export type MutationRegenerateTripArgs = {
   isPremium: Scalars['Boolean']['input'];
 };
 
+export type MutationSubscribeToPremiumArgs = {
+  input: CreateSubscriptionInput;
+  userId: Scalars['String']['input'];
+};
+
 export type MutationUpdateExpenseArgs = {
   data: UpdateExpenseInput;
   id: Scalars['Int']['input'];
@@ -319,6 +336,7 @@ export type Poi = {
   __typename?: 'Poi';
   accommodation?: Maybe<Accommodation>;
   address: Scalars['String']['output'];
+  businessOperatorId?: Maybe<Scalars['String']['output']>;
   businessPermit?: Maybe<BusinessPermit>;
   categories: Array<Category>;
   contactNumber: Scalars['String']['output'];
@@ -334,7 +352,6 @@ export type Poi = {
   price: Scalars['String']['output'];
   restaurant?: Maybe<Restaurant>;
   updatedAt: Scalars['DateTime']['output'];
-  userId?: Maybe<Scalars['String']['output']>;
   visitDuration: Scalars['Float']['output'];
 };
 
@@ -618,6 +635,7 @@ export type ResolversTypes = {
   Category: ResolverTypeWrapper<Category>;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
+  CreateSubscriptionInput: CreateSubscriptionInput;
   CreateTripInput: CreateTripInput;
   CreateTripPreferenceInput: CreateTripPreferenceInput;
   CreateUserInput: CreateUserInput;
@@ -665,6 +683,7 @@ export type ResolversParentTypes = {
   Category: Category;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
+  CreateSubscriptionInput: CreateSubscriptionInput;
   CreateTripInput: CreateTripInput;
   CreateTripPreferenceInput: CreateTripPreferenceInput;
   CreateUserInput: CreateUserInput;
@@ -880,6 +899,12 @@ export type MutationResolvers<
   ParentType extends
     ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  cancelSubscription?: Resolver<
+    ResolversTypes['Subscription'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationCancelSubscriptionArgs, 'userId'>
+  >;
   claimStamp?: Resolver<
     ResolversTypes['User'],
     ParentType,
@@ -949,6 +974,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationRegenerateTripArgs, 'id' | 'isPremium'>
   >;
+  subscribeToPremium?: Resolver<
+    ResolversTypes['Subscription'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationSubscribeToPremiumArgs, 'input' | 'userId'>
+  >;
   updateExpense?: Resolver<
     ResolversTypes['Expense'],
     ParentType,
@@ -989,6 +1020,11 @@ export type PoiResolvers<
     ContextType
   >;
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  businessOperatorId?: Resolver<
+    Maybe<ResolversTypes['String']>,
+    ParentType,
+    ContextType
+  >;
   businessPermit?: Resolver<
     Maybe<ResolversTypes['BusinessPermit']>,
     ParentType,
@@ -1024,7 +1060,6 @@ export type PoiResolvers<
     ContextType
   >;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   visitDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1457,6 +1492,25 @@ export type ClaimStampMutationVariables = Exact<{
 export type ClaimStampMutation = {
   __typename?: 'Mutation';
   claimStamp: { __typename?: 'User'; id: string };
+};
+
+export type SubscribeToPremiumMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+  input: CreateSubscriptionInput;
+}>;
+
+export type SubscribeToPremiumMutation = {
+  __typename?: 'Mutation';
+  subscribeToPremium: { __typename?: 'Subscription'; id: string };
+};
+
+export type CancelSubscriptionMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+export type CancelSubscriptionMutation = {
+  __typename?: 'Mutation';
+  cancelSubscription: { __typename?: 'Subscription'; id: string };
 };
 
 export type GetBusinessOperatorBusinessQueryVariables = Exact<{
@@ -2682,6 +2736,136 @@ export const ClaimStampDocument = {
     },
   ],
 } as unknown as DocumentNode<ClaimStampMutation, ClaimStampMutationVariables>;
+export const SubscribeToPremiumDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'SubscribeToPremium' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'input' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'CreateSubscriptionInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'subscribeToPremium' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'input' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'input' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SubscribeToPremiumMutation,
+  SubscribeToPremiumMutationVariables
+>;
+export const CancelSubscriptionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'CancelSubscription' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'cancelSubscription' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  CancelSubscriptionMutation,
+  CancelSubscriptionMutationVariables
+>;
 export const GetBusinessOperatorBusinessDocument = {
   kind: 'Document',
   definitions: [

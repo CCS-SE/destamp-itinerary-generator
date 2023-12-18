@@ -221,11 +221,11 @@ export const editPoi = async (
 };
 
 export const deletePoi = async (poiId: string, ctx: Context) => {
-  await ctx.prisma.businessPermit.delete({
-    where: {
-      poiId: poiId,
-    },
-  });
+  // await ctx.prisma.businessPermit.delete({
+  //   where: {
+  //     poiId: poiId,
+  //   },
+  // });
   await ctx.prisma.operatingHour.deleteMany({
     where: {
       poiId: poiId,
