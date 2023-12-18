@@ -22,7 +22,7 @@ const BusinessListScreen = () => {
     },
   );
 
-  if (error) {
+  if (data?.businessOperatorBusiness && error) {
     return <Text>Error: {error.message}</Text>;
   }
 
