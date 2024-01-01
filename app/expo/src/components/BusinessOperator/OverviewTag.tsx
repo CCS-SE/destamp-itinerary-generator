@@ -28,11 +28,10 @@ const OverviewTag = ({
         elevation: 5,
         width: width || 170,
         padding: 5,
-        flexDirection: 'row',
       }}
     >
       <Text style={{ paddingRight: 10, paddingLeft: 5 }}>{icon}</Text>
-      <Text style={{ fontFamily: 'Poppins', fontSize: 13, color: 'white' }}>
+      <Text style={{ fontFamily: 'Poppins', fontSize: 10, color: 'white' }}>
         {content}
       </Text>
     </View>

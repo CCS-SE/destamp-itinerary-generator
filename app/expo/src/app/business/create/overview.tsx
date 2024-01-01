@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -22,6 +22,8 @@ const OverviewPage = () => {
     color: '#404040',
     padding: 10,
   };
+
+  const width = Dimensions.get('window').width;
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -92,16 +94,19 @@ const OverviewPage = () => {
               <Text style={subTitleFontStyle}>
                 Identify your Establishment Type
               </Text>
-              <View style={{ alignItems: 'center' }}>
+              <View style={{ alignItems: 'center', flexDirection: 'row' }}>
                 <OverviewTag
+                  width={width / 3.5}
                   content={'Restaurant'}
                   icon={<Ionicons name="restaurant" size={24} color="white" />}
                 />
                 <OverviewTag
+                  width={width / 3.5}
                   content={'Accommodation'}
                   icon={<FontAwesome name="hotel" size={24} color="white" />}
                 />
                 <OverviewTag
+                  width={width / 3.5}
                   content={'Attraction'}
                   icon={
                     <MaterialIcons name="description" size={24} color="white" />
@@ -111,8 +116,7 @@ const OverviewPage = () => {
             </View>
             <View style={{ margin: 5 }}>
               <Text style={subTitleFontStyle}>
-                Verify your business by uploading a your business permit and
-                upload photos of your establishment.
+                Verify your business by uploading a business permit.
               </Text>
               {/* <View> */}
               <View style={{ flexDirection: 'row' }}>
@@ -130,12 +134,12 @@ const OverviewPage = () => {
                 />
               </View>
             </View>
-            <GradientButton
-              onPress={() => router.push('/business/create/establishmentType')}
-              title={'Get Started'}
-              isSubmitting={false}
-            />
           </ScrollView>
+          <GradientButton
+            onPress={() => router.push('/business/create/establishmentType')}
+            title={'Get Started'}
+            isSubmitting={false}
+          />
         </SafeAreaView>
       </View>
     </View>
