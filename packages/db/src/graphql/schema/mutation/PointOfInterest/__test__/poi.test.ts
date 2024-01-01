@@ -19,7 +19,7 @@ describe('createPoi mutation', () => {
   it('should create POI', async () => {
     const poi = {
       id: 'test',
-      businessOperatorId: 'user1',
+      userId: 'user1',
       name: 'Baliwag',
       description: '',
       address: 'Jaro Iloilo City',
@@ -29,6 +29,7 @@ describe('createPoi mutation', () => {
       longitude: 122.12912,
       visitDuration: 60,
       isAttraction: false,
+      isVerified: true,
       categories: ['Family Restuarant'],
       imageUrls: ['image1-url', 'image2-url'],
       operatingHours: [],
@@ -36,14 +37,6 @@ describe('createPoi mutation', () => {
       createdAt: new Date('2023-11-25'),
       updatedAt: new Date('2023-11-25'),
     };
-
-    mockContext.prisma.businessOperator.findFirstOrThrow.mockImplementation(
-      () => {
-        return {
-          id: 'test',
-        };
-      },
-    );
 
     mockContext.prisma.pointOfInterest.create.mockResolvedValue(poi);
 
