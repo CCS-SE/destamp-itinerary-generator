@@ -6,10 +6,9 @@ export const CreatePoi = mutationField('createPoi', {
   type: 'Poi',
   args: {
     type: nonNull(stringArg()),
-    userId: nonNull(stringArg()),
     input: nonNull('CreatePoiInput'),
   },
-  resolve: (_, args, ctx) => createPoi(args.type, args.userId, args.input, ctx),
+  resolve: (_, args, ctx) => createPoi(args.type, args.input, ctx),
 });
 
 export const EditPoi = mutationField('editPoi', {

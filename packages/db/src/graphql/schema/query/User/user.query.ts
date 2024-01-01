@@ -4,6 +4,7 @@ import {
   queryTravelerAccount,
   queryUnclaimedStamps,
   queryUser,
+  queryUserPois,
 } from './user.resolver';
 
 const User = queryField('user', {
@@ -30,4 +31,12 @@ const Account = queryField('travelerAccount', {
   resolve: (_, args, ctx) => queryTravelerAccount(args.id, ctx),
 });
 
-export default [User, UnclaimedStamps, Account];
+const UserPois = queryField('userPois', {
+  type: nonNull(list('Poi')),
+  args: {
+    userId: nonNull(stringArg()),
+  },
+  resolve: (_, args, ctx) => queryUserPois(args.userId, ctx),
+});
+
+export default [User, UnclaimedStamps, Account, UserPois];

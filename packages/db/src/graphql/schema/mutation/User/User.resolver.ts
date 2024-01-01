@@ -39,16 +39,6 @@ export const createUser = async (
         },
       },
     });
-  } else if (type === 'BUSINESS_OPERATOR') {
-    userTypePromise = ctx.prisma.businessOperator.create({
-      data: {
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-      },
-    });
   }
 
   if (userTypePromise) {

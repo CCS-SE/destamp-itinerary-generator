@@ -34,41 +34,6 @@ export const queryPoi = async (
   }
 };
 
-export const queryBusinessOperatorBusiness = async (
-  userId: string,
-  ctx: Context,
-) => {
-  const user = await ctx.prisma.user.findUniqueOrThrow({
-    where: {
-      id: userId,
-    },
-    include: {
-      businessOperator: {
-        include: {
-          businesses: {
-            include: {
-              businessOperator: true,
-            },
-          },
-          businessPermits: true,
-        },
-      },
-    },
-  });
-
-  const businessVerificationList =
-    user &&
-    user.businessOperator!.businesses.map((business) => ({
-      poi: business,
-      isVerified: user.businessOperator!.businessPermits.some(
-        (businessPermit) =>
-          businessPermit.poiId === business.id && businessPermit.isVerified,
-      ),
-    }));
-
-  return businessVerificationList;
-};
-
 export const queryAllCategories = (ctx: Context) => {
   return ctx.prisma.category.findMany({
     orderBy: {

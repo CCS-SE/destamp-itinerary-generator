@@ -7,16 +7,9 @@ type EditPoiInput = NexusGenInputs['EditPoiInput'];
 
 export const createPoi = async (
   type: string,
-  userId: string,
   input: CreatePoiInput,
   ctx: Context,
 ) => {
-  const operator = await ctx.prisma.businessOperator.findFirstOrThrow({
-    where: {
-      userId: userId,
-    },
-  });
-
   return await ctx.prisma.pointOfInterest.create({
     data: {
       address: input.address,
@@ -89,18 +82,8 @@ export const createPoi = async (
               },
             }
           : undefined,
-      businessOperator: {
-        connect: {
-          id: operator.id,
-        },
-      },
-      businessPermit: {
+      businessPermitImage: {
         create: {
-          businessOperator: {
-            connect: {
-              id: operator.id,
-            },
-          },
           image: {
             create: {
               url: input.permitUrl,
@@ -221,7 +204,7 @@ export const editPoi = async (
 };
 
 export const deletePoi = async (poiId: string, ctx: Context) => {
-  await ctx.prisma.businessPermit.delete({
+  await ctx.prisma.businessPermitImage.delete({
     where: {
       poiId: poiId,
     },

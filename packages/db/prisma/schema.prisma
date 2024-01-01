@@ -8,17 +8,18 @@ generator client {
 }
 
 model User {
-  id        String @id
-  email     String @unique @db.VarChar(255)
-  password  String @db.VarChar(255)
-  firstName String @map("first_name") @db.VarChar(255)
-  lastName  String @map("last_name") @db.VarChar(255)
+  id                 String  @id
+  email              String  @unique @db.VarChar(255)
+  password           String  @db.VarChar(255)
+  firstName          String  @map("first_name") @db.VarChar(255)
+  lastName           String  @map("last_name") @db.VarChar(255)
+  isBusinessOperator Boolean @default(false) @map("is_business_operator")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   traveler         Traveler?
-  businessOperator BusinessOperator?
+  pointOfInterests PointOfInterest[]
 
   @@map("users")
 }
@@ -38,20 +39,6 @@ model Traveler {
   subscription Subscription?
 
   @@map("travelers")
-}
-
-model BusinessOperator {
-  id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
-  userId String @unique @map("user_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  businesses      PointOfInterest[]
-  businessPermits BusinessPermit[]
-
-  @@map("business_operators")
 }
 
 model Subscription {
@@ -100,9 +87,9 @@ model Trip {
 }
 
 model PointOfInterest {
-  id                 String            @id @default(cuid())
-  businessOperator   BusinessOperator? @relation(fields: [businessOperatorId], references: [id])
-  businessOperatorId String?           @map("business_operator_id")
+  id     String  @id @default(cuid())
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @map("user_id")
 
   name          String  @db.VarChar(255)
   description   String?
@@ -113,37 +100,20 @@ model PointOfInterest {
   longitude     Float
   visitDuration Float   @map("visit_duration")
   isAttraction  Boolean @default(true) @map("is_attraction")
+  isVerified    Boolean @default(false) @map("is_verified")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  categories         Category[]
-  operatingHours     OperatingHour[]
-  poiImages          PoiImage[]
-  dailyItineraryPois DailyItineraryPoi[]
-  accommodation      Accommodation?
-  restaurant         Restaurant?
-  businessPermit     BusinessPermit?
+  categories          Category[]
+  operatingHours      OperatingHour[]
+  poiImages           PoiImage[]
+  dailyItineraryPois  DailyItineraryPoi[]
+  accommodation       Accommodation?
+  restaurant          Restaurant?
+  businessPermitImage BusinessPermitImage?
 
   @@map("point_of_interests")
-}
-
-model BusinessPermit {
-  id                 String           @id @default(cuid())
-  businessOperator   BusinessOperator @relation(fields: [businessOperatorId], references: [id])
-  businessOperatorId String           @map("business_operator_id")
-
-  image   Image           @relation(fields: [imageId], references: [id])
-  imageId String          @unique @map("image_id")
-  poi     PointOfInterest @relation(fields: [poiId], references: [id])
-  poiId   String          @unique @map("poi_id")
-
-  isVerified Boolean @default(false) @map("is_verified")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("business_permits")
 }
 
 model TripPreference {
@@ -274,9 +244,9 @@ model Image {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  stamp          Stamp?
-  poiImage       PoiImage?
-  businessPermit BusinessPermit?
+  stamp               Stamp?
+  poiImage            PoiImage?
+  businessPermitImage BusinessPermitImage?
 
   @@map("images")
 }
@@ -289,6 +259,20 @@ model PoiImage {
   imageId String          @unique @map("image_id")
 
   @@map("poi_images")
+}
+
+model BusinessPermitImage {
+  id String @id @default(cuid())
+
+  image   Image           @relation(fields: [imageId], references: [id])
+  imageId String          @unique @map("image_id")
+  poi     PointOfInterest @relation(fields: [poiId], references: [id])
+  poiId   String          @unique @map("poi_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("business_permit_images")
 }
 
 model Stamp {

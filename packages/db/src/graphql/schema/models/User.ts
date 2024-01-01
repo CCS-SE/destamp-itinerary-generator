@@ -8,6 +8,7 @@ const User = objectType({
     t.string('password');
     t.string('firstName');
     t.string('lastName');
+    t.boolean('isBusinessOperator');
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
     t.nullable.field('traveler', {
@@ -22,8 +23,8 @@ const User = objectType({
           .traveler();
       },
     });
-    t.nullable.field('businessOperator', {
-      type: 'BusinessOperator',
+    t.list.field('pois', {
+      type: 'Poi',
       resolve: ({ id }, _, ctx) => {
         return ctx.prisma.user
           .findUniqueOrThrow({
@@ -31,7 +32,7 @@ const User = objectType({
               id: id,
             },
           })
-          .businessOperator();
+          .pointOfInterests();
       },
     });
   },

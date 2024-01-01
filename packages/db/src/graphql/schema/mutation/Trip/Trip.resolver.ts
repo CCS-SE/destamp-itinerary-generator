@@ -61,19 +61,19 @@ export const createTrip = async (
       where: {
         OR: [
           {
-            businessOperator: {
+            user: {
               isNot: null,
             },
-            businessPermit: {
-              isVerified: true,
+            isVerified: {
+              equals: true,
             },
           }, // newly added place that is not yet verified must not be included
           {
-            businessOperator: {
+            user: {
               is: null,
             },
-            businessPermit: {
-              is: null,
+            isVerified: {
+              equals: false,
             },
           }, // include all scraped data
         ],
@@ -260,19 +260,19 @@ export const regenerateTrip = async (
       where: {
         OR: [
           {
-            businessOperator: {
+            user: {
               isNot: null,
             },
-            businessPermit: {
-              isVerified: true,
+            isVerified: {
+              equals: true,
             },
           },
           {
-            businessOperator: {
+            user: {
               is: null,
             },
-            businessPermit: {
-              is: null,
+            isVerified: {
+              equals: false,
             },
           },
         ],
