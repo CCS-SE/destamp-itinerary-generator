@@ -580,6 +580,7 @@ export interface NexusGenFieldTypes {
     isBusinessOperator: boolean; // Boolean!
     lastName: string; // String!
     password: string; // String!
+    pois: NexusGenRootTypes['Poi'][]; // [Poi!]!
     traveler: NexusGenRootTypes['Traveler'] | null; // Traveler
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
   };
@@ -797,6 +798,7 @@ export interface NexusGenFieldTypeNames {
     isBusinessOperator: 'Boolean';
     lastName: 'String';
     password: 'String';
+    pois: 'Poi';
     traveler: 'Traveler';
     updatedAt: 'DateTime';
   };

@@ -22,7 +22,7 @@ import GradientButton from '~/components/Button/GradientButton';
 import { AuthContext } from '~/context/AuthProvider';
 import {
   CreatePoiDocument,
-  GetBusinessOperatorBusinessDocument,
+  GetUserPoisDocument,
   MutationCreatePoiArgs,
 } from '~/graphql/generated';
 import addBusinessFormStore from '~/store/addBusinessFormStore';
@@ -171,7 +171,7 @@ const BusinessVerificationScreen: React.FC = () => {
 
     await createBusiness({
       variables: {
-        type: establishment.type,
+        type: CreatePoiInput.type,
         userId: CreatePoiInput.userId,
         input: CreatePoiInput.input,
       },
@@ -191,7 +191,7 @@ const BusinessVerificationScreen: React.FC = () => {
       },
       refetchQueries: [
         {
-          query: GetBusinessOperatorBusinessDocument,
+          query: GetUserPoisDocument,
           variables: {
             userId: CreatePoiInput.userId,
           },

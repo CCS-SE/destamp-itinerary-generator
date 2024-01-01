@@ -8,21 +8,18 @@ import BusinessCard from '~/components/Card/owner/BusinessCard';
 import MyBusinessEmptyState from '~/components/EmptyState/MyBusinessEmptyState';
 import BusinessScreenSkeleton from '~/components/Skeleton/BusinessListSkeleton';
 import { AuthContext } from '~/context/AuthProvider';
-import { GetBusinessOperatorBusinessDocument } from '~/graphql/generated';
+import { GetUserPoisDocument } from '~/graphql/generated';
 
 const BusinessListScreen = () => {
   const { user } = useContext(AuthContext);
 
-  const { loading, error, data } = useQuery(
-    GetBusinessOperatorBusinessDocument,
-    {
-      variables: {
-        userId: user ? user.id : '',
-      },
+  const { loading, error, data } = useQuery(GetUserPoisDocument, {
+    variables: {
+      userId: user ? user.id : '',
     },
-  );
+  });
 
-  if (data?.businessOperatorBusiness && error) {
+  if (data?.userPois && error) {
     return <Text>Error: {error.message}</Text>;
   }
 
@@ -37,11 +34,7 @@ const BusinessListScreen = () => {
     );
   }
 
-  if (
-    !loading &&
-    data &&
-    data.businessOperatorBusiness.map((op) => op.poi).length <= 0
-  ) {
+  if (!loading && data && data.userPois.length <= 0) {
     return <MyBusinessEmptyState />;
   }
 
@@ -50,16 +43,14 @@ const BusinessListScreen = () => {
       {data && (
         <FlatList
           testID="my-business-list"
-          data={data.businessOperatorBusiness.map((op) => op.poi)}
-          renderItem={({ item, index }) => (
+          data={data.userPois}
+          renderItem={({ item }) => (
             <BusinessCard
               businessId={item.id}
               businessName={item.name}
               businessImages={item.images.map((item) => item.image.url)}
               businessAddress={item.address}
-              businessIsVerified={
-                data.businessOperatorBusiness[index]?.isVerified || false
-              }
+              businessIsVerified={item.isVerified}
             />
           )}
           showsVerticalScrollIndicator={false}

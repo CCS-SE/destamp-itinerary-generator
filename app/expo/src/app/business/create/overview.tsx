@@ -94,31 +94,38 @@ const OverviewPage = () => {
               <Text style={subTitleFontStyle}>
                 Identify your Establishment Type
               </Text>
-              <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-                <OverviewTag
-                  width={width / 3.5}
-                  content={'Restaurant'}
-                  icon={<Ionicons name="restaurant" size={24} color="white" />}
-                />
-                <OverviewTag
-                  width={width / 3.5}
-                  content={'Accommodation'}
-                  icon={<FontAwesome name="hotel" size={24} color="white" />}
-                />
-                <OverviewTag
-                  width={width / 3.5}
-                  content={'Attraction'}
-                  icon={
-                    <MaterialIcons name="description" size={24} color="white" />
-                  }
-                />
+              <View className="items-center">
+                <View style={{ flexDirection: 'row' }}>
+                  <OverviewTag
+                    width={width / 3.8}
+                    content={'Restaurant'}
+                    icon={
+                      <Ionicons name="restaurant" size={24} color="white" />
+                    }
+                  />
+                  <OverviewTag
+                    width={width / 3.8}
+                    content={'Accommodation'}
+                    icon={<FontAwesome name="hotel" size={24} color="white" />}
+                  />
+                  <OverviewTag
+                    width={width / 3.8}
+                    content={'Attraction'}
+                    icon={
+                      <MaterialIcons
+                        name="attractions"
+                        size={24}
+                        color="white"
+                      />
+                    }
+                  />
+                </View>
               </View>
             </View>
-            <View style={{ margin: 5 }}>
+            <View style={{ margin: 5, alignItems: 'center' }}>
               <Text style={subTitleFontStyle}>
                 Verify your business by uploading a business permit.
               </Text>
-              {/* <View> */}
               <View style={{ flexDirection: 'row' }}>
                 <OverviewTag
                   content={'Business Permit'}

@@ -59,30 +59,12 @@ export type Amenity = {
   name: Scalars['String']['output'];
 };
 
-export type BusinessOperator = {
-  __typename?: 'BusinessOperator';
-  business_permits: Array<BusinessPermit>;
-  businesses: Array<Poi>;
-  createdAt: Scalars['DateTime']['output'];
+export type BusinessPermitImage = {
+  __typename?: 'BusinessPermitImage';
   id: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-  userId: Scalars['String']['output'];
-};
-
-export type BusinessOperatorBusiness = {
-  __typename?: 'BusinessOperatorBusiness';
-  isVerified: Scalars['Boolean']['output'];
-  poi: Poi;
-};
-
-export type BusinessPermit = {
-  __typename?: 'BusinessPermit';
-  businessOperatorId: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  image: Image;
   imageId: Scalars['String']['output'];
-  isVerified: Scalars['Boolean']['output'];
   poiId: Scalars['String']['output'];
+  userId: Scalars['String']['output'];
 };
 
 export type Category = {
@@ -336,8 +318,6 @@ export type Poi = {
   __typename?: 'Poi';
   accommodation?: Maybe<Accommodation>;
   address: Scalars['String']['output'];
-  businessOperatorId?: Maybe<Scalars['String']['output']>;
-  businessPermit?: Maybe<BusinessPermit>;
   categories: Array<Category>;
   contactNumber: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -345,6 +325,7 @@ export type Poi = {
   id: Scalars['String']['output'];
   images: Array<PoiImage>;
   isAttraction: Scalars['Boolean']['output'];
+  isVerified: Scalars['Boolean']['output'];
   latitude: Scalars['Float']['output'];
   longitude: Scalars['Float']['output'];
   name: Scalars['String']['output'];
@@ -352,6 +333,7 @@ export type Poi = {
   price: Scalars['String']['output'];
   restaurant?: Maybe<Restaurant>;
   updatedAt: Scalars['DateTime']['output'];
+  userId?: Maybe<Scalars['String']['output']>;
   visitDuration: Scalars['Float']['output'];
 };
 
@@ -368,7 +350,6 @@ export type Query = {
   accommodationCategoires: Array<Category>;
   amenities: Array<Amenity>;
   attractionCategoires: Array<Category>;
-  businessOperatorBusiness: Array<BusinessOperatorBusiness>;
   categories: Array<Category>;
   poi: Poi;
   restaurantCategoires: Array<Category>;
@@ -378,10 +359,7 @@ export type Query = {
   trips: Array<Trip>;
   unclaimedStamps: Array<Stamp>;
   user: User;
-};
-
-export type QueryBusinessOperatorBusinessArgs = {
-  userId: Scalars['String']['input'];
+  userPois: Array<Poi>;
 };
 
 export type QueryPoiArgs = {
@@ -406,6 +384,10 @@ export type QueryUnclaimedStampsArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['String']['input'];
+};
+
+export type QueryUserPoisArgs = {
+  userId: Scalars['String']['input'];
 };
 
 export type Restaurant = {
@@ -501,13 +483,14 @@ export type UpdateExpenseInput = {
 
 export type User = {
   __typename?: 'User';
-  businessOperator?: Maybe<BusinessOperator>;
   createdAt: Scalars['DateTime']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   id: Scalars['String']['output'];
+  isBusinessOperator: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
   password: Scalars['String']['output'];
+  pois: Array<Poi>;
   traveler?: Maybe<Traveler>;
   updatedAt: Scalars['DateTime']['output'];
 };
@@ -629,9 +612,7 @@ export type ResolversTypes = {
   Amenity: ResolverTypeWrapper<Amenity>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  BusinessOperator: ResolverTypeWrapper<BusinessOperator>;
-  BusinessOperatorBusiness: ResolverTypeWrapper<BusinessOperatorBusiness>;
-  BusinessPermit: ResolverTypeWrapper<BusinessPermit>;
+  BusinessPermitImage: ResolverTypeWrapper<BusinessPermitImage>;
   Category: ResolverTypeWrapper<Category>;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
@@ -677,9 +658,7 @@ export type ResolversParentTypes = {
   Amenity: Amenity;
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
-  BusinessOperator: BusinessOperator;
-  BusinessOperatorBusiness: BusinessOperatorBusiness;
-  BusinessPermit: BusinessPermit;
+  BusinessPermitImage: BusinessPermitImage;
   Category: Category;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
@@ -754,49 +733,15 @@ export interface BigIntScalarConfig
   name: 'BigInt';
 }
 
-export type BusinessOperatorResolvers<
+export type BusinessPermitImageResolvers<
   ContextType = any,
   ParentType extends
-    ResolversParentTypes['BusinessOperator'] = ResolversParentTypes['BusinessOperator'],
+    ResolversParentTypes['BusinessPermitImage'] = ResolversParentTypes['BusinessPermitImage'],
 > = {
-  business_permits?: Resolver<
-    Array<ResolversTypes['BusinessPermit']>,
-    ParentType,
-    ContextType
-  >;
-  businesses?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BusinessOperatorBusinessResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['BusinessOperatorBusiness'] = ResolversParentTypes['BusinessOperatorBusiness'],
-> = {
-  isVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  poi?: Resolver<ResolversTypes['Poi'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type BusinessPermitResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['BusinessPermit'] = ResolversParentTypes['BusinessPermit'],
-> = {
-  businessOperatorId?: Resolver<
-    ResolversTypes['String'],
-    ParentType,
-    ContextType
-  >;
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  image?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
   imageId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  isVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   poiId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1020,16 +965,6 @@ export type PoiResolvers<
     ContextType
   >;
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  businessOperatorId?: Resolver<
-    Maybe<ResolversTypes['String']>,
-    ParentType,
-    ContextType
-  >;
-  businessPermit?: Resolver<
-    Maybe<ResolversTypes['BusinessPermit']>,
-    ParentType,
-    ContextType
-  >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
     ParentType,
@@ -1045,6 +980,7 @@ export type PoiResolvers<
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   images?: Resolver<Array<ResolversTypes['PoiImage']>, ParentType, ContextType>;
   isAttraction?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  isVerified?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   latitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   longitude?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -1060,6 +996,7 @@ export type PoiResolvers<
     ContextType
   >;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   visitDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1095,12 +1032,6 @@ export type QueryResolvers<
     Array<ResolversTypes['Category']>,
     ParentType,
     ContextType
-  >;
-  businessOperatorBusiness?: Resolver<
-    Array<ResolversTypes['BusinessOperatorBusiness']>,
-    ParentType,
-    ContextType,
-    RequireFields<QueryBusinessOperatorBusinessArgs, 'userId'>
   >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
@@ -1152,6 +1083,12 @@ export type QueryResolvers<
     ParentType,
     ContextType,
     RequireFields<QueryUserArgs, 'id'>
+  >;
+  userPois?: Resolver<
+    Array<ResolversTypes['Poi']>,
+    ParentType,
+    ContextType,
+    RequireFields<QueryUserPoisArgs, 'userId'>
   >;
 };
 
@@ -1324,17 +1261,18 @@ export type UserResolvers<
   ParentType extends
     ResolversParentTypes['User'] = ResolversParentTypes['User'],
 > = {
-  businessOperator?: Resolver<
-    Maybe<ResolversTypes['BusinessOperator']>,
-    ParentType,
-    ContextType
-  >;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isBusinessOperator?: Resolver<
+    ResolversTypes['Boolean'],
+    ParentType,
+    ContextType
+  >;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  pois?: Resolver<Array<ResolversTypes['Poi']>, ParentType, ContextType>;
   traveler?: Resolver<
     Maybe<ResolversTypes['Traveler']>,
     ParentType,
@@ -1349,9 +1287,7 @@ export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
   Amenity?: AmenityResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
-  BusinessOperator?: BusinessOperatorResolvers<ContextType>;
-  BusinessOperatorBusiness?: BusinessOperatorBusinessResolvers<ContextType>;
-  BusinessPermit?: BusinessPermitResolvers<ContextType>;
+  BusinessPermitImage?: BusinessPermitImageResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DailyItinerary?: DailyItineraryResolvers<ContextType>;
   DailyItineraryPoi?: DailyItineraryPoiResolvers<ContextType>;
@@ -1513,25 +1449,22 @@ export type CancelSubscriptionMutation = {
   cancelSubscription: { __typename?: 'Subscription'; id: string };
 };
 
-export type GetBusinessOperatorBusinessQueryVariables = Exact<{
+export type GetUserPoisQueryVariables = Exact<{
   userId: Scalars['String']['input'];
 }>;
 
-export type GetBusinessOperatorBusinessQuery = {
+export type GetUserPoisQuery = {
   __typename?: 'Query';
-  businessOperatorBusiness: Array<{
-    __typename?: 'BusinessOperatorBusiness';
+  userPois: Array<{
+    __typename?: 'Poi';
+    id: string;
+    name: string;
+    address: string;
     isVerified: boolean;
-    poi: {
-      __typename?: 'Poi';
-      id: string;
-      name: string;
-      address: string;
-      images: Array<{
-        __typename?: 'PoiImage';
-        image: { __typename?: 'Image'; id: string; url: string };
-      }>;
-    };
+    images: Array<{
+      __typename?: 'PoiImage';
+      image: { __typename?: 'Image'; id: string; url: string };
+    }>;
   }>;
 };
 
@@ -2866,13 +2799,13 @@ export const CancelSubscriptionDocument = {
   CancelSubscriptionMutation,
   CancelSubscriptionMutationVariables
 >;
-export const GetBusinessOperatorBusinessDocument = {
+export const GetUserPoisDocument = {
   kind: 'Document',
   definitions: [
     {
       kind: 'OperationDefinition',
       operation: 'query',
-      name: { kind: 'Name', value: 'GetBusinessOperatorBusiness' },
+      name: { kind: 'Name', value: 'GetUserPois' },
       variableDefinitions: [
         {
           kind: 'VariableDefinition',
@@ -2894,7 +2827,7 @@ export const GetBusinessOperatorBusinessDocument = {
         selections: [
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'businessOperatorBusiness' },
+            name: { kind: 'Name', value: 'userPois' },
             arguments: [
               {
                 kind: 'Argument',
@@ -2908,41 +2841,29 @@ export const GetBusinessOperatorBusinessDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'address' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'isVerified' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'poi' },
+                  name: { kind: 'Name', value: 'images' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'address' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'images' },
+                        name: { kind: 'Name', value: 'image' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'id' },
-                                  },
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'url' },
-                                  },
-                                ],
-                              },
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
                             },
                           ],
                         },
@@ -2957,10 +2878,7 @@ export const GetBusinessOperatorBusinessDocument = {
       },
     },
   ],
-} as unknown as DocumentNode<
-  GetBusinessOperatorBusinessQuery,
-  GetBusinessOperatorBusinessQueryVariables
->;
+} as unknown as DocumentNode<GetUserPoisQuery, GetUserPoisQueryVariables>;
 export const GetBusinessDetailsDocument = {
   kind: 'Document',
   definitions: [

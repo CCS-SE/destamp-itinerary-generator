@@ -7,6 +7,7 @@ type EditPoiInput = NexusGenInputs['EditPoiInput'];
 
 export const createPoi = async (
   type: string,
+  userId: string,
   input: CreatePoiInput,
   ctx: Context,
 ) => {
@@ -89,6 +90,11 @@ export const createPoi = async (
               url: input.permitUrl,
             },
           },
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
         },
       },
     },
