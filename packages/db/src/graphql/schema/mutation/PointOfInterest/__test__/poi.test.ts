@@ -79,6 +79,8 @@ describe('deletePoi mutation', () => {
 
     mockContext.prisma.pointOfInterest.delete.mockResolvedValue(poi);
 
-    await expect(deletePoi(poi.id, context)).resolves.toEqual(poi);
+    const result = await deletePoi(poi.id, context);
+
+    expect(result).toEqual(poi);
   });
 });

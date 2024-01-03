@@ -226,7 +226,7 @@ export const deletePoi = async (poiId: string, ctx: Context) => {
     },
   });
 
-  if (ctx.userId !== poi.userId) {
+  if (ctx.userId !== poi?.userId) {
     throw new Error('You are not authorized to delete this point of interest.');
   }
 
