@@ -107,6 +107,16 @@ export const editPoi = async (
   input: EditPoiInput,
   ctx: Context,
 ) => {
+  const poi = await ctx.prisma.pointOfInterest.findUniqueOrThrow({
+    where: {
+      id: poiId,
+    },
+  });
+
+  if (ctx.userId !== poi.userId) {
+    throw new Error('You are not authorized to edit this point of interest.');
+  }
+
   return await ctx.prisma.pointOfInterest.update({
     where: {
       id: poiId,
@@ -210,6 +220,16 @@ export const editPoi = async (
 };
 
 export const deletePoi = async (poiId: string, ctx: Context) => {
+  const poi = await ctx.prisma.pointOfInterest.findUniqueOrThrow({
+    where: {
+      id: poiId,
+    },
+  });
+
+  if (ctx.userId !== poi.userId) {
+    throw new Error('You are not authorized to delete this point of interest.');
+  }
+
   await ctx.prisma.businessPermitImage.delete({
     where: {
       poiId: poiId,
