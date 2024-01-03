@@ -8,8 +8,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import {
   CreateUserDocument,
-  GetBusinessOperatorBusinessDocument,
   GetTripsDocument,
+  GetUserPoisDocument,
   MutationCreateUserArgs,
 } from '~/graphql/generated';
 import GradientButton from '../Button/GradientButton';
@@ -71,7 +71,7 @@ export default function AddProfileForm() {
             },
           },
           {
-            query: GetBusinessOperatorBusinessDocument,
+            query: GetUserPoisDocument,
             variables: {
               userId: data.user.id,
             },

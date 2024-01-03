@@ -29,7 +29,7 @@ const createContext = (request: any) => {
   try {
     const authHeader = request.req.headers['authorization'] as string;
 
-    if (authHeader !== null) {
+    if (authHeader && authHeader !== null) {
       const token = authHeader.split(' ')[1] as string;
 
       const tokenPayload = verify(
