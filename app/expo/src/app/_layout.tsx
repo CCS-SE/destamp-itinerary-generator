@@ -9,9 +9,11 @@ import {
   createHttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { ClerkProvider } from '@clerk/clerk-expo';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { supabase } from 'config/initSupabase';
 import { fetch } from 'cross-fetch';
 
 import { AuthProvider } from '~/context/AuthProvider';
@@ -23,33 +25,29 @@ export {
 
 const URL = 'https://cpu-destamp.onrender.com';
 
-// const LOCAL_SYSTEM_IP_ADDRESS = '10.10.10.17';
+// const LOCAL_SYSTEM_IP_ADDRESS = '192.168.1.3';
 // const PORT = 4000;
 
-const client = new ApolloClient({
-  link: createHttpLink({
-    uri: `${URL}/graphql`,
-    // uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
-    fetch,
-  }),
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          trips: {
-            merge(_, incoming) {
-              return incoming;
-            },
-          },
-          trip: {
-            merge(_, incoming) {
-              return incoming;
-            },
-          },
-        },
-      },
+const httpLink = createHttpLink({
+  uri: URL,
+  // uri: `http://${LOCAL_SYSTEM_IP_ADDRESS}:${PORT}/graphql`,
+  fetch,
+});
+
+const authLink = setContext(async (_, { headers }) => {
+  const token = (await supabase.auth.getSession()).data.session?.access_token;
+
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : '',
     },
-  }),
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache(),
 });
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
