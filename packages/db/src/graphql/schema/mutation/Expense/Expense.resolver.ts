@@ -27,6 +27,23 @@ export const createExpense = async (
 };
 
 export const deleteExpense = async (id: number, ctx: Context) => {
+  const expense = await ctx.prisma.expense.findUniqueOrThrow({
+    where: {
+      id: id,
+    },
+    include: {
+      trip: {
+        include: {
+          traveler: true,
+        },
+      },
+    },
+  });
+
+  if (ctx.userId !== expense?.trip.traveler.userId) {
+    throw new Error('You are not authorized to delete this expense.');
+  }
+
   return await ctx.prisma.expense.delete({
     where: {
       id: id,
@@ -39,6 +56,23 @@ export const updateExpense = async (
   input: UpdateExpenseInput,
   ctx: Context,
 ) => {
+  const expense = await ctx.prisma.expense.findUniqueOrThrow({
+    where: {
+      id: id,
+    },
+    include: {
+      trip: {
+        include: {
+          traveler: true,
+        },
+      },
+    },
+  });
+
+  if (ctx.userId !== expense?.trip.traveler.userId) {
+    throw new Error('You are not authorized to edit this expense.');
+  }
+
   return await ctx.prisma.expense.update({
     where: {
       id: id,
