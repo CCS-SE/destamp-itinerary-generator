@@ -53,6 +53,10 @@ export const editUser = async (
   input: EditUserInput,
   ctx: Context,
 ) => {
+  if (ctx.userId !== userId) {
+    throw new Error('You are not authorized to edit this user.');
+  }
+
   return await ctx.prisma.user.update({
     where: {
       id: userId,
