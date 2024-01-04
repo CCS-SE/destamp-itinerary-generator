@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -22,6 +22,8 @@ const OverviewPage = () => {
     color: '#404040',
     padding: 10,
   };
+
+  const width = Dimensions.get('window').width;
 
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -92,29 +94,38 @@ const OverviewPage = () => {
               <Text style={subTitleFontStyle}>
                 Identify your Establishment Type
               </Text>
-              <View style={{ alignItems: 'center' }}>
-                <OverviewTag
-                  content={'Restaurant'}
-                  icon={<Ionicons name="restaurant" size={24} color="white" />}
-                />
-                <OverviewTag
-                  content={'Accommodation'}
-                  icon={<FontAwesome name="hotel" size={24} color="white" />}
-                />
-                <OverviewTag
-                  content={'Attraction'}
-                  icon={
-                    <MaterialIcons name="description" size={24} color="white" />
-                  }
-                />
+              <View className="items-center">
+                <View style={{ flexDirection: 'row' }}>
+                  <OverviewTag
+                    width={width / 3.8}
+                    content={'Restaurant'}
+                    icon={
+                      <Ionicons name="restaurant" size={24} color="white" />
+                    }
+                  />
+                  <OverviewTag
+                    width={width / 3.8}
+                    content={'Accommodation'}
+                    icon={<FontAwesome name="hotel" size={24} color="white" />}
+                  />
+                  <OverviewTag
+                    width={width / 3.8}
+                    content={'Attraction'}
+                    icon={
+                      <MaterialIcons
+                        name="attractions"
+                        size={24}
+                        color="white"
+                      />
+                    }
+                  />
+                </View>
               </View>
             </View>
-            <View style={{ margin: 5 }}>
+            <View style={{ margin: 5, alignItems: 'center' }}>
               <Text style={subTitleFontStyle}>
-                Verify your business by uploading a your business permit and
-                upload photos of your establishment.
+                Verify your business by uploading a business permit.
               </Text>
-              {/* <View> */}
               <View style={{ flexDirection: 'row' }}>
                 <OverviewTag
                   content={'Business Permit'}
@@ -130,12 +141,12 @@ const OverviewPage = () => {
                 />
               </View>
             </View>
-            <GradientButton
-              onPress={() => router.push('/business/create/establishmentType')}
-              title={'Get Started'}
-              isSubmitting={false}
-            />
           </ScrollView>
+          <GradientButton
+            onPress={() => router.push('/business/create/establishmentType')}
+            title={'Get Started'}
+            isSubmitting={false}
+          />
         </SafeAreaView>
       </View>
     </View>

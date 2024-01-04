@@ -39,16 +39,6 @@ export const createUser = async (
         },
       },
     });
-  } else if (type === 'BUSINESS_OPERATOR') {
-    userTypePromise = ctx.prisma.businessOperator.create({
-      data: {
-        user: {
-          connect: {
-            id: user.id,
-          },
-        },
-      },
-    });
   }
 
   if (userTypePromise) {
@@ -63,6 +53,10 @@ export const editUser = async (
   input: EditUserInput,
   ctx: Context,
 ) => {
+  if (ctx.userId !== userId) {
+    throw new Error('You are not authorized to edit this user.');
+  }
+
   return await ctx.prisma.user.update({
     where: {
       id: userId,

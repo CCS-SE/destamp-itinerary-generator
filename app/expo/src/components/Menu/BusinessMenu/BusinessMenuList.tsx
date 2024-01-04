@@ -5,10 +5,7 @@ import { useMutation } from '@apollo/client';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 import { AuthContext } from '~/context/AuthProvider';
-import {
-  DeletePoiDocument,
-  GetBusinessOperatorBusinessDocument,
-} from '~/graphql/generated';
+import { DeletePoiDocument, GetUserPoisDocument } from '~/graphql/generated';
 import { confirmationAlert } from '~/utils/utils';
 import BusinessMenuItem from './BusinessMenuItem';
 
@@ -52,7 +49,7 @@ function BusinessMenuList({
     await deleteBusiness({
       refetchQueries: [
         {
-          query: GetBusinessOperatorBusinessDocument,
+          query: GetUserPoisDocument,
           variables: {
             userId: user ? user.id : '',
           },

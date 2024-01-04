@@ -61,19 +61,19 @@ export const createTrip = async (
       where: {
         OR: [
           {
-            businessOperator: {
+            user: {
               isNot: null,
             },
-            businessPermit: {
-              isVerified: true,
+            isVerified: {
+              equals: true,
             },
           }, // newly added place that is not yet verified must not be included
           {
-            businessOperator: {
+            user: {
               is: null,
             },
-            businessPermit: {
-              is: null,
+            isVerified: {
+              equals: false,
             },
           }, // include all scraped data
         ],
@@ -206,21 +206,18 @@ export const createTrip = async (
 };
 
 export const deleteTrip = async (id: number, ctx: Context) => {
-  const trip = await ctx.prisma.trip.findUnique({
+  const trip = await ctx.prisma.trip.findUniqueOrThrow({
     where: {
       id: id,
     },
     include: {
+      traveler: true,
       tripPreference: true,
     },
   });
 
-  if (trip && trip.tripPreference) {
-    await ctx.prisma.tripPreference.delete({
-      where: {
-        tripId: id,
-      },
-    });
+  if (ctx.userId !== trip?.traveler.userId) {
+    throw new Error('You are not authorized to delete this trip.');
   }
 
   await ctx.prisma.expense.deleteMany({
@@ -256,23 +253,42 @@ export const regenerateTrip = async (
   ctx: Context,
 ) => {
   try {
+    const trip = await ctx.prisma.trip
+      .findUniqueOrThrow({
+        where: {
+          id: id,
+        },
+        include: {
+          tripPreference: true,
+          traveler: true,
+        },
+      })
+      .then((trip) => {
+        if (!trip) throw new Error('Trip not found.');
+        return trip;
+      });
+
+    if (ctx.userId !== trip.traveler.userId) {
+      throw new Error('You are not authorized to regenerate this trip.');
+    }
+
     const pois = await ctx.prisma.pointOfInterest.findMany({
       where: {
         OR: [
           {
-            businessOperator: {
+            user: {
               isNot: null,
             },
-            businessPermit: {
-              isVerified: true,
+            isVerified: {
+              equals: true,
             },
           },
           {
-            businessOperator: {
+            user: {
               is: null,
             },
-            businessPermit: {
-              is: null,
+            isVerified: {
+              equals: false,
             },
           },
         ],
@@ -286,20 +302,6 @@ export const regenerateTrip = async (
         },
       },
     });
-
-    const trip = await ctx.prisma.trip
-      .findUnique({
-        where: {
-          id: id,
-        },
-        include: {
-          tripPreference: true,
-        },
-      })
-      .then((trip) => {
-        if (!trip) throw new Error('Trip not found');
-        return trip;
-      });
 
     const duration = tripDuration(trip.startDate, trip.endDate);
 

@@ -8,6 +8,10 @@ export const claimStamp = async (
   stampId: number,
   ctx: Context,
 ) => {
+  if (ctx.userId !== userId) {
+    throw new Error('You are not authorized to claim this stamp.');
+  }
+
   return await ctx.prisma.user.update({
     where: {
       id: userId,
@@ -31,6 +35,12 @@ export const subscribeToPremium = async (
   input: CreateSubscriptionInput,
   ctx: Context,
 ) => {
+  if (ctx.userId !== userId) {
+    throw new Error(
+      'You are not authorized to subscribe on behalf of this user.',
+    );
+  }
+
   const traveler = await ctx.prisma.traveler.findFirstOrThrow({
     where: {
       userId: userId,
@@ -69,11 +79,16 @@ export const subscribeToPremium = async (
 };
 
 export const cancelSubscription = async (userId: string, ctx: Context) => {
+  if (ctx.userId !== userId) {
+    throw new Error('You are not authorized to cancel this subscription.');
+  }
+
   const traveler = await ctx.prisma.traveler.findFirstOrThrow({
     where: {
       userId: userId,
     },
   });
+
   return await ctx.prisma.subscription.update({
     where: {
       travelerId: traveler.id,

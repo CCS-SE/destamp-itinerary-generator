@@ -57,7 +57,7 @@ const BusinessBasicInformation: React.FC = () => {
     >
       <CreateBusinessHeader title={'Create Business'} />
       <ScrollView
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         showsHorizontalScrollIndicator={false}
       >
         <View style={{ marginBottom: 10 }}>

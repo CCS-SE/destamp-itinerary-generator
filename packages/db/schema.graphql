@@ -23,27 +23,11 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
-type BusinessOperator {
-  business_permits: [BusinessPermit!]!
-  businesses: [Poi!]!
-  createdAt: DateTime!
+type BusinessPermitImage {
   id: String!
-  updatedAt: DateTime!
-  userId: String!
-}
-
-type BusinessOperatorBusiness {
-  isVerified: Boolean!
-  poi: Poi!
-}
-
-type BusinessPermit {
-  businessOperatorId: String!
-  id: String!
-  image: Image!
   imageId: String!
-  isVerified: Boolean!
   poiId: String!
+  userId: String!
 }
 
 type Category {
@@ -229,8 +213,6 @@ input OperatingHoursInput {
 type Poi {
   accommodation: Accommodation
   address: String!
-  businessOperatorId: String
-  businessPermit: BusinessPermit
   categories: [Category!]!
   contactNumber: String!
   createdAt: DateTime!
@@ -238,6 +220,7 @@ type Poi {
   id: String!
   images: [PoiImage!]!
   isAttraction: Boolean!
+  isVerified: Boolean!
   latitude: Float!
   longitude: Float!
   name: String!
@@ -245,6 +228,7 @@ type Poi {
   price: String!
   restaurant: Restaurant
   updatedAt: DateTime!
+  userId: String
   visitDuration: Float!
 }
 
@@ -259,7 +243,6 @@ type Query {
   accommodationCategoires: [Category!]!
   amenities: [Amenity!]!
   attractionCategoires: [Category!]!
-  businessOperatorBusiness(userId: String!): [BusinessOperatorBusiness!]!
   categories: [Category!]!
   poi(poiId: String!): Poi!
   restaurantCategoires: [Category!]!
@@ -269,6 +252,7 @@ type Query {
   trips(userId: String!): [Trip!]!
   unclaimedStamps(userId: String!): [Stamp!]!
   user(id: String!): User!
+  userPois(userId: String!): [Poi!]!
 }
 
 type Restaurant {
@@ -357,13 +341,14 @@ input UpdateExpenseInput {
 }
 
 type User {
-  businessOperator: BusinessOperator
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: String!
+  isBusinessOperator: Boolean!
   lastName: String!
   password: String!
+  pois: [Poi!]!
   traveler: Traveler
   updatedAt: DateTime!
 }

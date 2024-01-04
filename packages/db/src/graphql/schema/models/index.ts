@@ -1,9 +1,7 @@
 import Accommodation from './Accommodation';
 import Account from './Account';
 import Amenity from './Amenity';
-import BusinessOperator from './BusinessOperator';
-import BusinessOperatorBusiness from './BusinessOperatorBusiness';
-import BusinessPermit from './BusinessPermit';
+import BusinessPermitImage from './BusinessPermitImage';
 import Category from './Category';
 import DailyItinerary from './DailyItinerary';
 import DailyItineraryPoi from './DailyItineraryPoi';
@@ -36,12 +34,10 @@ const Models = [
   Stamp,
   OperatingHour,
   TripPreference,
-  BusinessPermit,
+  BusinessPermitImage,
   Subscription,
   Account,
   Traveler,
-  BusinessOperator,
-  BusinessOperatorBusiness,
 ];
 
 export default Models;

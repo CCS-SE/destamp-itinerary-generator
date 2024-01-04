@@ -5,7 +5,6 @@ import {
   queryAllAmenities,
   queryAllCategories,
   queryAttractionCategories,
-  queryBusinessOperatorBusiness,
   queryPoi,
   queryRestaurantCategories,
   queryRestaurantCategoriesMoreThanFive,
@@ -17,14 +16,6 @@ const Poi = queryField('poi', {
     poiId: nonNull(stringArg()),
   },
   resolve: (_, args, ctx, info) => queryPoi(args.poiId, ctx, info),
-});
-
-const BusinessOperatorPois = queryField('businessOperatorBusiness', {
-  type: nonNull(list('BusinessOperatorBusiness')),
-  args: {
-    userId: nonNull(stringArg()),
-  },
-  resolve: (_, args, ctx) => queryBusinessOperatorBusiness(args.userId, ctx),
 });
 
 const Categories = queryField('categories', {
@@ -62,7 +53,6 @@ const AccommodationCategories = queryField('accommodationCategoires', {
 
 export default [
   Poi,
-  BusinessOperatorPois,
   Categories,
   Amenities,
   RestaurantCategoriesMoreThanFive,

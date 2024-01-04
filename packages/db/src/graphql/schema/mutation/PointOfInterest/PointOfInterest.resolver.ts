@@ -11,12 +11,6 @@ export const createPoi = async (
   input: CreatePoiInput,
   ctx: Context,
 ) => {
-  const operator = await ctx.prisma.businessOperator.findFirstOrThrow({
-    where: {
-      userId: userId,
-    },
-  });
-
   return await ctx.prisma.pointOfInterest.create({
     data: {
       address: input.address,
@@ -89,23 +83,18 @@ export const createPoi = async (
               },
             }
           : undefined,
-      businessOperator: {
-        connect: {
-          id: operator.id,
-        },
-      },
-      businessPermit: {
+      businessPermitImage: {
         create: {
-          businessOperator: {
-            connect: {
-              id: operator.id,
-            },
-          },
           image: {
             create: {
               url: input.permitUrl,
             },
           },
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
         },
       },
     },
@@ -118,6 +107,16 @@ export const editPoi = async (
   input: EditPoiInput,
   ctx: Context,
 ) => {
+  const poi = await ctx.prisma.pointOfInterest.findUniqueOrThrow({
+    where: {
+      id: poiId,
+    },
+  });
+
+  if (ctx.userId !== poi.userId) {
+    throw new Error('You are not authorized to edit this point of interest.');
+  }
+
   return await ctx.prisma.pointOfInterest.update({
     where: {
       id: poiId,
@@ -221,7 +220,17 @@ export const editPoi = async (
 };
 
 export const deletePoi = async (poiId: string, ctx: Context) => {
-  await ctx.prisma.businessPermit.delete({
+  const poi = await ctx.prisma.pointOfInterest.findUniqueOrThrow({
+    where: {
+      id: poiId,
+    },
+  });
+
+  if (ctx.userId !== poi?.userId) {
+    throw new Error('You are not authorized to delete this point of interest.');
+  }
+
+  await ctx.prisma.businessPermitImage.delete({
     where: {
       poiId: poiId,
     },

@@ -4,7 +4,7 @@ const PointOfInterest = objectType({
   name: 'Poi',
   definition(t) {
     t.string('id');
-    t.nullable.string('businessOperatorId');
+    t.nullable.string('userId');
     t.string('name');
     t.string('address');
     t.nullable.string('description');
@@ -14,6 +14,7 @@ const PointOfInterest = objectType({
     t.float('longitude');
     t.float('visitDuration');
     t.boolean('isAttraction');
+    t.boolean('isVerified');
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
     t.list.field('categories', {
@@ -75,18 +76,6 @@ const PointOfInterest = objectType({
             },
           })
           .accommodation();
-      },
-    });
-    t.nullable.field('businessPermit', {
-      type: 'BusinessPermit',
-      resolve: ({ id }, _, ctx) => {
-        return ctx.prisma.pointOfInterest
-          .findUniqueOrThrow({
-            where: {
-              id: id,
-            },
-          })
-          .businessPermit();
       },
     });
   },

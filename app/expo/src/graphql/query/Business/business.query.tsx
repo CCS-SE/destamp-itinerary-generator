@@ -1,20 +1,18 @@
 import { gql } from '@apollo/client';
 
-export const GetBusinessOperatorBusinessQuery = gql(
-  `query GetBusinessOperatorBusiness($userId: String!) {
-    businessOperatorBusiness(userId: $userId) {
+export const GetUserPoisQuery = gql(
+  `query GetUserPois($userId: String!) {
+    userPois(userId: $userId) {
+      id
+      name
+      address
       isVerified
-      poi {
-        id
-        name
-        address
-        images {
-          image {
-            id
-            url
-          }
+      images {
+        image {
+          id
+          url
         }
-      }
+      } 
     }
   }  
   `,

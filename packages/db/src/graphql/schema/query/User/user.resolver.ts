@@ -85,6 +85,10 @@ export const queryUnclaimedStamps = async (userId: string, ctx: Context) => {
       },
     });
 
+    if (!user) {
+      throw new Error('Sorry, no user found with given id.');
+    }
+
     const unclaimedStamps = user?.traveler?.trips
       .filter((trip) =>
         // get trips with end date is before current date
@@ -110,5 +114,27 @@ export const queryUnclaimedStamps = async (userId: string, ctx: Context) => {
   } catch (error) {
     console.error(error);
     throw new Error('An error occurred while fetching unclaimed stamps.');
+  }
+};
+
+export const queryUserPois = async (userId: string, ctx: Context) => {
+  try {
+    const user = await ctx.prisma.user.findUniqueOrThrow({
+      where: {
+        id: userId,
+      },
+      include: {
+        pointOfInterests: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('Sorry, no user found with given id.');
+    }
+
+    return user.pointOfInterests;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while fetching user pois.');
   }
 };
