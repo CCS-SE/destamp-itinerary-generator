@@ -72,7 +72,7 @@ export const pointOfInterests = [
     price: '880',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:54.242Z'),
-    userId: null,
+    userId: 'user1',
     visitDuration: 1440,
   },
   {

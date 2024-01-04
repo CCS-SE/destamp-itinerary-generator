@@ -23,6 +23,11 @@ export const queryUser = (
     if (!isValidId(id)) {
       throw new Error('Invalid User ID');
     }
+
+    if (ctx.userId !== id) {
+      throw new Error('Unauthorized access.');
+    }
+
     return ctx.prisma.user.findUniqueOrThrow({
       where: {
         id: id,
@@ -38,6 +43,10 @@ export const queryUser = (
 };
 
 export const queryTravelerAccount = async (userId: string, ctx: Context) => {
+  if (ctx.userId !== userId) {
+    throw new Error('Unauthorized access.');
+  }
+
   return await ctx.prisma.user
     .findUniqueOrThrow({
       where: {
@@ -62,6 +71,10 @@ export const queryTravelerAccount = async (userId: string, ctx: Context) => {
 
 export const queryUnclaimedStamps = async (userId: string, ctx: Context) => {
   try {
+    if (ctx.userId !== userId) {
+      throw new Error('Unauthorized access.');
+    }
+
     const user = await ctx.prisma.user.findUnique({
       where: {
         id: userId,
@@ -119,6 +132,10 @@ export const queryUnclaimedStamps = async (userId: string, ctx: Context) => {
 
 export const queryUserPois = async (userId: string, ctx: Context) => {
   try {
+    if (ctx.userId !== userId) {
+      throw new Error('Unauthorized access.');
+    }
+
     const user = await ctx.prisma.user.findUniqueOrThrow({
       where: {
         id: userId,
