@@ -26,7 +26,7 @@ model User {
 
 model Traveler {
   id     String @id @default(cuid())
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique @map("user_id")
 
   tripCount Int @default(0) @map("trip_count")
@@ -52,7 +52,7 @@ model Subscription {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  traveler   Traveler @relation(fields: [travelerId], references: [id])
+  traveler   Traveler @relation(fields: [travelerId], references: [id], onDelete: Cascade)
   travelerId String   @unique @map("traveler_id")
 
   @@map("subscriptions")
@@ -60,7 +60,7 @@ model Subscription {
 
 model Trip {
   id         Int      @id @default(autoincrement())
-  traveler   Traveler @relation(fields: [travelerId], references: [id])
+  traveler   Traveler @relation(fields: [travelerId], references: [id], onDelete: Cascade)
   travelerId String   @map("traveler_id")
 
   title                    String     @db.VarChar(255)
@@ -87,9 +87,9 @@ model Trip {
 }
 
 model PointOfInterest {
-  id     String  @id @default(cuid())
-  user   User?   @relation(fields: [userId], references: [id])
-  userId String? @map("user_id")
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
 
   name          String  @db.VarChar(255)
   description   String?
@@ -118,7 +118,7 @@ model PointOfInterest {
 
 model TripPreference {
   id     Int  @id @default(autoincrement())
-  trip   Trip @relation(fields: [tripId], references: [id])
+  trip   Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
   tripId Int  @unique @map("trip_id")
 
   accommodationType String   @map("accommodation_type") @db.VarChar(255)
@@ -135,7 +135,7 @@ model TripPreference {
 
 model Restaurant {
   id    Int             @id @default(autoincrement())
-  poi   PointOfInterest @relation(fields: [poiId], references: [id])
+  poi   PointOfInterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
   poiId String          @unique @map("poi_id")
 
   atmospheres String[] @db.VarChar(255)
@@ -145,7 +145,7 @@ model Restaurant {
 
 model Accommodation {
   id    Int             @id @default(autoincrement())
-  poi   PointOfInterest @relation(fields: [poiId], references: [id])
+  poi   PointOfInterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
   poiId String          @unique @map("poi_id")
 
   amenities Amenity[]
@@ -173,7 +173,7 @@ model Category {
 
 model OperatingHour {
   id    Int             @id @default(autoincrement())
-  poi   PointOfInterest @relation(fields: [poiId], references: [id])
+  poi   PointOfInterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
   poiId String          @map("poi_id")
 
   day       Int
@@ -187,7 +187,7 @@ model OperatingHour {
 
 model DailyItinerary {
   id     Int  @id @default(autoincrement())
-  trip   Trip @relation(fields: [tripId], references: [id])
+  trip   Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
   tripId Int  @map("trip_id")
 
   accommodationCost  Float  @map("accommodation_cost")
@@ -207,7 +207,7 @@ model DailyItinerary {
 model DailyItineraryPoi {
   id               Int             @id @default(autoincrement())
   poi              PointOfInterest @relation(fields: [poiId], references: [id])
-  dailyItinerary   DailyItinerary  @relation(fields: [dailyItineraryId], references: [id])
+  dailyItinerary   DailyItinerary  @relation(fields: [dailyItineraryId], references: [id], onDelete: Cascade)
   poiId            String          @map("poi_id")
   dailyItineraryId Int             @map("daily_itinerary_id")
 
@@ -223,7 +223,7 @@ model DailyItineraryPoi {
 
 model Expense {
   id     Int  @id @default(autoincrement())
-  trip   Trip @relation(fields: [tripId], references: [id])
+  trip   Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
   tripId Int  @map("trip_id")
 
   amount    Float
@@ -253,9 +253,9 @@ model Image {
 
 model PoiImage {
   id      Int             @id @default(autoincrement())
-  poi     PointOfInterest @relation(fields: [poiId], references: [id])
+  poi     PointOfInterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
   poiId   String          @map("poi_id")
-  image   Image           @relation(fields: [imageId], references: [id])
+  image   Image           @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId String          @unique @map("image_id")
 
   @@map("poi_images")
@@ -264,9 +264,9 @@ model PoiImage {
 model BusinessPermitImage {
   id String @id @default(cuid())
 
-  image   Image           @relation(fields: [imageId], references: [id])
+  image   Image           @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId String          @unique @map("image_id")
-  poi     PointOfInterest @relation(fields: [poiId], references: [id])
+  poi     PointOfInterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
   poiId   String          @unique @map("poi_id")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -277,7 +277,7 @@ model BusinessPermitImage {
 
 model Stamp {
   id      Int    @id @default(autoincrement())
-  image   Image  @relation(fields: [imageId], references: [id])
+  image   Image  @relation(fields: [imageId], references: [id], onDelete: Cascade)
   imageId String @unique @map("image_id")
 
   title String @db.VarChar(255)

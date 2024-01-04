@@ -230,58 +230,6 @@ export const deletePoi = async (poiId: string, ctx: Context) => {
     throw new Error('You are not authorized to delete this point of interest.');
   }
 
-  await ctx.prisma.businessPermitImage.delete({
-    where: {
-      poiId: poiId,
-    },
-  });
-  await ctx.prisma.operatingHour.deleteMany({
-    where: {
-      poiId: poiId,
-    },
-  });
-
-  await ctx.prisma.poiImage.deleteMany({
-    where: {
-      poiId: poiId,
-    },
-  });
-
-  await ctx.prisma.image.deleteMany({
-    where: {
-      poiImage: {
-        poiId: poiId,
-      },
-    },
-  });
-
-  const restaurant = await ctx.prisma.restaurant.findUnique({
-    where: {
-      poiId: poiId,
-    },
-  });
-  const accommodation = await ctx.prisma.accommodation.findUnique({
-    where: {
-      poiId: poiId,
-    },
-  });
-
-  if (restaurant) {
-    await ctx.prisma.restaurant.delete({
-      where: {
-        id: restaurant.id,
-      },
-    });
-  }
-
-  if (accommodation) {
-    await ctx.prisma.accommodation.delete({
-      where: {
-        id: accommodation.id,
-      },
-    });
-  }
-
   return await ctx.prisma.pointOfInterest.delete({
     where: {
       id: poiId,

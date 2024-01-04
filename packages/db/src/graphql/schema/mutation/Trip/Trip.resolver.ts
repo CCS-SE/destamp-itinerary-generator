@@ -61,16 +61,13 @@ export const createTrip = async (
       where: {
         OR: [
           {
-            user: {
-              isNot: null,
-            },
             isVerified: {
               equals: true,
             },
           }, // newly added place that is not yet verified must not be included
           {
             user: {
-              is: null,
+              id: 'ccsdestamp2023',
             },
             isVerified: {
               equals: false,
@@ -220,26 +217,6 @@ export const deleteTrip = async (id: number, ctx: Context) => {
     throw new Error('You are not authorized to delete this trip.');
   }
 
-  await ctx.prisma.expense.deleteMany({
-    where: {
-      tripId: id,
-    },
-  });
-
-  await ctx.prisma.dailyItineraryPoi.deleteMany({
-    where: {
-      dailyItinerary: {
-        tripId: id,
-      },
-    },
-  });
-
-  await ctx.prisma.dailyItinerary.deleteMany({
-    where: {
-      tripId: id,
-    },
-  });
-
   return await ctx.prisma.trip.delete({
     where: {
       id: id,
@@ -276,16 +253,13 @@ export const regenerateTrip = async (
       where: {
         OR: [
           {
-            user: {
-              isNot: null,
-            },
             isVerified: {
               equals: true,
             },
           },
           {
             user: {
-              is: null,
+              id: 'ccsdestamp2023',
             },
             isVerified: {
               equals: false,
