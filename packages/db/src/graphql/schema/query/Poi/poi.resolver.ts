@@ -21,7 +21,7 @@ export const queryPoi = async (
       throw new Error('Invalid POI ID');
     }
 
-    return await ctx.prisma.pointOfInterest.findUniqueOrThrow({
+    const poi = await ctx.prisma.pointOfInterest.findUniqueOrThrow({
       where: {
         id: poiId,
       },
@@ -29,6 +29,12 @@ export const queryPoi = async (
         ...includedFields,
       },
     });
+
+    if (ctx.userId !== poi.userId) {
+      throw new Error('Unauthorized access.');
+    }
+
+    return poi;
   } catch (error) {
     throw new Error('An error occurred while fetching point of interest.');
   }
