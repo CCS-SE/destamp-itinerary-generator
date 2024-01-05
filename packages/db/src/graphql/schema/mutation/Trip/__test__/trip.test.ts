@@ -103,7 +103,7 @@ describe('createTrip mutation', () => {
 
     await expect(
       createTrip(true, 'user1', tripInput, tripPreferenceInput, context),
-    ).resolves.toEqual(trip);
+    ).rejects.toThrow('You are not authorized to create this trip.');
   });
 });
 

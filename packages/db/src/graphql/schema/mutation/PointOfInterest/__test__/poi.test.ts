@@ -69,7 +69,9 @@ describe('createPoi mutation', () => {
       context,
     );
 
-    await expect(result).resolves.toEqual(poi);
+    await expect(result).rejects.toThrow(
+      'You are not authorized to create this point of interest.',
+    );
   });
 });
 

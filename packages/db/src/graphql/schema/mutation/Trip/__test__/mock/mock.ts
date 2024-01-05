@@ -32,8 +32,9 @@ export const pointOfInterests = [
     price: '660',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:43.911Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -74,6 +75,7 @@ export const pointOfInterests = [
     updatedAt: new Date('2023-12-10T10:17:54.242Z'),
     userId: 'user1',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -108,8 +110,9 @@ export const pointOfInterests = [
     price: '1045',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:03.121Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -136,8 +139,9 @@ export const pointOfInterests = [
     price: '1485',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:12.749Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
 
   {
@@ -164,8 +168,9 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:49.724Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 60,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: null,
@@ -217,8 +222,9 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:54.185Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 60,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: null,
@@ -267,8 +273,9 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:17.284Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 90,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: null,
@@ -317,8 +324,9 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:23.196Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 45,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -353,8 +361,9 @@ export const pointOfInterests = [
     price: '660',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:43.911Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -393,8 +402,9 @@ export const pointOfInterests = [
     price: '880',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:17:54.242Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -429,8 +439,9 @@ export const pointOfInterests = [
     price: '1045',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:03.121Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: {
@@ -457,8 +468,9 @@ export const pointOfInterests = [
     price: '1485',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:18:12.749Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 1440,
+    businessPermitImage: 'NA',
   },
 
   {
@@ -485,8 +497,9 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:49.724Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 60,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: null,
@@ -538,8 +551,9 @@ export const pointOfInterests = [
       atmospheres: ['Casual'],
     },
     updatedAt: new Date('2023-12-10T10:36:54.185Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 60,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: null,
@@ -588,8 +602,9 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:17.284Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 90,
+    businessPermitImage: 'NA',
   },
   {
     accommodation: null,
@@ -638,7 +653,8 @@ export const pointOfInterests = [
     price: '0',
     restaurant: null,
     updatedAt: new Date('2023-12-10T10:50:23.196Z'),
-    userId: null,
+    userId: 'ccsdestamp',
     visitDuration: 45,
+    businessPermitImage: 'NA',
   },
 ];
