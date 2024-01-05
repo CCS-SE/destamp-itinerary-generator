@@ -1,7 +1,6 @@
 import Accommodation from './Accommodation';
 import Account from './Account';
 import Amenity from './Amenity';
-import BusinessPermitImage from './BusinessPermitImage';
 import Category from './Category';
 import DailyItinerary from './DailyItinerary';
 import DailyItineraryPoi from './DailyItineraryPoi';
@@ -34,7 +33,6 @@ const Models = [
   Stamp,
   OperatingHour,
   TripPreference,
-  BusinessPermitImage,
   Subscription,
   Account,
   Traveler,

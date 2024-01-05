@@ -83,15 +83,7 @@ export const createPoi = async (
               },
             }
           : undefined,
-      businessPermitImage: {
-        create: {
-          image: {
-            create: {
-              url: input.permitUrl,
-            },
-          },
-        },
-      },
+      businessPermitImage: input.permitUrl,
       user: {
         connect: {
           id: userId,

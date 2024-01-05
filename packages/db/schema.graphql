@@ -23,13 +23,6 @@ The `BigInt` scalar type represents non-fractional signed whole numeric values.
 """
 scalar BigInt
 
-type BusinessPermitImage {
-  id: String!
-  imageId: String!
-  poiId: String!
-  userId: String!
-}
-
 type Category {
   id: Int!
   name: String!
@@ -213,6 +206,7 @@ input OperatingHoursInput {
 type Poi {
   accommodation: Accommodation
   address: String!
+  businessPermitImage: String!
   categories: [Category!]!
   contactNumber: String!
   createdAt: DateTime!
@@ -228,7 +222,7 @@ type Poi {
   price: String!
   restaurant: Restaurant
   updatedAt: DateTime!
-  userId: String
+  userId: String!
   visitDuration: Float!
 }
 
