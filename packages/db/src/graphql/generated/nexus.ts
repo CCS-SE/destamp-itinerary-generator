@@ -205,13 +205,6 @@ export interface NexusGenObjects {
     id: number; // Int!
     name: string; // String!
   };
-  BusinessPermitImage: {
-    // root type
-    id: string; // String!
-    imageId: string; // String!
-    poiId: string; // String!
-    userId: string; // String!
-  };
   Category: {
     // root type
     id: number; // Int!
@@ -266,6 +259,7 @@ export interface NexusGenObjects {
   Poi: {
     // root type
     address: string; // String!
+    businessPermitImage: string; // String!
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
     description?: string | null; // String
@@ -277,7 +271,7 @@ export interface NexusGenObjects {
     name: string; // String!
     price: string; // String!
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    userId?: string | null; // String
+    userId: string; // String!
     visitDuration: number; // Float!
   };
   PoiImage: {
@@ -385,13 +379,6 @@ export interface NexusGenFieldTypes {
     id: number; // Int!
     name: string; // String!
   };
-  BusinessPermitImage: {
-    // field return type
-    id: string; // String!
-    imageId: string; // String!
-    poiId: string; // String!
-    userId: string; // String!
-  };
   Category: {
     // field return type
     id: number; // Int!
@@ -465,6 +452,7 @@ export interface NexusGenFieldTypes {
     // field return type
     accommodation: NexusGenRootTypes['Accommodation'] | null; // Accommodation
     address: string; // String!
+    businessPermitImage: string; // String!
     categories: NexusGenRootTypes['Category'][]; // [Category!]!
     contactNumber: string; // String!
     createdAt: NexusGenScalars['DateTime']; // DateTime!
@@ -480,7 +468,7 @@ export interface NexusGenFieldTypes {
     price: string; // String!
     restaurant: NexusGenRootTypes['Restaurant'] | null; // Restaurant
     updatedAt: NexusGenScalars['DateTime']; // DateTime!
-    userId: string | null; // String
+    userId: string; // String!
     visitDuration: number; // Float!
   };
   PoiImage: {
@@ -603,13 +591,6 @@ export interface NexusGenFieldTypeNames {
     id: 'Int';
     name: 'String';
   };
-  BusinessPermitImage: {
-    // field return type name
-    id: 'String';
-    imageId: 'String';
-    poiId: 'String';
-    userId: 'String';
-  };
   Category: {
     // field return type name
     id: 'Int';
@@ -683,6 +664,7 @@ export interface NexusGenFieldTypeNames {
     // field return type name
     accommodation: 'Accommodation';
     address: 'String';
+    businessPermitImage: 'String';
     categories: 'Category';
     contactNumber: 'String';
     createdAt: 'DateTime';
@@ -824,6 +806,7 @@ export interface NexusGenArgTypes {
       // args
       input: NexusGenInputs['CreatePoiInput']; // CreatePoiInput!
       type: string; // String!
+      userId: string; // String!
     };
     createTrip: {
       // args

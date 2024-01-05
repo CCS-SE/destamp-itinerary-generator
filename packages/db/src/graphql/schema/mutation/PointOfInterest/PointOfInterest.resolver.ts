@@ -11,6 +11,10 @@ export const createPoi = async (
   input: CreatePoiInput,
   ctx: Context,
 ) => {
+  if (ctx.userId !== userId) {
+    throw new Error('You are not authorized to create this point of interest.');
+  }
+
   return await ctx.prisma.pointOfInterest.create({
     data: {
       address: input.address,
@@ -83,15 +87,7 @@ export const createPoi = async (
               },
             }
           : undefined,
-      businessPermitImage: {
-        create: {
-          image: {
-            create: {
-              url: input.permitUrl,
-            },
-          },
-        },
-      },
+      businessPermitImage: input.permitUrl,
       user: {
         connect: {
           id: userId,

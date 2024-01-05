@@ -50,6 +50,10 @@ export const createTrip = async (
     travelerCount,
   } = tripInput;
 
+  if (ctx.userId !== userId) {
+    throw new Error('You are not authorized to create this trip.');
+  }
+
   const traveler = await ctx.prisma.traveler.findFirstOrThrow({
     where: {
       userId: userId,

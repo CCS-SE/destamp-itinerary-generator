@@ -59,14 +59,6 @@ export type Amenity = {
   name: Scalars['String']['output'];
 };
 
-export type BusinessPermitImage = {
-  __typename?: 'BusinessPermitImage';
-  id: Scalars['String']['output'];
-  imageId: Scalars['String']['output'];
-  poiId: Scalars['String']['output'];
-  userId: Scalars['String']['output'];
-};
-
 export type Category = {
   __typename?: 'Category';
   id: Scalars['Int']['output'];
@@ -318,6 +310,7 @@ export type Poi = {
   __typename?: 'Poi';
   accommodation?: Maybe<Accommodation>;
   address: Scalars['String']['output'];
+  businessPermitImage: Scalars['String']['output'];
   categories: Array<Category>;
   contactNumber: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
@@ -333,7 +326,7 @@ export type Poi = {
   price: Scalars['String']['output'];
   restaurant?: Maybe<Restaurant>;
   updatedAt: Scalars['DateTime']['output'];
-  userId?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['String']['output'];
   visitDuration: Scalars['Float']['output'];
 };
 
@@ -612,7 +605,6 @@ export type ResolversTypes = {
   Amenity: ResolverTypeWrapper<Amenity>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']['output']>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  BusinessPermitImage: ResolverTypeWrapper<BusinessPermitImage>;
   Category: ResolverTypeWrapper<Category>;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
@@ -658,7 +650,6 @@ export type ResolversParentTypes = {
   Amenity: Amenity;
   BigInt: Scalars['BigInt']['output'];
   Boolean: Scalars['Boolean']['output'];
-  BusinessPermitImage: BusinessPermitImage;
   Category: Category;
   CreateExpenseInput: CreateExpenseInput;
   CreatePoiInput: CreatePoiInput;
@@ -732,18 +723,6 @@ export interface BigIntScalarConfig
   extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
   name: 'BigInt';
 }
-
-export type BusinessPermitImageResolvers<
-  ContextType = any,
-  ParentType extends
-    ResolversParentTypes['BusinessPermitImage'] = ResolversParentTypes['BusinessPermitImage'],
-> = {
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  imageId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  poiId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
 
 export type CategoryResolvers<
   ContextType = any,
@@ -965,6 +944,11 @@ export type PoiResolvers<
     ContextType
   >;
   address?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  businessPermitImage?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType
+  >;
   categories?: Resolver<
     Array<ResolversTypes['Category']>,
     ParentType,
@@ -996,7 +980,7 @@ export type PoiResolvers<
     ContextType
   >;
   updatedAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
-  userId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   visitDuration?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -1287,7 +1271,6 @@ export type Resolvers<ContextType = any> = {
   Account?: AccountResolvers<ContextType>;
   Amenity?: AmenityResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
-  BusinessPermitImage?: BusinessPermitImageResolvers<ContextType>;
   Category?: CategoryResolvers<ContextType>;
   DailyItinerary?: DailyItineraryResolvers<ContextType>;
   DailyItineraryPoi?: DailyItineraryPoiResolvers<ContextType>;

@@ -25,6 +25,7 @@ export const createUser = async (
       password: hashedPassword,
       firstName: input.firstName,
       lastName: input.lastName,
+      isBusinessOperator: type === 'BUSINESS_OPERATOR',
     },
   });
 

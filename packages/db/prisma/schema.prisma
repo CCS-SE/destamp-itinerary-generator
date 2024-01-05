@@ -91,27 +91,27 @@ model PointOfInterest {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @map("user_id")
 
-  name          String  @db.VarChar(255)
-  description   String?
-  address       String  @db.VarChar(255)
-  price         String  @db.VarChar(255)
-  contactNumber String  @map("contact_number") @db.VarChar(255)
-  latitude      Float
-  longitude     Float
-  visitDuration Float   @map("visit_duration")
-  isAttraction  Boolean @default(true) @map("is_attraction")
-  isVerified    Boolean @default(false) @map("is_verified")
+  name                String  @db.VarChar(255)
+  description         String?
+  address             String  @db.VarChar(255)
+  price               String  @db.VarChar(255)
+  contactNumber       String  @map("contact_number") @db.VarChar(255)
+  latitude            Float
+  longitude           Float
+  visitDuration       Float   @map("visit_duration")
+  isAttraction        Boolean @default(true) @map("is_attraction")
+  isVerified          Boolean @default(false) @map("is_verified")
+  businessPermitImage String  @map("business_permit_image") @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  categories          Category[]
-  operatingHours      OperatingHour[]
-  poiImages           PoiImage[]
-  dailyItineraryPois  DailyItineraryPoi[]
-  accommodation       Accommodation?
-  restaurant          Restaurant?
-  businessPermitImage BusinessPermitImage?
+  categories         Category[]
+  operatingHours     OperatingHour[]
+  poiImages          PoiImage[]
+  dailyItineraryPois DailyItineraryPoi[]
+  accommodation      Accommodation?
+  restaurant         Restaurant?
 
   @@map("point_of_interests")
 }
@@ -244,9 +244,8 @@ model Image {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  stamp               Stamp?
-  poiImage            PoiImage?
-  businessPermitImage BusinessPermitImage?
+  stamp    Stamp?
+  poiImage PoiImage?
 
   @@map("images")
 }
@@ -259,20 +258,6 @@ model PoiImage {
   imageId String          @unique @map("image_id")
 
   @@map("poi_images")
-}
-
-model BusinessPermitImage {
-  id String @id @default(cuid())
-
-  image   Image           @relation(fields: [imageId], references: [id], onDelete: Cascade)
-  imageId String          @unique @map("image_id")
-  poi     PointOfInterest @relation(fields: [poiId], references: [id], onDelete: Cascade)
-  poiId   String          @unique @map("poi_id")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-
-  @@map("business_permit_images")
 }
 
 model Stamp {

@@ -4,7 +4,7 @@ const PointOfInterest = objectType({
   name: 'Poi',
   definition(t) {
     t.string('id');
-    t.nullable.string('userId');
+    t.string('userId');
     t.string('name');
     t.string('address');
     t.nullable.string('description');
@@ -15,6 +15,7 @@ const PointOfInterest = objectType({
     t.float('visitDuration');
     t.boolean('isAttraction');
     t.boolean('isVerified');
+    t.string('businessPermitImage');
     t.field('createdAt', { type: 'DateTime' });
     t.field('updatedAt', { type: 'DateTime' });
     t.list.field('categories', {
