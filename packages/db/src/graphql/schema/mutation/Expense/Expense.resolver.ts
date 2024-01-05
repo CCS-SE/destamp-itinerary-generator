@@ -11,6 +11,19 @@ export const createExpense = async (
   input: CreateExpenseInput,
   ctx: Context,
 ) => {
+  const trip = await ctx.prisma.trip.findUniqueOrThrow({
+    where: {
+      id: tripId,
+    },
+    include: {
+      traveler: true,
+    },
+  });
+
+  if (ctx.userId !== trip.traveler.userId) {
+    throw new Error('You are not authorized to create this expense.');
+  }
+
   return await ctx.prisma.expense.create({
     data: {
       amount: input.amount as number,
